@@ -1,0 +1,16 @@
+
+jinxian_downloader    ICON    "icons/jingxian.ico"
+#include "wx/msw/wx.rc"
+
+//browse_folder         BITMAP  "bitmaps/browse_folder.bmp"
+//delete_download       BITMAP  "bitmaps/delete_download.bmp"
+//download_properties   BITMAP  "bitmaps/download_properties.bmp"
+//find                  BITMAP  "bitmaps/find.bmp"
+//find_next             BITMAP  "bitmaps/find_next.bmp"
+//move_down             BITMAP  "bitmaps/move_down.bmp"
+//move_up               BITMAP  "bitmaps/move_up.bmp"
+//new_download          BITMAP  "bitmaps/new_download.bmp"
+//open_download_file    BITMAP  "bitmaps/open_download_file.bmp"
+//options               BITMAP  "bitmaps/options.bmp"
+//pause_download        BITMAP  "bitmaps/pause_download.bmp"
+//start_download        BITMAP  "bitmaps/start_download.bmp"
