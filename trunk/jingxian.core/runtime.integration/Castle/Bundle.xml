@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<bundle 
+	xmlns="http://www.jingxian.org/schemas/Bundle.xsd" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	id="jingxian.core.runtime.castleWindsorIntegration"
+	name="jingxian core runtime Castle Windsor Integration"
+	description="."
+	provider="jingxian-project">
+
+</bundle>

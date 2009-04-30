@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+	<include uri="file://ioc.properties.config.xml" />
+	<include uri="file://ioc.facilities.config.xml" />
+	<include uri="file://ioc.services.config.xml" />
+</configuration>

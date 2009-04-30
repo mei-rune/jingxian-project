@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ArgumentIsNotValidClassType" xml:space="preserve">
+    <value>The supplied argument '{0}' is not a valid class type that can be retrieved.</value>
+  </data>
+  <data name="AssemblyContainsNoBundleDefinition" xml:space="preserve">
+    <value>Assembly '{0}' contains no bundle definition file (Bundle.xml).</value>
+  </data>
+  <data name="BundleAddedInfo" xml:space="preserve">
+    <value>"Added bundle '{0}' with id '{1}' from '{2}'."</value>
+  </data>
+  <data name="BundleSkippedDueToDuplicateId" xml:space="preserve">
+    <value>Skipping bundle '{0}' with id '{1}' from '{2}' (same id is used by bundle '{3}' from '{4}').</value>
+  </data>
+  <data name="CacheServiceCacheDirCreationFailure" xml:space="preserve">
+    <value>Failed to create cache directory.</value>
+  </data>
+  <data name="CacheServiceCachePathInitializationFailure" xml:space="preserve">
+    <value>Failed to initialize cache path.</value>
+  </data>
+  <data name="DoneExecutingCommand" xml:space="preserve">
+    <value>Done. Command '{0}' was executed.</value>
+  </data>
+  <data name="ExtensionPointSkippedDueToDuplicateId" xml:space="preserve">
+    <value>Skipping extension point '{0}' with id '{1}' from '{2}' (same extension point id is also defined by bundle '{3}' from '{4}').</value>
+  </data>
+  <data name="ExtensionSkippedDueToDuplicateId" xml:space="preserve">
+    <value>Skipping extension '{0}' with id '{1}' from '{2}' (same extension id is also defined by bundle '{3}' from '{4}').</value>
+  </data>
+  <data name="FailedToAddService" xml:space="preserve">
+    <value>Failed to add service (id '{0}').</value>
+  </data>
+  <data name="FailedToDeserializeConfiguration" xml:space="preserve">
+    <value>Failed to deserialize configuration of element '{0}' in extension '{1}'.</value>
+  </data>
+  <data name="FailedToExecuteCommand" xml:space="preserve">
+    <value>Failed to execute command '{0}'.</value>
+  </data>
+  <data name="FailedToExecuteCommandNoSuchCommand" xml:space="preserve">
+    <value>Failed to execute command '{0}'. No such command.</value>
+  </data>
+  <data name="FailedToFindApplicationLaunchable" xml:space="preserve">
+    <value>Failed to find the configured launchable component '{0}'.</value>
+  </data>
+  <data name="FailedToLoadBundleActivatorType" xml:space="preserve">
+    <value>Failed to load bundle activator type '{0}'.</value>
+  </data>
+  <data name="FailedToLoadBundleFromResource" xml:space="preserve">
+    <value>Failed to load bundle from resource '{0}' in assembly '{1}' with location '{2}'.</value>
+  </data>
+  <data name="FailedToLoadContributedXmlSchemaAndSkipping" xml:space="preserve">
+    <value>Failed to load contributed XML schema extension from '{0}'. Skipping this extension.</value>
+  </data>
+  <data name="InvalidOperationExceptionDueToSecondLaunchAttempt" xml:space="preserve">
+    <value>Cannot launch product '{0}' (platform already launched with product '{1}').</value>
+  </data>
+  <data name="InvalidOperationExceptionWhileTryingToDeserializeBundleFromResource" xml:space="preserve">
+    <value>Failed to deserialize bundle from resource '{0}', assembly {1}.</value>
+  </data>
+  <data name="InvalidXmlConfigurationInExtension" xml:space="preserve">
+    <value>Invalid XML configuration in extension '{0}'. Skipping the invalid contribution.</value>
+  </data>
+  <data name="NotImplementedBecauseOfSchemaContributionViaExtension" xml:space="preserve">
+    <value>The IXmlSerializable.GetSchema() method is not implemented, because of use of schemas as contributions via an extension.</value>
+  </data>
+  <data name="PlatformNotInitializedExceptionWithContext" xml:space="preserve">
+    <value>Platform not initialized ({0}).</value>
+  </data>
+  <data name="RetrievedCommandConfigAndTryToExecute" xml:space="preserve">
+    <value>Retrieved the command configuration for command '{0}'. Try to execute it...</value>
+  </data>
+  <data name="SkippingAssemblyDueToBadImageFormat" xml:space="preserve">
+    <value>Skipping '{0}' (bad image format: {1}, {2}).</value>
+  </data>
+  <data name="SuccessfullyAddedService" xml:space="preserve">
+    <value>Successfully added service (id '{0}').</value>
+  </data>
+  <data name="SuccessfullyAddedXmlSchema" xml:space="preserve">
+    <value>   XML Schema '{0}' successfully added.</value>
+  </data>
+  <data name="TryingToAddService" xml:space="preserve">
+    <value>Trying to add service extension with id '{0}'...</value>
+  </data>
+  <data name="UriServiceRegisterSchemeFailure" xml:space="preserve">
+    <value>Failed to register Uri scheme '{0}'. Scheme already exists.</value>
+  </data>
+</root>

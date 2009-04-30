@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<bundle
+	xmlns="http://www.jingxian.org/release/0.2/schemas/Bundle.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	id="jingxian.core.runtime.simpl"
+	name="jingxian core runtime internal"
+	activator="jingxian.core.runtime.simpl.RuntimeBundle"
+	description="Contains implementations of basic platform components."
+	provider="The jingxian-Project">
+
+
+</bundle>
