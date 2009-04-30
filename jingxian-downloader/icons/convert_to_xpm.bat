@@ -1,0 +1,1 @@
+"C:\Program Files\ImageMagick-6.4.5-Q16\convert.exe" %*
