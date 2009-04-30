@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "curl_app", "samples\curl_app\curl_app.vcproj", "{F8A5770F-1708-44BC-A3BE-0FAC62617049}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxCURL", "wxCURL.vcproj", "{EB8E3917-CB2C-4F26-A1D1-D7D1DA9073DA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		DLL Debug|Win32 = DLL Debug|Win32
+		DLL Release|Win32 = DLL Release|Win32
+		DLL Unicode Debug|Win32 = DLL Unicode Debug|Win32
+		DLL Unicode Release|Win32 = DLL Unicode Release|Win32
+		Release|Win32 = Release|Win32
+		Unicode Debug|Win32 = Unicode Debug|Win32
+		Unicode Release|Win32 = Unicode Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F8A5770F-1708-44BC-A3BE-0FAC62617049}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F8A5770F-1708-44BC-A3BE-0FAC62617049}.Debug|Win32.Build.0 = Debug|Win32
+		{F8A5770F-1708-44BC-A3BE-0FAC62617049}.DLL Debug|Win32.ActiveCfg = DLL Debug|Win32
+		{F8A5770F-1708-44BC-A3BE-0FAC62617049}.DLL Debug|Win32.Build.0 = DLL Debug|Win32
+		{F8A5770F-1708-44BC-A3BE-0FAC62617049}.DLL Release|Win32.ActiveCfg = DLL Release|Win32
+		{F8A5770F-1708-44BC-A3BE-0FAC62617049}.DLL Release|Win32.Build.0 = DLL Release|Win32
+		{F8A5770F-1708-44BC-A3BE-0FAC62617049}.DLL Unicode Debug|Win32.ActiveCfg = DLL Unicode Debug|Win32
+		{F8A5770F-1708-44BC-A3BE-0FAC62617049}.DLL Unicode Debug|Win32.Build.0 = DLL Unicode Debug|Win32
+		{F8A5770F-1708-44BC-A3BE-0FAC62617049}.DLL Unicode Release|Win32.ActiveCfg = DLL Unicode Release|Win32
+		{F8A5770F-1708-44BC-A3BE-0FAC62617049}.DLL Unicode Release|Win32.Build.0 = DLL Unicode Release|Win32
+		{F8A5770F-1708-44BC-A3BE-0FAC62617049}.Release|Win32.ActiveCfg = Release|Win32
+		{F8A5770F-1708-44BC-A3BE-0FAC62617049}.Release|Win32.Build.0 = Release|Win32
+		{F8A5770F-1708-44BC-A3BE-0FAC62617049}.Unicode Debug|Win32.ActiveCfg = Unicode Debug|Win32
+		{F8A5770F-1708-44BC-A3BE-0FAC62617049}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
+		{F8A5770F-1708-44BC-A3BE-0FAC62617049}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
+		{F8A5770F-1708-44BC-A3BE-0FAC62617049}.Unicode Release|Win32.Build.0 = Unicode Release|Win32
+		{EB8E3917-CB2C-4F26-A1D1-D7D1DA9073DA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EB8E3917-CB2C-4F26-A1D1-D7D1DA9073DA}.Debug|Win32.Build.0 = Debug|Win32
+		{EB8E3917-CB2C-4F26-A1D1-D7D1DA9073DA}.DLL Debug|Win32.ActiveCfg = DLL Debug|Win32
+		{EB8E3917-CB2C-4F26-A1D1-D7D1DA9073DA}.DLL Debug|Win32.Build.0 = DLL Debug|Win32
+		{EB8E3917-CB2C-4F26-A1D1-D7D1DA9073DA}.DLL Release|Win32.ActiveCfg = DLL Release|Win32
+		{EB8E3917-CB2C-4F26-A1D1-D7D1DA9073DA}.DLL Release|Win32.Build.0 = DLL Release|Win32
+		{EB8E3917-CB2C-4F26-A1D1-D7D1DA9073DA}.DLL Unicode Debug|Win32.ActiveCfg = DLL Unicode Debug|Win32
+		{EB8E3917-CB2C-4F26-A1D1-D7D1DA9073DA}.DLL Unicode Debug|Win32.Build.0 = DLL Unicode Debug|Win32
+		{EB8E3917-CB2C-4F26-A1D1-D7D1DA9073DA}.DLL Unicode Release|Win32.ActiveCfg = DLL Unicode Release|Win32
+		{EB8E3917-CB2C-4F26-A1D1-D7D1DA9073DA}.DLL Unicode Release|Win32.Build.0 = DLL Unicode Release|Win32
+		{EB8E3917-CB2C-4F26-A1D1-D7D1DA9073DA}.Release|Win32.ActiveCfg = Release|Win32
+		{EB8E3917-CB2C-4F26-A1D1-D7D1DA9073DA}.Release|Win32.Build.0 = Release|Win32
+		{EB8E3917-CB2C-4F26-A1D1-D7D1DA9073DA}.Unicode Debug|Win32.ActiveCfg = Unicode Debug|Win32
+		{EB8E3917-CB2C-4F26-A1D1-D7D1DA9073DA}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
+		{EB8E3917-CB2C-4F26-A1D1-D7D1DA9073DA}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
+		{EB8E3917-CB2C-4F26-A1D1-D7D1DA9073DA}.Unicode Release|Win32.Build.0 = Unicode Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
