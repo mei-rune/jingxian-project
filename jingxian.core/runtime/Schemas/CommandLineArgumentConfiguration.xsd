@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.jingxian.org/schemas/Bundle.xsd"
+	targetNamespace="http://www.jingxian.org/schemas/Bundle.xsd"
+	elementFormDefault="qualified"
+	attributeFormDefault="unqualified"
+	version="0.1">
+
+	<xs:element name="commandLineArgument" type="CommandLineArgumentConfiguration" />
+
+	<xs:complexType name="CommandLineArgumentConfiguration">
+		<xs:attribute name="id" type="xs:string" use="required"/>
+		<xs:attribute name="text" type="xs:string" use="required"/>
+		<xs:attribute name="longText" type="xs:string" use="required"/>
+		<xs:attribute name="helpText" type="xs:string" use="required"/>
+		<xs:attribute name="isOptional" type="xs:boolean" use="required"/>
+		<xs:attribute name="onlyOnce" type="xs:boolean" use="required"/>
+		<xs:attribute name="supportsValue" type ="xs:boolean" use="optional"/>
+	</xs:complexType>
+</xs:schema>
