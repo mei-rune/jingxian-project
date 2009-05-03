@@ -43,6 +43,7 @@
     <Compile Include="BundleScanner.cs" />
     <Compile Include="BundleService.cs" />
     <Compile Include="CommandLineArguments.cs" />
+    <Compile Include="IoC\Activator\ReflectionActivator.cs" />
     <Compile Include="IoC\CreationContext.cs" />
     <Compile Include="Extension.cs" />
     <Compile Include="ExtensionBuilder.cs" />
@@ -56,6 +57,16 @@
     <Compile Include="IoC\Helper.cs" />
     <Compile Include="IoC\IComponentActivator.cs" />
     <Compile Include="IoC\IServiceRef.cs" />
+    <Compile Include="IoC\Parameters\AutowiringParameter.cs" />
+    <Compile Include="IoC\Parameters\NamedParameter.cs" />
+    <Compile Include="IoC\Parameters\NamedPropertyParameter.cs" />
+    <Compile Include="IoC\Parameters\ParameterExtensions.cs" />
+    <Compile Include="IoC\Parameters\PositionalParameter.cs" />
+    <Compile Include="IoC\Parameters\TypedParameter.cs" />
+    <Compile Include="IoC\Registration.cs" />
+    <Compile Include="IoC\Scope\InstanceScopeFactory.cs" />
+    <Compile Include="IoC\Scope\SingletonScope.cs" />
+    <Compile Include="IoC\Scope\TransientScope.cs" />
     <Compile Include="IoC\ServiceRef.cs" />
     <Compile Include="IoC\DefaultRef.cs" />
     <Compile Include="IoC\InstanceRef.cs" />
