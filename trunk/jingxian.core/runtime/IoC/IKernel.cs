@@ -1,7 +1,7 @@
 ﻿
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace jingxian.core.runtime
 {
@@ -14,25 +14,15 @@ namespace jingxian.core.runtime
 
         bool Contains<T>();
 
-        void Connect(string id, Type classType, Type serviceType, ComponentLifestyle lifestyle);
-
-        void Connect<TInterface, TImplementation>() where TImplementation : class;
-
-        void Connect<TImplementation>() where TImplementation : class;
-
-        void Connect<TInterface, TImplementation>(string id) where TImplementation : class;
-
-        void Connect<TImplementation>(string id) where TImplementation : class;
-
-        void Connect(string id, Type classType);
-
-        void Connect(string id, Type classType, Type serviceType);
-
-        void Connect<TInterface>(string id, object instance);
-
-        void Connect(string id, object instance, Type serviceType);
-
         void Release(object instance);
+
+        IKernelBuilder CreateBuilder();
+
+        void Connect(string id, Type classType
+            , Type serviceType
+            , ComponentLifestyle lifestyle
+            , IEnumerable< IParameter> parameters
+            , IProperties properties );
 
         bool Disconnect(string id);
 

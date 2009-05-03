@@ -6,7 +6,7 @@ namespace jingxian.core.runtime
 {
     public interface IComponentActivator
     {
-		object Create(ICreationContext context);
+        object Create(ICreationContext context, IEnumerable<IParameter> parameters);
 
         void Destroy(object instance);
     }

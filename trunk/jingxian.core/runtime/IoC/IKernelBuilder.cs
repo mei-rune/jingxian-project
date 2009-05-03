@@ -18,20 +18,21 @@ namespace jingxian.core.runtime
         IDisposable SetDefaultScope(ComponentLifestyle scope);
 
         IKernel Build();
-        void Build(IKernel container);
-
+        
         void RegisterModule(IModule module);
 
-        IGenericRegistrar RegisterGeneric(Type implementor);
         IReflectiveRegistrar Register<T>();
         IReflectiveRegistrar Register(Type implementor);
-        IGenericRegistrar RegisterTypesMatching(Predicate<Type> predicate);
-        IGenericRegistrar RegisterTypesFromAssembly(Assembly assembly);
-        IGenericRegistrar RegisterTypesAssignableTo<T>();
-        IConcreteRegistrar RegisterCollection<T>();
-        IConcreteRegistrar RegisterCollection(Type collectionType);
         IConcreteRegistrar Register<T>(ComponentActivator<T> creator);
         IConcreteRegistrar Register<T>(ComponentActivatorWithParameters<T> creator);
         IConcreteRegistrar Register<T>(T instance);
+
+
+        //IGenericRegistrar RegisterTypesMatching(Predicate<Type> predicate);
+        //IGenericRegistrar RegisterTypesFromAssembly(Assembly assembly);
+        //IGenericRegistrar RegisterTypesAssignableTo<T>();
+        //IConcreteRegistrar RegisterCollection<T>();
+        //IConcreteRegistrar RegisterCollection(Type collectionType);
+        //IGenericRegistrar RegisterGeneric(Type implementor);
     }
 }
