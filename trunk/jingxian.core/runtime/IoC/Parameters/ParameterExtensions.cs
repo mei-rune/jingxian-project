@@ -8,7 +8,7 @@ namespace jingxian.core.runtime
 {
 
 
-    public static class ParameterExtensions
+    public static class Parameter
     {
         public static T Named<T>( ICollection<IParameter> parameters, string name)
         {

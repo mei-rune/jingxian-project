@@ -14,7 +14,6 @@ namespace jingxian.core.runtime.castleIntegration.Facilities
 		{
 		}
 
-
 		public void Apply(ComponentModel model, object component)
 		{
 			IService runnable = component as IService;

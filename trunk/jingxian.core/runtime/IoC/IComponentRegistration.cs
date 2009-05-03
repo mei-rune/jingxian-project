@@ -17,6 +17,6 @@ namespace jingxian.core.runtime
 
         void InstanceActivated(ICreationContext context, object instance);
 
-        object Get(ICreationContext context, IEnumerable<IParameter> parameters, IDisposer disposer, out bool newInstance);
+        object Get(ICreationContext context, out bool newInstance);
     }
 }
