@@ -5,16 +5,17 @@ using System.Globalization;
 using System.Text;
 using System.Reflection;
 
-namespace jingxian.core.runtime.registrars
+namespace jingxian.core.runtime.simpl.registrars
 {
-	public class ReflectiveRegistrar : Registrar<IReflectiveRegistrar>, IReflectiveRegistrar
+    using jingxian.core.runtime.registrars;
+
+    public class MiniReflectiveRegistrar : MiniRegistrar<IReflectiveRegistrar>, IReflectiveRegistrar
 	{
         Type _implementor;
         ConstructorInfo _constructorInfo;
         List<IParameter> _additionalCtorArgs = new List<IParameter>();
-        List<NamedPropertyParameter> _explicitProperties = new List<NamedPropertyParameter>();
 
-        public ReflectiveRegistrar(Type implementor)
+        public MiniReflectiveRegistrar(Type implementor)
 		{
             _implementor = Enforce.ArgumentNotNull(implementor, "implementor");
 		}
@@ -54,18 +55,6 @@ namespace jingxian.core.runtime.registrars
             return this;
         }
 
-
-        public IReflectiveRegistrar WithArguments(params IParameter[] additionalCtorArgs)
-        {
-            return WithArguments((IEnumerable<IParameter>)additionalCtorArgs);
-        }
-
-        public IReflectiveRegistrar WithArguments(IEnumerable<IParameter> additionalCtorArgs)
-        {
-            _additionalCtorArgs.AddRange( Enforce.ArgumentNotNull(additionalCtorArgs, "additionalCtorArgs") );
-            return this;
-        }
-
         public IReflectiveRegistrar WithArgument(IParameter additionalCtorArg)
         {
             _additionalCtorArgs.Add(Enforce.ArgumentNotNull<IParameter>(
@@ -73,15 +62,15 @@ namespace jingxian.core.runtime.registrars
             return Syntax;
         }
 
-        public IReflectiveRegistrar WithProperties(IEnumerable<NamedPropertyParameter> explicitProperties)
+        public IReflectiveRegistrar WithArguments(params IParameter[] additionalCtorArgs)
         {
-            _explicitProperties.AddRange( Enforce.ArgumentNotNull(explicitProperties, "explicitProperties") );
-            return this;
+            return WithArguments(additionalCtorArgs);
         }
 
-        public IReflectiveRegistrar WithProperties(params NamedPropertyParameter[] explicitProperties)
+        public IReflectiveRegistrar WithArguments(IEnumerable<IParameter> additionalCtorArgs)
         {
-            return WithProperties((IEnumerable<NamedPropertyParameter>)explicitProperties);
+            _additionalCtorArgs.AddRange( Enforce.ArgumentNotNull(additionalCtorArgs, "additionalCtorArgs") );
+            return this;
         }
 
         protected override IReflectiveRegistrar Syntax

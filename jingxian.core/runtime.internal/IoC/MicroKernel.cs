@@ -50,7 +50,7 @@ namespace jingxian.core.runtime.simpl
         protected virtual void addService(IComponentRegistration registration)
         {
             if (_servicesById.ContainsKey(registration.Descriptor.Id))
-                throw new ComponentAlreadyExistsException(registration.Id);
+                throw new ComponentAlreadyExistsException(registration.Descriptor.Id);
 
             _servicesById[registration.Descriptor.Id] = registration;
 
@@ -233,5 +233,74 @@ namespace jingxian.core.runtime.simpl
                     break;
             }
         }
+
+        #region IKernel 成员
+
+
+        public bool Contains<T>()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IKernelBuilder CreateBuilder()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Connect(string id, Type classType, IEnumerable<Type> serviceTypes, ComponentLifestyle lifestyle, IEnumerable<IParameter> parameters, IProperties properties)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Disconnect(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region ILocator 成员
+
+        public object this[Type serviceType]
+        {
+            get { return GetService( serviceType ); }
+        }
+
+        public object this[string key]
+        {
+            get { return GetService(key); }
+        }
+
+        public T Get<T>()
+        {
+            return (T)GetService(typeof(T));
+        }
+
+        public object Get(string id)
+        {
+            return GetService(id);
+        }
+
+        public T Get<T>(string id)
+        {
+            return (T)Get(id, typeof(T));
+        }
+
+        public object Get(string id, Type service)
+        {
+            object value = GetService(id);
+            if (null == value)
+                return value;
+            if (service.IsAssignableFrom(value.GetType()))
+                return value;
+            return null;
+        }
+
+        public object Get(Type service)
+        {
+            return GetService(service);
+        }
+
+        #endregion
     }
 }

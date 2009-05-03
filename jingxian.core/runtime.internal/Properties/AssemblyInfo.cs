@@ -16,7 +16,7 @@ using System.Runtime.CompilerServices;
 
 [assembly: GuidAttribute("458f202e-b233-42f0-999c-b3460f9cfcae")]
 [assembly: ComVisibleAttribute(false)]
-[assembly: CLSCompliantAttribute(true)]
+[assembly: CLSCompliantAttribute(false)]
 [assembly: AssemblyConfigurationAttribute("debug,svn3919:3923M\r\n")]
 [assembly: AssemblyCompanyAttribute("The jingxian Project")]
 [assembly: AssemblyProductAttribute("jingxian")]
