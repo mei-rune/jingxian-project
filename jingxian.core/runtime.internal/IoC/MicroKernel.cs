@@ -5,29 +5,13 @@ using System.Reflection;
 
 namespace jingxian.core.runtime.simpl
 {
-    //public class EventClass
-    //{
-    //    int BeginCreating;
-    //    int EndCreated;
-
-    //    int BeginStarting;
-    //    int EndStarted;
-
-
-    //    int BeginStopping;
-    //    int EndStopped;
-
-    //    int BeginDestroy;
-    //    int EndDestroy;
-    //}
-
 
     public partial class MicroKernel : IKernel
     {
         private string _id;
         private IKernel _parent;
-        private IDictionary<string, IServiceRef> _servicesById = new Dictionary<string, IServiceRef>();
-        private IDictionary<Type, IServiceRef> _servicesByInterface = new Dictionary<Type, IServiceRef>();
+        private IDictionary<string, IComponentRegistration> _servicesById = new Dictionary<string, IComponentRegistration>();
+        private IDictionary<Type, IComponentRegistration> _servicesByInterface = new Dictionary<Type, IComponentRegistration>();
         bool _isStarted = false;
         bool _isResolved = false;
 
@@ -46,72 +30,83 @@ namespace jingxian.core.runtime.simpl
         {
             _parent = parent;
             _id = id;
-            InstanceRef instanceRef = new InstanceRef(this, _id??"__kernel__", typeof(IKernel), this, null, null);
-            _servicesByInterface[typeof(IKernel)] = instanceRef;
-            _servicesByInterface[typeof(IServiceProvider)] = instanceRef;
+            IComponentRegistration registration = new Registration(
+                new Descriptor(id, new Type[] { typeof(IKernel), typeof(ILocator), typeof(IServiceProvider) }, GetType())
+                , new activator.InstanceActivator(this)
+                , null, ComponentLifestyle.Singleton);
+
+            _servicesByInterface[typeof(IKernel)] = registration;
+            _servicesByInterface[typeof(ILocator)] = registration;
+            _servicesByInterface[typeof(IServiceProvider)] = registration;
         }
 
-        protected virtual void addService(IServiceRef serviceRef)
+        public bool IsDefaultServiceType(Type type)
         {
-            if (_servicesById.ContainsKey(serviceRef.Id))
-                throw new ComponentAlreadyExistsException(serviceRef.Id);
+            return typeof(IKernel) == type 
+                || typeof(ILocator) == type 
+                || typeof(IServiceProvider) == type;
+        }
 
-            _servicesById[serviceRef.Id] = serviceRef;
-            if (null != serviceRef.ServiceType && typeof(IKernel) != serviceRef.ServiceType)
+        protected virtual void addService(IComponentRegistration registration)
+        {
+            if (_servicesById.ContainsKey(registration.Descriptor.Id))
+                throw new ComponentAlreadyExistsException(registration.Id);
+
+            _servicesById[registration.Descriptor.Id] = registration;
+
+            if (null != registration.Descriptor.Services)
             {
-                if (_servicesByInterface.ContainsKey(serviceRef.ServiceType))
-                    throw new ComponentAlreadyExistsException(serviceRef.ServiceType.ToString());
-                _servicesByInterface[serviceRef.ServiceType] = serviceRef;
+                foreach (Type serviceType in registration.Descriptor.Services)
+                {
+                    if (null != serviceType && !IsDefaultServiceType( serviceType ) )
+                    {
+                        if (_servicesByInterface.ContainsKey(serviceType))
+                            throw new ComponentAlreadyExistsException(serviceType.ToString());
+                        _servicesByInterface[serviceType] = registration;
+                    }
+                }
             }
 
             if (_isStarted)
-                Start(this, serviceRef);
+                Start(this, registration);
         }
 
-        protected virtual bool removeService(IServiceRef serviceRef)
+        protected virtual bool removeService(IComponentRegistration registration)
         {
-            if (null != serviceRef.ServiceType && typeof(IKernel) != serviceRef.ServiceType)
-                _servicesByInterface.Remove(serviceRef.ServiceType);
+            bool isRemoved = false;
+            if (null != registration.Descriptor.Services)
+            {
+                foreach (Type serviceType in registration.Descriptor.Services)
+                {
+                    if (null != serviceType && !IsDefaultServiceType(serviceType))
+                    {
+                        if (_servicesByInterface.Remove(serviceType))
+                            isRemoved = true;
+                    }
+                }
+            }
 
-            if (!string.IsNullOrEmpty(serviceRef.Id))
-                return _servicesById.Remove(serviceRef.Id);
-            return false;
+            if (!string.IsNullOrEmpty(registration.Descriptor.Id)
+                && _servicesById.Remove(registration.Descriptor.Id))
+                isRemoved = true;
+            return isRemoved;
         }
 
         protected virtual bool removeService(string id)
         {
-            IServiceRef serviceRef = null;
-            if (_servicesById.TryGetValue(id, out serviceRef))
-                return removeService(serviceRef);
-
+            IComponentRegistration registration = null;
+            if (_servicesById.TryGetValue(id, out registration))
+                return removeService(registration);
             return false;
         }
 
         protected virtual bool removeService(Type serviceType)
         {
-            IServiceRef serviceRef = null;
-            if (_servicesByInterface.TryGetValue(serviceType, out serviceRef))
-                return removeService(serviceRef);
-
+            IComponentRegistration registration = null;
+            if (_servicesByInterface.TryGetValue(serviceType, out registration))
+                return removeService(registration);
             return false;
         }
-
-        protected virtual IServiceRef findService(string id)
-        {
-            IServiceRef serviceRef = null;
-            if (_servicesById.TryGetValue(id, out serviceRef))
-                return serviceRef;
-            return null;
-        }
-
-        protected virtual IServiceRef findService(Type interfaceType)
-        {
-            IServiceRef serviceRef = null;
-            if (_servicesByInterface.TryGetValue(interfaceType, out serviceRef))
-                return serviceRef;
-            return null;
-        }
-
 
         public void Resolve()
         {
@@ -129,7 +124,7 @@ namespace jingxian.core.runtime.simpl
             if (_isStarted)
                 return;
 
-            foreach (KeyValuePair<string, IServiceRef> kp in _servicesById)
+            foreach (KeyValuePair<string, IComponentRegistration > kp in _servicesById)
             {
                 Start(this, kp.Value);
             }
@@ -142,7 +137,7 @@ namespace jingxian.core.runtime.simpl
             if (!_isStarted)
                 return;
 
-            foreach (KeyValuePair<string, IServiceRef> kp in _servicesById)
+            foreach (KeyValuePair<string, IComponentRegistration> kp in _servicesById)
             {
                 Stop(this, kp.Value);
             }
@@ -153,39 +148,46 @@ namespace jingxian.core.runtime.simpl
 
         public bool Contains(string id)
         {
-            if( _servicesById.ContainsKey(id) )
+            if (_servicesById.ContainsKey(id))
                 return true;
-            if( null == _parent )
+            if (null == _parent)
                 return false;
-            return _parent.Contains( id );
+            return _parent.Contains(id);
         }
 
         public bool Contains(Type service)
         {
-            if( _servicesByInterface.ContainsKey( service ))
+            if (_servicesByInterface.ContainsKey(service))
                 return true;
-            if( null == _parent )
+            if (null == _parent)
                 return false;
-            return _parent.Contains( service );
+            return _parent.Contains(service);
         }
 
         public object GetService(Type serviceType)
         {
-            IServiceRef serviceRef = findService(serviceType);
-            if (null != serviceRef)
-                serviceRef.Get(null);
+            IComponentRegistration registration = null;
 
+            if (_servicesByInterface.TryGetValue(serviceType, out registration))
+                return Get(registration);
+ 
             return (null == _parent) ? null : _parent.Get(serviceType);
         }
         public object GetService(string serviceId)
         {
-            IServiceRef serviceRef = findService(serviceId);
-            if (null != serviceRef)
-                serviceRef.Get(null);
+            IComponentRegistration registration = null;
+            if (_servicesById.TryGetValue(serviceId, out registration))
+                return Get(registration);
 
             return (null == _parent) ? null : _parent.Get(serviceId);
         }
 
+        public object Get(IComponentRegistration registration)
+        {
+            ICreationContext context = null;
+            bool newInstance;
+            return registration.Get(context, out newInstance);
+        }
 
         public void Release(object instance)
         {
@@ -197,123 +199,19 @@ namespace jingxian.core.runtime.simpl
 
         #endregion
 
-        protected virtual CreationContext createContext(IServiceRef serviceRef)
+        public  void Start(IKernel kernel, IComponentRegistration registration)
         {
-            return new CreationContext(this, serviceRef);
+            invokeMethod("Start", kernel, registration);
         }
 
-        public virtual object createService(CreationContext context)
+        public  void Stop(IKernel kernel, IComponentRegistration registration)
         {
-            try
-            {
-                object instance = invokeConstructors(context);
-                invokeSetters(context, instance);
-                return instance;
-            }
-            catch (RuntimeException)
-            {
-                throw;
-            }
-            catch (Exception exception)
-            {
-                throw new RuntimeException("创建服务[ " + context.Id + "]失败", exception);
-            }
+            invokeMethod("Stop", kernel, registration);
         }
 
-        public object findParameter(CreationContext context, Type parameterType, object parameter)
+        void invokeMethod(string methodName, IKernel kernel, IComponentRegistration registration)
         {
-            if (parameterType.IsPrimitive)
-            {
-                if (null == parameter)
-                    return null;
-
-                return Converter.Instance.ConvertTo(parameter, parameterType, context);
-
-            }
-            else if (parameterType.IsInterface || parameterType.IsAbstract)
-            {
-                if (null != parameter)
-                    return context.Kernel[Helper.ExtractReference(parameter.ToString())];
-
-                return context.Kernel[parameterType];
-            }
-
-            if (null != parameter)
-            {
-                if (Helper.IsReference(parameter.ToString()))
-                    return context.Kernel[Helper.ExtractReference(parameter.ToString())];
-                else
-                    return Converter.Instance.ConvertTo(parameter, parameterType, context);
-            }
-
-            return context.Kernel[parameterType];
-        }
-
-        protected object invokeConstructors(CreationContext context)
-        {
-            ConstructorInfo[] constructors = context.ImplementationType.GetConstructors();
-            if (constructors.Length > 1)
-                throw new RuntimeException(string.Format("不能创建服务[{0}]实例,类型[{1}]有多个构造函数", context.Id, context.ImplementationType.FullName));
-            else if (constructors.Length != 1)
-                throw new RuntimeException(string.Format("不能创建服务[{0}]实例,类型[{1}]没有构造函数", context.Id, context.ImplementationType.FullName));
-
-            ConstructorInfo ctor = constructors[0];
-
-            ParameterInfo[] parameters = ctor.GetParameters();
-            object[] args = new object[parameters.Length];
-
-            for (int i = 0; i < parameters.Length; ++i)
-            {
-                object val = findParameter(context, parameters[i].ParameterType
-                    , context.Parameters[parameters[i].ParameterType.Name]);
-
-                //if (null != val)
-                args[i] = val;
-            }
-
-            return ctor.Invoke(args);
-        }
-
-        protected void invokeSetters(CreationContext context, object instance)
-        {
-            if (null == instance)
-                return;
-
-            foreach (PropertyInfo descriptor in instance.GetType().GetProperties())
-            {
-                if (!descriptor.CanWrite || null == descriptor.GetSetMethod())
-                    continue;
-
-                Type propertyType = descriptor.PropertyType;
-
-                try
-                {
-                    object val = findParameter(context, propertyType
-                        , context.Parameters[propertyType.Name]);
-
-                    if (null != val)
-                        descriptor.SetValue(instance, val, null);
-                }
-                catch (Exception exception)
-                {
-                    throw new RuntimeException(string.Format("创建服务[ " + propertyType.Name + "]失败", exception));
-                }
-            }
-        }
-
-        public static void Start(IKernel kernel, IServiceRef serviceRef)
-        {
-            invokeMethod("Start", kernel, serviceRef);
-        }
-
-        public static void Stop(IKernel kernel, IServiceRef serviceRef)
-        {
-            invokeMethod("Stop", kernel, serviceRef);
-        }
-
-        static void invokeMethod(string methodName, IKernel kernel, IServiceRef serviceRef)
-        {
-            MethodInfo methodInfo = serviceRef.ImplementationType.GetMethod(methodName);
+            MethodInfo methodInfo = registration.Descriptor.ImplementationType.GetMethod(methodName);
             if (null == methodInfo)
                 return;
 
@@ -322,37 +220,18 @@ namespace jingxian.core.runtime.simpl
             {
                 case 0:
                     {
-                        object instance = serviceRef.Get( null );
+                        object instance = Get(registration);
                         methodInfo.Invoke(instance, new object[] { });
                         break;
                     }
                 case 1:
                     if (parameters[0].ParameterType == typeof(IKernel))
                     {
-                        object instance = serviceRef.Get(null);
+                        object instance = Get(registration);
                         methodInfo.Invoke(instance, new object[] { kernel });
                     }
                     break;
             }
-        }
-
-        public virtual IComponentActivator CreateActivator(ComponentLifestyle lifestyleType, IServiceRef serviceRef)
-        {
-            switch (lifestyleType)
-            {
-                case ComponentLifestyle.Singleton:
-                    return new SingletonActivator(this, serviceRef, this.OnCreation, this.OnDestruction);
-                default:
-                    return null;
-            }
-        }
-
-        protected virtual void OnCreation(IServiceRef serviceRef, object instance)
-        {
-        }
-
-        protected virtual void OnDestruction(IServiceRef serviceRef, object instance)
-        {
         }
     }
 }

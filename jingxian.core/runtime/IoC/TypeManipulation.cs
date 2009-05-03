@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace jingxian.core.runtime
 {
-    class TypeManipulation
+    public class TypeManipulation
     {
         public static object ChangeToCompatibleType(object value, Type destinationType)
         {

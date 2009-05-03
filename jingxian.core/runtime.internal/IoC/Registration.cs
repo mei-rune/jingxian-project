@@ -9,20 +9,20 @@ namespace jingxian.core.runtime
     public class Registration : Disposable, IComponentRegistration
     {
         IComponentDescriptor _descriptor;
-        IComponentActivator _activator;
-        ComponentLifestyle _lifestyle;
-        IScope _scope;
-        object _synchRoot = new object();
-
+        protected IComponentActivator _activator;
+        protected ComponentLifestyle _lifestyle;
+        protected IEnumerable<IParameter> _parameters;
+        protected IScope _scope;
+        protected object _synchRoot = new object();
 
         public event EventHandler<PreparingEventArgs> Preparing;
         public event EventHandler<ActivatingEventArgs> Activating;
         public event EventHandler<ActivatedEventArgs> Activated;
 
-
         public Registration(
             IComponentDescriptor descriptor,
             IComponentActivator activator,
+            IEnumerable<IParameter> parameters,
             ComponentLifestyle lifestyle )
         {
             _descriptor = Enforce.ArgumentNotNull(descriptor, "descriptor");
@@ -31,18 +31,14 @@ namespace jingxian.core.runtime
             _scope = scope.InstanceScopeFactory.ToScope( lifestyle );
         }
 
-        #region IComponentRegistration Members
-
         public IComponentDescriptor Descriptor
         {
             get { return _descriptor; }
         }
 
-        public virtual object Get(ICreationContext context, IEnumerable<IParameter> parameters, IDisposer disposer, out bool newInstance)
+        public virtual object Get(ICreationContext context, out bool newInstance)
         {
             Enforce.ArgumentNotNull(context, "context");
-            Enforce.ArgumentNotNull(parameters, "parameters");
-            Enforce.ArgumentNotNull(disposer, "disposer");
 
             CheckNotDisposed();
 
@@ -56,13 +52,13 @@ namespace jingxian.core.runtime
                 }
                 else
                 {
-                    var preparingArgs = new PreparingEventArgs(context, this, parameters);
+                    PreparingEventArgs preparingArgs = new PreparingEventArgs(context, this, _parameters);
                     Preparing(this, preparingArgs);
 
                     instance = preparingArgs.Instance ??
-                        Activator.Create(context, preparingArgs.Parameters);
+                        _activator.Create(context, preparingArgs.Parameters);
 
-                    var activatingArgs = new ActivatingEventArgs(context, this, instance);
+                    ActivatingEventArgs activatingArgs = new ActivatingEventArgs(context, this, instance);
                     Activating(this, activatingArgs);
 
                     instance = activatingArgs.Instance;
@@ -75,36 +71,17 @@ namespace jingxian.core.runtime
             }
         }
 
-
-
-
         public virtual void InstanceActivated(ICreationContext context, object instance)
         {
-            var activatedArgs = new ActivatedEventArgs(context, this, instance);
+            ActivatedEventArgs activatedArgs = new ActivatedEventArgs(context, this, instance);
             Activated(this, activatedArgs);
-        }
-
-        #endregion
-
-        public virtual ComponentLifestyle Lifestyle
-        {
-            get { return _lifestyle; }
-        }
-        public virtual IScope  Scope
-        {
-            get { return _scope; }
-        }
-
-        public virtual IComponentActivator Activator
-        {
-            get { return _activator; }
         }
 
         public override string ToString()
         {
-            return string.Concat(Descriptor
-                , ", Activator = ", Activator
-                , ", Scope = ", Scope );
+            return string.Concat("( ", Descriptor
+                , ", Activator = ", _activator
+                , ", Scope = ", _scope, ")" );
                 //, ",Ownership = ", OwnershipModel);
         }
     }

@@ -7,15 +7,14 @@ namespace jingxian.core.runtime.activator
 {
     public class ReflectionActivator : IComponentActivator
     {
-        Type _componentType;
-        readonly IEnumerable<IParameter> _additionalConstructorParameters ;
-        readonly IEnumerable<NamedPropertyParameter> _explicitPropertySetters;
-        //readonly IConstructorSelector _constructorSelector;
-        //static readonly IConstructorInvoker DirectInvoker = new DirectConstructorInvoker();
-        //IConstructorInvoker _constructorInvoker = DirectInvoker;
         static readonly IEnumerable<IParameter> AutowiringParameterArray = new IParameter[] { new AutowiringParameter() };
         static readonly MethodInfo InternalPreserveStackTraceMethod = typeof(Exception)
             .GetMethod("InternalPreserveStackTrace", BindingFlags.Instance | BindingFlags.NonPublic);
+
+        Type _componentType;
+        readonly IEnumerable<IParameter> _additionalConstructorParameters;
+        readonly IEnumerable<NamedPropertyParameter> _explicitPropertySetters;
+        readonly ConstructorInfo _constructorInfo;
 
 
         public ReflectionActivator(Type componentType)
@@ -27,8 +26,7 @@ namespace jingxian.core.runtime.activator
         public ReflectionActivator(
             Type componentType,
             IEnumerable<IParameter> additionalConstructorParameters)
-            : this(
-                componentType,
+            : this( componentType,
                 additionalConstructorParameters,
                 null)
         {
@@ -39,42 +37,71 @@ namespace jingxian.core.runtime.activator
             Type componentType,
             IEnumerable<IParameter> additionalConstructorParameters,
             IEnumerable<NamedPropertyParameter> explicitPropertySetters)
-            : this(
-                componentType,
+            : this( componentType,
+                null,
                 additionalConstructorParameters,
-                explicitPropertySetters,
-                new MostParametersConstructorSelector())
+                explicitPropertySetters )
         {
         }
 
 
         public ReflectionActivator(
             Type componentType,
+            ConstructorInfo constructorInfo,
             IEnumerable<IParameter> additionalConstructorParameters,
-            IEnumerable<NamedPropertyParameter> explicitPropertySetters,
-            IConstructorSelector constructorSelector)
+            IEnumerable<NamedPropertyParameter> explicitPropertySetters )
         {
             Enforce.ArgumentNotNull(componentType, "componentType");
             Enforce.ArgumentNotNull(additionalConstructorParameters, "additionalConstructorParameters");
             Enforce.ArgumentNotNull(explicitPropertySetters, "explicitPropertySetters");
-            Enforce.ArgumentNotNull(constructorSelector, "constructorSelector");
+            Enforce.ArgumentNotNull(constructorInfo, "constructorInfo");
 
             _componentType = componentType;
-            _constructorSelector = constructorSelector;
-            _additionalConstructorParameters = additionalConstructorParameters.Concat(AutowiringParameterArray).ToArray();
-            _explicitPropertySetters = explicitPropertySetters.ToArray();
+            _constructorInfo = constructorInfo;
+            _additionalConstructorParameters = this.Concat(additionalConstructorParameters, AutowiringParameterArray);
+            _explicitPropertySetters = explicitPropertySetters;
         }
 
-
-        public object ActivateInstance(ICreationContext context, IEnumerable<IParameter> parameters)
+        public IEnumerable<T> Concat<T>(IEnumerable<T> a, IEnumerable<T> b)
         {
-            Enforce.ArgumentNotNull(context, "context");
-            Enforce.ArgumentNotNull(parameters, "parameters");
+            if (null == a)
+                return b??new T[0];
+            if (null == b)
+                return a;
+            List<T> result = new List<T>(a);
+            result.AddRange(b);
+            return result;
+        }
 
-            var possibleConstructors = new Dictionary<ConstructorInfo, Func<object>[]>();
-            StringBuilder reasons = null;
+        public ConstructorInfo GetConstructorInfo( ICreationContext context, IEnumerable<IParameter> parameters, out Func<object>[] valueProviders )
+        {
+            if (null == _constructorInfo)
+            {
+                ParameterInfo[] parameterInfos = _constructorInfo.GetParameters();
+                valueProviders = new Func<object>[parameterInfos.Length];
+
+                foreach (ParameterInfo parameterInfo in parameterInfos)
+                {
+                    Func<object> va = null;
+                    foreach (IParameter param in parameters)
+                    {
+                        if (param.TryGetProvider(parameterInfo, context, out va))
+                            break;
+                    }
+                    if (null == va)
+                        throw new DependencyResolutionException(
+                                  string.Format("类型 '{0}' 没有找到组件:{1}"
+                                  , _componentType, parameterInfo.Name));
+
+                    valueProviders[parameterInfo.Position] = va;
+                }
+                return _constructorInfo;
+            }
+
+            List< KeyValuePair<ConstructorInfo, Func<object>[]> > possibleConstructors =
+                new List<KeyValuePair<ConstructorInfo, Func<object>[]>>();
             bool foundPublicConstructor = false;
-            var augmentedParameters = parameters.Concat(_additionalConstructorParameters);
+            StringBuilder reasons = null;
 
             foreach (ConstructorInfo ci in _componentType.FindMembers(
                 MemberTypes.Constructor,
@@ -86,9 +113,9 @@ namespace jingxian.core.runtime.activator
 
                 Func<object>[] parameterAccessors;
                 string reason;
-                if (CanUseConstructor(ci, context, augmentedParameters, out parameterAccessors, out reason))
+                if (CanUseConstructor(ci, context, parameters, out parameterAccessors, out reason))
                 {
-                    possibleConstructors.Add(ci, parameterAccessors);
+                    possibleConstructors.Add( new KeyValuePair<ConstructorInfo,Func<object>[]>( ci, parameterAccessors) );
                 }
                 else
                 {
@@ -100,73 +127,53 @@ namespace jingxian.core.runtime.activator
 
             if (!foundPublicConstructor)
                 throw new DependencyResolutionException(
-                    string.Format(CultureInfo.CurrentCulture,
-                        ReflectionActivatorResources.NoPublicConstructor, _componentType));
+                    string.Format( "类型 '{0}' 没有公共构造函数.", _componentType));
 
             if (possibleConstructors.Count == 0)
                 throw new DependencyResolutionException(
-                          string.Format(CultureInfo.CurrentCulture, ReflectionActivatorResources.NoResolvableConstructor, _componentType, reasons ?? new StringBuilder()));
+                          string.Format("类型 '{0}' 没有找到公共构造函数. 不合适的构造函数包括:{1}"
+                          , _componentType, reasons ?? new StringBuilder()));
 
-            var selectedCI = _constructorSelector.SelectConstructor(possibleConstructors.Keys);
+            valueProviders = null;
+            ConstructorInfo result = null;
+            foreach (KeyValuePair<ConstructorInfo, Func<object>[]> kp in possibleConstructors)
+            {
+                if (result == null ||
+                    result.GetParameters().Length < kp.Key.GetParameters().Length)
+                {
+                    result = kp.Key;
+                    valueProviders = null;
+                }
+            }
+            return result;
+        }
 
-            var result = ConstructInstance(selectedCI, context, augmentedParameters, possibleConstructors[selectedCI]);
+        public object Create(ICreationContext context, IEnumerable<IParameter> parameters)
+        {
+            Enforce.ArgumentNotNull(context, "context");
+            Enforce.ArgumentNotNull(parameters, "parameters");
+            
+            IEnumerable<IParameter> argumentedParameters = Concat(parameters,_additionalConstructorParameters);
 
-            SetExplicitProperties(result, context);
+            Func<object>[] valueProviders = null;
+            ConstructorInfo selectedCI = GetConstructorInfo(context, argumentedParameters, out valueProviders);
+                
+            object result = invokeConstructors( selectedCI, context, valueProviders);
+
+            invokeSetters(result, context);
 
             return result;
         }
 
-        /// <summary>
-        /// A 'new context' is a scope that is self-contained
-        /// and that can dispose the components it contains before the parent
-        /// container is disposed. If the activator is stateless it should return
-        /// true, otherwise false.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance can support a new context; otherwise, <c>false</c>.
-        /// </value>
         public bool CanSupportNewContext
         {
-            get
-            {
-                return true;
-            }
+            get { return true; }
         }
 
-        /// <summary>
-        /// The type that will be used to reflectively instantiate the component instances.
-        /// </summary>
-        /// <remarks>
-        /// The actual implementation type may be substituted with a dynamically-generated subclass.
-        /// Note that functionality that  relies on this feature will obviously not be available to provided instances or
-        /// to delegate-created instances; interface-based AOP is recommended in these situations.
-        /// </remarks>
         public Type ImplementationType
         {
-            get
-            {
-                return _componentType;
-            }
-            set
-            {
-                _componentType = Enforce.ArgumentNotNull(value, "value");
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the constructor invoker.
-        /// </summary>
-        /// <value>The constructor invoker.</value>
-        public IConstructorInvoker ConstructorInvoker
-        {
-            get
-            {
-                return _constructorInvoker;
-            }
-            set
-            {
-                _constructorInvoker = Enforce.ArgumentNotNull(value, "value");
-            }
+            get { return _componentType; }
+            set { _componentType = Enforce.ArgumentNotNull(value, "value"); }
         }
 
         bool CanUseConstructor(ConstructorInfo ci, ICreationContext context, IEnumerable<IParameter> parameters, out Func<object>[] valueAccessors, out string reason)
@@ -206,9 +213,9 @@ namespace jingxian.core.runtime.activator
                         reasonNotUsable.Append(", ");
                     }
 
-                    reasonNotUsable.AppendFormat(CultureInfo.CurrentCulture,
-                        ReflectionActivatorResources.MissingParameter,
-                        pi.Name, pi.ParameterType);
+                    reasonNotUsable.AppendFormat(
+                        "类型为 '{0}' 的参数 '{1}' 没有找到",
+                        pi.ParameterType, pi.Name);
                 }
             }
 
@@ -223,7 +230,6 @@ namespace jingxian.core.runtime.activator
                 reason = String.Empty;
             }
 
-            // Return true if there is no reason not to use it, i.e. reasonNotUsable is null
             return reasonNotUsable == null;
         }
 
@@ -233,64 +239,45 @@ namespace jingxian.core.runtime.activator
             return ex.InnerException;
         }
 
-        object ConstructInstance(ConstructorInfo ci, ICreationContext context, IEnumerable<IParameter> parameters, Func<object>[] parameterAccessors)
+        object invokeConstructors(ConstructorInfo ci, ICreationContext context, Func<object>[] parameterAccessors)
         {
             Enforce.ArgumentNotNull(ci, "ci");
             Enforce.ArgumentNotNull(parameterAccessors, "parameterAccessors");
 
-            try
+            object[] parameters = new object[parameterAccessors.Length];
+            for (int i = 0; i < parameters.Length; ++i)
             {
-                object instance = ConstructorInvoker.InvokeConstructor(context, parameters, ci, parameterAccessors);
-                return instance;
+                parameters[i] = parameterAccessors[i]();
             }
-            catch (TargetInvocationException tie)
-            {
-                throw KeepTargetInvocationStack(tie);
-            }
+
+            return _constructorInfo.Invoke(parameters);
         }
 
-        void SetExplicitProperties(object instance, ICreationContext context)
+        void invokeSetters(object instance, ICreationContext context)
         {
             Enforce.ArgumentNotNull(instance, "instance");
             Enforce.ArgumentNotNull(context, "context");
 
-            if (!_explicitPropertySetters.Any())
+            if (null == _explicitPropertySetters)
                 return;
 
             Type instanceType = instance.GetType();
 
-            // Rinat Abdullin: properties with signature like {private set;get;} pass the
-            // BindingFlags.SetProperty but fail around "GetSetMethod()", since it returns null
-            // for non-public properties
-            var properties = instanceType.GetProperties(
-                BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty)
-                .Select(p => new
-                {
-                    Info = p,
-                    SetMethod = p.GetSetMethod()
-                })
-                .Where(p => p.SetMethod != null)
-                .ToArray();
-
-            foreach (var param in _explicitPropertySetters)
+            foreach (PropertyInfo propertyInfo in instanceType.GetProperties(
+                BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty))
             {
-                foreach (var propertyData in properties)
+                foreach (NamedPropertyParameter param in _explicitPropertySetters)
                 {
                     Func<object> propertyValueAccessor;
-                    if (param.CanSupplyValue(propertyData.SetMethod.GetParameters()[0], context, out propertyValueAccessor))
+                    if (param.TryGetProvider(propertyInfo.GetSetMethod().GetParameters()[0]
+                        , context, out propertyValueAccessor))
                     {
-                        propertyData.Info.SetValue(instance, propertyValueAccessor(), null);
+                        propertyInfo.SetValue(instance, propertyValueAccessor(), null);
                     }
                 }
             }
         }
 
-        /// <summary>
-        /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
-        /// </returns>
         public override string ToString()
         {
             return "ReflectionActivator";

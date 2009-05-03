@@ -8,7 +8,7 @@ namespace jingxian.core.runtime
 {
     using jingxian.core.runtime.utilities;
 
-	static class Enforce
+	public static class Enforce
 	{
         public static T ArgumentNotNull<T>(T value, string name)
             where T : class

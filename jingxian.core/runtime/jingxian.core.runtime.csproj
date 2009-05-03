@@ -48,9 +48,13 @@
     <Compile Include="IoC\IComponentRegistration.cs" />
     <Compile Include="IoC\ICreationContext.cs" />
     <Compile Include="IoC\IModule.cs" />
-    <Compile Include="IoC\NamedPropertyParameter.cs" />
-    <Compile Include="IoC\IParameter.cs" />
+    <Compile Include="IoC\Parameters\NamedPropertyParameter.cs" />
+    <Compile Include="IoC\Parameters\IParameter.cs" />
     <Compile Include="IoC\IKernelBuilder.cs" />
+    <Compile Include="IoC\Parameters\NamedParameter.cs" />
+    <Compile Include="IoC\Parameters\ParameterExtensions.cs" />
+    <Compile Include="IoC\Parameters\PositionalParameter.cs" />
+    <Compile Include="IoC\Parameters\TypedParameter.cs" />
     <Compile Include="IoC\Registrars\RegisteredEventArgs.cs" />
     <Compile Include="IoC\Registrars\ActivatedEventArgs.cs" />
     <Compile Include="IoC\Registrars\ActivatingEventArgs.cs" />

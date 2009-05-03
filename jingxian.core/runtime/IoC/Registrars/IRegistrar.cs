@@ -6,8 +6,6 @@ namespace jingxian.core.runtime.registrars
 	public interface IRegistrar<TSyntax>
         where TSyntax : IRegistrar<TSyntax>
     {
-        string Id { get; }
-
         TSyntax Named(string name);
 
         TSyntax As<TService>();

@@ -11,7 +11,7 @@ using System.Threading;
 
 namespace jingxian.core.runtime.simpl
 {
-    using jingxian.core.runtime.castleIntegration;
+    //using jingxian.core.runtime.castleIntegration;
     using jingxian.core.runtime.simpl.Resources;
 
     public static class Platform
@@ -22,10 +22,10 @@ namespace jingxian.core.runtime.simpl
         private static readonly PredefinedService[] _predefinedServices = new PredefinedService[]
 			{
 				new PredefinedService(RuntimeConstants.AssemblyLoaderServiceId, typeof (IAssemblyLoaderService), typeof (AssemblyLoaderService)),
-				new PredefinedService(RuntimeConstants.ObjectBuilderServiceId, typeof (IObjectBuilder), typeof (ObjectBuilder)),
+				//new PredefinedService(RuntimeConstants.ObjectBuilderServiceId, typeof (IObjectBuilder), typeof (ObjectBuilder)),
 				new PredefinedService(RuntimeConstants.BundleServiceId, typeof (IBundleService), typeof (BundleService)),
 				new PredefinedService(RuntimeConstants.ExtensionRegistryId, typeof (IExtensionRegistry), typeof (ExtensionRegistry)),
-				new PredefinedService(RuntimeConstants.ServiceRegistryId, typeof (IServiceRegistry), typeof (ServiceRegistry)),
+				//new PredefinedService(RuntimeConstants.ServiceRegistryId, typeof (IServiceRegistry), typeof (ServiceRegistry)),
 			};
 
         internal static PredefinedService[] PredefinedServices
@@ -45,7 +45,7 @@ namespace jingxian.core.runtime.simpl
                 throw new PlatformConfigurationException(msg);
             }
             IApplicationLaunchable launchable =
-                builder.BuildTransient<IApplicationLaunchable>(launchableExtension.Id, launchableExtension.Implementation);
+                builder.BuildTransient<IApplicationLaunchable>( launchableExtension.Implementation);
 
             return launchable;
         }
@@ -66,14 +66,23 @@ namespace jingxian.core.runtime.simpl
 
             try
             {
-                using (IKernel containerAdapter = new ContainerAdapter())
+                using (IKernel containerAdapter = new MiniKernel( null, null ))
                 {
-                    containerAdapter.InitializeContainer(context, PredefinedServices);
+                    IKernelBuilder kernelBuilder = containerAdapter.CreateBuilder();
 
-                    if (!containerAdapter.Contains<IKernel>())
+                    foreach (PredefinedService predefinedService in PredefinedServices)
                     {
-                        containerAdapter.Connect<IKernel>(RuntimeConstants.MiniKernelId, containerAdapter);
+                        kernelBuilder.Register(predefinedService.Implementation)
+                            .As(predefinedService.Service)
+                            .Named( predefinedService.Id );
                     }
+
+                    kernelBuilder.Build();
+
+                    //if (!containerAdapter.Contains<IKernel>())
+                    //{
+                    //    containerAdapter.Connect<IKernel>(RuntimeConstants.MiniKernelId, containerAdapter);
+                    //}
 
 
                     IExtensionRegistry registry = containerAdapter.Get <IExtensionRegistry>();
