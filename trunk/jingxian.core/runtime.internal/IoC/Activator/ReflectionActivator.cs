@@ -282,5 +282,14 @@ namespace jingxian.core.runtime.activator
         {
             return "ReflectionActivator";
         }
+
+        #region IComponentActivator 成员
+
+
+        public void Destroy(object instance)
+        {
+        }
+
+        #endregion
     }
 }

@@ -54,9 +54,8 @@
     <Compile Include="ExtensionXmlSchema.cs" />
     <Compile Include="IExtensionBuilder.cs" />
     <Compile Include="IoC\Activator\InstanceActivator.cs" />
-    <Compile Include="IoC\Registrars\ConcreteRegistrar.cs" />
     <Compile Include="IoC\Helper.cs" />
-    <Compile Include="IoC\KernelBuilder.cs" />
+    <Compile Include="simpl\KernelBuilder.cs" />
     <Compile Include="IoC\Parameters\AutowiringParameter.cs" />
     <Compile Include="IoC\Registrars\ReflectiveRegistrar.cs" />
     <Compile Include="IoC\Registrars\Registrar.cs" />
@@ -66,7 +65,7 @@
     <Compile Include="IoC\Scope\TransientScope.cs" />
     <Compile Include="IoC\KernelUtils.cs" />
     <Compile Include="IoC\MicroKernel.cs" />
-    <Compile Include="IoC\MiniKernel.cs" />
+    <Compile Include="simpl\MiniKernel.cs" />
     <Compile Include="ObjectBuilder.cs" />
     <Compile Include="Platform.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -79,6 +78,8 @@
     <Compile Include="ServiceConfiguration.cs" />
     <Compile Include="ServiceLauncher.cs" />
     <Compile Include="ServiceRegistry.cs" />
+    <Compile Include="simpl\Registrars\ReflectiveRegistrar.cs" />
+    <Compile Include="simpl\Registrars\Registrar.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\runtime\jingxian.core.runtime.csproj">

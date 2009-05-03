@@ -7,12 +7,10 @@ namespace jingxian.core.runtime.registrars
     {
         IReflectiveRegistrar UsingConstructor(params Type[] ctorSignature);
 
+        IReflectiveRegistrar WithArgument( IParameter additionalCtorArg);
+
         IReflectiveRegistrar WithArguments(params IParameter[] additionalCtorArgs);
 
         IReflectiveRegistrar WithArguments(IEnumerable<IParameter> additionalCtorArgs);
-
-        IReflectiveRegistrar WithProperties(params NamedPropertyParameter[] explicitProperties);
-
-        IReflectiveRegistrar WithProperties(IEnumerable<NamedPropertyParameter> explicitProperties);
     }
 }

@@ -5,7 +5,6 @@ using System.Reflection;
 
 namespace jingxian.core.runtime.simpl
 {
-
     public class MiniKernel : IKernel
     {
         private string _id;
@@ -15,18 +14,12 @@ namespace jingxian.core.runtime.simpl
         bool _isStarted = false;
         bool _isResolved = false;
 
+        public MiniKernel()
+        : this(null, null )
+        { 
+        }
 
         public MiniKernel(string id, IKernel parent)
-            : this(id, parent, null)
-        {
-        }
-
-        public MiniKernel(IProperties properties)
-            : this("root", null, properties)
-        {
-        }
-
-        public MiniKernel(string id, IKernel parent, IProperties properties)
         {
             _parent = parent;
             _id = id;
