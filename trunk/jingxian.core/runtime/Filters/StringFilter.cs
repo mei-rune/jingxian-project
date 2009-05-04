@@ -23,11 +23,7 @@ namespace jingxian.core.runtime.Filters
 
         protected StringFilter(string name, bool isRegex)
         {
-
-            if (string.IsNullOrEmpty(name))
-                throw new StringArgumentException("name");
-
-            _name = name;
+            _name = Enforce.ArgumentNotNullOrEmpty(name, "name");
             _IsRegex = isRegex;
         }
 

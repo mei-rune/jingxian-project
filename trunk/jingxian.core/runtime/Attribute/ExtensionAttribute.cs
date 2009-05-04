@@ -17,19 +17,13 @@ namespace jingxian.core.runtime
         private string _description;
         private string _name;
 
-		private ExtensionAttribute(
-			string id,
-			string bundleId)
-		{
-			if (string.IsNullOrEmpty(id))
-				throw new StringArgumentException("id");
-			if (string.IsNullOrEmpty(bundleId))
-				throw new StringArgumentException("bundleId");
-
-
-			_Id = id;
-			_bundleId = bundleId;
-		}
+        private ExtensionAttribute(
+            string id,
+            string bundleId)
+        {
+            _Id = Enforce.ArgumentNotNullOrEmpty(id, "id");
+            _bundleId = Enforce.ArgumentNotNullOrEmpty(bundleId, "bundleId");
+        }
         
         public ExtensionAttribute(
 			string id,
@@ -37,10 +31,7 @@ namespace jingxian.core.runtime
 			string point)
 			: this(id, bundleId)
 		{
-			if (string.IsNullOrEmpty(point))
-				throw new StringArgumentException("point");
-
-			_point = point;
+            _point = Enforce.ArgumentNotNullOrEmpty(point, "point");
 		}
 
 		public ExtensionAttribute(
@@ -50,10 +41,7 @@ namespace jingxian.core.runtime
 			Type implementation)
 			: this(id, bundleId, point)
 		{
-			if (implementation == null)
-				throw new ArgumentNullException("implementation");
-
-			_implementation = implementation;
+            _implementation = Enforce.ArgumentNotNull<Type>(implementation, "implementation");
 		}
 
 

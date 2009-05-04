@@ -20,15 +20,11 @@ namespace jingxian.core.runtime.simpl
 		{
 		}
 
-		public ExtensionXmlSchema(XmlSchema schema)
-			: this()
-		{
-
-			if (schema == null)
-				throw new ArgumentNullException("schema");
-
-			_schema = schema;
-		}
+        public ExtensionXmlSchema(XmlSchema schema)
+            : this()
+        {
+            _schema = Enforce.ArgumentNotNull<XmlSchema>(schema, "schema");
+        }
 
 
 		public XmlSchema Schema

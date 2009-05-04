@@ -265,9 +265,8 @@ namespace jingxian.core.runtime.simpl
 		}
 
 		public bool TryGetExtensionPointConfiguration(string extensionPointId, out IExtensionPointConfiguration pointConfiguration)
-		{
-			if (string.IsNullOrEmpty(extensionPointId))
-				throw new StringArgumentException("extensionPointId");
+        {
+            Enforce.ArgumentNotNullOrEmpty(extensionPointId, "extensionPointId");
 
 			IBundle bundle;
 			if (_bundleByExtensionPointId.TryGetValue(extensionPointId, out bundle))
@@ -304,24 +303,21 @@ namespace jingxian.core.runtime.simpl
 
 		public bool TryGetBundle(string bundleId, out IBundle bundle)
 		{
-			if (string.IsNullOrEmpty(bundleId))
-				throw new StringArgumentException("bundleId");
+			Enforce.ArgumentNotNullOrEmpty(bundleId, "bundleId");
 
 			return _bundleById.TryGetValue(bundleId, out bundle);
 		}
 
 		public bool TryGetBundleForExtension(string extensionId, out IBundle bundle)
-		{
-			if (string.IsNullOrEmpty(extensionId))
-				throw new StringArgumentException("extensionId");
+        {
+            Enforce.ArgumentNotNullOrEmpty(extensionId, "extensionId");
 
 			return _bundleByExtensionId.TryGetValue(extensionId, out bundle);
 		}
 
 		public bool TryGetBundleForExtensionPoint(string extensionPointId, out IBundle bundle)
-		{
-			if (string.IsNullOrEmpty(extensionPointId))
-				throw new StringArgumentException("extensionPointId"); 
+        {
+            Enforce.ArgumentNotNullOrEmpty(extensionPointId, "extensionPointId");
 
 			return _bundleByExtensionPointId.TryGetValue(extensionPointId, out bundle);
 		}

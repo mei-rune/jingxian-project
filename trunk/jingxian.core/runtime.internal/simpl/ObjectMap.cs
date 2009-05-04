@@ -93,12 +93,12 @@ namespace jingxian.core.runtime.simpl
 
         public IEnumerator<KeyValuePair<string, T>> GetEnumerator()
         {
-            return _
+            return _servicesById.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return _servicesById.GetEnumerator();
         }
 
         #endregion

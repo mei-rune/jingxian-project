@@ -171,7 +171,7 @@ namespace jingxian.core.runtime.simpl
             if (_servicesByInterface.TryGetValue(serviceType, out registration))
                 return Get(registration);
  
-            return (null == _parent) ? null : _parent.Get(serviceType);
+            return (null == _parent) ? null : _parent.GetService(serviceType);
         }
         public object GetService(string serviceId)
         {
@@ -179,7 +179,7 @@ namespace jingxian.core.runtime.simpl
             if (_servicesById.TryGetValue(serviceId, out registration))
                 return Get(registration);
 
-            return (null == _parent) ? null : _parent.Get(serviceId);
+            return (null == _parent) ? null : _parent.GetService(serviceId);
         }
 
         public object Get(IComponentRegistration registration)
@@ -247,7 +247,7 @@ namespace jingxian.core.runtime.simpl
             throw new NotImplementedException();
         }
 
-        public void Connect(string id, Type classType, IEnumerable<Type> serviceTypes, ComponentLifestyle lifestyle, IEnumerable<IParameter> parameters, IProperties properties)
+        public void Connect(string id, IEnumerable<Type> serviceTypes, Type classType, ComponentLifestyle lifestyle, IEnumerable<IParameter> parameters, IProperties properties)
         {
             throw new NotImplementedException();
         }
@@ -276,11 +276,6 @@ namespace jingxian.core.runtime.simpl
             return (T)GetService(typeof(T));
         }
 
-        public object Get(string id)
-        {
-            return GetService(id);
-        }
-
         public T Get<T>(string id)
         {
             return (T)Get(id, typeof(T));
@@ -294,11 +289,6 @@ namespace jingxian.core.runtime.simpl
             if (service.IsAssignableFrom(value.GetType()))
                 return value;
             return null;
-        }
-
-        public object Get(Type service)
-        {
-            return GetService(service);
         }
 
         #endregion

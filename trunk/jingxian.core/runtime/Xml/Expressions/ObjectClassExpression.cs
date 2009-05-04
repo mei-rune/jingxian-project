@@ -7,8 +7,8 @@ namespace jingxian.core.runtime.Xml.Expressions
 {
 	public class ObjectClassExpression : XmlExpression
 	{
-		private string _ObjectClassName;
-		private Type _ObjectClassType;
+		private string _objectClassName;
+		private Type _objectClassType;
 
 		public ObjectClassExpression(XmlReader reader)
 		{
@@ -22,29 +22,25 @@ namespace jingxian.core.runtime.Xml.Expressions
 			}
 		}
 
-		public ObjectClassExpression(string classType)
-		{
-			if (string.IsNullOrEmpty(classType))
-			{
-				throw new ArgumentNullException("classType");
-			}
-			_ObjectClassName = classType;
-		}
+        public ObjectClassExpression(string classType)
+        {
+            _objectClassName = Enforce.ArgumentNotNullOrEmpty(classType, "classType");
+        }
 
 		public string ObjectClassName
 		{
-			get { return _ObjectClassName; }
+			get { return _objectClassName; }
 		}
 
 		public Type ObjectClassType
 		{
-			get { return _ObjectClassType; }
+			get { return _objectClassType; }
 		}
 
 
 		private void ReadObjectClass(XmlReader reader, bool withEndElement)
 		{
-			_ObjectClassName = reader.GetAttribute("classType");
+			_objectClassName = reader.GetAttribute("classType");
 			reader.ReadStartElement(ObjectClassExpTag);
 			if (withEndElement)
 			{
@@ -54,11 +50,11 @@ namespace jingxian.core.runtime.Xml.Expressions
 
 		public override bool IsTrueFor(object obj)
 		{
-			if (_ObjectClassType == null)
+			if (_objectClassType == null)
 			{
-				_ObjectClassType = Type.GetType(_ObjectClassName, true);
+				_objectClassType = Type.GetType(_objectClassName, true);
 			}
-			return _ObjectClassType.IsAssignableFrom(obj.GetType());
+			return _objectClassType.IsAssignableFrom(obj.GetType());
 		}
 	}
 }

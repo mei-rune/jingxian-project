@@ -26,13 +26,10 @@ namespace jingxian.core.runtime.Xml.Serialization
 		{
 		}
 
-		protected XmlSerializableIdentifiable(string id)
-		{
-			if (string.IsNullOrEmpty(id))
-				throw new StringArgumentException( "id");
-
-			Id = id;
-		}
+        protected XmlSerializableIdentifiable(string id)
+        {
+            Id = Enforce.ArgumentNotNullOrEmpty(id, "id");
+        }
 
 		protected override void ReadXmlAttributes(XmlReader reader)
 		{

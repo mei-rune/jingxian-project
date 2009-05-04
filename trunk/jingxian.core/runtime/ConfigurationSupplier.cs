@@ -19,20 +19,17 @@ namespace jingxian.core.runtime
         private IDictionary<string, T> _configurations;
 		private IList<T> _nonUniqueElements;
 
-		public ConfigurationSupplier(IExtensionRegistry extensionRegistry)
-		{
-			if (extensionRegistry == null)
-				throw new ArgumentNullException("extensionRegistry");
-
-			_extensionRegistry = extensionRegistry;
-		}
+        public ConfigurationSupplier(IExtensionRegistry extensionRegistry)
+        {
+            _extensionRegistry = Enforce.ArgumentNotNull<IExtensionRegistry>(extensionRegistry, "extensionRegistry");
+        }
 
 
-		public bool AllowElementsWithoutId
-		{
-			get{return _allowElementsWithoutId;}
-			set{	_allowElementsWithoutId = value;}
-		}
+        public bool AllowElementsWithoutId
+        {
+            get { return _allowElementsWithoutId; }
+            set { _allowElementsWithoutId = value; }
+        }
 
 		public IList<T> ElementsWithoutId
 		{

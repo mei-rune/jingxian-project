@@ -13,10 +13,7 @@ namespace jingxian.core.runtime
 
         public ObjectMapper(object instance)
         {
-            if (null == instance)
-                throw new ArgumentNullException("instance");
-
-            _instance = instance;
+            _instance = Enforce.ArgumentNotNull(instance, "instance");
             _instanceType = _instance.GetType();
         }
 

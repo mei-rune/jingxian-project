@@ -116,8 +116,7 @@ namespace jingxian.core.runtime.simpl
 
 		public IExtension GetExtension(string extensionId)
 		{
-			if (string.IsNullOrEmpty(extensionId))
-				throw new StringArgumentException("extensionId");
+			Enforce.ArgumentNotNullOrEmpty(extensionId, "extensionId");
 
             IExtension result;
             if (_extensions.TryGetValue(extensionId, out result))
@@ -127,9 +126,8 @@ namespace jingxian.core.runtime.simpl
 		}
 
 		public IExtensionPoint GetExtensionPoint(string extensionPointId)
-		{
-			if (string.IsNullOrEmpty(extensionPointId))
-				throw new StringArgumentException("extensionPointId");
+        {
+            Enforce.ArgumentNotNullOrEmpty(extensionPointId, "extensionPointId");
 
             IExtensionPoint result;
             if (_extensionPoints.TryGetValue(extensionPointId, out result))
@@ -140,8 +138,7 @@ namespace jingxian.core.runtime.simpl
 
 		public IExtension[] GetExtensions(string pointId)
 		{
-			if (string.IsNullOrEmpty(pointId))
-				throw new StringArgumentException("pointId");
+            Enforce.ArgumentNotNullOrEmpty(pointId, "pointId");
 
 			IExtension[] result;
 			IExtensionPoint ep;
@@ -163,25 +160,22 @@ namespace jingxian.core.runtime.simpl
 		}
 
 		public bool TryGetExtension(string extensionId, out IExtension extension)
-		{
-			if (string.IsNullOrEmpty(extensionId))
-				throw new StringArgumentException("extensionId");
+        {
+            Enforce.ArgumentNotNullOrEmpty(extensionId, "extensionId");
 
 			return _extensions.TryGetValue(extensionId, out extension);
 		}
 
 		public IExtensionConfiguration GetExtensionConfigurationElement(string id)
-		{
-			if (string.IsNullOrEmpty(id))
-				throw new StringArgumentException("id");
+        {
+            Enforce.ArgumentNotNullOrEmpty(id, "id");
 
 			return _bundleService.GetExtensionConfigurationElement(id);
 		}
 
 		public IExtensionPointConfiguration GetExtensionPointConfigurationElement(string id)
-		{
-			if (string.IsNullOrEmpty(id))
-				throw new StringArgumentException("id"); 
+        {
+            Enforce.ArgumentNotNullOrEmpty(id, "id");
 
 			return _bundleService.GetExtensionPointConfigurationElement(id);
 		}

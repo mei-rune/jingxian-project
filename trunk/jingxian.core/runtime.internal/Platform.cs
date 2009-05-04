@@ -56,11 +56,8 @@ namespace jingxian.core.runtime.simpl
 
             AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 
-            if (context == null)
-                throw new ArgumentNullException("context");
-
-            if (string.IsNullOrEmpty(context.ApplicationLaunchableId))
-                throw new ArgumentException("context.ApplicationLaunchableId");
+            Enforce.ArgumentNotNull<IApplicationContext>( context,"context");
+            Enforce.ArgumentNotNullOrEmpty(context.ApplicationLaunchableId,"context.ApplicationLaunchableId");
 
             _logger.Debug("开始启动...");
 

@@ -27,8 +27,8 @@ namespace jingxian.core.runtime
 
         void IConfigurationElement.Configure(IExtension declaringExtension)
         {
-            if (declaringExtension == null)
-                throw new ArgumentNullException("declaringExtension"); 
+            Enforce.ArgumentNotNull<IExtension>(declaringExtension,
+                "declaringExtension"); 
 
 
             if (_declaringExtension == null)
