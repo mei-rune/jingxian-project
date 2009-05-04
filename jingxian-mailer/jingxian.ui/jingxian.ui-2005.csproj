@@ -1,0 +1,334 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9ACEA1A1-38CC-4221-BA4A-F46972ACE6AA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>jingxian.ui</RootNamespace>
+    <AssemblyName>jingxian.ui</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug-2005\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Empinia.Core.Runtime, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib-2005\Empinia.Core.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Empinia.Core.Runtime.Internal, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib-2005\Empinia.Core.Runtime.Internal.dll</HintPath>
+    </Reference>
+    <Reference Include="Empinia.Core.Utilities, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib-2005\Empinia.Core.Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Empinia.DomainModel, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib-2005\Empinia.DomainModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Empinia.DomainModel.UI, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib-2005\Empinia.DomainModel.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Empinia.UI, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib-2005\Empinia.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Empinia.UI.Navigator, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib-2005\Empinia.UI.Navigator.dll</HintPath>
+    </Reference>
+    <Reference Include="Empinia.UI.PropertyEditor, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib-2005\Empinia.UI.PropertyEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="Empinia.UI.TextEditor, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib-2005\Empinia.UI.TextEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="Empinia.UI.Workbench, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib-2005\Empinia.UI.Workbench.dll</HintPath>
+    </Reference>
+    <Reference Include="Empinia.UI.Workbench.Internal, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib-2005\Empinia.UI.Workbench.Internal.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib-2005\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ArchivingActionConfiguration.cs" />
+    <Compile Include="Commands\archivingAction\DeleteCommand.cs" />
+    <Compile Include="Commands\archivingAction\NoneCommand.cs" />
+    <Compile Include="Commands\CollapseAllNodesCommand.cs" />
+    <Compile Include="Commands\DeleteContactCommand.cs" />
+    <Compile Include="Commands\DeleteFolderCommand.cs" />
+    <Compile Include="Commands\EditFolderCommand.cs" />
+    <Compile Include="Commands\EditTreeNodeCommand.cs" />
+    <Compile Include="Commands\edit\CopyCommand.cs" />
+    <Compile Include="Commands\edit\CutCommand.cs" />
+    <Compile Include="Commands\edit\DeleteCommand.cs" />
+    <Compile Include="Commands\edit\PasteCommand.cs" />
+    <Compile Include="Commands\edit\RedoCommand.cs" />
+    <Compile Include="Commands\edit\UndoCommand.cs" />
+    <Compile Include="Commands\ExpandAllNodesCommand.cs" />
+    <Compile Include="Commands\file\ClearTrushCommand.cs" />
+    <Compile Include="Commands\file\GetMailsCommand.cs" />
+    <Compile Include="Commands\file\MailSaveAsCommand.cs" />
+    <Compile Include="Commands\file\NewContactCommand.cs" />
+    <Compile Include="Commands\file\NewMailCommand.cs" />
+    <Compile Include="Commands\file\SendMailsCommand.cs" />
+    <Compile Include="Commands\help\AboutCommand.cs" />
+    <Compile Include="Commands\help\ViewHelpCommand.cs" />
+    <Compile Include="Commands\message\DeleteAllLabelsCommand.cs" />
+    <Compile Include="Commands\message\DownCommand.cs" />
+    <Compile Include="Commands\message\ForwordCommand.cs" />
+    <Compile Include="Commands\message\OpenCommand.cs" />
+    <Compile Include="Commands\message\ReplyCommand.cs" />
+    <Compile Include="Commands\message\UPCommand.cs" />
+    <Compile Include="Commands\NewFolderCommand.cs" />
+    <Compile Include="Commands\NewTreeNodeCommand.cs" />
+    <Compile Include="Commands\OrderingCommand.cs" />
+    <Compile Include="Commands\OrderingDownContactCommand.cs" />
+    <Compile Include="Commands\OrderingDownFolderCommand.cs" />
+    <Compile Include="Commands\OrderingUpContactCommand.cs" />
+    <Compile Include="Commands\OrderingUpFolderCommand.cs" />
+    <Compile Include="Commands\tools\SettingCommand.cs" />
+    <Compile Include="Commands\TreeCommand.cs" />
+    <Compile Include="Commands\view\AddSizeCommand.cs" />
+    <Compile Include="Commands\view\EncodingCommand.cs" />
+    <Compile Include="Commands\view\HtmlCommand.cs" />
+    <Compile Include="Commands\view\ShowHeaderCommand.cs" />
+    <Compile Include="Commands\view\ShowSourceCommand.cs" />
+    <Compile Include="Commands\view\SubSizeCommand.cs" />
+    <Compile Include="Commands\view\SwitchToClassicCommand.cs" />
+    <Compile Include="Commands\view\SwitchToVerticalCommand.cs" />
+    <Compile Include="Commands\view\TextCommand.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="ContentWidget.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ContentWidget.Designer.cs">
+      <DependentUpon>ContentWidget.cs</DependentUpon>
+    </Compile>
+    <Compile Include="controls\MessageViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="controls\MessageViewer.Designer.cs">
+      <DependentUpon>MessageViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="controls\ServerItemControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="controls\ServerItemControl.designer.cs">
+      <DependentUpon>ServerItemControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="controls\ServerListDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="controls\ServerListDialog.designer.cs">
+      <DependentUpon>ServerListDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataExplorerConfiguration.cs" />
+    <Compile Include="Decorator\FolderDecorator.cs" />
+    <Compile Include="Dialogs\ArchivingSettingPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Dialogs\ArchivingSettingPanel.designer.cs">
+      <DependentUpon>ArchivingSettingPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\FolderPropertyDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\FolderPropertyDlg.designer.cs">
+      <DependentUpon>FolderPropertyDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Helper.cs" />
+    <Compile Include="LayoutPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="LayoutPanel.Designer.cs">
+      <DependentUpon>LayoutPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LayoutProvider.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs" />
+    <Compile Include="Serialization\ContentConfiguration.cs" />
+    <Compile Include="Serialization\ToolbarAreaConfiguration.cs" />
+    <Compile Include="Serialization\ToolbarConfiguration.cs" />
+    <Compile Include="Serialization\ToolbarRowConfiguration.cs" />
+    <Compile Include="Serialization\WidgetConfiguration.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="Settings.designer.cs">
+      <DependentUpon>Settings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Settings1.Designer.cs" />
+    <Compile Include="ToolbarFactory.cs" />
+    <Compile Include="ToolStripEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Views\ContactPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Views\DataExplorer.cs" />
+    <Compile Include="Views\IFieldDescriptor.cs" />
+    <Compile Include="Views\ListExplorer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\ListExplorer.Designer.cs">
+      <DependentUpon>ListExplorer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MailPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Views\MessageExpleror.cs" />
+    <Compile Include="Views\MessageExplerorWidget.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\MessageExplerorWidget.Designer.cs">
+      <DependentUpon>MessageExplerorWidget.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OutlookBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\OutlookPage.cs" />
+    <Compile Include="Views\TreePage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Wizards\AccountWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Wizards\AccountWizard.designer.cs">
+      <DependentUpon>AccountWizard.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="controls\MessageViewer.resx">
+      <DependentUpon>MessageViewer.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="controls\ServerItemControl.resx">
+      <DependentUpon>ServerItemControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="controls\ServerListDialog.resx">
+      <DependentUpon>ServerListDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\ArchivingSettingPanel.resx">
+      <DependentUpon>ArchivingSettingPanel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\FolderPropertyDlg.resx">
+      <DependentUpon>FolderPropertyDlg.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LayoutPanel.resx">
+      <DependentUpon>LayoutPanel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ListExplorer.resx">
+      <DependentUpon>ListExplorer.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\MessageExplerorWidget.resx">
+      <DependentUpon>MessageExplerorWidget.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\AccountWizard.resx">
+      <DependentUpon>AccountWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Bundle.xml" />
+    <EmbeddedResource Include="Resources\arrow_down.png" />
+    <EmbeddedResource Include="Resources\arrow_left.png" />
+    <EmbeddedResource Include="Resources\arrow_right.png" />
+    <EmbeddedResource Include="Resources\arrow_up.png" />
+    <EmbeddedResource Include="Resources\big_point.png" />
+    <EmbeddedResource Include="Resources\close_mail.ico" />
+    <EmbeddedResource Include="Resources\contact.png" />
+    <EmbeddedResource Include="Resources\edit.png" />
+    <EmbeddedResource Include="Resources\folder\attachments.png" />
+    <EmbeddedResource Include="Resources\folder\calendar.png" />
+    <EmbeddedResource Include="Resources\folder\draft.png" />
+    <EmbeddedResource Include="Resources\folder\dynamicfolder.png" />
+    <EmbeddedResource Include="Resources\folder\inbox.png" />
+    <EmbeddedResource Include="Resources\folder\junk.png" />
+    <EmbeddedResource Include="Resources\folder\mailinglist.png" />
+    <EmbeddedResource Include="Resources\folder\newsgroup.png" />
+    <EmbeddedResource Include="Resources\folder\note.png" />
+    <EmbeddedResource Include="Resources\folder\outbox.png" />
+    <EmbeddedResource Include="Resources\folder\sent.png" />
+    <EmbeddedResource Include="Resources\folder\standard.png" />
+    <EmbeddedResource Include="Resources\folder\today.png" />
+    <EmbeddedResource Include="Resources\folder\trash.png" />
+    <EmbeddedResource Include="Resources\gray_flag.png" />
+    <EmbeddedResource Include="Resources\litter_point.png" />
+    <EmbeddedResource Include="Resources\mail.png" />
+    <EmbeddedResource Include="Resources\open_mail.ico" />
+    <EmbeddedResource Include="Resources\red_flag.png" />
+    <EmbeddedResource Include="Resources\right.png" />
+    <EmbeddedResource Include="Resources\spam.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\folder\Thumbs.db" />
+    <EmbeddedResource Include="Schemas\ArchivingActionConfiguration.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schemas\DataExplorerConfiguration.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="Settings.settings" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\jingxian.commons\jingxian.commons-2005.csproj">
+      <Project>{955C9AC8-C9D2-483D-B368-1DABD6B73F68}</Project>
+      <Name>jingxian.commons-2005</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\jingxian.ui.controls\jingxian.ui.controls-2005.csproj">
+      <Project>{55C512AB-AB50-49C7-BE01-3C2E3857DE2C}</Project>
+      <Name>jingxian.ui.controls-2005</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

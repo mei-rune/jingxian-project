@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlMap namespace="dbo_signature"  xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <resultMaps>
+    <resultMap class="jingxian.data.Signature" id="abatorgenerated_SignatureResult">
+    <result column="id" dbType="Int" property="Id" />
+    <result column="sig_name" dbType="NVarChar" property="Name" />
+    <result column="sig_owner" dbType="NVarChar" property="Owner" />
+    <result column="sig_type" dbType="NVarChar" property="Type" />
+    <result column="sig_signature" dbType="Text" property="Content" />
+    <result column="sig_signaturehtml" dbType="Text" property="Html" />
+    <result column="sig_param" dbType="Text" property="Param" />
+  </resultMap>
+  </resultMaps>
+  <statements>
+  <select id="GetSignature" resultMap="abatorgenerated_SignatureResult">
+    select id, sig_name, sig_owner, sig_type, sig_signature, sig_signaturehtml, sig_param
+    from dbo.signature
+    where id=#value#
+  </select>
+  <delete id="DeleteSignature">
+    delete from dbo.signature
+    where id=#value#
+  </delete>
+  <insert id="InsertSignature" parameterClass="jingxian.data.Signature">
+    insert into dbo.signature (id, sig_name, sig_owner, sig_type, sig_signature, sig_signaturehtml,
+    sig_param)
+    values (#Id:Int#, #Name:NVarChar#, #Owner:NVarChar#, #Type:NVarChar#,
+    #Content:Text#, #Html:Text#, #Param:Text#)
+  </insert>
+  <select id="GetCountForSignature" >
+    select count(*) from dbo.signature
+  </select>
+  </statements>
+</sqlMap>

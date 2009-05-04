@@ -1,0 +1,200 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{955C9AC8-C9D2-483D-B368-1DABD6B73F68}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>jingxian.commons</RootNamespace>
+    <AssemblyName>jingxian.commons</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug-2005\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core, Version=1.0.3324.16350, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib-2005\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.DynamicProxy, Version=1.0.3324.16643, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib-2005\Castle.DynamicProxy.dll</HintPath>
+    </Reference>
+    <Reference Include="IBatisNet.Common, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib-2005\IBatisNet.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="IBatisNet.DataMapper, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib-2005\IBatisNet.DataMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Collections\GeneralTree.cs" />
+    <Compile Include="Collections\Guard.cs" />
+    <Compile Include="Collections\Properties.cs" />
+    <Compile Include="ConvertSystem.cs" />
+    <Compile Include="data\Contact.cs" />
+    <Compile Include="data\ContactGroup.cs" />
+    <Compile Include="data\Dtproperties.cs" />
+    <Compile Include="data\Filter.cs" />
+    <Compile Include="data\Folder.cs" />
+    <Compile Include="data\FolderWithBLOBs.cs" />
+    <Compile Include="data\Message.cs" />
+    <Compile Include="data\MessageWithBLOBs.cs" />
+    <Compile Include="data\Note.cs" />
+    <Compile Include="data\Parameter.cs" />
+    <Compile Include="data\PropertiesTypeHandler.cs" />
+    <Compile Include="data\Servers.cs" />
+    <Compile Include="data\Signature.cs" />
+    <Compile Include="domainModel\IDbSession.cs" />
+    <Compile Include="domainModel\IDbSessionFactory.cs" />
+    <Compile Include="domainModel\TransactionScope.cs" />
+    <Compile Include="IAccessor.cs" />
+    <Compile Include="IVirtualFileSystem.cs" />
+    <Compile Include="mail\mime\DataReadEventHandler.cs" />
+    <Compile Include="mail\mime\FieldParserProxy.cs" />
+    <Compile Include="mail\mime\IEndCriteriaStrategy.cs" />
+    <Compile Include="mail\mime\IFieldParser.cs" />
+    <Compile Include="mail\mime\IFieldParserProxy.cs" />
+    <Compile Include="mail\mime\IMailMessage.cs" />
+    <Compile Include="mail\mime\IMailReader.cs" />
+    <Compile Include="mail\mime\INullable.cs" />
+    <Compile Include="mail\mime\RFC2045\Attachment.cs" />
+    <Compile Include="mail\mime\RFC2045\Base64Decoder.cs" />
+    <Compile Include="mail\mime\RFC2045\ContentTransferEncodingField.cs" />
+    <Compile Include="mail\mime\RFC2045\ContentTransferEncodingFieldParser.cs" />
+    <Compile Include="mail\mime\RFC2045\ContentTypeField.cs" />
+    <Compile Include="mail\mime\RFC2045\ContentTypeFieldParser.cs" />
+    <Compile Include="mail\mime\RFC2045\Entity.cs" />
+    <Compile Include="mail\mime\RFC2045\FieldParserProxy.cs" />
+    <Compile Include="mail\mime\RFC2045\IAttachment.cs" />
+    <Compile Include="mail\mime\RFC2045\IDecoder.cs" />
+    <Compile Include="mail\mime\RFC2045\IEntity.cs" />
+    <Compile Include="mail\mime\RFC2045\IMimeMailMessage.cs" />
+    <Compile Include="mail\mime\RFC2045\IMultipartEntity.cs" />
+    <Compile Include="mail\mime\RFC2045\MailReader.cs" />
+    <Compile Include="mail\mime\RFC2045\Message.cs" />
+    <Compile Include="mail\mime\RFC2045\MIMERException.cs" />
+    <Compile Include="mail\mime\RFC2045\MultipartEntity.cs" />
+    <Compile Include="mail\mime\RFC2045\NullMessage.cs" />
+    <Compile Include="mail\mime\RFC2045\QuotedPrintableDecoder.cs" />
+    <Compile Include="mail\mime\RFC2046\CompositeMediaType.cs" />
+    <Compile Include="mail\mime\RFC2046\DiscreteMediaType.cs" />
+    <Compile Include="mail\mime\RFC2047\ExtendedFieldParser.cs" />
+    <Compile Include="mail\mime\RFC2183\ContentDispositionField.cs" />
+    <Compile Include="mail\mime\RFC2183\ContentDispositionFieldParser.cs" />
+    <Compile Include="mail\mime\RFC822\EndOfLineStrategy.cs" />
+    <Compile Include="mail\mime\RFC822\Field.cs" />
+    <Compile Include="mail\mime\RFC822\FieldParser.cs" />
+    <Compile Include="mail\mime\RFC822\MailReader.cs" />
+    <Compile Include="mail\mime\RFC822\Message.cs" />
+    <Compile Include="mail\mime\RFC822\NullLineStrategy.cs" />
+    <Compile Include="mail\pop\AuthorizationState.cs" />
+    <Compile Include="mail\pop\CommandIssuedEventArgs.cs" />
+    <Compile Include="mail\pop\DisconnectedState.cs" />
+    <Compile Include="mail\pop\POPClient.cs" />
+    <Compile Include="mail\pop\POPState.cs" />
+    <Compile Include="mail\pop\ReadingState.cs" />
+    <Compile Include="mail\pop\RFC1939\ApopCommand.cs" />
+    <Compile Include="mail\pop\RFC1939\ConnectCommand.cs" />
+    <Compile Include="mail\pop\RFC1939\DeleteCommand.cs" />
+    <Compile Include="mail\pop\RFC1939\GenericCommand.cs" />
+    <Compile Include="mail\pop\RFC1939\GreetingCommand.cs" />
+    <Compile Include="mail\pop\RFC1939\ListCommand.cs" />
+    <Compile Include="mail\pop\RFC1939\NoopCommand.cs" />
+    <Compile Include="mail\pop\RFC1939\PassCommand.cs" />
+    <Compile Include="mail\pop\RFC1939\POPCommand.cs" />
+    <Compile Include="mail\pop\RFC1939\POPException.cs" />
+    <Compile Include="mail\pop\RFC1939\QuitCommand.cs" />
+    <Compile Include="mail\pop\RFC1939\ResetCommand.cs" />
+    <Compile Include="mail\pop\RFC1939\RetriveCommand.cs" />
+    <Compile Include="mail\pop\RFC1939\StatCommand.cs" />
+    <Compile Include="mail\pop\RFC1939\TopCommand.cs" />
+    <Compile Include="mail\pop\RFC1939\UIDLCommand.cs" />
+    <Compile Include="mail\pop\RFC1939\UserCommand.cs" />
+    <Compile Include="mail\pop\StateChangedEventArgs.cs" />
+    <Compile Include="mail\pop\TransactionState.cs" />
+    <Compile Include="ObjectMapper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Threading\Handler.cs" />
+    <Compile Include="Threading\ICallable.cs" />
+    <Compile Include="Threading\ICompletionPort.cs" />
+    <Compile Include="Threading\IRunnable.cs" />
+    <Compile Include="Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="mail\mime\RFC2045\RFC2045.cd" />
+    <None Include="mail\mime\RFC822\RFC822.cd" />
+    <None Include="mail\pop\ClassDiagram1.cd" />
+    <None Include="mail\pop\RFC1939\RFC1939.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Maps\MSSQL\dbo_Contact.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Maps\MSSQL\dbo_ContactGroup.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Maps\MSSQL\dbo_DtProperties.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Maps\MSSQL\dbo_Filter.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Maps\MSSQL\dbo_Folder.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Maps\MSSQL\dbo_Message.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Maps\MSSQL\dbo_Note.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Maps\MSSQL\dbo_Parameter.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Maps\MSSQL\dbo_Server.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Maps\MSSQL\dbo_Signature.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Maps\MSSQL\dbo_generateTable.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

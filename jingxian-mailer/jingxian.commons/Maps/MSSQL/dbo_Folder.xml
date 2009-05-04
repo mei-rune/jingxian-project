@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlMap namespace="dbo_folder" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <resultMaps>
+    <resultMap class="jingxian.data.Folder" id="abatorgenerated_FolderResult">
+    <result column="id" dbType="Int" property="Id" />
+    <result column="name" dbType="NVarChar" property="Name" />
+    <result column="class" dbType="NVarChar" property="Type" />
+    <result column="idparent" dbType="Int" property="Parent" />
+    <result column="icon" dbType="NVarChar" property="Icon" />
+    <result column="ordering" dbType="Int" property="Ordering" />
+  </resultMap>
+  <resultMap class="jingxian.data.FolderWithBLOBs" extends="dbo_folder.abatorgenerated_FolderResult" id="abatorgenerated_FolderResultWithBLOBs">
+    <result column="misc" dbType="Text" property="Misc" typeHandler="jingxian.data.PropertiesTypeHandler,jingxian.commons" />
+  </resultMap>
+  </resultMaps>
+  <parameterMaps>
+    <parameterMap id="insert-params">
+      <parameter property="Name" />
+      <parameter property="Type" />
+      <parameter property="Parent" />
+      <parameter property="Icon" />
+      <parameter property="Ordering" />
+      <parameter property="Misc" typeHandler="jingxian.data.PropertiesTypeHandler,jingxian.commons" />
+    </parameterMap>
+  </parameterMaps>
+  <statements>
+    <select id="GetAllFolders" resultMap="abatorgenerated_FolderResult">
+      select id,  name, class, idparent, icon, ordering
+      from dbo.mail_folder
+    </select>
+  <select id="GetFolder" resultMap="abatorgenerated_FolderResult">
+    select id,  name, class, idparent, icon, ordering
+    from dbo.mail_folder
+    where id=#value#
+  </select>
+    <select id="GetAllFoldersWithBLOBs" resultMap="abatorgenerated_FolderResultWithBLOBs">
+      select id,  name, class, idparent, icon, ordering, misc
+      from dbo.mail_folder
+    </select>
+  <select id="GetFolderWithBLOBs" resultMap="abatorgenerated_FolderResultWithBLOBs">
+    select id,  name, class, idparent, icon, ordering, misc
+    from dbo.mail_folder
+    where id=#value#
+  </select>
+  <delete id="DeleteFolder" >
+    delete from dbo.mail_folder
+    where id=#value#
+  </delete>
+    <insert id="InsertFolder" parameterClass="jingxian.data.FolderWithBLOBs" >
+      insert into dbo.mail_folder ( name, class, idparent, icon, ordering, misc )
+      values ( #Name:NVarChar#, #Type:NVarChar#, #Parent:Int#,
+      #Icon:NVarChar#, #Ordering:Int#, #Misc,handler=stringMap#)
+    </insert>
+    <update id="UpdateFolder" parameterClass="jingxian.data.FolderWithBLOBs" >
+      update dbo.mail_folder
+      set name = #Name:NVarChar#
+      , class=#Type:NVarChar#
+      , idparent=#Parent:Int#
+      , icon=#Icon:NVarChar#
+      , ordering=#Ordering:Int#
+      , misc=#Misc,handler=stringMap#
+      where id = #Id:Int#
+    </update>
+    <update id="UpdateFolderForOrdering" parameterClass="jingxian.data.Folder">
+      update dbo.mail_folder
+      set ordering = #Ordering:NVarChar#
+      where id = #Id:Int#
+    </update>
+
+    <update id="UpdateFolderForName" parameterClass="jingxian.data.Folder">
+      update dbo.mail_folder
+      set name = #Name:NVarChar#
+      where id = #Id:Int#
+    </update>
+    <update id="UpdateFolderForParent" parameterClass="jingxian.data.Folder" >
+      update dbo.mail_folder
+      set idparent = #Parent:Int#
+      where id = #Id:Int#
+    </update>
+  
+</statements>
+</sqlMap>

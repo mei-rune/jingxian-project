@@ -1,0 +1,1018 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<bundle
+	xmlns="http://www.empinia.org/release/0.2/schemas/Bundle.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	id="jingxian.ui"
+	name="jingxian mailer GUI client"
+	description="jingxian 邮件客户端"
+	provider="mfksoft">
+
+  <!-- EXTENSION POINTS -->
+  <extensionPoint
+		id="jingxian.ui.archiving.actions"
+		name="邮件档案保存策略的扩展点" />
+
+  <!-- PREFERENCE PAGES -->
+
+  <extension
+		id="jingxian.ui.preferencePages"
+		point="empinia.core.runtime.preference.pages">
+  </extension>
+
+
+  <!-- Views -->
+
+  <extension
+		id="jingxian.ui.views"
+		name="jingxian 邮件客户端视图"
+		description="Views contributed by the Workbench"
+		point="empinia.ui.workbench.viewPoint">
+    <view
+			id="jingxian.ui.views.welcomePage"
+			name="Welcome"
+			description="欢迎页面"
+			iconId="defaulticons.star.png"
+			implementation="Empinia.UI.Workbench.Internal.Welcome.WelcomePage, Empinia.UI.Workbench.Internal"
+			singleInstance="true">
+      <layout>
+        <preferredArea id="center"/>
+      </layout>
+    </view>
+    <view
+      id="jingxian.ui.views.mailPage"
+      name="邮件"
+      description="邮件文件夹面板"
+      iconId="jingxian.bar.mail.png"
+      implementation="jingxian.ui.views.MailPage, jingxian.ui"
+      singleInstance="true">
+    </view>
+    <view
+      id="jingxian.ui.views.contactPage"
+      name="通讯录"
+      description="通讯录面板"
+      iconId="jingxian.bar.contact.png"
+      implementation="jingxian.ui.views.ContactPage, jingxian.ui"
+      singleInstance="true">
+    </view>
+    <view
+			id="jingxian.ui.views.outlookPage"
+			name="outlook"
+			description="outlook 面板"
+			iconId="defaulticons.star.png"
+			implementation="jingxian.ui.views.OutlookPage, jingxian.ui"
+			singleInstance="true">
+      <layout>
+        <preferredArea id="south"/>
+      </layout>
+      <configuration>
+        <viewSet>
+          <viewBar ref="jingxian.ui.views.mailPage" />
+          <viewBar ref="jingxian.ui.views.contactPage" />
+        </viewSet>
+      </configuration>
+    </view>
+    <view
+      id="jingxian.ui.views.messageExplorer"
+      name="消息浏览"
+      description="消息浏览面板"
+      iconId="jingxian.bar.star.png"
+      implementation="jingxian.ui.views.MessageExplorer, jingxian.ui"
+			singleInstance="true">
+      <layout>
+        <preferredArea id="center"/>
+      </layout>
+      <configuration>
+        <view ref="jingxian.ui.views.welcomePage" />
+        <!--<dataExplorer>
+        <table>
+          <column id="adf" description="aaa" type="sdf" />
+        </table>
+        <view ref="jingxian.ui.views.welcomePage" />
+      </dataExplorer>-->
+      </configuration>
+    </view>
+  </extension>
+
+
+  <!-- EXTENSIONS __________________________________________________________________ -->
+
+  <extension
+		 id="jingxian.ui.toolbars"
+		 name="jingxian Toolbars"
+		 point="empinia.ui.workbench.toolbars">
+    <toolbar id="jingxian.ui.menu.mainMenu"
+						 name="jingxian Main Menu"
+						 type="Menu"/>
+
+    <toolbar id="jingxian.ui.toolbars.jingxianToolbar"
+						 name="jingxian Main Toolbar"
+						 ignoreParents="true"
+						 type="Toolbar"/>
+  </extension>
+
+
+  <!-- PERSPECTIVE -->
+  <extension
+    id ="jingxian.ui.perspectives"
+    name="Jingxian Perspectives"
+    point ="empinia.ui.workbench.perspectivePoint">
+    <perspective
+      id="jingxian.ui.perspectives.jingxianPerspective"
+      providerId="anyProvider"
+      name="Start"
+      description="启动布局."
+      iconId="defaulticons.layout.png">
+      <includedViewTypes>
+        <viewType id="jingxian.ui.views.outlookPage"/>
+        <viewType id="jingxian.ui.views.messageExplorer"/>
+      </includedViewTypes>
+      <includedToolbars>
+        <toolbar id="jingxian.ui.menu.mainMenu"/>
+      </includedToolbars>
+    </perspective>
+  </extension>
+
+  <!-- Hierarchy Decorators -->
+  <extension
+		id="jingxian.ui.hierarchy.navigatorContentHierarchyConfigurations"
+		name="Hierarchy Configurations"
+		description="jingxian 树形数据的配置"
+		point="empinia.core.runtime.hierarchyDecorators">
+
+    <hierarchyDecorator
+			id="jingxian.folder.navigator.contentHierarchy"
+			name="邮件文件夹的树形数据配置"
+			type="jingxian.data.Folder, jingxian.commons"
+			implementation="jingxian.ui.decorator.FolderDecorator, jingxian.ui"/>
+
+  </extension>
+
+  <!-- Navigator Configurations -->
+  <extension
+		id="jingxian.ui.navigatorConfigurations"
+		point="empinia.ui.navigator.contentConfigurationPoint"
+		name="jingxian 邮件客户端的导航配置">
+
+    <navigatorConfiguration
+			id="jingxian.ui.navigator.folder"
+			name="邮件文件夹的导航配置"
+			navigatorImplementationId="empinia.ui.navigator.internal.defaultNavigator">
+      <decoratorSet>
+        <include name="jingxian.folder.navigator.contentHierarchy"/>
+      </decoratorSet>
+    </navigatorConfiguration>
+
+  </extension>
+
+
+
+
+  <!-- Actions -->
+
+  <extension
+    id="jingxian.ui.menuItem.actions"
+		name="邮件主菜单"
+		description="邮件主菜单"
+    point="empinia.ui.actions">
+    <actionSet>
+
+      <workbenchActions>
+        <action
+					id="jingxian.ui.menuItem.file"
+					label="文件"
+					style="menuitem"
+					orderIndex="10" />
+
+        <action
+					id="jingxian.ui.menuItem.edit"
+					label="编辑"
+					style="menuitem"
+					orderIndex="20" />
+
+        <action
+					id="jingxian.ui.menuItem.view"
+					label="查看"
+					style="menuitem"
+					orderIndex="30" />
+
+        <action
+					id="jingxian.ui.menuItem.go"
+					label="转到"
+					style="menuitem"
+          orderIndex="40" />
+
+        <action
+					id="jingxian.ui.menuItem.message"
+					label="消息"
+					style="menuitem"
+					orderIndex="50" />
+
+        <action
+					id="jingxian.ui.menuItem.tools"
+					label="工具"
+					style="menuitem"
+          orderIndex="60" />
+
+        <action
+					id="jingxian.ui.menuItem.help"
+					label="帮助"
+					style="menuitem"
+					orderIndex="70"/>
+
+      </workbenchActions>
+
+      <partActions targetId="jingxian.ui.menu.mainMenu">
+        <action ref="jingxian.ui.menuItem.file"/>
+        <action ref="jingxian.ui.menuItem.edit"/>
+        <action ref="jingxian.ui.menuItem.view"/>
+        <action ref="jingxian.ui.menuItem.go"/>
+        <action ref="jingxian.ui.menuItem.message"/>
+        <action ref="jingxian.ui.menuItem.tools"/>
+        <action ref="jingxian.ui.menuItem.help"/>
+      </partActions>
+    </actionSet>
+  </extension>
+
+  <extension
+    id="jingxian.ui.menuItem.actions.file"
+		name="文件"
+		description="邮件主菜单中文件菜单的配置"
+    point="empinia.ui.actions">
+    <actionSet>
+
+      <workbenchActions>
+        <action
+					id="jingxian.ui.menuItem.file.newFile"
+					label="新建"
+					style="menuitem"
+					parent="jingxian.ui.menuItem.file"
+					orderIndex="1000">
+        </action>
+        <action
+					id="jingxian.ui.menuItem.file.new.mail"
+					label="邮件"
+					parent="jingxian.ui.menuItem.file.newFile"
+					commandId="jingxian.ui.commands.file.newMail"/>
+        <action
+					id="jingxian.ui.menuItem.file.new.contact"
+					label="联系人"
+					parent="jingxian.ui.menuItem.file.newFile"
+					commandId="jingxian.ui.commands.file.newContact"/>
+        <action
+					id="jingxian.ui.menuItem.file.saveAs"
+					label="另存为"
+					parent="jingxian.ui.menuItem.file"
+					commandId="jingxian.ui.commands.file.saveAs"
+					orderIndex="1200" />
+        <action
+					id="jingxian.ui.menuItem.file.get"
+					label="获取"
+					style="menuitem"
+					parent="jingxian.ui.menuItem.file"
+					orderIndex="1300" />
+        <action
+					id="jingxian.ui.menuItem.file.get.getMails"
+					label="获取所有"
+					parent="jingxian.ui.menuItem.file.get"
+					commandId="jingxian.ui.commands.file.getMails"
+					orderIndex="1300" />
+        <action
+					id="jingxian.ui.menuItem.file.sendMails"
+					label="发送未发送的邮件"
+					parent="jingxian.ui.menuItem.file"
+					commandId="jingxian.ui.commands.file.sendMails"
+					orderIndex="1400" />
+        <action
+					id="jingxian.ui.menuItem.file.clearTrush"
+					label="清空&quot;废件箱&quot;"
+					parent="jingxian.ui.menuItem.file"
+					commandId="jingxian.ui.commands.file.clearTrush"
+					orderIndex="1500" />
+        <action
+					id="jingxian.ui.menuItem.exit"
+					label="退出"
+					parent="jingxian.ui.menuItem.file"
+					commandId="empinia.ui.workbench.internal.closeWorkbenchCommand"
+					orderIndex="1600" />
+      </workbenchActions>
+
+      <partActions targetId="jingxian.ui.menu.mainMenu">
+        <action ref="jingxian.ui.menuItem.file.newFile"/>
+        <action ref="jingxian.ui.menuItem.file.new.mail" />
+        <action ref="jingxian.ui.menuItem.file.new.contact" />
+        <action ref="jingxian.ui.menuItem.file.saveAs" />
+        <action ref="jingxian.ui.menuItem.file.get"/>
+        <action ref="jingxian.ui.menuItem.file.get.getMails" />
+        <action ref="jingxian.ui.menuItem.file.sendMails"/>
+        <action ref="jingxian.ui.menuItem.file.clearTrush"/>
+        <action ref="jingxian.ui.menuItem.exit"/>
+      </partActions>
+      
+    </actionSet>
+  </extension>
+
+  <extension
+    id="jingxian.ui.menuItem.actions.edit"
+		name="编辑"
+		description="邮件主菜单中编辑菜单的配置"
+    point="empinia.ui.actions">
+    <actionSet>
+
+      <workbenchActions>
+        <action
+					id="jingxian.ui.menuItem.edit.undo"
+					label="撤消"
+					parent="jingxian.ui.menuItem.edit"
+					orderIndex="2100">
+        </action>
+        <action
+					id="jingxian.ui.menuItem.edit.redo"
+					label="重做"
+					parent="jingxian.ui.menuItem.edit"
+					orderIndex="2200">
+        </action>
+        <action
+					id="jingxian.ui.menuItem.edit.separator1"
+					label=""
+					parent="jingxian.ui.menuItem.edit"
+          style="separator"
+					orderIndex="2300">
+        </action>
+        <action
+					id="jingxian.ui.menuItem.edit.cut"
+					label="剪切"
+					parent="jingxian.ui.menuItem.edit"
+					orderIndex="2400">
+        </action>
+        <action
+					id="jingxian.ui.menuItem.edit.copy"
+					label="复制"
+					parent="jingxian.ui.menuItem.edit"
+					orderIndex="2500">
+        </action>
+        <action
+					id="jingxian.ui.menuItem.edit.paste"
+					label="粘贴"
+					parent="jingxian.ui.menuItem.edit"
+					orderIndex="2600">
+        </action>
+        <action
+					id="jingxian.ui.menuItem.edit.delete"
+					label="删除"
+					parent="jingxian.ui.menuItem.edit"
+					orderIndex="2700">
+        </action>
+      </workbenchActions>
+      <partActions targetId="jingxian.ui.menu.mainMenu">
+        <action ref="jingxian.ui.menuItem.edit.undo" />
+        <action ref="jingxian.ui.menuItem.edit.redo" />
+        <action ref="jingxian.ui.menuItem.edit.separator1" />
+        <action ref="jingxian.ui.menuItem.edit.cut" />
+        <action ref="jingxian.ui.menuItem.edit.copy" />
+        <action ref="jingxian.ui.menuItem.edit.cut" />
+        <action ref="jingxian.ui.menuItem.edit.delete" />
+      </partActions>
+    </actionSet>
+  </extension>
+
+  <extension
+  id="jingxian.ui.menuItem.actions.view"
+  name="查看"
+  description="邮件主菜单中查看菜单的配置"
+  point="empinia.ui.actions">
+    <actionSet>
+
+      <workbenchActions>
+        <action
+					id="jingxian.ui.menuItem.view.layout"
+					label="布局"
+          style="menuitem"
+					parent="jingxian.ui.menuItem.view"
+					orderIndex="3100">
+        </action>
+        <action
+					id="jingxian.ui.menuItem.view.layout.classic"
+					label="经典视图"
+					parent="jingxian.ui.menuItem.view.layout"
+          commandId="jingxian.ui.commands.view.switchToClassic"
+					orderIndex="3110">
+        </action>
+        <action
+					id="jingxian.ui.menuItem.view.layout.vertical"
+					label="直视图"
+					parent="jingxian.ui.menuItem.view.layout"
+          commandId="jingxian.ui.commands.view.switchToVertical"
+					orderIndex="3120">
+        </action>
+        <action
+            id="jingxian.ui.menuItem.view.messageHeader"
+            label="消息头"
+            parent="jingxian.ui.menuItem.view"
+            commandId="jingxian.ui.commands.view.messageHeader"
+            orderIndex="3200">
+        </action>
+        <action
+            id="jingxian.ui.menuItem.view.message.source"
+            label="消息源码"
+            parent="jingxian.ui.menuItem.view"
+            commandId="jingxian.ui.commands.view.messageSource"
+            orderIndex="3300">
+        </action>
+        <action
+            id="jingxian.ui.menuItem.view.messageBody"
+            label="消息体"
+            parent="jingxian.ui.menuItem.view"
+            style="menuitem"
+            orderIndex="3400">
+        </action>
+        <action
+            id="jingxian.ui.menuItem.view.messageBody.html"
+            label="HTML"
+            parent="jingxian.ui.menuItem.view.messageBody"
+            commandId="jingxian.ui.commands.view.messageBody.html"
+            orderIndex="3410">
+        </action>
+        <action
+            id="jingxian.ui.menuItem.view.messageBody.text"
+            label="文件"
+            parent="jingxian.ui.menuItem.view.messageBody"
+            commandId="jingxian.ui.commands.view.messageBody.text"
+            orderIndex="3420">
+        </action>
+        <action
+            id="jingxian.ui.menuItem.view.textSize"
+            label="字体大小"
+            style="menuitem"
+            parent="jingxian.ui.menuItem.view"
+            orderIndex="3500">
+        </action>
+        <action
+            id="jingxian.ui.menuItem.view.textSize.add"
+            label="增大"
+            parent="jingxian.ui.menuItem.view.textSize"
+            commandId="jingxian.ui.commands.view.textSize.add"
+            orderIndex="3510">
+        </action>
+        <action
+            id="jingxian.ui.menuItem.view.textSize.sub"
+            label="减小"
+            parent="jingxian.ui.menuItem.view.textSize"
+            commandId="jingxian.ui.commands.view.textSize.sub"
+            orderIndex="3520">
+        </action>
+        <action
+            id="jingxian.ui.menuItem.view.text.encoding"
+            label="字符编码"
+            parent="jingxian.ui.menuItem.view"
+            commandId="jingxian.ui.commands.view.text.encoding"
+            orderIndex="3600">
+        </action>
+      </workbenchActions>
+      <partActions targetId="jingxian.ui.menu.mainMenu">
+        <action ref="jingxian.ui.menuItem.view.layout" />
+        <action ref="jingxian.ui.menuItem.view.layout.classic" />
+        <action ref="jingxian.ui.menuItem.view.layout.vertical" />
+        <action ref="jingxian.ui.menuItem.view.messageHeader" />
+        <action ref="jingxian.ui.menuItem.view.message.source" />
+        <action ref="jingxian.ui.menuItem.view.messageBody" />
+        <action ref="jingxian.ui.menuItem.view.messageBody.html" />
+        <action ref="jingxian.ui.menuItem.view.messageBody.text" />
+        <action ref="jingxian.ui.menuItem.view.text.size" />
+        <action ref="jingxian.ui.menuItem.view.text.encoding" />
+      </partActions>
+    </actionSet>
+  </extension>
+
+  <extension
+  id="jingxian.ui.menuItem.actions.message"
+  name="消息"
+  description="邮件主菜单中消息菜单的配置"
+  point="empinia.ui.actions">
+    <actionSet>
+      <workbenchActions>
+        <action
+            id="jingxian.ui.menuItem.message.up"
+            label="上一封"
+            parent="jingxian.ui.menuItem.message"
+            commandId="jingxian.ui.commands.message.up"
+            orderIndex="4100">
+        </action>
+        <action
+            id="jingxian.ui.menuItem.message.down"
+            label="下一封"
+            parent="jingxian.ui.menuItem.message"
+            commandId="jingxian.ui.commands.message.down"
+            orderIndex="4200">
+        </action>
+        <action
+					id="jingxian.ui.menuItem.message.orderingSeparator"
+					label=""
+          parent="jingxian.ui.menuItem.message"
+          style="separator"
+					orderIndex="4250">
+        </action>
+        <action
+            id="jingxian.ui.menuItem.message.newMail"
+            label="新建消息"
+            parent="jingxian.ui.menuItem.message"
+            commandId="jingxian.ui.commands.message.newMail"
+            orderIndex="4300">
+        </action>
+        <action
+            id="jingxian.ui.menuItem.message.replyMail"
+            label="回复"
+            parent="jingxian.ui.menuItem.message"
+            commandId="jingxian.ui.commands.message.replyMail"
+            orderIndex="4400">
+        </action>
+        <action
+            id="jingxian.ui.menuItem.message.forwordMail"
+            label="转发"
+            parent="jingxian.ui.menuItem.message"
+            commandId="jingxian.ui.commands.message.forwordMail"
+            orderIndex="4500">
+        </action>
+        <action
+            id="jingxian.ui.menuItem.message.openMail"
+            label="打开"
+            parent="jingxian.ui.menuItem.message"
+            commandId="jingxian.ui.commands.message.openMail"
+            orderIndex="4600">
+        </action>
+        <action
+					id="jingxian.ui.menuItem.message.operatorSeparator"
+					label=""
+          parent="jingxian.ui.menuItem.message"
+          style="separator"
+					orderIndex="4650">
+        </action>
+        <action
+            id="jingxian.ui.menuItem.message.moveMail"
+            label="移动"
+            parent="jingxian.ui.menuItem.message"
+            style="menuitem"
+            orderIndex="4700">
+        </action>
+        <action
+            id="jingxian.ui.menuItem.message.copyMail"
+            label="复制"
+            parent="jingxian.ui.menuItem.message"
+            style="menuitem"
+            orderIndex="4800">
+        </action>
+        <action
+            id="jingxian.ui.menuItem.message.labelMail"
+            label="标签"
+            parent="jingxian.ui.menuItem.message"
+            style="menuitem"
+            orderIndex="4900">
+        </action>
+        <action
+            id="jingxian.ui.menuItem.message.labelMail.deleteAll"
+            label="移除所有标签"
+            parent="jingxian.ui.menuItem.message.labelMail"
+            commandId="jingxian.ui.commands.message.deleteAllLabels"
+            orderIndex="4900">
+        </action>
+        <action
+					id="jingxian.ui.menuItem.edit.label.deleteAllSeparator"
+					label=""
+          parent="jingxian.ui.menuItem.message.labelMail"
+          style="separator"
+					orderIndex="4910">
+        </action>
+      </workbenchActions>
+      <partActions targetId="jingxian.ui.menu.mainMenu">
+        <action ref="jingxian.ui.menuItem.message.up" />
+        <action ref="jingxian.ui.menuItem.message.down" />
+        <action ref="jingxian.ui.menuItem.message.operatorSeparator" />
+        <action ref="jingxian.ui.menuItem.message.moveMail" />
+        <action ref="jingxian.ui.menuItem.message.newMail" />
+        <action ref="jingxian.ui.menuItem.message.replyMail" />
+        <action ref="jingxian.ui.menuItem.message.forwordMail" />
+        <action ref="jingxian.ui.menuItem.message.openMail" />
+        <action ref="jingxian.ui.menuItem.message.operatorSeparator" />
+        <action ref="jingxian.ui.menuItem.message.copyMail" />
+        <action ref="jingxian.ui.menuItem.message.labelMail" />
+        <action ref="jingxian.ui.menuItem.message.labelMail.deleteAll" />
+        <action ref="jingxian.ui.menuItem.edit.label.deleteAllSeparator" />
+      </partActions>
+    </actionSet>
+  </extension>
+
+  <extension
+  id="jingxian.ui.menuItem.actions.tools"
+  name="工具"
+  description="邮件主菜单中工具菜单的配置"
+  point="empinia.ui.actions">
+    <actionSet>
+      <workbenchActions>
+        <action
+            id="jingxian.ui.menuItem.tools.setting"
+            label="帐户设置"
+            parent="jingxian.ui.menuItem.tools"
+            commandId="jingxian.ui.commands.tools.setting"
+            orderIndex="5100" />
+      </workbenchActions>
+      <partActions targetId="jingxian.ui.menu.mainMenu">
+        <action ref="jingxian.ui.menuItem.tools.setting" />
+      </partActions>
+    </actionSet>
+  </extension>
+
+  <extension
+  id="jingxian.ui.menuItem.actions.help"
+  name="帮助"
+  description="邮件主菜单中帮助菜单的配置"
+  point="empinia.ui.actions">
+    <actionSet>
+      <workbenchActions>
+        <action
+            id="jingxian.ui.menuItem.help.viewHelp"
+            label="帮助"
+            parent="jingxian.ui.menuItem.help"
+            commandId="jingxian.ui.commands.help.viewHelp"
+            orderIndex="6100">
+        </action>
+        <action
+            id="jingxian.ui.menuItem.help.about"
+            label="关于"
+            parent="jingxian.ui.menuItem.help"
+            commandId="jingxian.ui.commands.help.about"
+            orderIndex="6100">
+        </action>
+      </workbenchActions>
+      <partActions targetId="jingxian.ui.menu.mainMenu">
+        <action ref="jingxian.ui.menuItem.help.viewHelp" />
+        <action ref="jingxian.ui.menuItem.help.about" />
+      </partActions>
+    </actionSet>
+  </extension>
+
+  <extension
+		 id="jingxian.ui.navigator.actions"
+		 point="empinia.ui.actions"
+		 name="Navigator Actions for reuse">
+    <actionSet>
+
+      <objectActions classType="jingxian.data.Contact, jingxian.commons">
+        <action
+							id="jingxian.ui.navigator.actions.contact.expandAllNodes"
+							label="展开所有节点"
+							iconId="defaulticons.expand_all.png"
+							commandId="jingxian.ui.commands.expandAllNodes"/>
+        <action
+							id="jingxian.ui.navigator.actions.contact.collapseAllNodes"
+							label="折叠所有节点"
+							iconId="defaulticons.collapse_all.png"
+							commandId="jingxian.ui.commands.collapseAllNodes"/>
+        <action
+              id="jingxian.ui.navigator.actions.contact.orderingUp"
+              label="上移节点"
+              iconId="jingxian.ui.icons.arrow_up.png"
+              commandId="jingxian.ui.commands.contact.orderingUp"/>
+        <action
+              id="jingxian.ui.navigator.actions.contact.orderingDown"
+              label="下移节点"
+              iconId="jingxian.ui.icons.arrow_down.png"
+              commandId="jingxian.ui.commands.contact.orderingDown"/>
+        <action
+              id="jingxian.ui.navigator.actions.contact.new"
+              label="添加子节点"
+              iconId="defaulticons.add.png"
+              commandId="jingxian.ui.commands.contact.new"/>
+        <action
+              id="jingxian.ui.navigator.actions.contact.edit"
+              label="编辑节点"
+              iconId="jingxian.ui.icons.edit.png"
+              commandId="jingxian.ui.commands.contact.edit"/>
+        <action
+              id="jingxian.ui.navigator.actions.contact.delete"
+              label="删除节点"
+              iconId="defaulticons.delete.png"
+              commandId="jingxian.ui.commands.contact.delete"/>
+      </objectActions>
+      <objectActions classType="jingxian.data.Folder, jingxian.commons">
+        <action
+							id="jingxian.ui.navigator.actions.expandAllNodes"
+							label="展开所有节点"
+							iconId="defaulticons.expand_all.png"
+							commandId="jingxian.ui.commands.expandAllNodes"/>
+        <action
+							id="jingxian.ui.navigator.actions.collapseAllNodes"
+							label="折叠所有节点"
+							iconId="defaulticons.collapse_all.png"
+							commandId="jingxian.ui.commands.collapseAllNodes"/>
+        <action
+              id="jingxian.ui.navigator.actions.orderingUpFolder"
+              label="上移节点"
+              iconId="jingxian.ui.icons.arrow_up.png"
+              commandId="jingxian.ui.commands.orderingUpFolder"/>
+        <action
+              id="jingxian.ui.navigator.actions.orderingDownFolder"
+              label="下移节点"
+              iconId="jingxian.ui.icons.arrow_down.png"
+              commandId="jingxian.ui.commands.orderingDownFolder"/>
+        <action
+              id="jingxian.ui.navigator.actions.NewFolder"
+              label="添加子节点"
+              iconId="defaulticons.add.png"
+              commandId="jingxian.ui.commands.newFolder"/>
+        <action
+              id="jingxian.ui.navigator.actions.editFolder"
+              label="编辑节点"
+              iconId="jingxian.ui.icons.edit.png"
+              commandId="jingxian.ui.commands.editFolder"/>
+        <action
+              id="jingxian.ui.navigator.actions.deleteFolder"
+              label="删除节点"
+              iconId="defaulticons.delete.png"
+              commandId="jingxian.ui.commands.deleteFolder"/>
+      </objectActions>
+    </actionSet>
+  </extension>
+
+  <!-- Commands -->
+
+  <extension
+		id="jingxian.ui.commands"
+		point="empinia.core.runtime.commands"
+		name="邮件文件夹命令配置">
+
+    <command
+			id="jingxian.ui.commands.expandAllNodes"
+			implementation="jingxian.ui.commands.ExpandAllNodesCommand, jingxian.ui" />
+    <command
+			id="jingxian.ui.commands.collapseAllNodes"
+			implementation="jingxian.ui.commands.CollapseAllNodesCommand, jingxian.ui" />
+    <command
+			id="jingxian.ui.commands.orderingUpFolder"
+			implementation="jingxian.ui.commands.OrderingUpFolderCommand, jingxian.ui" />
+    <command
+			id="jingxian.ui.commands.orderingDownFolder"
+			implementation="jingxian.ui.commands.OrderingDownFolderCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.newFolder"
+      implementation="jingxian.ui.commands.NewFolderCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.editFolder"
+      implementation="jingxian.ui.commands.EditFolderCommand, jingxian.ui" />
+    <command
+			id="jingxian.ui.commands.deleteFolder"
+			implementation="jingxian.ui.commands.DeleteFolderCommand, jingxian.ui" />
+    <command
+			id="jingxian.ui.commands.archiving.action.none"
+			implementation="jingxian.ui.commands.archivingAction.NoneCommand, jingxian.ui" />
+    <command
+			id="jingxian.ui.commands.archiving.action.delete"
+			implementation="jingxian.ui.commands.archivingAction.DeleteCommand, jingxian.ui" />
+    <command
+			id="jingxian.ui.commands.contact.orderingUp"
+			implementation="jingxian.ui.commands.OrderingUpContactCommand, jingxian.ui" />
+    <command
+			id="jingxian.ui.commands.contact.orderingDown"
+			implementation="jingxian.ui.commands.OrderingDownContactCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.contact.new"
+      implementation="jingxian.ui.commands.NewContactCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.contact.edit"
+      implementation="jingxian.ui.commands.EditContactCommand, jingxian.ui" />
+    <command
+			id="jingxian.ui.commands.contact.delete"
+			implementation="jingxian.ui.commands.DeleteContactCommand, jingxian.ui" />
+    <command
+			id="jingxian.ui.commands.file.newMail"
+			implementation="jingxian.ui.commands.file.NewMailCommand, jingxian.ui" />
+    <command
+			id="jingxian.ui.commands.file.newContact"
+			implementation="jingxian.ui.commands.file.NewContactCommand, jingxian.ui" />
+    <command
+			id="jingxian.ui.commands.file.saveAs"
+			implementation="jingxian.ui.commands.file.MailSaveAsCommand, jingxian.ui" />
+    <command
+			id="jingxian.ui.commands.file.getMails"
+			implementation="jingxian.ui.commands.file.GetMailsCommand, jingxian.ui" />
+    <command
+			id="jingxian.ui.commands.file.sendMails"
+			implementation="jingxian.ui.commands.file.SendMailsCommand, jingxian.ui" />
+    <command
+			id="jingxian.ui.commands.file.clearTrush"
+			implementation="jingxian.ui.commands.file.ClearTrushCommand, jingxian.ui" />
+    <!--<command
+			id="jingxian.ui.commands.file.exit"
+			implementation="jingxian.ui.commands.ExitCommand, jingxian.ui" />-->
+    <command
+      id="jingxian.ui.menuItem.edit.undo"
+			implementation="jingxian.ui.commands.edit.UndoCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.menuItem.edit.redo"
+			implementation="jingxian.ui.commands.edit.RedoCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.menuItem.edit.cut"
+			implementation="jingxian.ui.commands.edit.CutCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.menuItem.edit.copy"
+			implementation="jingxian.ui.commands.edit.CopyCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.menuItem.edit.paste"
+			implementation="jingxian.ui.commands.edit.PasteCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.menuItem.edit.delete"
+			implementation="jingxian.ui.commands.edit.DeleteCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.view.switchToClassic"
+			implementation="jingxian.ui.commands.view.SwitchToClassicCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.view.switchToVertical"
+			implementation="jingxian.ui.commands.view.SwitchToVerticalCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.view.messageHeader"
+			implementation="jingxian.ui.commands.view.ShowHeaderCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.view.messageSource"
+			implementation="jingxian.ui.commands.view.ShowSourceCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.view.messageBody.html"
+			implementation="jingxian.ui.commands.view.HtmlCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.view.messageBody.text"
+			implementation="jingxian.ui.commands.view.TextCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.menuItem.view.textSize.add"
+			implementation="jingxian.ui.commands.view.AddSizeCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.view.textSize.sub"
+			implementation="jingxian.ui.commands.view.SubSizeCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.view.text.encoding"
+			implementation="jingxian.ui.commands.view.EncodingCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.message.up"
+			implementation="jingxian.ui.commands.message.UpCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.message.down"
+			implementation="jingxian.ui.commands.message.DownCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.message.newMail"
+			implementation="jingxian.ui.commands.file.NewMailCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.message.replyMail"
+			implementation="jingxian.ui.commands.message.ReplyCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.message.forwordMail"
+			implementation="jingxian.ui.commands.message.ForwordCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.message.openMail"
+			implementation="jingxian.ui.commands.message.OpenCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.message.deleteAllLabels"
+			implementation="jingxian.ui.commands.message.DeleteAllLabelsCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.help.viewHelp"
+			implementation="jingxian.ui.commands.help.ViewHelpCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.help.about"
+			implementation="jingxian.ui.commands.help.AboutCommand, jingxian.ui" />
+    <command
+      id="jingxian.ui.commands.tools.setting"
+			implementation="jingxian.ui.commands.tools.SettingCommand, jingxian.ui" />
+  </extension>
+
+  <!--____archivingAction______________________________________________________________________________________________-->
+  <extension
+		id="jingxian.ui.archiving.actions.config"
+		name="邮件档案保存策略扩展"
+		description="请将邮件档案保存策略扩展放在这里"
+		point="jingxian.ui.archiving.actions">
+    <archivingAction id="jingxian.ui.archiving.actions.none" name="不处理" commandId="jingxian.ui.commands.archiving.action.none"
+                     description="该命令不作任何处理" />
+    <archivingAction id="jingxian.ui.archiving.actions.delete" name="删除" commandId="jingxian.ui.commands.archiving.action.delete"
+                     description="删除超时的邮件" />
+  </extension>
+
+  <!--____Icons_________________________________________________________________________________________________________-->
+  <extension
+   id="jingxian.ui.icons"
+    name="jingxian-mailer 图标"
+		description="邮件客户端的图标"
+		point="empinia.ui.icons">
+    <icon
+			id="jingxian.ui.icons.mail.png"
+			resource="jingxian.ui.Resources.mail.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.ui.icons.contact.png"
+      resource="jingxian.ui.Resources.contact.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.ui.icons.arrow_down.png"
+      resource="jingxian.ui.Resources.arrow_down.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.ui.icons.arrow_up.png"
+      resource="jingxian.ui.Resources.arrow_up.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.ui.icons.arrow_left.png"
+      resource="jingxian.ui.Resources.arrow_left.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.ui.icons.arrow_right.png"
+      resource="jingxian.ui.Resources.arrow_right.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.ui.icons.edit.png"
+      resource="jingxian.ui.Resources.edit.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.folder.attachments.png"
+      resource="jingxian.ui.Resources.folder.attachments.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.folder.calendar.png"
+      resource="jingxian.ui.Resources.folder.calendar.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.folder.draft.png"
+      resource="jingxian.ui.Resources.folder.draft.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.folder.dynamicfolder.png"
+      resource="jingxian.ui.Resources.folder.dynamicfolder.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.folder.inbox.png"
+      resource="jingxian.ui.Resources.folder.inbox.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.folder.junk.png"
+      resource="jingxian.ui.Resources.folder.junk.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.folder.mailinglist.png"
+      resource="jingxian.ui.Resources.folder.mailinglist.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.folder.newsgroup.png"
+      resource="jingxian.ui.Resources.folder.newsgroup.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.folder.note.png"
+      resource="jingxian.ui.Resources.folder.note.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.folder.outbox.png"
+      resource="jingxian.ui.Resources.folder.outbox.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.folder.sent.png"
+      resource="jingxian.ui.Resources.folder.sent.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.folder.standard.png"
+      resource="jingxian.ui.Resources.folder.standard.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.folder.today.png"
+      resource="jingxian.ui.Resources.folder.today.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.folder.trash.png"
+      resource="jingxian.ui.Resources.folder.trash.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.ui.icons.maillist.litter_point.png"
+      resource="jingxian.ui.Resources.litter_point.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.ui.icons.maillist.big_point.png"
+      resource="jingxian.ui.Resources.big_point.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.ui.icons.maillist.open_mail.ico"
+      resource="jingxian.ui.Resources.open_mail.ico"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.ui.icons.maillist.close_mail.ico"
+      resource="jingxian.ui.Resources.close_mail.ico"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.ui.icons.maillist.spam.png"
+      resource="jingxian.ui.Resources.spam.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.ui.icons.maillist.red_flag.png"
+      resource="jingxian.ui.Resources.red_flag.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.ui.icons.maillist.gray_flag.png"
+      resource="jingxian.ui.Resources.gray_flag.png"
+      assembly="jingxian.ui"/>
+    <icon
+      id="jingxian.ui.icons.maillist.right.png"
+      resource="jingxian.ui.Resources.right.png"
+      assembly="jingxian.ui"/>
+
+  </extension>
+</bundle>

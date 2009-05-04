@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.15" />
+  <Class Name="jingxian.mail.popper.POPClient" Collapsed="true">
+    <Position X="3.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>POPClient.cs</FileName>
+      <HashCode>AsQDBBAAFCgQAMATQAAAwbJACkAAAAACAIQMIgCCQDA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CurrentState" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="CommandHistory" />
+    </ShowAsCollectionAssociation>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Events" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Delegate Name="jingxian.mail.popper.POPClient.ReadMailDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>POPClient.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="jingxian.mail.popper.POPState" Collapsed="true">
+    <Position X="6.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>POPState.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAIAACAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="jingxian.mail.popper.AuthorizationState" Collapsed="true">
+    <Position X="6" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>AuthorizationState.cs</FileName>
+      <HashCode>AAAAAABAAAAAAAAEAAAAAAAABAAAIAACAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="jingxian.mail.popper.TransactionState" Collapsed="true">
+    <Position X="7.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>TransactionState.cs</FileName>
+      <HashCode>AAAAAABAAAAAAAAEAAAAAAAABAAAIAACAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="jingxian.mail.popper.DisconnectedState" Collapsed="true">
+    <Position X="4.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>DisconnectedState.cs</FileName>
+      <HashCode>AAAACABAAAAAAAAEAAAAAAAAAAAAIAACAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="jingxian.mail.popper.ReadingState" Collapsed="true">
+    <Position X="9.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ReadingState.cs</FileName>
+      <HashCode>AAAAAABAAAAAAAAEAAAAAAAABAAAIAACAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="jingxian.mail.popper.RFC1939.POPCommand" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>RFC1939\POPCommand.cs</FileName>
+      <HashCode>AABAAAAAQCBIAAQAAAAAAAAIAAAAIAAAAgABAAAAACA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+</ClassDiagram>
