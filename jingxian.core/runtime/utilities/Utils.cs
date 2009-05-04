@@ -244,8 +244,7 @@ namespace jingxian.core.runtime
 
 		public static string GetImplementationName(Type type)
 		{
-			if (type == default(Type))
-				throw new ArgumentNullException("type"); 
+            Enforce.ArgumentNotNull<Type>( type, "type"); 
 
 			string name = string.Format("{0}, {1}", type.FullName, type.Assembly.GetName().Name);
 			if (type.IsGenericType)
@@ -444,10 +443,9 @@ namespace jingxian.core.runtime
 
 		public static Type FindGreatestCommonType(Type type, Type commonType)
 		{
-			if (type == null)
-				throw new ArgumentNullException("type"); 
-			if (commonType == null)
-				throw new ArgumentNullException("commonType");
+            Enforce.ArgumentNotNull<Type>(type, "type");
+            Enforce.ArgumentNotNull<Type>(commonType, "commonType"); 
+
 			if (type == typeof(object) || commonType == typeof(object))
 				return typeof(object);
 

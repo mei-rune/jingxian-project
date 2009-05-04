@@ -10,12 +10,11 @@ namespace jingxian.core.runtime
     public delegate T ComponentActivator<T>(ICreationContext context);
     public delegate T ComponentActivatorWithParameters<T>(ICreationContext context, IEnumerable<IParameter> parameters);
 
-
     public interface IKernelBuilder
     {
-        ComponentLifestyle DefaultScope { get; }
+        ComponentLifestyle DefaultLifestyle { get; }
 
-        IDisposable SetDefaultScope(ComponentLifestyle scope);
+        void SetDefaultLifestyle(ComponentLifestyle scope);
 
         IKernel Build();
         

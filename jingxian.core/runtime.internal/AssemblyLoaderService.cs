@@ -71,10 +71,8 @@ namespace jingxian.core.runtime.simpl
 
 		public T CreateAppDomain<T>(string friendlyName, AppDomainSetup setup) where T: MarshalByRefObject, new()
 		{
-			if (setup == null)
-				throw new ArgumentNullException("setup");
-			if (string.IsNullOrEmpty(friendlyName))
-                throw new ArgumentException("friendlyName 不能为空.", "friendlyName");
+            Enforce.ArgumentNotNull<AppDomainSetup>(setup, "setup");
+            Enforce.ArgumentNotNullOrEmpty(friendlyName, "friendlyName");
 
 			Evidence baseEvidence = AppDomain.CurrentDomain.Evidence;
 			Evidence evidence = new Evidence(baseEvidence);
@@ -95,8 +93,7 @@ namespace jingxian.core.runtime.simpl
         /// </summary>
         public AppDomain GetAppDomain(string friendlyName)
 		{
-			if (string.IsNullOrEmpty(friendlyName))
-				throw new StringArgumentException("friendlyName");
+            Enforce.ArgumentNotNullOrEmpty(friendlyName, "friendlyName");
 
 			foreach (KeyValuePair<object, AppDomain> pair in LoadedAppDomains)
 			{
@@ -110,8 +107,8 @@ namespace jingxian.core.runtime.simpl
 
 		public AppDomain GetAppDomain(object proxy)
 		{
-			if (proxy == null)
-				throw new ArgumentNullException("proxy");
+            Enforce.ArgumentNotNull(proxy, "proxy");
+
             AppDomain result = null;
 
             LoadedAppDomains.TryGetValue(proxy, out result);
@@ -121,8 +118,7 @@ namespace jingxian.core.runtime.simpl
 
         public void UnloadAppDomain(AppDomain appDomain)
         {
-            if (appDomain == null)
-                throw new ArgumentNullException("appDomain");
+            Enforce.ArgumentNotNull<AppDomain>(appDomain, "appDomain");
 
             if (!LoadedAppDomains.ContainsValue(appDomain))
                 throw new CannotUnloadAppDomainException(
@@ -145,8 +141,7 @@ namespace jingxian.core.runtime.simpl
 
         public void UnloadAppDomain(string friendlyName)
         {
-            if (string.IsNullOrEmpty(friendlyName))
-                throw new StringArgumentException("friendlyName");
+            Enforce.ArgumentNotNullOrEmpty(friendlyName,"friendlyName");
 
 
             AppDomain appDomainToUnload = null;
@@ -174,13 +169,12 @@ namespace jingxian.core.runtime.simpl
 
 		public void UnloadAppDomain(object proxy)
 		{
-			if (proxy == null)
-				throw new ArgumentNullException("proxy");
+            Enforce.ArgumentNotNull(proxy, "proxy");
 
 			if (!LoadedAppDomains.ContainsKey(proxy))
 				throw new CannotUnloadAppDomainException(
 					string.Format(CultureInfo.InvariantCulture,
-					"Unable to unload AppDomain for proxy '{0}' which is not managed by this service.", proxy));
+					"不能为 '{0}' 卸载 AppDomain, 它不是本服务管理的.", proxy));
 
 				AppDomain appDomain = LoadedAppDomains[proxy];
 				LoadedAppDomains.Remove(proxy);
@@ -189,12 +183,7 @@ namespace jingxian.core.runtime.simpl
 
         public Assembly LoadAssembly(string simpleName)
         {
-
-            if (string.IsNullOrEmpty(simpleName))
-                throw new StringArgumentException("simpleName");
-
-
-            simpleName = AssertIsSimpleName(simpleName);
+            simpleName = AssertIsSimpleName(Enforce.ArgumentNotNullOrEmpty(simpleName, "simpleName"));
 
             if (!_runtimeCfg.AvailableAssemblies.MeetsCriteria(simpleName))
                 throw new AssemblyUnavailableException(simpleName);
@@ -281,8 +270,7 @@ namespace jingxian.core.runtime.simpl
 
 		public bool TryGetLoadedAssembly(string simpleName, out Assembly assembly)
 		{
-			if (string.IsNullOrEmpty(simpleName))
-				throw new StringArgumentException("simpleName");
+			Enforce.ArgumentNotNullOrEmpty(simpleName, "simpleName");
 
 			return LoadedAssemblies.TryGetValue(simpleName, out assembly);
 		}

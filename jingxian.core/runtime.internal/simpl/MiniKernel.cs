@@ -73,8 +73,8 @@ namespace jingxian.core.runtime.simpl
             , IEnumerable<IParameter> parameters
             , IProperties properties)
         {
-            _componentMap.Add(new registrars.MiniRegistration(id
-                , serviceTypes, classType, lifestyle, parameters, properties) );
+            _componentMap.Add(new Descriptor(id, serviceTypes
+                , classType, lifestyle, parameters, properties) );
         }
 
         public bool Disconnect(string id)
@@ -93,6 +93,16 @@ namespace jingxian.core.runtime.simpl
             if (_instanceMap.TryGetValue(serviceType, out instance))
                 return instance;
 
+            Descriptor descriptor = null;
+            if (_componentMap.TryGetValue(serviceType, out descriptor))
+            {
+                instance = GetService(descriptor);
+                if (   ComponentLifestyle.Singleton == descriptor.Lifestyle
+                    || ComponentLifestyle.DependencyInjectionOnly == descriptor.Lifestyle)
+                    _instanceMap.Add(descriptor.Id, descriptor.Services, instance);
+                return instance;
+            }
+
             return (null == _parent) ? null : _parent.GetService(serviceType);
         }
 
@@ -102,7 +112,17 @@ namespace jingxian.core.runtime.simpl
             if (_instanceMap.TryGetValue(serviceId, out instance))
                 return instance;
 
-            return (null == _parent) ? null : _parent.Get(serviceId);
+            Descriptor descriptor = null;
+            if (_componentMap.TryGetValue(serviceId, out descriptor))
+            {
+                instance = GetService(descriptor);
+                if (   ComponentLifestyle.Singleton == descriptor.Lifestyle
+                    || ComponentLifestyle.DependencyInjectionOnly == descriptor.Lifestyle )
+                    _instanceMap.Add(descriptor.Id, descriptor.Services, instance);
+                return instance;
+            }
+
+            return (null == _parent) ? null : _parent.GetService(serviceId);
         }
 
         public object this[Type serviceType]
@@ -135,16 +155,6 @@ namespace jingxian.core.runtime.simpl
             return null;
         }
 
-        public object Get(string id)
-        {
-            return GetService(id);
-        }
-
-        public object Get(Type service)
-        {
-            return GetService(service);
-        }
-
         #endregion
 
         #region Kernel Starter ≥…‘±
@@ -154,9 +164,10 @@ namespace jingxian.core.runtime.simpl
             if (_isStarted)
                 return;
 
-            foreach (KeyValuePair<string, object> kp in _servicesById)
+            foreach (KeyValuePair<string, Descriptor> kp in _componentMap )
             {
-                Start(this, kp.Value);
+                if( ComponentLifestyle.Singleton == kp.Value.Lifestyle )
+                    Start(this, GetService(kp.Value));
             }
 
             _isStarted = true;
@@ -167,7 +178,7 @@ namespace jingxian.core.runtime.simpl
             if (!_isStarted)
                 return;
 
-            foreach (KeyValuePair<string, object> kp in _servicesById)
+            foreach (KeyValuePair<string, object> kp in _instanceMap)
             {
                 Stop(this, kp.Value);
             }
@@ -175,7 +186,7 @@ namespace jingxian.core.runtime.simpl
             _isStarted = false;
         }
 
-        public static void Start(IKernel kernel, object instance)
+        public void Start(IKernel kernel, object instance)
         {
             invokeMethod("Start", kernel, instance);
         }
@@ -205,7 +216,7 @@ namespace jingxian.core.runtime.simpl
         }
 
 
-        protected object invokeConstructors(registrars.MiniRegistration descriptor)
+        protected object invokeConstructors( IComponentDescriptor descriptor)
         {
             ConstructorInfo[] constructors = descriptor.ImplementationType.GetConstructors();
             if (constructors.Length > 1)
@@ -222,12 +233,12 @@ namespace jingxian.core.runtime.simpl
             object[] parameters = new object[constructorParameters.Length];
 
             for (int i = 0; i < constructorParameters.Length; i++)
-                parameters[i] = Get(constructorParameters[i].ParameterType);
+                parameters[i] = GetService(constructorParameters[i].ParameterType);
 
             return constructor.Invoke(parameters);
         }
 
-        protected void invokeSetters(object instance, registrars.MiniRegistration descriptor)
+        protected void invokeSetters(object instance, IComponentDescriptor descriptor)
         {
             if (null == instance)
                 return;
@@ -241,7 +252,7 @@ namespace jingxian.core.runtime.simpl
 
                 try
                 {
-                    object val = Get(propertyType);
+                    object val = GetService(propertyType);
                     if (null != val)
                         propertyInfo.SetValue(instance, val, null);
                 }
@@ -252,7 +263,7 @@ namespace jingxian.core.runtime.simpl
             }
         }
 
-        protected object Get(registrars.MiniRegistration descriptor)
+        protected object GetService(IComponentDescriptor descriptor)
         {
             object instance = invokeConstructors(descriptor);
             invokeSetters(instance, descriptor);

@@ -11,8 +11,12 @@ namespace jingxian.core.runtime
 
         IEnumerable<Type> Services { get; }
 
-        IProperties ExtendedProperties { get; }
-
         Type ImplementationType { get; }
+
+        ComponentLifestyle Lifestyle{ get; }
+
+        IEnumerable<IParameter> Parameters{ get; }
+
+        IProperties ExtendedProperties { get; }
     }
 }

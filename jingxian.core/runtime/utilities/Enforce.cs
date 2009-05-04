@@ -4,12 +4,23 @@ using System;
 using System.Globalization;
 using System.Reflection;
 
-namespace jingxian.core.runtime
+namespace jingxian.core
 {
     using jingxian.core.runtime.utilities;
 
 	public static class Enforce
-	{
+    {
+        public static object ArgumentNotNull(object value, string name)
+        {
+            if (name == null)
+                throw new ArgumentNullException("name");
+
+            if (value == null)
+                throw new ArgumentNullException(name);
+
+            return value;
+        }
+
         public static T ArgumentNotNull<T>(T value, string name)
             where T : class
 		{
@@ -20,7 +31,7 @@ namespace jingxian.core.runtime
 				throw new ArgumentNullException(name);
 
             return value;
-		}
+        }
 
         public static object NotNull(object value, string description)
         {

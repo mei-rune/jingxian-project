@@ -13,10 +13,8 @@ namespace jingxian.core.runtime.castleIntegration
 	{
         public void ProcessModel(Castle.MicroKernel.IKernel kernel, ComponentModel model)
 		{
-			if (model == null)
-			{
-				throw new ArgumentNullException("model");
-			}
+            Enforce.ArgumentNotNull<Castle.MicroKernel.IKernel>(kernel, "kernel");
+			
 			if (typeof(IInitializable).IsAssignableFrom(model.Implementation))
 			{
 				model.LifecycleSteps.Add(LifecycleStepType.Commission, InitializationConcern.Instance);

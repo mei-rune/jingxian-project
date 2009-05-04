@@ -16,11 +16,7 @@ namespace jingxian.core.runtime
 		public ServiceAttribute(Type serviceInterface, Type implementation, string id, string bundleId)
 			: base(id, bundleId, Constants.Points.Services, implementation)
 		{
-			if (serviceInterface == null)
-				throw new ArgumentNullException("serviceInterface");
-
-		
-			_ServiceInterface = serviceInterface;
+            _ServiceInterface = Enforce.ArgumentNotNull <Type>( serviceInterface, "serviceInterface");
 		}
 
 		public Type ServiceInterface

@@ -9,38 +9,44 @@ namespace jingxian.core.runtime
 {
     public class Descriptor : IComponentDescriptor
     {
+        // 组件的id
         string _id;
+        // 组件的接口
         IEnumerable<Type> _services;
-        IProperties _extendedProperties;
+        // 组件的实现类型
         Type _implementationType;
+        // 生命周期
+        ComponentLifestyle _lifestyle;
+        // 参数
+        IEnumerable<IParameter> _parameters;
+        // 扩展属性
+        IProperties _extendedProperties;
 
-        public Descriptor( string id,
-            IEnumerable<Type> services,
-            Type bestKnownImplementationType)
-        : this(id, services, bestKnownImplementationType,  null )
+        public Descriptor( string id
+            , IEnumerable<Type> services
+            , Type bestKnownImplementationType)
+            : this(id
+            , services
+            , bestKnownImplementationType
+            , ComponentLifestyle.Singleton
+            , null, null )
         {
         }
 
-        public Descriptor( string id,
-            IEnumerable<Type> services, 
-            Type implementationType,
-            IProperties extendedProperties)
+        public Descriptor( string id
+            , IEnumerable<Type> services
+            , Type implementationType
+            , ComponentLifestyle lifestyle
+            , IEnumerable<IParameter> parameters
+            , IProperties extendedProperties)
         {
             _id = Enforce.ArgumentNotNullOrEmpty(id, "id");
             _services = Enforce.ArgumentNotNull(services, "services");
-
-
-            if (null == extendedProperties)
-                _extendedProperties = new MapProperties();
-            else
-                _extendedProperties = extendedProperties;
-
             _implementationType = Enforce.ArgumentNotNull(implementationType, "implementationType");
-        }
 
-        public IEnumerable<Type > Services
-        {
-            get { return _services; }
+            _lifestyle = lifestyle;
+            _parameters = parameters;
+            _extendedProperties = extendedProperties;
         }
 
         public string Id
@@ -48,9 +54,9 @@ namespace jingxian.core.runtime
             get { return _id; }
         }
 
-        public  IProperties ExtendedProperties
+        public IEnumerable<Type > Services
         {
-            get { return _extendedProperties; }
+            get { return _services; }
         }
 
         public Type ImplementationType
@@ -58,15 +64,35 @@ namespace jingxian.core.runtime
             get { return _implementationType; }
         }
 
+        public ComponentLifestyle Lifestyle
+        {
+            get { return _lifestyle; }
+        }
+
+        public IEnumerable<IParameter> Parameters
+        {
+            get { return _parameters; }
+        }
+
+        public IProperties ExtendedProperties
+        {
+            get { return _extendedProperties; }
+        }
+
         public override string ToString()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder("Id=");
             sb.Append(_id);
+            
             sb.Append(";Services=");
             Utils.Join<Type>(sb, ",", _services);
 
             sb.Append(";ImplementationType=");
             sb.Append(_implementationType.ToString());
+
+            sb.Append(";ComponentLifestyle=");
+            sb.Append(_lifestyle);
+            
             return sb.ToString();
         }
     }

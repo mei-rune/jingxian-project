@@ -14,12 +14,10 @@ namespace jingxian.core.runtime
 
         T  Get<T>();
 
-        object Get(string id);
-
         T Get<T>(string id);
 
         object Get(string id, Type service);
 
-        object Get(Type service);
+        object GetService(string id);
     }
 }

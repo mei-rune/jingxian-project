@@ -52,9 +52,8 @@ namespace jingxian.core.utilities
 		#region GetSchema
 
 		public static XmlSchema GetSchema(Stream stream)
-		{
-			if (stream == null)
-				throw new ArgumentNullException("stream");
+        {
+            Enforce.ArgumentNotNull<Stream>(stream, "stream");
 		
 			XmlSchema schema;
 			using (Stream schemaStream = stream)

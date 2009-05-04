@@ -79,8 +79,6 @@
     <Compile Include="ServiceLauncher.cs" />
     <Compile Include="ServiceRegistry.cs" />
     <Compile Include="simpl\ObjectMap.cs" />
-    <Compile Include="simpl\Registrars\MiniRegistration.cs" />
-    <Compile Include="simpl\Registrars\ReflectiveRegistrar.cs" />
     <Compile Include="simpl\Registrars\Registrar.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -9,7 +9,7 @@ namespace jingxian.core.runtime.simpl
 
     public class KernelBuilder : IKernelBuilder
     {
-        List<IComponentDescriptor> _descriptors = new List<IComponentDescriptor>();
+        List<registrars.MiniRegistrar> _registrars = new List<registrars.MiniRegistrar>();
 
         MiniKernel _kernel;
         ComponentLifestyle _defaultScope = ComponentLifestyle.Singleton;
@@ -21,49 +21,19 @@ namespace jingxian.core.runtime.simpl
 
         #region IKernelBuilder 成员
 
-        public ComponentLifestyle DefaultScope
+        public ComponentLifestyle DefaultLifestyle
         {
             get { return _defaultScope; }
         }
 
-        public IDisposable SetDefaultScope(ComponentLifestyle scope)
+        public void SetDefaultLifestyle(ComponentLifestyle scope)
         {
-            throw new NotImplementedException();
+            _defaultScope = scope;
         }
 
         public IKernel Build()
         {
-            foreach (IComponentDescriptor descriptor in _descriptors)
-            {
-            }
-
             return _kernel;
-        }
-
-
-        IComponentDescriptor GetDescriptor(string serviceId)
-        {
-            foreach (IComponentDescriptor descriptor in _descriptors)
-            {
-                if (serviceId == descriptor.Id)
-                    return descriptor;
-            }
-            return null;
-        }
-
-        IComponentDescriptor GetDescriptor(Type contract)
-        {
-            foreach (IComponentDescriptor descriptor in _descriptors)
-            {
-                if (null == descriptor.Services)
-                    continue;
-                foreach (Type type in descriptor.Services)
-                {
-                    if (type == contract)
-                        return descriptor;
-                }
-            }
-            return null;
         }
 
         public void RegisterModule(IModule module)
@@ -78,7 +48,9 @@ namespace jingxian.core.runtime.simpl
 
         public IReflectiveRegistrar Register(Type implementor)
         {
-            throw new NotImplementedException();
+             registrars.MiniRegistrar registrar = new registrars.MiniRegistrar( implementor );
+             _registrars.Add(registrar);
+             return registrar;
         }
 
         public IConcreteRegistrar Register<T>(ComponentActivator<T> creator)

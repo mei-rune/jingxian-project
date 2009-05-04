@@ -29,11 +29,7 @@ namespace jingxian.core.runtime.Xml.Expressions
 		public ObjectPropertyExpression(string name, string value)
 			: base()
 		{
-			if (string.IsNullOrEmpty(name))
-			{
-				throw new ArgumentNullException("name"); 
-			}
-			_ObjectPropertyName = name;
+			_ObjectPropertyName = Enforce.ArgumentNotNullOrEmpty(name, "name");
 			_ObjectPropertyValue = value;
 		}
 
