@@ -1,5 +1,0 @@
-D:\developing\jingxian-mailer\bin\Debug-2008\SMTPClient.exe
-D:\developing\jingxian-mailer\bin\Debug-2008\SMTPClient.pdb
-D:\developing\jingxian-mailer\Trunk\SMTPClient\obj\Debug\ResolveAssemblyReference.cache
-D:\developing\jingxian-mailer\Trunk\SMTPClient\obj\Debug\SMTPClient.exe
-D:\developing\jingxian-mailer\Trunk\SMTPClient\obj\Debug\SMTPClient.pdb

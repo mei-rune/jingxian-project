@@ -1,5 +1,0 @@
-D:\developing\jingxian-mailer\bin\Debug\jingxian.commons-2005.dll
-D:\developing\jingxian-mailer\bin\Debug\jingxian.commons-2005.pdb
-D:\developing\jingxian-mailer\Trunk\SMTPClient\obj\Debug\ResolveAssemblyReference.cache
-D:\developing\jingxian-mailer\Trunk\SMTPClient\obj\Debug\jingxian.commons-2005.dll
-D:\developing\jingxian-mailer\Trunk\SMTPClient\obj\Debug\jingxian.commons-2005.pdb
