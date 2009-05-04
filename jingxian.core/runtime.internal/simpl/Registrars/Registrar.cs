@@ -66,8 +66,9 @@ namespace jingxian.core.runtime.simpl.registrars
 
         public virtual TSyntax WithLifestyle(ComponentLifestyle lifestyle)
 		{
-            _lifestyle = lifestyle;
-            return Syntax;
+            throw new NotImplementedException();
+            //_lifestyle = lifestyle;
+            //return Syntax;
 		}
         
         public virtual TSyntax OnRegistered(EventHandler<RegisteredEventArgs> handler)
@@ -101,8 +102,9 @@ namespace jingxian.core.runtime.simpl.registrars
         public virtual TSyntax WithExtendedProperty(string key, object value)
         {
             Enforce.ArgumentNotNull(key, "key");
-            _extendedProperties.Add(key, value);
-            return Syntax;
+            throw new NotImplementedException();
+            //_extendedProperties.Add(key, value);
+            //return Syntax;
         }
 
 		protected virtual IEnumerable<Type> Services

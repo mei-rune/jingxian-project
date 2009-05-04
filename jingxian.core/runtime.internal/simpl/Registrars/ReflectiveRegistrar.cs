@@ -32,45 +32,50 @@ namespace jingxian.core.runtime.simpl.registrars
 
         public IReflectiveRegistrar UsingConstructor(params Type[] ctorSignature)
         {
-            Enforce.ArgumentNotNull(ctorSignature, "ctorSignature");
-            ConstructorInfo constructorInfo = _implementor.GetConstructor(ctorSignature);
-            if (null == constructorInfo)
-            {
-                var sig = new StringBuilder();
-                var first = true;
-                foreach (var t in ctorSignature)
-                {
-                    if (first)
-                        first = false;
-                    else
-                        sig.Append(", ");
-                    sig.Append(t.FullName);
-                }
+            throw new NotImplementedException();
 
-                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture,
-                    "数型 '{0}' 不能提供带有签名 '{1}' 的构造函数!",
-                    _implementor, sig));
-            }
-            _constructorInfo = constructorInfo;
-            return this;
+            //Enforce.ArgumentNotNull(ctorSignature, "ctorSignature");
+            //ConstructorInfo constructorInfo = _implementor.GetConstructor(ctorSignature);
+            //if (null == constructorInfo)
+            //{
+            //    var sig = new StringBuilder();
+            //    var first = true;
+            //    foreach (var t in ctorSignature)
+            //    {
+            //        if (first)
+            //            first = false;
+            //        else
+            //            sig.Append(", ");
+            //        sig.Append(t.FullName);
+            //    }
+
+            //    throw new ArgumentException(string.Format(CultureInfo.CurrentCulture,
+            //        "数型 '{0}' 不能提供带有签名 '{1}' 的构造函数!",
+            //        _implementor, sig));
+            //}
+            //_constructorInfo = constructorInfo;
+            //return this;
         }
 
         public IReflectiveRegistrar WithArgument(IParameter additionalCtorArg)
         {
-            _additionalCtorArgs.Add(Enforce.ArgumentNotNull<IParameter>(
-                additionalCtorArg, "additionalCtorArg"));
-            return Syntax;
+            throw new NotImplementedException();
+            //_additionalCtorArgs.Add(Enforce.ArgumentNotNull<IParameter>(
+            //    additionalCtorArg, "additionalCtorArg"));
+            //return Syntax;
         }
 
         public IReflectiveRegistrar WithArguments(params IParameter[] additionalCtorArgs)
         {
-            return WithArguments(additionalCtorArgs);
+            throw new NotImplementedException();
+            //return WithArguments(additionalCtorArgs);
         }
 
         public IReflectiveRegistrar WithArguments(IEnumerable<IParameter> additionalCtorArgs)
         {
-            _additionalCtorArgs.AddRange( Enforce.ArgumentNotNull(additionalCtorArgs, "additionalCtorArgs") );
-            return this;
+            throw new NotImplementedException();
+            //_additionalCtorArgs.AddRange( Enforce.ArgumentNotNull(additionalCtorArgs, "additionalCtorArgs") );
+            //return this;
         }
 
         protected override IReflectiveRegistrar Syntax

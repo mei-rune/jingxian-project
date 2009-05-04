@@ -66,62 +66,6 @@ namespace jingxian.core.runtime.simpl
             return null;
         }
 
-
-        protected object invokeConstructors(IComponentDescriptor descriptor)
-        {
-            ConstructorInfo[] constructors = descriptor.ImplementationType.GetConstructors();
-            if (constructors.Length > 1)
-                throw new RuntimeException(string.Format("不能创建服务[{0}]实例,类型[{1}]有多个构造函数", descriptor.Id, descriptor.ImplementationType.FullName));
-            else if (constructors.Length != 1)
-                throw new RuntimeException(string.Format("不能创建服务[{0}]实例,类型[{1}]没有构造函数", descriptor.Id, descriptor.ImplementationType.FullName));
-
-            ConstructorInfo constructor = constructors[0];
-            ParameterInfo[] constructorParameters = constructor.GetParameters();
-
-            if (constructorParameters.Length == 0)
-                return Activator.CreateInstance(descriptor.ImplementationType);
-
-            object[] parameters = new object[constructorParameters.Length];
-
-            for (int i = 0; i < constructorParameters.Length; i++)
-                parameters[i] = Resolve(constructorParameters[i].ParameterType);
-
-            return constructor.Invoke(parameters);
-        }
-
-        protected void invokeSetters( object instance)
-        {
-            if (null == instance)
-                return;
-
-            foreach (PropertyInfo descriptor in instance.GetType().GetProperties())
-            {
-                if (!descriptor.CanWrite || null == descriptor.GetSetMethod())
-                    continue;
-
-                Type propertyType = descriptor.PropertyType;
-
-                try
-                {
-                    object val = Resolve( propertyType );
-                    if (null != val)
-                        descriptor.SetValue(instance, val, null);
-                }
-                catch (Exception exception)
-                {
-                    throw new RuntimeException(string.Format("创建服务[ " + propertyType.Name + "]失败", exception));
-                }
-            }
-        }
-
-        object Resolve(Type contract)
-        {
-            IComponentDescriptor descriptor = GetDescriptor(contract);
-            object instance = this.invokeConstructors(descriptor);
-            this.invokeSetters(instance);
-            return instance;
-        }
-
         public void RegisterModule(IModule module)
         {
             throw new NotImplementedException();
