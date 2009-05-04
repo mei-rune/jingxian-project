@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.empinia.org/release/0.2/schemas/Bundle.xsd"
+	targetNamespace="http://www.empinia.org/release/0.2/schemas/Bundle.xsd"
+	elementFormDefault="qualified" attributeFormDefault="unqualified" version="0.1">
+  <xs:element name="dataExplorer" type="DataExplorerConfiguration">
+    <xs:annotation>
+      <xs:documentation>A DataExplorer configuration.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="DataExplorerConfiguration">
+    <xs:sequence >
+      <xs:element name ="table" type="TableModelConfiguration" minOccurs="0" maxOccurs="1" >
+      </xs:element>
+      <xs:element name ="view" minOccurs="0" maxOccurs="1" >
+        <xs:complexType>
+          <xs:attribute name="ref" type="xs:string" />
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string" />
+    <xs:attribute name="description" type="xs:string" use="optional" />
+  </xs:complexType>
+
+
+  <xs:complexType name="TableModelConfiguration">
+    <xs:sequence minOccurs="1" maxOccurs="unbounded">
+      <xs:element name="column" type="ColumnModelConfiguration">
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name ="ColumnModelConfiguration">
+    <xs:attribute name="id" type="xs:string" />
+    <xs:attribute name="type" type="xs:string" />
+    <xs:attribute name="text" type="xs:string" use="optional" />
+    <xs:attribute name="format" type="xs:string" use="optional" />
+    <xs:attribute name="alignment" type="xs:string" use="optional" />
+    <xs:attribute name="width" type="xs:string" use="optional" />
+    <xs:attribute name="contentWidth" type="xs:string" use="optional" />
+    <xs:attribute name="image" type="xs:string" use="optional" />
+    <xs:attribute name="imageOnRight" type="xs:string" use="optional" />
+    <xs:attribute name="visible" type="xs:string" use="optional" />
+    <xs:attribute name="sortable" type="xs:string" use="optional" />
+    <xs:attribute name="resizable" type="xs:string" use="optional" />
+    <xs:attribute name="editable" type="xs:string" use="optional" />
+    <xs:attribute name="enabled" type="xs:string" use="optional" />
+    <xs:attribute name="selectable" type="xs:string" use="optional" />
+    <xs:attribute name="toolTipText" type="xs:string" use="optional" />
+    <xs:attribute name="description" type="xs:string" use="optional" />
+  </xs:complexType>
+  
+</xs:schema>

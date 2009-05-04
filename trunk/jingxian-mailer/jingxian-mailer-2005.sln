@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jingxian-mailer-2005", "jingxian-mailer\jingxian-mailer-2005.csproj", "{F71066AE-9652-4A7D-B04F-5EF18D3AC7E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMTPClient-2005", "SMTPClient\SMTPClient-2005.csproj", "{3B1714D3-BDED-41F8-92FC-09AC513B73CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PopConsoleTest-2005", "PopConsoleTest\PopConsoleTest-2005.csproj", "{2535CD38-03D4-4978-961B-98ECEDD27B87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POPClient-2005", "POP.Console\POPClient-2005.csproj", "{92636205-880D-4CA9-AC71-9311A9DC9938}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jingxian.ui.controls-2005", "jingxian.ui.controls\jingxian.ui.controls-2005.csproj", "{55C512AB-AB50-49C7-BE01-3C2E3857DE2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jingxian.ui-2005", "jingxian.ui\jingxian.ui-2005.csproj", "{9ACEA1A1-38CC-4221-BA4A-F46972ACE6AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jingxian.commons-2005", "jingxian.commons\jingxian.commons-2005.csproj", "{955C9AC8-C9D2-483D-B368-1DABD6B73F68}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F71066AE-9652-4A7D-B04F-5EF18D3AC7E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F71066AE-9652-4A7D-B04F-5EF18D3AC7E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F71066AE-9652-4A7D-B04F-5EF18D3AC7E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F71066AE-9652-4A7D-B04F-5EF18D3AC7E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B1714D3-BDED-41F8-92FC-09AC513B73CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B1714D3-BDED-41F8-92FC-09AC513B73CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B1714D3-BDED-41F8-92FC-09AC513B73CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B1714D3-BDED-41F8-92FC-09AC513B73CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2535CD38-03D4-4978-961B-98ECEDD27B87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2535CD38-03D4-4978-961B-98ECEDD27B87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2535CD38-03D4-4978-961B-98ECEDD27B87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2535CD38-03D4-4978-961B-98ECEDD27B87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92636205-880D-4CA9-AC71-9311A9DC9938}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92636205-880D-4CA9-AC71-9311A9DC9938}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92636205-880D-4CA9-AC71-9311A9DC9938}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92636205-880D-4CA9-AC71-9311A9DC9938}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55C512AB-AB50-49C7-BE01-3C2E3857DE2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55C512AB-AB50-49C7-BE01-3C2E3857DE2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55C512AB-AB50-49C7-BE01-3C2E3857DE2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55C512AB-AB50-49C7-BE01-3C2E3857DE2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9ACEA1A1-38CC-4221-BA4A-F46972ACE6AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9ACEA1A1-38CC-4221-BA4A-F46972ACE6AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9ACEA1A1-38CC-4221-BA4A-F46972ACE6AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9ACEA1A1-38CC-4221-BA4A-F46972ACE6AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{955C9AC8-C9D2-483D-B368-1DABD6B73F68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{955C9AC8-C9D2-483D-B368-1DABD6B73F68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{955C9AC8-C9D2-483D-B368-1DABD6B73F68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{955C9AC8-C9D2-483D-B368-1DABD6B73F68}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

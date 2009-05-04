@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlMap namespace="dbo_Filter" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <resultMaps>
+    <resultMap class="jingxian.data.Filter" id="abatorgenerated_FiltersResult">
+    <result column="id" dbType="Int" property="Id" />
+    <result column="filtername" dbType="NVarChar" property="Name" />
+    <result column="filtertype" dbType="NVarChar" property="Type" />
+    <result column="itemgroup" dbType="Int" property="ItemGroup" />
+    <result column="idparent" dbType="Int" property="Parent" />
+    <result column="ordering" dbType="Int" property="Ordering" />
+    <result column="filterdata" dbType="Text" property="Data" />
+  </resultMap>
+  </resultMaps>
+  <statements>
+  <select id="GetFilter" resultMap="abatorgenerated_FiltersResult">
+    select id, filtername, filtertype, itemgroup, idparent, ordering
+    from dbo.Filters
+    where id=#value#
+  </select>
+  <delete id="DeleteFilter">
+    delete from dbo.Filters
+    where id=#value#
+  </delete>
+  <insert id="InsertFilter" parameterClass="jingxian.data.Filter">
+    insert into dbo.Filters (id, filtername, filtertype, itemgroup, idparent, ordering, filterdata)
+    values (#Id:Int#, #Name:NVarChar#, #Type:NVarChar#, #ItemGroup:Int#,
+    #Parent:Int#, #Ordering:Int#, #Data:Text#)
+  </insert>
+  <select id="GetCountForFilter">
+    select count(*) from dbo.Filters
+  </select>
+  </statements>
+</sqlMap>

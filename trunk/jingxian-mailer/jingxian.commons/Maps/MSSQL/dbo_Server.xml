@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlMap namespace="dbo_server" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <resultMaps>
+  <resultMap class="jingxian.data.BaseServer" id="baseServer">
+      <result column="id" dbType="Int" property="Id" />
+      <result column="servercaption" dbType="NVarChar" property="Caption" />
+      <result column="serverdns" dbType="NVarChar" property="Address" />
+      <result column="serverport" dbType="Int" property="Port" />
+      <result column="serverusername" dbType="NVarChar" property="UserName" />
+      <result column="serverpassword" dbType="NVarChar" property="Password" />
+      <result column="serverparam" dbType="Text" property="Misc" typeHandler="jingxian.data.PropertiesTypeHandler,jingxian.commons" />
+      <discriminator column="servertype" type="string" />
+      <subMap value="smtp" resultMapping="SmtpServer" />
+      <subMap value="pop" resultMapping="PopServer" />
+      <subMap value="proxy" resultMapping="ProxyServer" />
+    </resultMap>
+    
+    <resultMap id="SmtpServer" class="jingxian.data.SmtpServer" extends="baseServer">
+    </resultMap>
+
+    <resultMap id="PopServer" class="jingxian.data.PopServer" extends="baseServer">
+    </resultMap>
+
+    <resultMap id="ProxyServer" class="jingxian.data.ProxyServer" extends="baseServer">
+    </resultMap>
+
+  </resultMaps>
+  <statements>
+    
+    <select id="GetPOPs"  resultMap="PopServer">
+      select *
+      from dbo.mail_servers
+      where servertype='pop'
+    </select>
+    <select id="GetPOP"  resultMap="PopServer">
+      select *
+      from dbo.mail_servers
+      where servertype='pop' and id=#value#
+    </select>
+    <select id="GetSmtps"  resultMap="SmtpServer">
+      select *
+      from dbo.mail_servers
+      where servertype='smtp'
+    </select>
+    <select id="GetSmtp"  resultMap="SmtpServer">
+      select *
+      from dbo.mail_servers
+      where servertype='smtp' and id=#value#
+    </select>
+    <select id="GetProxys"  resultMap="ProxyServer">
+      select *
+      from dbo.mail_servers
+      where servertype='proxy'
+    </select>
+    <select id="GetProxy"  resultMap="ProxyServer">
+      select *
+      from dbo.mail_servers
+      where servertype='proxy' and id=#value#
+    </select>
+    <select id="GetAllServers"  resultMap="baseServer">
+      select *
+      from dbo.mail_servers
+    </select>
+  <select id="GetServer"  resultMap="baseServer">
+    select *
+    from dbo.mail_servers
+    where id=#value#
+  </select>
+  <delete id="DeleteServer" >
+    delete from dbo.mail_servers
+    where id=#value#
+  </delete>
+  <insert id="InsertServer" parameterClass="jingxian.data.BaseServer">
+    insert into dbo.mail_servers ( servercaption, serverdns, serverport, serverusername,
+    serverpassword, servertype, serverparam)
+    values ( #Caption:NVarChar#, #Address:NVarChar#, #Port:Int#,
+    #UserName:NVarChar#, #Password:NVarChar#, #Type:NVarChar#,#Misc,handler=stringMap#)
+  </insert>
+    <update id="UpdateServer" parameterClass="jingxian.data.BaseServer">
+      update dbo.mail_servers set
+      servercaption = #Caption:NVarChar#,
+      serverdns = #Address:NVarChar#,
+      serverport = #Port:Int#,
+      serverusername = #UserName:NVarChar#,
+      serverpassword = #Password:NVarChar#,
+      servertype = #Type:NVarChar#,
+      serverparam = #Misc,handler=stringMap#
+      where id = #Id:Int#
+    </update>
+    <update id="UpdateProperties" parameterClass="jingxian.data.BaseServer">
+      update dbo.mail_servers set
+      serverparam = #Misc,handler=stringMap#
+      where id = #Id:Int#
+    </update>
+  <select id="GetCountForServer">
+    select count(*) from dbo.mail_servers
+  </select>
+  </statements>
+</sqlMap>

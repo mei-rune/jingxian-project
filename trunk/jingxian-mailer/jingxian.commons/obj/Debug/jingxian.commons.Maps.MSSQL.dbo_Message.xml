@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlMap namespace="dbo_message" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <resultMaps>
+    <resultMap class="jingxian.data.Message" id="abatorgenerated_MessageResult">
+      <result column="id" dbType="Int" property="Id" />
+      <result column="idnewsserver" dbType="Int" property="NewsServer" />
+      <result column="itemgroup" dbType="Int" property="ItemGroup" />
+      <result column="category" dbType="Int" property="Category" />
+      <result column="idparent" dbType="NVarChar" property="Parent" />
+      <result column="attachment_size" dbType="Int" property="AttachmentSize" />
+      <result column="messageindex" dbType="Int" property="MessageIndex" />
+      <result column="folder" dbType="Int" property="Folder" />
+      <result column="textcolor" dbType="Int" property="TextColor" />
+      <result column="backgroundcolor" dbType="Int" property="BackgroundColor" />
+      <result column="messagetype" dbType="Int" property="MessageType" />
+      <result column="receiveddate" dbType="DateTime" property="ReceivedDate" />
+      <result column="isspam" dbType="Int" property="IsSpam" />
+      <result column="importance" dbType="Int" property="Importance" />
+      <result column="uid" dbType="NVarChar" property="UId" />
+
+      <result column="info_read" dbType="Int" property="InfoRead" />
+      <result column="info_reply" dbType="NVarChar" property="InfoReply" />
+
+      <result column="header_date" dbType="DateTime" property="HeaderDate" />
+      <result column="header_from" dbType="NVarChar" property="HeaderFrom" />
+      <result column="header_newsgroup" dbType="NVarChar" property="HeaderNewsGroup" />
+      <result column="header_messageid" dbType="NVarChar" property="HeaderMessageId" />
+      <result column="header_cc" dbType="Text" property="HeaderCC" />
+      <result column="header_bcc" dbType="Text" property="HeaderBCC" />
+      <result column="header_subject" dbType="Text" property="HeaderSubject" />
+      <result column="header_references" dbType="Text" property="HeaderReferences" />
+      <result column="header_to" dbType="Text" property="HeaderTO" />
+      <result column="header_mime" dbType="NVarChar" property="HeaderMime" />
+      <result column="header_size" dbType="Int" property="HeaderSize" />
+
+    </resultMap>
+    <resultMap class="jingxian.data.MessageWithBLOBs" extends="dbo_message.abatorgenerated_MessageResult" id="abatorgenerated_MessageResultWithBLOBs">
+      <result column="raw_header" dbType="Image" property="RawHeader" />
+      <result column="raw_body" dbType="Image" property="RawBody" />
+      <result column="misc" dbType="Text" property="Misc" typeHandler="stringMap" />
+    </resultMap>
+  </resultMaps>
+  <statements>
+
+    <select id="GetAllMessages" resultMap="abatorgenerated_MessageResult">
+      select id,uid,idnewsserver,itemgroup,category,idparent
+      ,messageindex,folder,textcolor,backgroundcolor,messagetype
+      ,receiveddate,isspam,importance,info_read,info_reply
+      ,header_date,header_from,header_cc,header_bcc,header_newsgroup
+      ,header_subject,header_messageid,header_references,header_to
+      ,header_mime,header_size,attachment_size
+      from dbo.mail_message
+    </select>
+
+    <select id="GetMessage" resultMap="abatorgenerated_MessageResult">
+      select id,uid,idnewsserver,itemgroup,category,idparent
+      ,messageindex,folder,textcolor,backgroundcolor,messagetype
+      ,receiveddate,isspam,importance,info_read,info_reply
+      ,header_date,header_from,header_cc,header_bcc,header_newsgroup
+      ,header_subject,header_messageid,header_references,header_to
+      ,header_mime,header_size,attachment_size
+      from dbo.mail_message
+      where id=#value#
+    </select>
+    <select id="GetMessageWithBLOBs" resultMap="abatorgenerated_MessageResultWithBLOBs">
+      select id,uid,idnewsserver,itemgroup,category,idparent
+      ,messageindex,folder,textcolor,backgroundcolor,messagetype
+      ,receiveddate,isspam,importance,info_read,info_reply
+      ,header_date,header_from,header_cc,header_bcc,header_newsgroup
+      ,header_subject,header_messageid,header_references,header_to
+      ,header_mime,header_size,attachment_size,raw_header,raw_body,misc
+      from dbo.mail_message
+      where id=#value#
+    </select>
+    <delete id="DeleteMessage" >
+      delete from dbo.mail_message
+      where id=#value#
+    </delete>
+    <insert id="InsertMessage" parameterClass="jingxian.data.MessageWithBLOBs">
+      insert into dbo.mail_message (uid,idnewsserver,itemgroup,category,idparent
+      ,messageindex,folder,textcolor,backgroundcolor,messagetype
+      ,receiveddate,isspam,importance,info_read,info_reply
+      ,header_date,header_from,header_cc,header_bcc,header_newsgroup
+      ,header_subject,header_messageid,header_references,header_to
+      ,header_mime,header_size,attachment_size,raw_header,raw_body,misc )
+      values (#UId:NVarChar#, #NewsServer:Int#, #ItemGroup:Int#,#Category:Int#, #Parent:NVarChar#,
+      #MessageIndex:Int#, #Folder:Int#, #TextColor:Int#,#BackgroundColor:Int#, #MessageType:Int#,
+      #ReceivedDate:DateTime#, #IsSpam:Int#, #Importance:Int#,#InfoRead:Int#, #InfoReply:NVarChar#,
+      #HeaderDate:DateTime#, #HeaderFrom:NVarChar#,#HeaderCC:Text#,#HeaderBCC:Text#,#HeaderNewsGroup:NVarChar#,
+      #HeaderSubject:Text#,#HeaderMessageId:NVarChar#,  #HeaderReferences:Text#, #HeaderTO:Text#,
+      #HeaderMime:NVarChar#, #HeaderSize:Int#, #AttachmentSize:Int#,#RawHeader:Image#,#RawBody:Image#, #Misc,handler=stringMap#, )
+    </insert>
+    <update id="UpdateMessageForImportance" parameterClass="jingxian.data.Message">
+      update dbo.mail_message
+      set importance = #Importance:Int#
+      where id = #Id:Int#
+    </update>
+    <update id="UpdateMessageForReadState" parameterClass="jingxian.data.Message">
+      update dbo.mail_message
+      set info_read = #InfoRead:Int#
+      where id = #Id:Int#
+    </update>
+    <update id="UpdateMessageForIsSpam" parameterClass="jingxian.data.Message">
+      update dbo.mail_message
+      set isspam = #IsSpam:Int#
+      where id = #Id:Int#
+    </update>
+    <select id="GetCountForMessage">
+      select count(*) from dbo.mail_message
+    </select>
+  </statements>
+</sqlMap>
