@@ -41,9 +41,9 @@ namespace jingxian.core.runtime
             , IProperties extendedProperties)
         {
             _id = Enforce.ArgumentNotNullOrEmpty(id, "id");
-            _services = Enforce.ArgumentNotNull(services, "services");
             _implementationType = Enforce.ArgumentNotNull(implementationType, "implementationType");
 
+            _services = services;
             _lifestyle = lifestyle;
             _parameters = parameters;
             _extendedProperties = extendedProperties;

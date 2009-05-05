@@ -143,7 +143,7 @@ namespace jingxian.core.runtime.simpl
 
 		public T BuildTransient<T>(IExtension extension)
 		{
-			T implementation = _objectBuilderService.BuildTransient<T>(extension.Implementation);
+			T implementation = (T)_objectBuilderService.BuildTransient(extension.Implementation);
 
 			IExtensionAware awareImplementation = implementation as IExtensionAware;
 			if (awareImplementation != null)

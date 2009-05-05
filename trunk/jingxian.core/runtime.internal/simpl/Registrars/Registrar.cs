@@ -3,22 +3,23 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace jingxian.core.runtime.simpl.registrars
+namespace jingxian.core.runtime.simpl.mini.registrars
 {
     using jingxian.core.runtime.registrars;
 
-    public class MiniRegistrar : IReflectiveRegistrar
+    public class Registrar : IReflectiveRegistrar
 	{
         string _id;
         IList<Type> _services = new List<Type>();
         Type _implementor;
         ComponentLifestyle _lifestyle = ComponentLifestyle.Singleton;
-        List<IParameter> _parameters = new List<IParameter>();
-        IDictionary<string, object> _extendedProperties = new Dictionary<string, object>();
+        List<IParameter> _parameters;
+        IProperties _extendedProperties;
 
-        public MiniRegistrar(Type implementor)
+        public Registrar(Type implementor)
 		{
             _implementor = Enforce.ArgumentNotNull(implementor, "implementor");
+            _parameters = null;
 		}
 
         public IReflectiveRegistrar Named(string id)
@@ -66,6 +67,9 @@ namespace jingxian.core.runtime.simpl.registrars
         {
             Enforce.ArgumentNotNullOrEmpty(key, "key");
             Enforce.ArgumentNotNull(value, "value");
+            if (null == _extendedProperties)
+                _extendedProperties = new MapProperties();
+
             _extendedProperties[key] = value;
             return this;
         }
@@ -157,5 +161,12 @@ namespace jingxian.core.runtime.simpl.registrars
         }
 
         #endregion
+
+        public void Configure(MiniKernel kernel)
+        {
+            Enforce.ArgumentNotNull(kernel, "kernel");
+
+            kernel.Connect(_id, _services, _implementor, _lifestyle, _parameters, _extendedProperties);
+        }
     }
 }

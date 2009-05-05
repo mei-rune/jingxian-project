@@ -52,8 +52,7 @@
 //        #region IObjectBuilder Members
 //        public bool TryGetType(string typeName, out Type type)
 //        {
-//            if (string.IsNullOrEmpty(typeName))
-//                throw new StringArgumentException("typeName"); 
+//            Enforce.ArgumentNotNullOrEmpty(typeName, "typeName");
 
 		
 //            type = Type.GetType(typeName, false, false);
@@ -62,8 +61,7 @@
 
 //        public Type GetType(string typeName)
 //        {
-//            if (string.IsNullOrEmpty(typeName))
-//                throw new StringArgumentException("typeName"); 
+//            Enforce.ArgumentNotNullOrEmpty(typeName, "typeName");
 		
 //            Type type = Type.GetType(typeName, true, false);
 //            return type;
@@ -71,12 +69,9 @@
 
 //        public T BuildTransient<T>(string id, Type classType, Type contractType)
 //        {
-//            if (string.IsNullOrEmpty(id))
-//                throw new StringArgumentException("id");
-//            if (classType == null)
-//                throw new ArgumentNullException("classType");
-//            if (contractType == null)
-//                throw new ArgumentNullException("contractType"); 
+//           Enforce.ArgumentNotNullOrEmpty(id, "id");
+//           Enforce.ArgumentNotNull(classType, "classType");
+//           Enforce.ArgumentNotNull(contractType, "contractType");
 
 
 //            Container.Connect(id, classType, contractType, ComponentLifestyle.DependencyInjectionOnly);
@@ -88,14 +83,10 @@
 
 //        public T BuildTransient<T>(string id, Type classType, Type contractType, IDictionary arguments)
 //        {
-//            if (string.IsNullOrEmpty(id))
-//                throw new StringArgumentException("id");
-//            if (classType == null)
-//                throw new ArgumentNullException("classType");
-//            if (contractType == null)
-//                throw new ArgumentNullException("contractType");
-//            if (arguments == null)
-//                throw new ArgumentNullException("arguments");
+//           Enforce.ArgumentNotNullOrEmpty(id, "id");
+//           Enforce.ArgumentNotNull(classType, "classType");
+//           Enforce.ArgumentNotNull(contractType, "contractType");
+//           Enforce.ArgumentNotNull(arguments, "arguments");
 
 //            Container.Connect(id, classType, contractType, ComponentLifestyle.DependencyInjectionOnly);
 //            T instance = (T) Container.Get(id, arguments);
@@ -106,8 +97,7 @@
 
 //        public T BuildTransient<T>(Type classType)
 //        {
-//            if (classType == null)
-//                throw new ArgumentNullException("classType");
+//           Enforce.ArgumentNotNull(classType, "classType");
 
 
 //            string id = GetUniqueId(classType);
@@ -121,10 +111,8 @@
 
 //        public T BuildTransient<T>(Type classType, IDictionary arguments)
 //        {
-//            if (classType == null)
-//                throw new ArgumentNullException("classType");
-//            if (arguments == null)
-//                throw new ArgumentNullException("arguments");
+//           Enforce.ArgumentNotNull(classType, "classType");
+//           Enforce.ArgumentNotNull(arguments, "arguments");
 
 //            string id = GetUniqueId(classType);
 //            Container.Connect(id, classType, typeof(T), ComponentLifestyle.DependencyInjectionOnly);

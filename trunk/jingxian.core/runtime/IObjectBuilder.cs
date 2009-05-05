@@ -9,11 +9,18 @@ namespace jingxian.core.runtime
     {
         bool TryGetType(string typeName, out Type type);
         Type GetType(string typeName);
-        T BuildTransient<T>(string id, Type classType, Type contractType);
-        T BuildTransient<T>(string id, Type classType, Type contractType, IDictionary arguments);
-        T BuildTransient<T>(Type classType);
-        T BuildTransient<T>(Type classType, IDictionary arguments);
-        T BuildTransient<T>(string classType);
-        T BuildTransient<T>(string classType, IDictionary arguments);
+
+
+        T BuildTransient<T>();
+        // 暂时不做
+        //T BuildTransient<T>(IProperties arguments);
+
+        object BuildTransient(Type classType);
+        // 暂时不做
+        //object BuildTransient(Type classType, IProperties arguments);
+
+        object BuildTransient(string classType);
+        // 暂时不做
+        //object BuildTransient(string classType, IProperties arguments);
     }
 }
