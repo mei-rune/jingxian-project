@@ -5,6 +5,10 @@ namespace jingxian.core.runtime.registrars
 {
     public interface IReflectiveRegistrar : IConcreteRegistrar<IReflectiveRegistrar>
     {
+        IReflectiveRegistrar WithLifestyle(ComponentLifestyle scope);
+
+        IReflectiveRegistrar WithProposedLevel(int level);
+
         IReflectiveRegistrar UsingConstructor(params Type[] ctorSignature);
 
         IReflectiveRegistrar WithArgument( IParameter additionalCtorArg);

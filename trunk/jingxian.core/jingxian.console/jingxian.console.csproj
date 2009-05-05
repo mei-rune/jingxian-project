@@ -49,10 +49,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\runtime.integration\Castle\jingxian.core.runtime.castleIntegration.csproj">
-      <Project>{880F7100-8E47-4C76-824D-05418A7A3450}</Project>
-      <Name>jingxian.core.runtime.castleIntegration</Name>
-    </ProjectReference>
     <ProjectReference Include="..\runtime.internal\jingxian.core.runtime.internal.csproj">
       <Project>{F3530AA2-B0CC-4ECC-B5DD-D1F32BB8F484}</Project>
       <Name>jingxian.core.runtime.internal</Name>

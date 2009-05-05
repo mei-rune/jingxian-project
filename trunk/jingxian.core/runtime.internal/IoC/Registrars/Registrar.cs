@@ -10,6 +10,7 @@ namespace jingxian.core.runtime.registrars
         string _id;
         IList<Type> _services = new List<Type>();
         ComponentLifestyle _lifestyle = ComponentLifestyle.Singleton;
+        int _level;
         IList<EventHandler<PreparingEventArgs>> _preparingHandlers = new List<EventHandler<PreparingEventArgs>>();
         IList<EventHandler<ActivatingEventArgs>> _activatingHandlers = new List<EventHandler<ActivatingEventArgs>>();
         IList<EventHandler<ActivatedEventArgs>> _activatedHandlers = new List<EventHandler<ActivatedEventArgs>>();
@@ -18,11 +19,11 @@ namespace jingxian.core.runtime.registrars
         
         protected abstract TSyntax Syntax { get; }
 
-        public virtual void Configure( IKernel container )
+        public virtual void Configure(  )
         {
-            Enforce.ArgumentNotNull(container, "container");
+            //Enforce.ArgumentNotNull(container, "container");
 
-            DoConfigure(container);
+            //DoConfigure(container);
         }
 
         public TSyntax Named(string id)
@@ -66,7 +67,13 @@ namespace jingxian.core.runtime.registrars
 		{
             _lifestyle = lifestyle;
             return Syntax;
-		}
+        }
+
+        public virtual TSyntax WithProposedLevel(int level)
+        {
+            _level = level;
+            return Syntax;
+        }
         
         public virtual TSyntax OnRegistered(EventHandler<RegisteredEventArgs> handler)
         {
@@ -120,12 +127,6 @@ namespace jingxian.core.runtime.registrars
             foreach (Type service in services)
                 AddService(service);
         }
-
-        protected virtual ComponentLifestyle Lifestyle
-		{
-            get { return _lifestyle; }
-            set { _lifestyle = value; }
-		}
 
         protected virtual IEnumerable<EventHandler<PreparingEventArgs>> PreparingHandlers
         {

@@ -70,6 +70,7 @@ namespace jingxian.core.runtime.simpl
             , IEnumerable<Type> serviceTypes
             , Type classType
             , ComponentLifestyle lifestyle
+            , int proposedLevel
             , IEnumerable<IParameter> parameters
             , IProperties properties)
         {
@@ -77,7 +78,26 @@ namespace jingxian.core.runtime.simpl
                 id = Guid.NewGuid().ToString();
 
             _componentMap.Add(new Descriptor(id, serviceTypes
-                , classType, lifestyle, parameters, properties) );
+                , classType, lifestyle, proposedLevel, parameters, properties) );
+        }
+
+        public void ConnectWithInstance(object instance
+            , string id
+            , IEnumerable<Type> serviceTypes
+            , Type classType
+            , int proposedLevel
+            , IEnumerable<IParameter> parameters
+            , IProperties properties)
+        {
+            Enforce.ArgumentNotNull(instance, "instance");
+
+            if (string.IsNullOrEmpty(id))
+                id = Guid.NewGuid().ToString();
+
+            _componentMap.Add(new Descriptor(id, serviceTypes
+                , classType, ComponentLifestyle.Singleton, proposedLevel, parameters, properties));
+
+            _instanceMap.Add(id, serviceTypes, instance);
         }
 
         public object Build(
@@ -85,8 +105,8 @@ namespace jingxian.core.runtime.simpl
             , IEnumerable<IParameter> parameters
             , IProperties properties)
         {
-            Descriptor descriptor = new Descriptor("Transient", null
-                , classType, ComponentLifestyle.Transient, parameters, properties);
+            Descriptor descriptor = new Descriptor("Transient", null, classType
+               , ComponentLifestyle.Transient, int.MaxValue, parameters, properties);
 
             return CreateService(descriptor);
         }
@@ -166,20 +186,29 @@ namespace jingxian.core.runtime.simpl
             if (_isStarted)
                 return;
 
+            List<Descriptor> componentList = new List<Descriptor>();
+
             foreach (KeyValuePair<string, Descriptor> kp in _componentMap)
             {
                 if (ComponentLifestyle.Singleton == kp.Value.Lifestyle)
                 {
-                    object instance = null;
-                    if (!_instanceMap.TryGetValue(kp.Value.Id, out instance))
-                        instance = CreateService(kp.Value);
+                    componentList.Add(kp.Value);
                 }
             }
 
-            foreach (KeyValuePair<string, object> kp in _instanceMap)
+            componentList.Sort(delegate(Descriptor a, Descriptor b)
             {
-                    Start(this, kp.Value);
+                return a.ProposedLevel - b.ProposedLevel;
+            });
+
+            foreach (Descriptor descriptor in componentList)
+            {
+                object instance = null;
+                if (!_instanceMap.TryGetValue(descriptor.Id, out instance))
+                    instance = CreateService(descriptor);
             }
+
+            invokeMethod("Start");
 
             _isStarted = true;
         }
@@ -189,15 +218,42 @@ namespace jingxian.core.runtime.simpl
             if (!_isStarted)
                 return;
 
-            foreach (KeyValuePair<string, object> kp in _instanceMap)
-            {
-                Stop(this, kp.Value);
-            }
+            invokeMethod("Stop");
 
             _isStarted = false;
         }
 
-        public void Start(IKernel kernel, object instance)
+        void invokeMethod(string methodName)
+        {
+            List<KeyValuePair<Descriptor, object>> instanceList = new List<KeyValuePair<Descriptor, object>>();
+            List<object> unkownLevels = new List<object>();
+
+            foreach (KeyValuePair<string, object> kp in _instanceMap)
+            {
+                Descriptor descriptor = null;
+                if (!_componentMap.TryGetValue(kp.Key, out descriptor))
+                    instanceList.Add(new KeyValuePair<Descriptor, object>(descriptor, kp.Value));
+                else
+                    unkownLevels.Add(kp.Value);
+            }
+
+            instanceList.Sort(delegate(KeyValuePair<Descriptor, object> a, KeyValuePair<Descriptor, object> b)
+            {
+                return a.Key.ProposedLevel - b.Key.ProposedLevel;
+            });
+
+            foreach (KeyValuePair<Descriptor, object> kp in instanceList)
+            {
+                invokeMethod(methodName, this, kp.Value);
+            }
+
+            foreach (object instance in unkownLevels)
+            {
+                invokeMethod(methodName, this, instance);
+            }
+        }
+
+        public static void Start(IKernel kernel, object instance)
         {
             invokeMethod("Start", kernel, instance);
         }

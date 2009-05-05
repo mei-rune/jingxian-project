@@ -55,6 +55,7 @@
     <Compile Include="IExtensionBuilder.cs" />
     <Compile Include="IoC\Activator\InstanceActivator.cs" />
     <Compile Include="IoC\Helper.cs" />
+    <Compile Include="simpl\Registrars\AbstractRegistrar.cs" />
     <Compile Include="simpl\KernelBuilder.cs" />
     <Compile Include="IoC\Parameters\AutowiringParameter.cs" />
     <Compile Include="IoC\Registrars\ReflectiveRegistrar.cs" />
@@ -77,10 +78,10 @@
     <Compile Include="RuntimeBundle.cs" />
     <Compile Include="ServiceConfiguration.cs" />
     <Compile Include="ServiceLauncher.cs" />
-    <Compile Include="ServiceRegistry.cs" />
     <Compile Include="simpl\MiniBuilder.cs" />
     <Compile Include="simpl\ObjectMap.cs" />
-    <Compile Include="simpl\Registrars\Registrar.cs" />
+    <Compile Include="simpl\Registrars\ReflectiveRegistrar.cs" />
+    <Compile Include="simpl\Registrars\InstanceRegistrar.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\runtime\jingxian.core.runtime.csproj">

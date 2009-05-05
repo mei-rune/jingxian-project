@@ -16,10 +16,6 @@ namespace jingxian.core.runtime.registrars
 
         TSyntax As(params Type[] services);
 
-        TSyntax WithLifestyle(ComponentLifestyle scope);
-
-        TSyntax WithLevel(int level);
-
         TSyntax OnRegistered(EventHandler<RegisteredEventArgs> handler);
 
         TSyntax OnPreparing(EventHandler<PreparingEventArgs> handler);

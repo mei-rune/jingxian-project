@@ -17,6 +17,8 @@ namespace jingxian.core.runtime
         Type _implementationType;
         // 生命周期
         ComponentLifestyle _lifestyle;
+        // 启动组别
+        int _level = int.MaxValue;
         // 参数
         IEnumerable<IParameter> _parameters;
         // 扩展属性
@@ -29,6 +31,7 @@ namespace jingxian.core.runtime
             , services
             , bestKnownImplementationType
             , ComponentLifestyle.Singleton
+            , int.MaxValue
             , null, null )
         {
         }
@@ -37,6 +40,7 @@ namespace jingxian.core.runtime
             , IEnumerable<Type> services
             , Type implementationType
             , ComponentLifestyle lifestyle
+            , int level
             , IEnumerable<IParameter> parameters
             , IProperties extendedProperties)
         {
@@ -45,6 +49,7 @@ namespace jingxian.core.runtime
 
             _services = services;
             _lifestyle = lifestyle;
+            _level = level;
             _parameters = parameters;
             _extendedProperties = extendedProperties;
         }
@@ -67,6 +72,11 @@ namespace jingxian.core.runtime
         public ComponentLifestyle Lifestyle
         {
             get { return _lifestyle; }
+        }
+
+        public int ProposedLevel
+        {
+            get { return _level; }
         }
 
         public IEnumerable<IParameter> Parameters
