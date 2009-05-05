@@ -120,6 +120,7 @@
     <Compile Include="Attribute\OptionalDependencyAttribute.cs" />
     <Compile Include="Exception\PlatformConfigurationException.cs" />
     <Compile Include="Exception\RuntimeException.cs" />
+    <Compile Include="MicroKernel.cs" />
     <Compile Include="PredefinedService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ExceptionMessages.Designer.cs">
@@ -142,13 +143,13 @@
     <Compile Include="utilities\CommandLineParser\CommandLineArgumentParser.cs" />
     <Compile Include="utilities\CommandLineParser\CommandLineParseResult.cs" />
     <Compile Include="utilities\Disposable.cs" />
-    <Compile Include="utilities\Enforce.cs" />
-    <Compile Include="utilities\EnforceResources.Designer.cs">
+    <Compile Include="Enforce.cs" />
+    <Compile Include="Resources\EnforceResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>EnforceResources.resx</DependentUpon>
     </Compile>
-    <Compile Include="utilities\Error.Designer.cs">
+    <Compile Include="Resources\Error.Designer.cs">
       <DependentUpon>Error.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -211,11 +212,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Messages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="utilities\EnforceResources.resx">
+    <EmbeddedResource Include="Resources\EnforceResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>EnforceResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="utilities\Error.resx">
+    <EmbeddedResource Include="Resources\Error.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Error.Designer.cs</LastGenOutput>
     </EmbeddedResource>

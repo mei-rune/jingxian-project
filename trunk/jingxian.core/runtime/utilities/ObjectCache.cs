@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace jingxian.core.utilities.Collections.Generic
+namespace jingxian.core.runtime.utilities.Collections.Generic
 {
+    using jingxian.core.runtime.Resources;
+
 	public sealed class ObjectCache<TKey, TValue>
 	{
 

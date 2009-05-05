@@ -5,7 +5,7 @@ using System.Globalization;
 
 namespace jingxian.core.runtime
 {
-using jingxian.core.runtime.Resources;
+    using jingxian.core.runtime.Resources;
 
 	[Serializable]
 	public sealed class ComponentLookupException: RuntimeException

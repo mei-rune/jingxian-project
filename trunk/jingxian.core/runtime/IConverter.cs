@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace jingxian.core.runtime
 {
-    using jingxian.core.utilities;
+    using jingxian.core.runtime.utilities;
 
     public interface IConverter
     {

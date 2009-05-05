@@ -26,9 +26,9 @@ namespace jingxian.core.runtime.simpl
         {
             _parent = parent;
             _id = id;
-            _instanceMap.Add(null
-                , new Type[] { typeof(IKernel), typeof(ILocator), typeof(IServiceProvider) }
-                , this);
+            _instanceMap.Connect(typeof(IKernel), this);
+            _instanceMap.Connect(typeof(ILocator), this);
+            _instanceMap.Connect(typeof(IServiceProvider), this);
         }
 
         #region IKernel ≥…‘±
@@ -77,8 +77,21 @@ namespace jingxian.core.runtime.simpl
             if (string.IsNullOrEmpty(id))
                 id = Guid.NewGuid().ToString();
 
-            _componentMap.Add(new Descriptor(id, serviceTypes
-                , classType, lifestyle, proposedLevel, parameters, properties) );
+            Descriptor descriptor = new Descriptor(id
+                , serviceTypes
+                , classType
+                , lifestyle
+                , proposedLevel
+                , parameters
+                , properties);
+
+            _componentMap.Add( descriptor );
+
+            if (_isStarted)
+            {
+                if (ComponentLifestyle.Singleton == lifestyle)
+                    CreateService(descriptor);
+            }
         }
 
         public void ConnectWithInstance(object instance
@@ -94,10 +107,21 @@ namespace jingxian.core.runtime.simpl
             if (string.IsNullOrEmpty(id))
                 id = Guid.NewGuid().ToString();
 
-            _componentMap.Add(new Descriptor(id, serviceTypes
-                , classType, ComponentLifestyle.Singleton, proposedLevel, parameters, properties));
+            _componentMap.Add(new Descriptor(id
+                , serviceTypes
+                , classType
+                , ComponentLifestyle.Singleton
+                , proposedLevel
+                , parameters
+                , properties));
 
             _instanceMap.Add(id, serviceTypes, instance);
+
+
+            if (_isStarted)
+            {
+                Start(this, instance);
+            }
         }
 
         public object Build(
@@ -273,7 +297,7 @@ namespace jingxian.core.runtime.simpl
             switch (parameters.Length)
             {
                 case 0:
-                        methodInfo.Invoke(instance, new object[] { });
+                        methodInfo.Invoke(instance, null);
                         break;
                 case 1:
                     if (parameters[0].ParameterType == typeof(IKernel))

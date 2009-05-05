@@ -2,10 +2,11 @@
 
 using System;
 using System.Xml;
-using jingxian.core.runtime.Resources;
 
 namespace jingxian.core.runtime.Xml.Expressions
 {
+    using jingxian.core.runtime.Resources;
+
 	public class NotExpression : SingleExpression
 	{
 

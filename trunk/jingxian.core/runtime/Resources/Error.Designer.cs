@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace jingxian.core.runtime.utilities {
+namespace jingxian.core.runtime.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace jingxian.core.runtime.utilities {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("jingxian.core.runtime.utilities.Error", typeof(Error).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("jingxian.core.runtime.Resources.Error", typeof(Error).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

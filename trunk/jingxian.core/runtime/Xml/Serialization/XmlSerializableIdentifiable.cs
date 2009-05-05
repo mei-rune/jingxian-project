@@ -2,7 +2,7 @@
 
 using System;
 using System.Xml;
-using jingxian.core.utilities;
+using jingxian.core.runtime.utilities;
 
 namespace jingxian.core.runtime.Xml.Serialization
 {

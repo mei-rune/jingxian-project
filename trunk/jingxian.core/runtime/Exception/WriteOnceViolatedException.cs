@@ -1,12 +1,12 @@
 ﻿
-
 using System;
 using System.Globalization;
 using System.Runtime.Serialization;
-using jingxian.core.runtime.Resources;
 
 namespace jingxian.core.runtime
 {
+    using jingxian.core.runtime.Resources;
+
 	[Serializable]
 	public sealed class WriteOnceViolatedException: InvalidOperationException
 	{

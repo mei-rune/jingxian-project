@@ -5,7 +5,7 @@ using System.Globalization;
 
 namespace jingxian.core.runtime
 {
-    using jingxian.core.utilities;
+    using jingxian.core.runtime.utilities;
 
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
 	public sealed class ServiceAttribute: ExtensionAttribute

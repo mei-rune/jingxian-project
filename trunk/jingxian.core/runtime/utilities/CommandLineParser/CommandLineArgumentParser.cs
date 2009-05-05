@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace jingxian.core.utilities.CommandLineParser
+namespace jingxian.core.runtime.utilities.CommandLineParser
 {
+    using jingxian.core.runtime.Resources;
+
     // 命令行分析器
     // 选项前缀可以是 '/ ', '-', '--', 选项名的大小写不敏感，选项名和选项值之间用‘:’分隔
 	public class CommandLineArgumentParser

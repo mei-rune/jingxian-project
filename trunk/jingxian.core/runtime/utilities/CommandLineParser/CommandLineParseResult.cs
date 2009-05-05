@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace jingxian.core.utilities.CommandLineParser
+namespace jingxian.core.runtime.utilities.CommandLineParser
 {
+    using jingxian.core.runtime.Resources;
+
 	public class CommandLineParseResult
 	{
 		private readonly string[] _InitialArguments;

@@ -12,8 +12,8 @@ using System.Diagnostics;
 
 namespace jingxian.core.runtime.simpl
 {
-using jingxian.core.runtime.simpl.Resources;
-using jingxian.core.utilities;
+    using jingxian.core.runtime.simpl.Resources;
+    using jingxian.core.runtime.utilities;
 
 	[Serializable]
 	[XmlRoot(

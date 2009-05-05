@@ -63,7 +63,7 @@ namespace jingxian.core.runtime.simpl
 
             try
             {
-                using (IKernel containerAdapter = new MiniKernel( null, null ))
+                using (IKernel containerAdapter = new MiniKernel())
                 {
                     IKernelBuilder kernelBuilder = containerAdapter.CreateBuilder();
 

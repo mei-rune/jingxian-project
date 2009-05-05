@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace jingxian.core.runtime
 {
-    using jingxian.core.utilities;
+    using jingxian.core.runtime.utilities;
 
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
 	public sealed class ComponentAttribute: ExtensionAttribute
