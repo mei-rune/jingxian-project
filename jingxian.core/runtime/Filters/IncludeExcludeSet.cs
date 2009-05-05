@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 namespace jingxian.core.runtime.Filters
 {
     using jingxian.core.runtime.Xml.Serialization;
-    using jingxian.core.utilities;
+    using jingxian.core.runtime.utilities;
 
     [Serializable]
     public abstract class IncludeExcludeSet : XmlSerializable, IFilter<string>

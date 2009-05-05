@@ -4,10 +4,12 @@ using System;
 using System.ComponentModel;
 using System.Xml;
 using System.Xml.Serialization;
-using jingxian.core.utilities;
+
 
 namespace jingxian.core.runtime.simpl
 {
+    using jingxian.core.runtime.utilities;
+
 	[TypeConverter(typeof (ExpandableObjectConverter))]
 	[Serializable]
 	[XmlRoot(ServiceConfiguration.XmlElementName, DataType = ServiceConfiguration.XmlTypeName,

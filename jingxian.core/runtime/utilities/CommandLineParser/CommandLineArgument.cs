@@ -2,7 +2,7 @@
 using System;
 using System.Text;
 
-namespace jingxian.core.utilities.CommandLineParser
+namespace jingxian.core.runtime.utilities.CommandLineParser
 {
 	public class CommandLineArgument : ICloneable
 	{

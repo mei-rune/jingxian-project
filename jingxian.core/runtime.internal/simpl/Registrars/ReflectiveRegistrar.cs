@@ -26,7 +26,13 @@ namespace jingxian.core.runtime.simpl.mini.registrars
         {
             Enforce.NotNull(_kernel, "kernel");
 
-            _kernel.Connect(_id, _services, _implementor, _lifestyle, _level, _parameters, _extendedProperties);
+            _kernel.Connect(_id
+                , _services
+                , _implementor
+                , _lifestyle
+                , _level
+                , _parameters
+                , _extendedProperties);
         }
 
         protected override IReflectiveRegistrar Syntax

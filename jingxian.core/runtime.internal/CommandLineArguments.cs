@@ -1,7 +1,7 @@
 ﻿
 
 using System.Collections.Generic;
-using jingxian.core.utilities.CommandLineParser;
+using jingxian.core.runtime.utilities.CommandLineParser;
 
 namespace jingxian.core.runtime.simpl
 {

@@ -33,7 +33,7 @@ namespace jingxian.core.runtime.simpl
                 throw new ArgumentException("id 和 services 不能同进为 null!");
             }
 
-            if (null == services)
+            if (null != services)
             {
                 foreach (Type serviceType in services)
                 {
@@ -106,6 +106,16 @@ namespace jingxian.core.runtime.simpl
 
     public class InstanceMap : ObjectMap<object>
     {
+        public void Connect(Type serviceType, object instance)
+        {
+            _servicesByInterface.Add(serviceType, instance);
+        }
+
+        public void Connect(string serviceId, object instance)
+        {
+            _servicesById.Add(serviceId, instance);
+        }
+
         protected override bool Remove(string id, object instance)
         {
             List<Type> typeKeys = new List<Type>();

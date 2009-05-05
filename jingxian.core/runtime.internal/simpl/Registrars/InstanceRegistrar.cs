@@ -23,8 +23,13 @@ namespace jingxian.core.runtime.simpl.mini.registrars
 
         public override void Configure()
         {
-
-            _kernel.ConnectWithInstance(_instance, _id, _services, _implementor, int.MaxValue, null, _extendedProperties);
+            _kernel.ConnectWithInstance(_instance
+                , _id
+                , _services
+                , _implementor
+                , int.MaxValue
+                , null
+                , _extendedProperties);
         }
 
         protected override IConcreteRegistrar Syntax

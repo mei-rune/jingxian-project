@@ -1,10 +1,11 @@
 ﻿
 
 using System;
-using jingxian.core.utilities;
 
 namespace jingxian.core.runtime.Filters
 {
+    using jingxian.core.runtime.utilities;
+
 	public sealed class FilterConfiguration : ITypedXmlSerializable, IFilterProvider, ICloneable
 	{
 		#region constants

@@ -4,9 +4,9 @@ using System;
 using System.Globalization;
 using System.Reflection;
 
-namespace jingxian.core
+namespace jingxian.core.runtime
 {
-    using jingxian.core.runtime.utilities;
+    using jingxian.core.runtime.Resources;
 
 	public static class Enforce
     {

@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace jingxian.core.runtime
 {
-using jingxian.core.utilities;
+using jingxian.core.runtime.utilities;
 
 	[Serializable]
 	[XmlRoot(ComponentConfiguration.XmlElementName,

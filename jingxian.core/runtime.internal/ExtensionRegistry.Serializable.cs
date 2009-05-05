@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using jingxian.core.utilities;
+using jingxian.core.runtime.utilities;
 using System.Globalization;
 
 namespace jingxian.core.runtime.simpl

@@ -10,8 +10,10 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Globalization;
 
-namespace jingxian.core.utilities
+namespace jingxian.core.runtime.utilities
 {
+    using jingxian.core.runtime.Resources;
+
 	public static class XmlUtils
 	{
 		#region Serialize

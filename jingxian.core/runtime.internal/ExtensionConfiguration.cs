@@ -8,7 +8,7 @@ using System.Xml.Schema;
 namespace jingxian.core.runtime.simpl
 {
 using jingxian.core.runtime.Xml.Serialization;
-using jingxian.core.utilities;
+using jingxian.core.runtime.utilities;
 
 	[Serializable]
 	internal sealed class ExtensionConfiguration: XmlSerializableIdentifiable, IExtensionConfiguration

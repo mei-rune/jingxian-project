@@ -6,8 +6,10 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
-namespace jingxian.core.utilities
+namespace jingxian.core.runtime.utilities
 {
+    using jingxian.core.runtime.Resources;
+
 	public sealed class VersionInfo
 	{
 		private VersionInfo()

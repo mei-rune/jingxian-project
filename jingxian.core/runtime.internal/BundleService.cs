@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using jingxian.core.runtime.simpl.Resources;
-using jingxian.core.utilities;
+using jingxian.core.runtime.utilities;
 using System.Globalization;
 
 namespace jingxian.core.runtime.simpl
