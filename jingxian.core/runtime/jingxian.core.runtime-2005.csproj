@@ -140,16 +140,6 @@
     <Compile Include="utilities\CommandLineParser\CommandLineParseResult.cs" />
     <Compile Include="utilities\Disposable.cs" />
     <Compile Include="utilities\Enforce.cs" />
-    <Compile Include="utilities\EnforceResources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EnforceResources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="utilities\Error.Designer.cs">
-      <DependentUpon>Error.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <Compile Include="Logging\AbstractLogger.cs" />
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\ILogFactory.cs" />
@@ -165,6 +155,16 @@
     <Compile Include="Logging\SystemTraceLogger.cs" />
     <Compile Include="Logging\SystemTraceLoggerFactory.cs" />
     <Compile Include="IProperties.cs" />
+    <Compile Include="utilities\EnforceResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EnforceResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="utilities\Error.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Error.resx</DependentUpon>
+    </Compile>
     <Compile Include="utilities\IDisposer.cs" />
     <Compile Include="utilities\ObjectCache.cs" />
     <Compile Include="ObjectMapper.cs" />
@@ -204,6 +204,16 @@
     <EmbeddedResource Include="Schemas\ComponentConfiguration.xsd" />
     <EmbeddedResource Include="Schemas\ServiceConfiguration.xsd" />
     <EmbeddedResource Include="Schemas\XmlExpressions.xsd" />
+    <EmbeddedResource Include="utilities\EnforceResources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>EnforceResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="utilities\Error.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Error.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
