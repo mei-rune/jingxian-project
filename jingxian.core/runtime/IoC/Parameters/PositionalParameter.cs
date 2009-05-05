@@ -9,16 +9,24 @@ namespace jingxian.core.runtime
 {
     public class PositionalParameter : ConstantParameter
     {
-        public int Position { get; private set; }
+        int _position;
+
+        public int Position
+        {
+            get { return _position; } 
+        }
 
         public PositionalParameter(int position, object value)
-            : base(value, pi => pi.Position == position &&
-                                pi.Member.MemberType == MemberTypes.Constructor)
+            : base(value, delegate(ParameterInfo pi)
         {
-            if (position < 0) 
+            return pi.Position == position &&
+                pi.Member.MemberType == MemberTypes.Constructor;
+        })
+        {
+            if (position < 0)
                 throw new ArgumentOutOfRangeException("position");
 
-            Position = position;
+            _position = position;
         }
     }
 }

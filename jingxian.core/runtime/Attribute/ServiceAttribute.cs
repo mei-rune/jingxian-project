@@ -30,7 +30,7 @@ namespace jingxian.core.runtime
 			{
 				if (_configuration == null)
 				{
-					var builder = new StringBuilder();
+                    StringBuilder builder = new StringBuilder();
 					builder.Append(
 						string.Format(CultureInfo.InvariantCulture,
 						"<service interface='{0}' implementation='{1}' id='{2}' />",

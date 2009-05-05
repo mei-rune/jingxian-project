@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jingxian.core.runtime-2005", "runtime\jingxian.core.runtime-2005.csproj", "{F9030AA2-B0CC-4ECC-B5DD-D1F32BB8F484}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jingxian.core.runtime.internal-2005", "runtime.internal\jingxian.core.runtime.internal-2005.csproj", "{F3530AA2-B0CC-4ECC-B5DD-D1F32BB8F484}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jingxian.core.runtime.castleIntegration-2005", "runtime.integration\Castle\jingxian.core.runtime.castleIntegration-2005.csproj", "{880F7100-8E47-4C76-824D-05418A7A3450}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jingxian.console-2005", "jingxian.console\jingxian.console-2005.csproj", "{68B046BC-4585-4E1B-8CFE-2F8702BFDD4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jingxian.core.testSupport-2005", "Tests\jingxian.core.testSupport\jingxian.core.testSupport-2005.csproj", "{A2E6E1B4-40D6-4E8D-B278-79BD6941439A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F9030AA2-B0CC-4ECC-B5DD-D1F32BB8F484}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9030AA2-B0CC-4ECC-B5DD-D1F32BB8F484}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9030AA2-B0CC-4ECC-B5DD-D1F32BB8F484}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9030AA2-B0CC-4ECC-B5DD-D1F32BB8F484}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3530AA2-B0CC-4ECC-B5DD-D1F32BB8F484}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3530AA2-B0CC-4ECC-B5DD-D1F32BB8F484}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3530AA2-B0CC-4ECC-B5DD-D1F32BB8F484}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3530AA2-B0CC-4ECC-B5DD-D1F32BB8F484}.Release|Any CPU.Build.0 = Release|Any CPU
+		{880F7100-8E47-4C76-824D-05418A7A3450}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{880F7100-8E47-4C76-824D-05418A7A3450}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{880F7100-8E47-4C76-824D-05418A7A3450}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{880F7100-8E47-4C76-824D-05418A7A3450}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68B046BC-4585-4E1B-8CFE-2F8702BFDD4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68B046BC-4585-4E1B-8CFE-2F8702BFDD4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68B046BC-4585-4E1B-8CFE-2F8702BFDD4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68B046BC-4585-4E1B-8CFE-2F8702BFDD4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2E6E1B4-40D6-4E8D-B278-79BD6941439A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2E6E1B4-40D6-4E8D-B278-79BD6941439A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2E6E1B4-40D6-4E8D-B278-79BD6941439A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2E6E1B4-40D6-4E8D-B278-79BD6941439A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,97 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F3530AA2-B0CC-4ECC-B5DD-D1F32BB8F484}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>jingxian.core.runtime.simpl</RootNamespace>
+    <AssemblyName>jingxian.core.runtime.internal</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug-2005\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Bundle.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Messages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyLoaderService.cs" />
+    <Compile Include="Bundle.cs" />
+    <Compile Include="BundleScanner.cs" />
+    <Compile Include="BundleService.cs" />
+    <Compile Include="CommandLineArguments.cs" />
+    <Compile Include="Extension.cs" />
+    <Compile Include="ExtensionBuilder.cs" />
+    <Compile Include="ExtensionConfiguration.cs" />
+    <Compile Include="ExtensionPoint.cs" />
+    <Compile Include="ExtensionPointConfiguration.cs" />
+    <Compile Include="ExtensionRegistry.cs" />
+    <Compile Include="ExtensionRegistry.Serializable.cs" />
+    <Compile Include="ExtensionXmlSchema.cs" />
+    <Compile Include="IExtensionBuilder.cs" />
+    <Compile Include="IoC\Activator\InstanceActivator.cs" />
+    <Compile Include="IoC\Activator\ReflectionActivator.cs" />
+    <Compile Include="IoC\Helper.cs" />
+    <Compile Include="IoC\KernelUtils.cs" />
+    <Compile Include="IoC\MicroKernel.cs" />
+    <Compile Include="IoC\Parameters\AutowiringParameter.cs" />
+    <Compile Include="IoC\Registrars\ReflectiveRegistrar.cs" />
+    <Compile Include="IoC\Registrars\Registrar.cs" />
+    <Compile Include="IoC\Registration.cs" />
+    <Compile Include="IoC\Scope\InstanceScopeFactory.cs" />
+    <Compile Include="IoC\Scope\SingletonScope.cs" />
+    <Compile Include="IoC\Scope\TransientScope.cs" />
+    <Compile Include="ObjectBuilder.cs" />
+    <Compile Include="Platform.cs" />
+    <Compile Include="Resources\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="RuntimeBundle.cs" />
+    <Compile Include="ServiceConfiguration.cs" />
+    <Compile Include="ServiceLauncher.cs" />
+    <Compile Include="ServiceRegistry.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\runtime\jingxian.core.runtime-2005.csproj">
+      <Project>{F9030AA2-B0CC-4ECC-B5DD-D1F32BB8F484}</Project>
+      <Name>jingxian.core.runtime-2005</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
