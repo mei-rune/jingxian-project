@@ -13,6 +13,7 @@ namespace jingxian.core.runtime.simpl.mini.registrars
         IList<Type> _services = new List<Type>();
         Type _implementor;
         ComponentLifestyle _lifestyle = ComponentLifestyle.Singleton;
+        int _level = int.MaxValue;
         List<IParameter> _parameters;
         IProperties _extendedProperties;
 
@@ -59,6 +60,12 @@ namespace jingxian.core.runtime.simpl.mini.registrars
 
         public virtual IReflectiveRegistrar WithLifestyle(ComponentLifestyle lifestyle)
 		{
+            _lifestyle = lifestyle;
+            return this;
+        }
+
+        public virtual IReflectiveRegistrar WithLevel(int le)
+        {
             _lifestyle = lifestyle;
             return this;
         }

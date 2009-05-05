@@ -18,7 +18,5 @@ namespace jingxian.core.runtime.registrars
         TSyntax MemberOf<TService>();
 
         TSyntax MemberOf(Type serviceType);
-
-        TSyntax MemberOf(Service service);
     }
 }

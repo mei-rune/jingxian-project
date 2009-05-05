@@ -113,7 +113,6 @@
     <Compile Include="IRuntimeContext.cs" />
     <Compile Include="IRuntimePart.cs" />
     <Compile Include="IService.cs" />
-    <Compile Include="IServiceRegistry.cs" />
     <Compile Include="ITypedXmlSerializable.cs" />
     <Compile Include="Attribute\OptionalDependencyAttribute.cs" />
     <Compile Include="Exception\PlatformConfigurationException.cs" />
@@ -134,7 +133,6 @@
     <Compile Include="RuntimeContext.cs" />
     <Compile Include="Service.cs" />
     <Compile Include="Attribute\ServiceAttribute.cs" />
-    <Compile Include="ServiceRegistrySingleton.cs" />
     <Compile Include="Exception\WriteOnceViolatedException.cs" />
     <Compile Include="utilities\AbstractServiceContainer.cs" />
     <Compile Include="utilities\CommandLineParser\CommandLineArgument.cs" />

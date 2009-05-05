@@ -81,6 +81,7 @@ namespace jingxian.core.runtime.simpl
                     //    containerAdapter.Connect<IKernel>(RuntimeConstants.MiniKernelId, containerAdapter);
                     //}
 
+                    containerAdapter.Start();
 
                     IExtensionRegistry registry = containerAdapter.Get <IExtensionRegistry>();
                     IObjectBuilder builder = containerAdapter.Get<IObjectBuilder>();
@@ -88,6 +89,8 @@ namespace jingxian.core.runtime.simpl
 
                     IApplicationLaunchable launchable = BuildApplicationLaunchable(context, registry, builder);
                     exitCode = launchable.Launch(context);
+
+                    containerAdapter.Stop();
                 }
 
             }
