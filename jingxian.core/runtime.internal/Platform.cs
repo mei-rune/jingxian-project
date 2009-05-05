@@ -25,7 +25,7 @@ namespace jingxian.core.runtime.simpl
 				new PredefinedService(RuntimeConstants.ObjectBuilderServiceId, typeof (IObjectBuilder), typeof ( MiniBuilder)),
 				new PredefinedService(RuntimeConstants.BundleServiceId, typeof (IBundleService), typeof (BundleService)),
 				new PredefinedService(RuntimeConstants.ExtensionRegistryId, typeof (IExtensionRegistry), typeof (ExtensionRegistry)),
-			    new PredefinedService(RuntimeConstants.ServiceRegistryId, typeof (IServiceRegistry), typeof (ServiceRegistry)),
+			    //new PredefinedService(RuntimeConstants.ServiceRegistryId, typeof (IServiceRegistry), typeof (ServiceRegistry)),
 			};
 
         internal static PredefinedService[] PredefinedServices

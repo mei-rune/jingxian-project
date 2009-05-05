@@ -8,6 +8,15 @@ namespace jingxian.core.runtime.registrars
         IKernel _kernel;
         IComponentRegistration _registration;
 
+        public RegisteredEventArgs()
+        { }
+
+        public RegisteredEventArgs( IKernel kernel, IComponentRegistration registration)
+        {
+            _kernel = kernel;
+            _registration = registration;
+        }
+
         public IKernel Container
         { 
             get { return _kernel; }

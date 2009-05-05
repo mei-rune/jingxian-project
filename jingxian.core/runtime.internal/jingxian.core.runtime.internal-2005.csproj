@@ -79,6 +79,11 @@
     <Compile Include="ServiceConfiguration.cs" />
     <Compile Include="ServiceLauncher.cs" />
     <Compile Include="ServiceRegistry.cs" />
+    <Compile Include="simpl\KernelBuilder.cs" />
+    <Compile Include="simpl\MiniBuilder.cs" />
+    <Compile Include="simpl\MiniKernel.cs" />
+    <Compile Include="simpl\ObjectMap.cs" />
+    <Compile Include="simpl\Registrars\Registrar.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\runtime\jingxian.core.runtime-2005.csproj">

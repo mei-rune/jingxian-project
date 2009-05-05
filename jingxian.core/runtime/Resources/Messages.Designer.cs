@@ -61,7 +61,7 @@ namespace jingxian.core.runtime.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Tag &lt;and&gt; is empty element. 的本地化字符串。
+        ///   查找类似 节点 &lt;and&gt; 是空节点. 的本地化字符串。
         /// </summary>
         internal static string AndEmptyElement {
             get {
@@ -70,7 +70,7 @@ namespace jingxian.core.runtime.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Invalid XmlExpression syntax!  的本地化字符串。
+        ///   查找类似 无效 XmlExpression 格式!  的本地化字符串。
         /// </summary>
         internal static string InvalidXmlExpression {
             get {
@@ -79,7 +79,7 @@ namespace jingxian.core.runtime.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Tag &lt;not&gt; is empty element. 的本地化字符串。
+        ///   查找类似 节点 &lt;not&gt; 是空节点. 的本地化字符串。
         /// </summary>
         internal static string NotEmptyElement {
             get {
@@ -88,7 +88,7 @@ namespace jingxian.core.runtime.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Tag &lt;or&gt; is empty element. 的本地化字符串。
+        ///   查找类似 节点 &lt;or&gt; 是空节点. 的本地化字符串。
         /// </summary>
         internal static string OrEmptyElement {
             get {
@@ -97,7 +97,7 @@ namespace jingxian.core.runtime.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Unrecognized XmlExpression element:  的本地化字符串。
+        ///   查找类似 不能识别的 XmlExpression 节点:  的本地化字符串。
         /// </summary>
         internal static string UnrecognizedXmlExpressionElement {
             get {

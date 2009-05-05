@@ -117,7 +117,7 @@ namespace jingxian.core.runtime.registrars
         protected virtual void AddServices(IEnumerable<Type> services)
         {
             Enforce.ArgumentNotNull(services, "services");
-            foreach (var service in services)
+            foreach (Type service in services)
                 AddService(service);
         }
 
@@ -174,7 +174,7 @@ namespace jingxian.core.runtime.registrars
             registeredEventArgs.Container = container;
             registeredEventArgs.Registration = cr;
 
-            FireRegistered(new RegisteredEventArgs() { Container = container, Registration = cr });
+            FireRegistered(new RegisteredEventArgs( container,cr ) );
         }
     }
 }

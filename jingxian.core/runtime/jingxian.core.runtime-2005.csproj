@@ -189,6 +189,16 @@
     <Compile Include="Xml\Serialization\XmlSerializableIdentifiable.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\ExceptionMessages.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Messages.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Schemas\ArbitraryConfiguration.xsd" />
     <EmbeddedResource Include="Schemas\Bundle.xsd" />
     <EmbeddedResource Include="Schemas\Category.xsd" />
