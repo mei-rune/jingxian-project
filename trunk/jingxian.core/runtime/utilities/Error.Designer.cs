@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace jingxian.core.utilities {
+namespace jingxian.core.runtime.utilities {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace jingxian.core.utilities {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("jingxian.core.utilities.Error", typeof(Error).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("jingxian.core.runtime.utilities.Error", typeof(Error).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,7 +61,7 @@ namespace jingxian.core.utilities {
         }
         
         /// <summary>
-        ///   查找类似 Cannot add argument &apos;{0}&apos; at position {1} (argument is allowed only once and was already given at position {2}). 的本地化字符串。
+        ///   查找类似 不能在 {1} 处添加参数 &apos;{0}&apos; (参数只能出现一次，便已经存在了 {2}). 的本地化字符串。
         /// </summary>
         internal static string ArgumentIsAllowedOnlyOnceAndWasAlreadyGiven {
             get {
@@ -79,7 +79,7 @@ namespace jingxian.core.utilities {
         }
         
         /// <summary>
-        ///   查找类似 Cannot handle &apos;{0}&apos; at position {1} (arguments must have a minimum length of 2). 的本地化字符串。
+        ///   查找类似 不能处理参数[ &apos;{0}&apos; , position = {1} ](参数至少有2个字节). 的本地化字符串。
         /// </summary>
         internal static string ArgumentsMustHaveMinimumLength {
             get {
@@ -88,7 +88,7 @@ namespace jingxian.core.utilities {
         }
         
         /// <summary>
-        ///   查找类似 Cannot handle &apos;{0}&apos; at position {1} (arguments must have a prefix of &apos;{2}&apos;, &apos;{3}&apos; or &apos;{4}&apos;). 的本地化字符串。
+        ///   查找类似 不能处理参数[ &apos;{0}&apos; , position = {1} ] (参数必须有一个前缀 &apos;{2}&apos;, &apos;{3}&apos; 或 &apos;{4}&apos;). 的本地化字符串。
         /// </summary>
         internal static string ArgumentsMustHavePrefix {
             get {
@@ -97,7 +97,7 @@ namespace jingxian.core.utilities {
         }
         
         /// <summary>
-        ///   查找类似 {0} of {1} given arguments successfully parsed. 的本地化字符串。
+        ///   查找类似 参数{1} 的 {0} 成功解析. 的本地化字符串。
         /// </summary>
         internal static string ArgumentSuccessfullyParsed {
             get {
@@ -106,7 +106,7 @@ namespace jingxian.core.utilities {
         }
         
         /// <summary>
-        ///   查找类似 Attribte &apos;{0}&apos; is required 的本地化字符串。
+        ///   查找类似 属性 &apos;{0}&apos; 是必须的 的本地化字符串。
         /// </summary>
         internal static string AttribteIsRequired {
             get {
@@ -115,7 +115,7 @@ namespace jingxian.core.utilities {
         }
         
         /// <summary>
-        ///   查找类似 Command line parse results 的本地化字符串。
+        ///   查找类似 命令行分析结果 的本地化字符串。
         /// </summary>
         internal static string CommandLineParseResults {
             get {
@@ -124,7 +124,7 @@ namespace jingxian.core.utilities {
         }
         
         /// <summary>
-        ///   查找类似 Default commands: 的本地化字符串。
+        ///   查找类似 缺省命令 的本地化字符串。
         /// </summary>
         internal static string DefaultCommands {
             get {
@@ -133,7 +133,7 @@ namespace jingxian.core.utilities {
         }
         
         /// <summary>
-        ///   查找类似 Cannot handle &apos;{0}&apos; at position {1} (does not match any known argument). 的本地化字符串。
+        ///   查找类似 不能处理[ &apos;{0}&apos;, position= {1}] (没有匹配任何已知的参数). 的本地化字符串。
         /// </summary>
         internal static string DoNotMatchAnyArgument {
             get {
@@ -151,7 +151,7 @@ namespace jingxian.core.utilities {
         }
         
         /// <summary>
-        ///   查找类似 Errors 的本地化字符串。
+        ///   查找类似 错误 的本地化字符串。
         /// </summary>
         internal static string Errors {
             get {
@@ -160,7 +160,7 @@ namespace jingxian.core.utilities {
         }
         
         /// <summary>
-        ///   查找类似 Failed to parse argument at position {0} (argument is null or empty) 的本地化字符串。
+        ///   查找类似 分析参数[ position = &apos;{0}&apos;]发生错误.(参数为空) 的本地化字符串。
         /// </summary>
         internal static string FailedToParseArgument {
             get {
@@ -178,7 +178,7 @@ namespace jingxian.core.utilities {
         }
         
         /// <summary>
-        ///   查找类似 # Format: File Name (dll|exe), Version, Machine, PEKinds, Created 的本地化字符串。
+        ///   查找类似 # 格式: 文件 (dll|exe), 版本, 机器, PEKinds, 创建 的本地化字符串。
         /// </summary>
         internal static string FileVersionFormat {
             get {
@@ -187,7 +187,7 @@ namespace jingxian.core.utilities {
         }
         
         /// <summary>
-        ///   查找类似 # File Version Info of {0} files in directory {1} 的本地化字符串。
+        ///   查找类似 # 目录 {1} 中的文件 {0} 的版本信息 {1} 的本地化字符串。
         /// </summary>
         internal static string FileVersionInfoOfFilesInDirectory {
             get {
@@ -196,7 +196,7 @@ namespace jingxian.core.utilities {
         }
         
         /// <summary>
-        ///   查找类似 Ignoring argument &apos;{0}&apos; at position {1} (argument is allowed only once and was already given at position {2}). 的本地化字符串。
+        ///   查找类似 忽略参数[ &apos;{0}&apos; , position = {1}] (参数不允许出现多次，它已经在 {2} 出现). 的本地化字符串。
         /// </summary>
         internal static string IgnoringArgument {
             get {
@@ -205,7 +205,7 @@ namespace jingxian.core.utilities {
         }
         
         /// <summary>
-        ///   查找类似 Key {0} does not exist in this ObjectCache instance 的本地化字符串。
+        ///   查找类似 Key {0} 不存在 的本地化字符串。
         /// </summary>
         internal static string KeyNotExistInObjectCache {
             get {
@@ -214,7 +214,7 @@ namespace jingxian.core.utilities {
         }
         
         /// <summary>
-        ///   查找类似 Cannot get single argument (multiple arguments with identifier &apos;{0}&apos; found). 的本地化字符串。
+        ///   查找类似 只能有一个参数 (找到多个 &apos;{0}&apos; 参数). 的本地化字符串。
         /// </summary>
         internal static string MultipleArgumentsWithIdentifierFound {
             get {
@@ -223,7 +223,7 @@ namespace jingxian.core.utilities {
         }
         
         /// <summary>
-        ///   查找类似 No arguments given. 的本地化字符串。
+        ///   查找类似 没有参数. 的本地化字符串。
         /// </summary>
         internal static string NoArgumentsGiven {
             get {
@@ -232,7 +232,7 @@ namespace jingxian.core.utilities {
         }
         
         /// <summary>
-        ///   查找类似 {0} parse errors detected. 的本地化字符串。
+        ///   查找类似 {0} 个解析错误. 的本地化字符串。
         /// </summary>
         internal static string ParseErrorDetected {
             get {

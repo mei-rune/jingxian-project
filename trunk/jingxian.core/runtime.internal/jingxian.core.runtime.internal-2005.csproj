@@ -82,7 +82,9 @@
     <Compile Include="simpl\MiniBuilder.cs" />
     <Compile Include="simpl\MiniKernel.cs" />
     <Compile Include="simpl\ObjectMap.cs" />
-    <Compile Include="simpl\Registrars\Registrar.cs" />
+    <Compile Include="simpl\Registrars\AbstractRegistrar.cs" />
+    <Compile Include="simpl\Registrars\InstanceRegistrar.cs" />
+    <Compile Include="simpl\Registrars\ReflectiveRegistrar.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\runtime\jingxian.core.runtime-2005.csproj">
