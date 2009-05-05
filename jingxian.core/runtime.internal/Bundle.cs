@@ -391,7 +391,7 @@ using jingxian.core.utilities;
             {
                 try
                 {
-                    _activatorInstance = builder.BuildTransient<object>(_activatorClass);
+                    _activatorInstance = builder.BuildTransient(_activatorClass);
                 }
                 catch (Exception exc)
                 {

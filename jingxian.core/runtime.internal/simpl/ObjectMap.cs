@@ -148,10 +148,13 @@ namespace jingxian.core.runtime.simpl
         protected override bool Remove(string id, Descriptor instance)
         {
             bool isRemoved = false;
-            foreach (Type type in instance.Services)
+            if (null != instance.Services)
             {
-                if (IsValidServiceType(type))
-                    isRemoved = isRemoved ? isRemoved : _servicesByInterface.Remove(type);
+                foreach (Type type in instance.Services)
+                {
+                    if (IsValidServiceType(type))
+                        isRemoved = isRemoved ? isRemoved : _servicesByInterface.Remove(type);
+                }
             }
 
             if (!string.IsNullOrEmpty(id))

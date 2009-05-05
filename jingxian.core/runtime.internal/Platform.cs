@@ -22,10 +22,10 @@ namespace jingxian.core.runtime.simpl
         private static readonly PredefinedService[] _predefinedServices = new PredefinedService[]
 			{
 				new PredefinedService(RuntimeConstants.AssemblyLoaderServiceId, typeof (IAssemblyLoaderService), typeof (AssemblyLoaderService)),
-				//new PredefinedService(RuntimeConstants.ObjectBuilderServiceId, typeof (IObjectBuilder), typeof (ObjectBuilder)),
+				new PredefinedService(RuntimeConstants.ObjectBuilderServiceId, typeof (IObjectBuilder), typeof ( MiniBuilder)),
 				new PredefinedService(RuntimeConstants.BundleServiceId, typeof (IBundleService), typeof (BundleService)),
 				new PredefinedService(RuntimeConstants.ExtensionRegistryId, typeof (IExtensionRegistry), typeof (ExtensionRegistry)),
-				//new PredefinedService(RuntimeConstants.ServiceRegistryId, typeof (IServiceRegistry), typeof (ServiceRegistry)),
+			    new PredefinedService(RuntimeConstants.ServiceRegistryId, typeof (IServiceRegistry), typeof (ServiceRegistry)),
 			};
 
         internal static PredefinedService[] PredefinedServices
@@ -45,7 +45,7 @@ namespace jingxian.core.runtime.simpl
                 throw new PlatformConfigurationException(msg);
             }
             IApplicationLaunchable launchable =
-                builder.BuildTransient<IApplicationLaunchable>( launchableExtension.Implementation);
+                builder.BuildTransient(launchableExtension.Implementation) as IApplicationLaunchable;
 
             return launchable;
         }

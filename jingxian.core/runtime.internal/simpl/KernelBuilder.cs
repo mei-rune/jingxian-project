@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 
-namespace jingxian.core.runtime.simpl
+namespace jingxian.core.runtime.simpl.mini
 {
     using jingxian.core.runtime.registrars;
 
     public class KernelBuilder : IKernelBuilder
     {
-        List<registrars.MiniRegistrar> _registrars = new List<registrars.MiniRegistrar>();
+        List<registrars.Registrar> _registrars = new List<registrars.Registrar>();
 
         MiniKernel _kernel;
-        ComponentLifestyle _defaultScope = ComponentLifestyle.Singleton;
+        ComponentLifestyle _defaultLifestyle = ComponentLifestyle.Singleton;
 
         public KernelBuilder(MiniKernel kernel)
         {
@@ -23,16 +23,21 @@ namespace jingxian.core.runtime.simpl
 
         public ComponentLifestyle DefaultLifestyle
         {
-            get { return _defaultScope; }
+            get { return _defaultLifestyle; }
         }
 
-        public void SetDefaultLifestyle(ComponentLifestyle scope)
+        public void SetDefaultLifestyle(ComponentLifestyle lifestyle)
         {
-            _defaultScope = scope;
+            _defaultLifestyle = lifestyle;
         }
 
         public IKernel Build()
         {
+            foreach (registrars.Registrar registrar in _registrars)
+            {
+                registrar.Configure(_kernel);
+            }
+
             return _kernel;
         }
 
@@ -48,7 +53,8 @@ namespace jingxian.core.runtime.simpl
 
         public IReflectiveRegistrar Register(Type implementor)
         {
-             registrars.MiniRegistrar registrar = new registrars.MiniRegistrar( implementor );
+             registrars.Registrar registrar = new registrars.Registrar( implementor );
+             registrar.WithLifestyle(_defaultLifestyle);
              _registrars.Add(registrar);
              return registrar;
         }

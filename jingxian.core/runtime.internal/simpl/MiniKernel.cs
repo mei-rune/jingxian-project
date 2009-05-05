@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace jingxian.core.runtime.simpl
 {
-
+    using jingxian.core.runtime.simpl.mini;
 
     public class MiniKernel : IKernel
     {
@@ -73,8 +73,22 @@ namespace jingxian.core.runtime.simpl
             , IEnumerable<IParameter> parameters
             , IProperties properties)
         {
+            if (string.IsNullOrEmpty(id))
+                id = Guid.NewGuid().ToString();
+
             _componentMap.Add(new Descriptor(id, serviceTypes
                 , classType, lifestyle, parameters, properties) );
+        }
+
+        public object Build(
+              Type classType
+            , IEnumerable<IParameter> parameters
+            , IProperties properties)
+        {
+            Descriptor descriptor = new Descriptor("Transient", null
+                , classType, ComponentLifestyle.Transient, parameters, properties);
+
+            return CreateService(descriptor);
         }
 
         public bool Disconnect(string id)
@@ -95,13 +109,7 @@ namespace jingxian.core.runtime.simpl
 
             Descriptor descriptor = null;
             if (_componentMap.TryGetValue(serviceType, out descriptor))
-            {
-                instance = GetService(descriptor);
-                if (   ComponentLifestyle.Singleton == descriptor.Lifestyle
-                    || ComponentLifestyle.DependencyInjectionOnly == descriptor.Lifestyle)
-                    _instanceMap.Add(descriptor.Id, descriptor.Services, instance);
-                return instance;
-            }
+                return CreateService(descriptor);
 
             return (null == _parent) ? null : _parent.GetService(serviceType);
         }
@@ -114,13 +122,7 @@ namespace jingxian.core.runtime.simpl
 
             Descriptor descriptor = null;
             if (_componentMap.TryGetValue(serviceId, out descriptor))
-            {
-                instance = GetService(descriptor);
-                if (   ComponentLifestyle.Singleton == descriptor.Lifestyle
-                    || ComponentLifestyle.DependencyInjectionOnly == descriptor.Lifestyle )
-                    _instanceMap.Add(descriptor.Id, descriptor.Services, instance);
-                return instance;
-            }
+                return CreateService(descriptor);
 
             return (null == _parent) ? null : _parent.GetService(serviceId);
         }
@@ -164,10 +166,19 @@ namespace jingxian.core.runtime.simpl
             if (_isStarted)
                 return;
 
-            foreach (KeyValuePair<string, Descriptor> kp in _componentMap )
+            foreach (KeyValuePair<string, Descriptor> kp in _componentMap)
             {
-                if( ComponentLifestyle.Singleton == kp.Value.Lifestyle )
-                    Start(this, GetService(kp.Value));
+                if (ComponentLifestyle.Singleton == kp.Value.Lifestyle)
+                {
+                    object instance = null;
+                    if (!_instanceMap.TryGetValue(kp.Value.Id, out instance))
+                        instance = CreateService(kp.Value);
+                }
+            }
+
+            foreach (KeyValuePair<string, object> kp in _instanceMap)
+            {
+                    Start(this, kp.Value);
             }
 
             _isStarted = true;
@@ -263,10 +274,15 @@ namespace jingxian.core.runtime.simpl
             }
         }
 
-        protected object GetService(IComponentDescriptor descriptor)
+        protected object CreateService(IComponentDescriptor descriptor)
         {
             object instance = invokeConstructors(descriptor);
             invokeSetters(instance, descriptor);
+
+            if (ComponentLifestyle.Singleton == descriptor.Lifestyle
+                || ComponentLifestyle.DependencyInjectionOnly == descriptor.Lifestyle)
+                _instanceMap.Add(descriptor.Id, descriptor.Services, instance);
+
             return instance;
         }
 
