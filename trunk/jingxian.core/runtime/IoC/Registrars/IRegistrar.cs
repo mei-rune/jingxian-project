@@ -18,6 +18,8 @@ namespace jingxian.core.runtime.registrars
 
         TSyntax WithLifestyle(ComponentLifestyle scope);
 
+        TSyntax WithLevel(int level);
+
         TSyntax OnRegistered(EventHandler<RegisteredEventArgs> handler);
 
         TSyntax OnPreparing(EventHandler<PreparingEventArgs> handler);
