@@ -17,9 +17,7 @@ namespace jingxian.core.runtime
         void SetDefaultLifestyle(ComponentLifestyle scope);
 
         IKernel Build();
-        
-        void RegisterModule(IModule module);
-
+      
         IReflectiveRegistrar Register<T>();
         IReflectiveRegistrar Register(Type implementor);
         IConcreteRegistrar Register<T>(ComponentActivator<T> creator);

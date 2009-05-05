@@ -9,7 +9,7 @@ namespace jingxian.core.runtime.simpl.mini
 
     public class KernelBuilder : IKernelBuilder
     {
-        List<registrars.Registrar> _registrars = new List<registrars.Registrar>();
+        List<IModule> _registrars = new List<IModule>();
 
         MiniKernel _kernel;
         ComponentLifestyle _defaultLifestyle = ComponentLifestyle.Singleton;
@@ -33,9 +33,9 @@ namespace jingxian.core.runtime.simpl.mini
 
         public IKernel Build()
         {
-            foreach (registrars.Registrar registrar in _registrars)
+            foreach ( IModule registrar in _registrars)
             {
-                registrar.Configure(_kernel);
+                registrar.Configure();
             }
 
             return _kernel;
@@ -53,10 +53,10 @@ namespace jingxian.core.runtime.simpl.mini
 
         public IReflectiveRegistrar Register(Type implementor)
         {
-             registrars.Registrar registrar = new registrars.Registrar( implementor );
-             registrar.WithLifestyle(_defaultLifestyle);
-             _registrars.Add(registrar);
-             return registrar;
+            registrars.ReflectiveRegistrar registrar = new registrars.ReflectiveRegistrar(_kernel, implementor);
+            registrar.WithLifestyle(_defaultLifestyle);
+            _registrars.Add(registrar);
+            return registrar;
         }
 
         public IConcreteRegistrar Register<T>(ComponentActivator<T> creator)
@@ -71,7 +71,10 @@ namespace jingxian.core.runtime.simpl.mini
 
         public IConcreteRegistrar Register<T>(T instance)
         {
-            throw new NotImplementedException();
+            registrars.InstanceRegistrar registrar = new registrars.InstanceRegistrar(_kernel,instance);
+            registrar.As(typeof(T));
+            _registrars.Add(registrar);
+            return registrar;
         }
 
         #endregion

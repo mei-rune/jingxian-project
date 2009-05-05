@@ -6,6 +6,6 @@ namespace jingxian.core.runtime
 {
     public interface IModule
     {
-        void Configure(IKernel kernel);
+        void Configure();
     }
 }

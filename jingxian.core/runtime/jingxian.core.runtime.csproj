@@ -41,13 +41,13 @@
     <Compile Include="Exception\AssemblyUnavailableException.cs" />
     <Compile Include="BundleState.cs" />
     <Compile Include="Attribute\ComponentAttribute.cs" />
-    <Compile Include="IoC\ConstantParameter.cs" />
     <Compile Include="IoC\Descriptor.cs" />
     <Compile Include="IoC\IComponentActivator.cs" />
     <Compile Include="IoC\IComponentDescriptor.cs" />
     <Compile Include="IoC\IComponentRegistration.cs" />
     <Compile Include="IoC\ICreationContext.cs" />
     <Compile Include="IoC\IModule.cs" />
+    <Compile Include="IoC\Parameters\ConstantParameter.cs" />
     <Compile Include="IoC\Parameters\NamedPropertyParameter.cs" />
     <Compile Include="IoC\Parameters\IParameter.cs" />
     <Compile Include="IoC\IKernelBuilder.cs" />
@@ -116,7 +116,6 @@
     <Compile Include="IRuntimeContext.cs" />
     <Compile Include="IRuntimePart.cs" />
     <Compile Include="IService.cs" />
-    <Compile Include="IServiceRegistry.cs" />
     <Compile Include="ITypedXmlSerializable.cs" />
     <Compile Include="Attribute\OptionalDependencyAttribute.cs" />
     <Compile Include="Exception\PlatformConfigurationException.cs" />
@@ -137,7 +136,6 @@
     <Compile Include="RuntimeContext.cs" />
     <Compile Include="Service.cs" />
     <Compile Include="Attribute\ServiceAttribute.cs" />
-    <Compile Include="ServiceRegistrySingleton.cs" />
     <Compile Include="Exception\WriteOnceViolatedException.cs" />
     <Compile Include="utilities\AbstractServiceContainer.cs" />
     <Compile Include="utilities\CommandLineParser\CommandLineArgument.cs" />

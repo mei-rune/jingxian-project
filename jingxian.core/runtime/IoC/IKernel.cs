@@ -18,13 +18,6 @@ namespace jingxian.core.runtime
 
         IKernelBuilder CreateBuilder();
 
-        void Connect(string id
-            , IEnumerable<Type> serviceTypes
-            , Type classType
-            , ComponentLifestyle lifestyle
-            , IEnumerable< IParameter> parameters
-            , IProperties properties );
-
         bool Disconnect(string id);
 
         void Start();

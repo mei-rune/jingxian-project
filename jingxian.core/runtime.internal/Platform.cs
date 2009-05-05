@@ -67,11 +67,14 @@ namespace jingxian.core.runtime.simpl
                 {
                     IKernelBuilder kernelBuilder = containerAdapter.CreateBuilder();
 
+                    kernelBuilder.Register<IApplicationContext>(context);
+
                     foreach (PredefinedService predefinedService in PredefinedServices)
                     {
                         kernelBuilder.Register(predefinedService.Implementation)
                             .As(predefinedService.Service)
-                            .Named( predefinedService.Id );
+                            .Named( predefinedService.Id )
+                            .WithProposedLevel( 0 );
                     }
 
                     kernelBuilder.Build();

@@ -30,7 +30,7 @@ namespace jingxian.core.runtime
         /// <summary>
         /// 组件的等组
         /// </summary>
-        int Level { get; }
+        int ProposedLevel { get; }
 
         /// <summary>
         /// 参数
