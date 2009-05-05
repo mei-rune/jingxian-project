@@ -1,0 +1,208 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F9030AA2-B0CC-4ECC-B5DD-D1F32BB8F484}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>jingxian.core.runtime</RootNamespace>
+    <AssemblyName>jingxian.core.runtime</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug-2005\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Exception\AssemblyUnavailableException.cs" />
+    <Compile Include="BundleState.cs" />
+    <Compile Include="Attribute\ComponentAttribute.cs" />
+    <Compile Include="IoC\Parameters\ConstantParameter.cs" />
+    <Compile Include="IoC\Descriptor.cs" />
+    <Compile Include="IoC\IComponentActivator.cs" />
+    <Compile Include="IoC\IComponentDescriptor.cs" />
+    <Compile Include="IoC\IComponentRegistration.cs" />
+    <Compile Include="IoC\ICreationContext.cs" />
+    <Compile Include="IoC\IModule.cs" />
+    <Compile Include="IoC\Parameters\NamedPropertyParameter.cs" />
+    <Compile Include="IoC\Parameters\IParameter.cs" />
+    <Compile Include="IoC\IKernelBuilder.cs" />
+    <Compile Include="IoC\Parameters\NamedParameter.cs" />
+    <Compile Include="IoC\Parameters\ParameterExtensions.cs" />
+    <Compile Include="IoC\Parameters\PositionalParameter.cs" />
+    <Compile Include="IoC\Parameters\TypedParameter.cs" />
+    <Compile Include="IoC\Registrars\RegisteredEventArgs.cs" />
+    <Compile Include="IoC\Registrars\ActivatedEventArgs.cs" />
+    <Compile Include="IoC\Registrars\ActivatingEventArgs.cs" />
+    <Compile Include="IoC\ComponentConfiguration.cs" />
+    <Compile Include="IoC\ComponentLifestyle.cs" />
+    <Compile Include="Exception\ComponentAlreadyExistsException.cs" />
+    <Compile Include="Exception\ComponentLookupException.cs" />
+    <Compile Include="ConfigurationElement.cs" />
+    <Compile Include="ConfigurationSupplier.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Exception\DependencyResolutionException.cs" />
+    <Compile Include="EventSupplier.cs" />
+    <Compile Include="Attribute\ExtensionAttribute.cs" />
+    <Compile Include="Attribute\ExtensionContractAttribute.cs" />
+    <Compile Include="Attribute\ExtensionPointAttribute.cs" />
+    <Compile Include="Filters\AlwaysFalseFilter.cs" />
+    <Compile Include="Filters\AlwaysTrueFilter.cs" />
+    <Compile Include="Filters\AssemblyFileSet.cs" />
+    <Compile Include="Filters\CompositeFilter.cs" />
+    <Compile Include="Filters\Exclude.cs" />
+    <Compile Include="Filters\FilterConfiguration.cs" />
+    <Compile Include="Filters\FilterT.cs" />
+    <Compile Include="Filters\ICompositeFilterT.cs" />
+    <Compile Include="Filters\IFilterProvider.cs" />
+    <Compile Include="Filters\IFilterT.cs" />
+    <Compile Include="Filters\Include.cs" />
+    <Compile Include="Filters\IncludeExcludeSet.cs" />
+    <Compile Include="Filters\LogicalAnd.cs" />
+    <Compile Include="Filters\LogicalNot.cs" />
+    <Compile Include="Filters\LogicalOr.cs" />
+    <Compile Include="Filters\StringFilter.cs" />
+    <Compile Include="IApplicationLaunchable.cs" />
+    <Compile Include="IAssemblyLoaderService.cs" />
+    <Compile Include="IBundle.cs" />
+    <Compile Include="IBundleService.cs" />
+    <Compile Include="ICacheService.cs" />
+    <Compile Include="ICommandLineArguments.cs" />
+    <Compile Include="IoC\IComponentIdAware.cs" />
+    <Compile Include="IConfigurableT.cs" />
+    <Compile Include="IConfigurationElement.cs" />
+    <Compile Include="IoC\IContainerAdapter.cs" />
+    <Compile Include="IApplicationContext.cs" />
+    <Compile Include="IConverter.cs" />
+    <Compile Include="IExtension.cs" />
+    <Compile Include="IExtensionAware.cs" />
+    <Compile Include="IExtensionConfiguration.cs" />
+    <Compile Include="IExtensionPoint.cs" />
+    <Compile Include="IExtensionPointConfiguration.cs" />
+    <Compile Include="IExtensionRegistry.cs" />
+    <Compile Include="IObjectBuilder.cs" />
+    <Compile Include="IoC\IKernel.cs" />
+    <Compile Include="IoC\ILocator.cs" />
+    <Compile Include="IoC\Registrars\PreparingEventArgs.cs" />
+    <Compile Include="IoC\Registrars\IConcreteRegistrar.cs" />
+    <Compile Include="IoC\Registrars\IReflectiveRegistrar.cs" />
+    <Compile Include="IoC\Registrars\IRegistrar.cs" />
+    <Compile Include="IoC\Scope\IScope.cs" />
+    <Compile Include="IoC\TypeManipulation.cs" />
+    <Compile Include="IRuntimeContext.cs" />
+    <Compile Include="IRuntimePart.cs" />
+    <Compile Include="IService.cs" />
+    <Compile Include="IServiceRegistry.cs" />
+    <Compile Include="ITypedXmlSerializable.cs" />
+    <Compile Include="Attribute\OptionalDependencyAttribute.cs" />
+    <Compile Include="Exception\PlatformConfigurationException.cs" />
+    <Compile Include="Exception\RuntimeException.cs" />
+    <Compile Include="PredefinedService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\ExceptionMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExceptionMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="RuntimeConstants.cs" />
+    <Compile Include="RuntimeContext.cs" />
+    <Compile Include="Service.cs" />
+    <Compile Include="Attribute\ServiceAttribute.cs" />
+    <Compile Include="ServiceRegistrySingleton.cs" />
+    <Compile Include="Exception\WriteOnceViolatedException.cs" />
+    <Compile Include="utilities\AbstractServiceContainer.cs" />
+    <Compile Include="utilities\CommandLineParser\CommandLineArgument.cs" />
+    <Compile Include="utilities\CommandLineParser\CommandLineArgumentParser.cs" />
+    <Compile Include="utilities\CommandLineParser\CommandLineParseResult.cs" />
+    <Compile Include="utilities\Disposable.cs" />
+    <Compile Include="utilities\Enforce.cs" />
+    <Compile Include="utilities\EnforceResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EnforceResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="utilities\Error.Designer.cs">
+      <DependentUpon>Error.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Logging\AbstractLogger.cs" />
+    <Compile Include="Logging\ILog.cs" />
+    <Compile Include="Logging\ILogFactory.cs" />
+    <Compile Include="Logging\Log4NetFactory.cs" />
+    <Compile Include="Logging\Log4NetLogger.cs" />
+    <Compile Include="Logging\LogConfigurationException.cs" />
+    <Compile Include="Logging\LogLevel.cs" />
+    <Compile Include="Logging\LogUtils.cs" />
+    <Compile Include="Logging\NullFactory.cs" />
+    <Compile Include="Logging\SimpleLogger.cs" />
+    <Compile Include="Logging\SimpleLoggerFactory.cs" />
+    <Compile Include="Logging\StdFactory.cs" />
+    <Compile Include="Logging\SystemTraceLogger.cs" />
+    <Compile Include="Logging\SystemTraceLoggerFactory.cs" />
+    <Compile Include="IProperties.cs" />
+    <Compile Include="utilities\IDisposer.cs" />
+    <Compile Include="utilities\ObjectCache.cs" />
+    <Compile Include="ObjectMapper.cs" />
+    <Compile Include="utilities\Utils.cs" />
+    <Compile Include="utilities\VersionInfo.cs" />
+    <Compile Include="utilities\XmlUtils.cs" />
+    <Compile Include="Xml\Expressions\AndExpression.cs" />
+    <Compile Include="Xml\Expressions\BundleStateExpression.cs" />
+    <Compile Include="Xml\Expressions\CompositeExpression.cs" />
+    <Compile Include="Xml\Expressions\DefaultXmlExpression.cs" />
+    <Compile Include="Xml\Expressions\NotExpression.cs" />
+    <Compile Include="Xml\Expressions\ObjectClassExpression.cs" />
+    <Compile Include="Xml\Expressions\ObjectPropertyExpression.cs" />
+    <Compile Include="Xml\Expressions\OrExpression.cs" />
+    <Compile Include="Xml\Expressions\SingleExpression.cs" />
+    <Compile Include="Xml\Expressions\SystemPropertyExpression.cs" />
+    <Compile Include="Xml\Expressions\XmlExpression.cs" />
+    <Compile Include="Xml\Expressions\XmlExpressionsBundle.cs" />
+    <Compile Include="Xml\Serialization\XmlSerializable.cs" />
+    <Compile Include="Xml\Serialization\XmlSerializableIdentifiable.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Schemas\ArbitraryConfiguration.xsd" />
+    <EmbeddedResource Include="Schemas\Bundle.xsd" />
+    <EmbeddedResource Include="Schemas\Category.xsd" />
+    <EmbeddedResource Include="Schemas\CommandLineArgumentConfiguration.xsd" />
+    <EmbeddedResource Include="Schemas\ComponentConfiguration.xsd" />
+    <EmbeddedResource Include="Schemas\ServiceConfiguration.xsd" />
+    <EmbeddedResource Include="Schemas\XmlExpressions.xsd" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

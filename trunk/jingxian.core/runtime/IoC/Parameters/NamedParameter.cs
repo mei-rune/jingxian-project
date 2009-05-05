@@ -12,7 +12,7 @@ namespace jingxian.core.runtime
         private string _name;
 
         public NamedParameter(string name, object value)
-            : base(value, delegate(ParameterInfo  pi ){ return pi.Name == _name; } )
+            : base(value, delegate(ParameterInfo pi) { return pi.Name == name; })
         {
             _name = Enforce.ArgumentNotNullOrEmpty(name, "name");
         }

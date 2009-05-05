@@ -14,8 +14,8 @@ namespace jingxian.core.runtime
         }
 
         public NamedPropertyParameter(string name, object value)
-            : base(value, delegate(ParameterInfo parameterInfo) 
-                        { return parameterInfo.Member.Name.Replace("set_", "") == _name; })
+            : base(value, delegate(ParameterInfo parameterInfo)
+                        { return parameterInfo.Member.Name.Replace("set_", "") == name; })
         {
             _name = Enforce.ArgumentNotNullOrEmpty(name, "name");
         }

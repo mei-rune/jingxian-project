@@ -33,7 +33,7 @@ namespace jingxian.core.runtime
 
         private static string GetDetailedMessage()
         {
-            var builder = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
             builder.AppendLine();
             builder.AppendLine(Resources.ExceptionMessages.OtherCurrentlyInstantiatedServices);
             foreach (Type type in _instantiatedServiceTypeSingletons)
