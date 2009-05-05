@@ -184,14 +184,14 @@ namespace jingxian.core.runtime.activator
 
             StringBuilder reasonNotUsable = null;
 
-            var ciParams = ci.GetParameters();
-            var partialValueAccessors = new Func<object>[ciParams.Length];
+            ParameterInfo[] ciParams = ci.GetParameters();
+            Func<object>[] partialValueAccessors = new Func<object>[ciParams.Length];
 
             foreach (ParameterInfo pi in ciParams)
             {
                 Func<object> va = null;
 
-                foreach (var param in parameters)
+                foreach ( IParameter param in parameters)
                 {
                     if (param.TryGetProvider(pi, context, out va))
                         break;

@@ -61,7 +61,7 @@ namespace jingxian.core.runtime.Resources {
         }
         
         /// <summary>
-        ///   查找类似 The Assembly &apos;{0}&apos; is unavailable. This might be due to excluding it from the Platform&apos;s &lt;assemblyFileSet&gt;. 的本地化字符串。
+        ///   查找类似 程序集 &apos;{0}&apos; 不可用. 它在&lt;assemblyFileSet&gt;中可能被过滤了. 的本地化字符串。
         /// </summary>
         internal static string AssemblyUnavailable {
             get {
@@ -70,7 +70,7 @@ namespace jingxian.core.runtime.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Cannot add same listener for context &apos;{0}&apos;. Use contains methods to verify. 的本地化字符串。
+        ///   查找类似 不能为 context &apos;{0}&apos; 增加监听者. 的本地化字符串。
         /// </summary>
         internal static string CannotAddListenerForContext {
             get {
@@ -79,7 +79,7 @@ namespace jingxian.core.runtime.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Cannot remove listener for non-existent context &apos;{0}&apos;. Use contains methods to verify. 的本地化字符串。
+        ///   查找类似 不能为不存在的 context &apos;{0}&apos; 删除监听者.  的本地化字符串。
         /// </summary>
         internal static string CannotRemoveListenerForNonExistentContext {
             get {
@@ -88,7 +88,7 @@ namespace jingxian.core.runtime.Resources {
         }
         
         /// <summary>
-        ///   查找类似 The component with Id &apos;{0}&apos; could not be found. This might be due to removal or unloading of PlugIns. Also check your Id to make sure you do not have a typo in it. 的本地化字符串。
+        ///   查找类似 组件[ id= &apos;{0}&apos; ] 没有找到. 可能被移除或卸载. 的本地化字符串。
         /// </summary>
         internal static string ComponentNotFound {
             get {
@@ -97,7 +97,7 @@ namespace jingxian.core.runtime.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Attempt detected to instantiate service of type &apos;{0}&apos; twice. This is not supported yet. {1} 的本地化字符串。
+        ///   查找类似 检测到试图实例化服务 &apos;{0}&apos; 两次. {1} 的本地化字符串。
         /// </summary>
         internal static string InstantiateServiceTwice {
             get {
@@ -106,7 +106,7 @@ namespace jingxian.core.runtime.Resources {
         }
         
         /// <summary>
-        ///   查找类似 No components for this composite filter defined 的本地化字符串。
+        ///   查找类似 没有为这个复合过滤器定义给件. 的本地化字符串。
         /// </summary>
         internal static string NoComponentsForCompositeFilterDefined {
             get {
@@ -115,7 +115,7 @@ namespace jingxian.core.runtime.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Other currently instantiated services are: 的本地化字符串。
+        ///   查找类似 当前其它实例化的服务: 的本地化字符串。
         /// </summary>
         internal static string OtherCurrentlyInstantiatedServices {
             get {
@@ -124,7 +124,7 @@ namespace jingxian.core.runtime.Resources {
         }
         
         /// <summary>
-        ///   查找类似 The string argument &apos;{0}&apos; cannot be null or empty. 的本地化字符串。
+        ///   查找类似 字符串 &apos;{0}&apos; 不能为null或空. 的本地化字符串。
         /// </summary>
         internal static string StringArgumentNullOrEmpty {
             get {
@@ -133,7 +133,7 @@ namespace jingxian.core.runtime.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Write Once semantic violated. 的本地化字符串。
+        ///   查找类似 违返写一次的语义. 的本地化字符串。
         /// </summary>
         internal static string WriteOnceSemanticViolated {
             get {
@@ -142,7 +142,7 @@ namespace jingxian.core.runtime.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Write Once semantic violated: The member &apos;{0}&apos; is only writable once and was already set. 的本地化字符串。
+        ///   查找类似 违返写一次的语义: 成员 &apos;{0}&apos; 只能设置一次. 的本地化字符串。
         /// </summary>
         internal static string WriteOnceSemanticViolatedMember {
             get {

@@ -35,9 +35,9 @@ namespace jingxian.core.runtime.registrars
             ConstructorInfo constructorInfo = _implementor.GetConstructor(ctorSignature);
             if (null == constructorInfo)
             {
-                var sig = new StringBuilder();
-                var first = true;
-                foreach (var t in ctorSignature)
+                StringBuilder sig = new StringBuilder();
+                bool first = true;
+                foreach ( Type t in ctorSignature)
                 {
                     if (first)
                         first = false;
