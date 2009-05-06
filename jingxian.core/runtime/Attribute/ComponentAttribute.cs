@@ -15,13 +15,13 @@ namespace jingxian.core.runtime
     {
         private readonly Type _InterfaceType;
 		private string _configuration;
+        private int _proposedLevel = int.MaxValue;
 
 		public ComponentAttribute(Type interfaceType, Type implementation, string id, string bundleId)
 			: base(id, bundleId, Constants.Points.Components, implementation)
 		{
 			_InterfaceType = interfaceType;
 		}
-
 
 		public Type InterfaceType
 		{

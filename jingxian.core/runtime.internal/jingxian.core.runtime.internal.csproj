@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\..\bin\</OutputPath>
+    <OutputPath>..\..\bin\Debug-2008\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -51,12 +51,9 @@
     <Compile Include="ExtensionPointConfiguration.cs" />
     <Compile Include="ExtensionRegistry.cs" />
     <Compile Include="ExtensionRegistry.Serializable.cs" />
-    <Compile Include="ExtensionXmlSchema.cs" />
     <Compile Include="IExtensionBuilder.cs" />
     <Compile Include="IoC\Activator\InstanceActivator.cs" />
     <Compile Include="IoC\Helper.cs" />
-    <Compile Include="simpl\Registrars\AbstractRegistrar.cs" />
-    <Compile Include="simpl\KernelBuilder.cs" />
     <Compile Include="IoC\Parameters\AutowiringParameter.cs" />
     <Compile Include="IoC\Registrars\ReflectiveRegistrar.cs" />
     <Compile Include="IoC\Registrars\Registrar.cs" />
@@ -66,7 +63,6 @@
     <Compile Include="IoC\Scope\TransientScope.cs" />
     <Compile Include="IoC\KernelUtils.cs" />
     <Compile Include="IoC\MicroKernel.cs" />
-    <Compile Include="simpl\MiniKernel.cs" />
     <Compile Include="ObjectBuilder.cs" />
     <Compile Include="Platform.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -75,13 +71,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Messages.resx</DependentUpon>
     </Compile>
-    <Compile Include="RuntimeBundle.cs" />
     <Compile Include="ServiceConfiguration.cs" />
     <Compile Include="ServiceLauncher.cs" />
-    <Compile Include="simpl\MiniBuilder.cs" />
-    <Compile Include="simpl\ObjectMap.cs" />
-    <Compile Include="simpl\Registrars\ReflectiveRegistrar.cs" />
-    <Compile Include="simpl\Registrars\InstanceRegistrar.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\runtime\jingxian.core.runtime.csproj">

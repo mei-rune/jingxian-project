@@ -4,7 +4,7 @@ import os;
 
 ignoreList=[".svn",".suo",".user","Thumbs.db",".scc",   \
             ".obj",".eprj",".idb",".pch",".res", \
-            ".manifest"];
+            ".manifest",".lib",".dll",".pdb",".ilk","obj"];
 
 
 def copyfile(src,dstDir,file):
