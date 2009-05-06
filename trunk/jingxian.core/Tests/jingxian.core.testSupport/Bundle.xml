@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<bundle
+	xmlns="http://www.jingxian.org/schemas/Bundle.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	id="jingxian.core.testSupport"
+	name="jingxian.core.testSupport API"
+	description="."
+	provider="The jingxian-Project">
+
+</bundle>

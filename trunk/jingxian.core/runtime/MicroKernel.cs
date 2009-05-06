@@ -5,13 +5,17 @@ using System.Reflection;
 
 namespace jingxian.core.runtime
 {
-    public class MicroKernel : IServiceProvider
-    {
-        Dictionary<string, object> _componentsById = new Dictionary<string, object>();
-        Dictionary<Type, object> _componentsByType = new Dictionary<Type, object>();
 
-        IServiceProvider _parent;
-        MethodInfo _getMethodInfo;
+    public class MicroKernel : IServiceProvider, IDisposable
+    {
+        protected Dictionary<string, object> _componentsById = new Dictionary<string, object>();
+        protected Dictionary<Type, object> _componentsByType = new Dictionary<Type, object>();
+
+        protected IServiceProvider _parent;
+        protected MethodInfo _getMethodInfo;
+
+
+        bool _isStarted = false;
 
         public MicroKernel()
         { }
@@ -24,22 +28,89 @@ namespace jingxian.core.runtime
 
         public void Connect(Type serviceType, object instance)
         {
-            _componentsByType[serviceType] = instance;
+            innerConnect( serviceType, instance, null );
         }
 
         public void Connect(Type serviceType, Type classType)
         {
-            _componentsByType[serviceType] = classType;
+            innerConnect(serviceType, null, classType);
+        }
+
+        protected void innerConnect(Type serviceType, object instance, Type implementor)
+        {
+            Enforce.ArgumentNotNull(serviceType, "serviceType");
+
+            if (null != instance && null != implementor)
+                throw new ArgumentException("参数 '{0}' 和 'instance' 不能同时有值!");
+            if (null == instance && null == implementor)
+                throw new ArgumentException("参数 '{0}' 和 'instance' 不能同时为 null!");
+
+            if (!_isStarted)
+            {
+                _componentsByType[serviceType] = instance ?? implementor;
+                return;
+            }
+
+            bool newInstance = false;
+
+            if (null == instance)
+                instance = createInstance(implementor, out newInstance);
+            else
+                instance = createInstance(instance, out newInstance);
+
+            _componentsByType[serviceType] = instance;
+            Start(instance);
         }
 
         public void Connect(string serviceId, object instance)
         {
-            _componentsById[serviceId] = instance;
+            innerConnect(serviceId, instance, null );
         }
 
         public void Connect(string serviceId, Type classType)
         {
-            _componentsById[serviceId] = classType;
+            innerConnect(serviceId,null, classType);
+        }
+
+        protected void innerConnect(string serviceId, object instance, Type implementor)
+        {
+            Enforce.ArgumentNotNullOrEmpty(serviceId, "serviceId");
+
+            if (null != instance && null != implementor)
+                throw new ArgumentException("参数 '{0}' 和 'instance' 不能同时有值!");
+            if (null == instance && null == implementor)
+                throw new ArgumentException("参数 '{0}' 和 'instance' 不能同时为 null!");
+
+            if (!_isStarted)
+            {
+                _componentsById[serviceId] = instance ?? implementor;
+                return;
+            }
+
+            bool newInstance = false;
+            
+            if (null == instance)
+                instance = createInstance(implementor, out newInstance);
+            else
+                instance = createInstance(instance, out newInstance);
+
+            _componentsById[serviceId] = instance;
+            Start(instance);
+        }
+
+
+        public void Connect(string serviceId, Type serviceType, object instance)
+        {
+            Enforce.ArgumentNotNullOrEmpty(serviceId, "serviceId");
+            _componentsById[serviceId] = serviceType;
+            innerConnect(serviceType, instance, null);
+        }
+
+        public void Connect(string serviceId, Type serviceType, Type classType)
+        {
+            Enforce.ArgumentNotNullOrEmpty(serviceId, "serviceId");
+            _componentsById[serviceId] = serviceType;
+            innerConnect(serviceType, null, classType);
         }
 
         public bool Disconnect(Type serviceType)
@@ -47,7 +118,7 @@ namespace jingxian.core.runtime
             return _componentsByType.Remove(serviceType);
         }
 
-        public bool Disconnect(string serviceId, object instance)
+        public bool Disconnect(string serviceId)
         {
             return _componentsById.Remove( serviceId );
         }
@@ -64,18 +135,17 @@ namespace jingxian.core.runtime
 
         #region IServiceProvider 成员
 
-        public object GetService(string serviceId)
+        public virtual object GetService(string serviceId)
         {
             object instance = null;
-            if (!_componentsById.TryGetValue(serviceId, out instance))
+            if (_componentsById.TryGetValue(serviceId, out instance))
             {
-                Type classType = instance as Type;
-                if (null != classType)
-                    return instance;
+                bool newInstance = false;
+                instance = createInstance(instance, out newInstance);
+                if (newInstance)
+                    _componentsById[serviceId] = instance;
 
-                instance = invokeConstructors(classType);
-                invokeSetters(instance);
-                _componentsById[serviceId] = instance;
+                return instance;
             }
             if (null == _getMethodInfo)
                 return null;
@@ -85,22 +155,46 @@ namespace jingxian.core.runtime
                 , new object[] { serviceId });
         }
 
-        public object GetService(Type serviceType)
+        public virtual object GetService(Type serviceType)
         {
             object instance = null;
-            if (!_componentsByType.TryGetValue(serviceType, out instance))
+            if (_componentsByType.TryGetValue(serviceType, out instance))
             {
-                Type classType = instance as Type;
-                if (null != classType)
-                    return instance;
-
-                instance = invokeConstructors(classType);
-                invokeSetters(instance);
-                _componentsByType[serviceType] = instance;
+                bool newInstance = false;
+                instance = createInstance(instance, out newInstance);
+                if( newInstance )
+                    _componentsByType[serviceType] = instance;
+                return instance;
             }
             if (null == _parent)
                 return _parent;
             return _parent.GetService(serviceType);
+        }
+        protected virtual object createInstance(Type implementor, out bool newInstance)
+        {
+            if (implementor.IsInterface)
+            {
+                //NOTICE: 因为不是本次查找的key直接创建的，所以不作为新实例
+                newInstance = false;
+                return GetService(implementor);
+            }
+
+            newInstance = true;
+            object instance = invokeConstructors(implementor);
+            invokeSetters(instance);
+            return instance;
+        }
+
+        protected virtual object createInstance(object instance, out bool newInstance)
+        {
+            Type implementor = instance as Type;
+            if (null == implementor)
+            {
+                newInstance = false;
+                return instance;
+            }
+
+            return createInstance(implementor, out newInstance);
         }
 
         protected object invokeConstructors(Type implementor)
@@ -150,6 +244,63 @@ namespace jingxian.core.runtime
         }
 
         #endregion
+
+
+        public void Start()
+        {
+            if (_isStarted)
+                return;
+
+            foreach (KeyValuePair<string, object> kp in _componentsById)
+            {
+                GetService(kp.Key);
+            }
+
+            foreach (KeyValuePair<Type, object> kp in _componentsByType)
+            {
+                GetService(kp.Key);
+            }
+
+
+            foreach (KeyValuePair<string, object> kp in _componentsById)
+            {
+                if (this != kp.Value)
+                    Start(kp.Value);
+            }
+
+            foreach (KeyValuePair<Type, object> kp in _componentsByType)
+            {
+                if (this != kp.Value)
+                    Start(kp.Value);
+            }
+
+            _isStarted = true;
+        }
+
+        public void Stop()
+        {
+            if (!_isStarted)
+                return;
+
+            foreach (KeyValuePair<string, object> kp in _componentsById)
+            {
+                if (this != kp.Value)
+                    Stop(kp.Value);
+            }
+
+            foreach (KeyValuePair<Type, object> kp in _componentsByType)
+            {
+                if (this != kp.Value)
+                    Stop(kp.Value);
+            }
+
+            _isStarted = false;
+        }
+
+        public void Dispose()
+        {
+            Stop();
+        }
 
         public static void Start(object instance)
         {

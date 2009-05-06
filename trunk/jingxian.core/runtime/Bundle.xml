@@ -12,6 +12,10 @@
 		id="jingxian.core.runtime.applications"
 		name="Applications" />
 
+  <extensionPoint		
+    id="jingxian.core.runtime.initializer"
+    name="Initializer" />
+  
 	<extensionPoint		
 		id="jingxian.core.runtime.services"
 		name="Services" />

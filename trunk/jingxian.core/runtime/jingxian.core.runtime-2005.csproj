@@ -35,9 +35,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enforce.cs" />
     <Compile Include="Exception\AssemblyUnavailableException.cs" />
     <Compile Include="BundleState.cs" />
     <Compile Include="Attribute\ComponentAttribute.cs" />
+    <Compile Include="ExtensionXmlSchema.cs" />
+    <Compile Include="IoC\KernelAdapter.cs" />
     <Compile Include="IoC\Parameters\ConstantParameter.cs" />
     <Compile Include="IoC\Descriptor.cs" />
     <Compile Include="IoC\IComponentActivator.cs" />
@@ -117,8 +120,19 @@
     <Compile Include="Attribute\OptionalDependencyAttribute.cs" />
     <Compile Include="Exception\PlatformConfigurationException.cs" />
     <Compile Include="Exception\RuntimeException.cs" />
+    <Compile Include="MicroKernel.cs" />
     <Compile Include="PredefinedService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\EnforceResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EnforceResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Error.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Error.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\ExceptionMessages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -139,7 +153,6 @@
     <Compile Include="utilities\CommandLineParser\CommandLineArgumentParser.cs" />
     <Compile Include="utilities\CommandLineParser\CommandLineParseResult.cs" />
     <Compile Include="utilities\Disposable.cs" />
-    <Compile Include="utilities\Enforce.cs" />
     <Compile Include="Logging\AbstractLogger.cs" />
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\ILogFactory.cs" />
@@ -155,16 +168,6 @@
     <Compile Include="Logging\SystemTraceLogger.cs" />
     <Compile Include="Logging\SystemTraceLoggerFactory.cs" />
     <Compile Include="IProperties.cs" />
-    <Compile Include="utilities\EnforceResources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EnforceResources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="utilities\Error.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Error.resx</DependentUpon>
-    </Compile>
     <Compile Include="utilities\IDisposer.cs" />
     <Compile Include="utilities\ObjectCache.cs" />
     <Compile Include="ObjectMapper.cs" />
@@ -187,6 +190,16 @@
     <Compile Include="Xml\Serialization\XmlSerializableIdentifiable.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\EnforceResources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>EnforceResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Error.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Error.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\ExceptionMessages.resx">
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
@@ -204,16 +217,10 @@
     <EmbeddedResource Include="Schemas\ComponentConfiguration.xsd" />
     <EmbeddedResource Include="Schemas\ServiceConfiguration.xsd" />
     <EmbeddedResource Include="Schemas\XmlExpressions.xsd" />
-    <EmbeddedResource Include="utilities\EnforceResources.resx">
-      <SubType>Designer</SubType>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>EnforceResources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="utilities\Error.resx">
-      <SubType>Designer</SubType>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Error.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Bundle.xml" />
+    <EmbeddedResource Include="Xml\Expressions\Bundle.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

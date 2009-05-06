@@ -68,18 +68,6 @@ namespace jingxian.core.runtime.simpl
             get { return !string.IsNullOrEmpty(Implementation); }
         }
 
-        public T[] BuildConfigurationsFromXml<T>()
-            where T : IXmlSerializable, new()
-        {
-            return _builder.BuildConfigurationsFromXml<T>(this);
-        }
-
-        public T BuildConfigurationFromXml<T>() 
-            where T : IXmlSerializable, new()
-        {
-            return _builder.BuildConfigurationFromXml<T>(this);
-        }
-
         public T BuildTransient<T>()
         {
             return _builder.BuildTransient<T>(this);

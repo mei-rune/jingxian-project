@@ -43,8 +43,6 @@ namespace jingxian.core.runtime.simpl
         {
             _logger.Debug("开始搜索扩展和扩展点...");
 
-
-
             foreach (IBundle bundle in _bundleService.Bundles)
             {
                 _logger.DebugFormat("   从程序序集 '{0}' 中搜索 id 为 '{1}' 名为  '{2}' 的Bundle.", bundle.AssemblyLocation, bundle.Id, bundle.Name);

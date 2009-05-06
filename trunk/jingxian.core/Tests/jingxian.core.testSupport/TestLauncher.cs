@@ -6,12 +6,12 @@ namespace jingxian.core.testSupport
 {
     using jingxian.core.runtime;
 
-	[ExtensionAttribute(
-        "jingxian.core.runtime.simpl.serviceLauncher", Constants.Bundles.Internal,
-		Constants.Points.Applications,
-		typeof(TestLauncher),
-		Name = TestLauncher.OriginalName,
-		Description = "")]
+	[ExtensionAttribute( "jingxian.core.testSupport.serviceLauncher"
+        , "jingxian.core.testSupport"
+		, Constants.Points.Applications
+		, typeof(TestLauncher)
+		, Name = TestLauncher.OriginalName
+		, Description = "")]
 	internal sealed class TestLauncher: IApplicationLaunchable
 	{
 		public const string OriginalName = "Test Launcher";
@@ -25,14 +25,14 @@ namespace jingxian.core.testSupport
 
         public int Launch(IApplicationContext context)
         {
-
             foreach( IExtension extension in _extensionRegistry.GetExtensions("jingxian.core.testSupport.autoTests") )
             {
                 if (extension.Point == Constants.Points.XmlSchemas)
                     continue;
 
                 Console.WriteLine( "创建对象 - {0}" , extension.Id );
-                extension.BuildTransient<object>();
+                ITester tester = extension.BuildTransient<ITester>();
+                tester.Test();
             }
 
             return 0;

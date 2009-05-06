@@ -21,10 +21,6 @@ namespace jingxian.core.runtime
 
 		string BundleId { get; }
 
-		T[] BuildConfigurationsFromXml<T>() where T: IXmlSerializable, new();
-
-		T BuildConfigurationFromXml<T>() where T: IXmlSerializable, new();
-
 		T BuildTransient<T>();
 
 		bool HasConfiguration { get; }
