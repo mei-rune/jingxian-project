@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\..\bin\</OutputPath>
+    <OutputPath>..\..\bin\Debug-2008\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -41,12 +41,14 @@
     <Compile Include="Exception\AssemblyUnavailableException.cs" />
     <Compile Include="BundleState.cs" />
     <Compile Include="Attribute\ComponentAttribute.cs" />
+    <Compile Include="ExtensionXmlSchema.cs" />
     <Compile Include="IoC\Descriptor.cs" />
     <Compile Include="IoC\IComponentActivator.cs" />
     <Compile Include="IoC\IComponentDescriptor.cs" />
     <Compile Include="IoC\IComponentRegistration.cs" />
     <Compile Include="IoC\ICreationContext.cs" />
     <Compile Include="IoC\IModule.cs" />
+    <Compile Include="IoC\KernelAdapter.cs" />
     <Compile Include="IoC\Parameters\ConstantParameter.cs" />
     <Compile Include="IoC\Parameters\NamedPropertyParameter.cs" />
     <Compile Include="IoC\Parameters\IParameter.cs" />
@@ -134,7 +136,7 @@
       <DependentUpon>Messages.resx</DependentUpon>
     </Compile>
     <Compile Include="RuntimeConstants.cs" />
-    <Compile Include="RuntimeContext.cs" />
+    <Compile Include="ApplicationContext.cs" />
     <Compile Include="Service.cs" />
     <Compile Include="Attribute\ServiceAttribute.cs" />
     <Compile Include="Exception\WriteOnceViolatedException.cs" />
