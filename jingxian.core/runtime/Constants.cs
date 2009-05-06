@@ -16,6 +16,8 @@ namespace jingxian.core.runtime
 		{
 			public const string Applications = "jingxian.core.runtime.applications";
 
+            public const string Initializer = "jingxian.core.runtime.initializer"; 
+
 			public const string Services = "jingxian.core.runtime.services"; 
 
             /// <summary>

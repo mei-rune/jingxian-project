@@ -13,7 +13,7 @@ namespace jingxian.console
         static void Main(string[] args)
         {
             ApplicationContext context = new ApplicationContext();
-            context.ApplicationLaunchableId = "jingxian.core.runtime.simpl.serviceLauncher";
+            context.ApplicationLaunchableId = "jingxian.core.testSupport.serviceLauncher";
 
             jingxian.core.runtime.simpl.Platform.Launch(context, null);
         }

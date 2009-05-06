@@ -1,13 +1,11 @@
-﻿
+﻿using System;
+using System.Diagnostics;
+using jingxian.core.runtime.utilities;
+using System.Collections;
+using System.Globalization;
 
-//using System;
-//using System.Diagnostics;
-//using jingxian.core.runtime.utilities;
-//using System.Collections;
-//using System.Globalization;
-
-//namespace jingxian.core.runtime.simpl
-//{
+namespace jingxian.core.runtime.simpl
+{
 //    [Service(
 //        typeof(IObjectBuilder), typeof(ObjectBuilder),
 //        RuntimeConstants.ObjectBuilderServiceId,
@@ -304,4 +302,4 @@
 //        #endregion
 
 //    }
-//}
+}

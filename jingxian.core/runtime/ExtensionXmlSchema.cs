@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 using jingxian.core.runtime.utilities;
 using System.Globalization;
 
-namespace jingxian.core.runtime.simpl
+namespace jingxian.core.runtime
 {
 	internal sealed class ExtensionXmlSchema: IXmlSerializable
 	{

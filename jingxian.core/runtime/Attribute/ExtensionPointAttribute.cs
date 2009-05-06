@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace jingxian.core.runtime
 {
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+	[AttributeUsage(AttributeTargets.Interface|AttributeTargets.Assembly, AllowMultiple = true)]
 	public sealed class ExtensionPointAttribute : Attribute
 	{
 		private string _Id;

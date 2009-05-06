@@ -22,7 +22,6 @@ namespace jingxian.core.runtime.simpl
         private static readonly PredefinedService[] _predefinedServices = new PredefinedService[]
 			{
 				new PredefinedService(RuntimeConstants.AssemblyLoaderServiceId, typeof (IAssemblyLoaderService), typeof (AssemblyLoaderService)),
-				new PredefinedService(RuntimeConstants.ObjectBuilderServiceId, typeof (IObjectBuilder), typeof ( MiniBuilder)),
 				new PredefinedService(RuntimeConstants.BundleServiceId, typeof (IBundleService), typeof (BundleService)),
 				new PredefinedService(RuntimeConstants.ExtensionRegistryId, typeof (IExtensionRegistry), typeof (ExtensionRegistry)),
 			    //new PredefinedService(RuntimeConstants.ServiceRegistryId, typeof (IServiceRegistry), typeof (ServiceRegistry)),
@@ -63,26 +62,14 @@ namespace jingxian.core.runtime.simpl
 
             try
             {
-                using (IKernel containerAdapter = new MiniKernel())
+                using (KernelAdapter containerAdapter = new KernelAdapter())
                 {
-                    IKernelBuilder kernelBuilder = containerAdapter.CreateBuilder();
-
-                    kernelBuilder.Register<IApplicationContext>(context);
+                    containerAdapter.Connect( typeof(IApplicationContext), context );
 
                     foreach (PredefinedService predefinedService in PredefinedServices)
                     {
-                        kernelBuilder.Register(predefinedService.Implementation)
-                            .As(predefinedService.Service)
-                            .Named( predefinedService.Id )
-                            .WithProposedLevel( 0 );
+                        containerAdapter.Connect(predefinedService.Id, predefinedService.Service, predefinedService.Implementation);
                     }
-
-                    kernelBuilder.Build();
-
-                    //if (!containerAdapter.Contains<IKernel>())
-                    //{
-                    //    containerAdapter.Connect<IKernel>(RuntimeConstants.MiniKernelId, containerAdapter);
-                    //}
 
                     containerAdapter.Start();
 
