@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationContext.cs" />
+    <Compile Include="Attribute\ServiceAttribute.cs" />
     <Compile Include="Enforce.cs" />
     <Compile Include="Exception\AssemblyUnavailableException.cs" />
     <Compile Include="BundleState.cs" />
@@ -146,7 +147,6 @@
     </Compile>
     <Compile Include="RuntimeConstants.cs" />
     <Compile Include="Service.cs" />
-    <Compile Include="Attribute\ServiceAttribute.cs" />
     <Compile Include="Exception\WriteOnceViolatedException.cs" />
     <Compile Include="utilities\AbstractServiceContainer.cs" />
     <Compile Include="utilities\CommandLineParser\CommandLineArgument.cs" />

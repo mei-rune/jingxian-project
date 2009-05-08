@@ -19,21 +19,7 @@ namespace jingxian.core.runtime.simpl
         private static logging.ILog _logger = logging.LogUtils.GetLogger(typeof(Platform));
 
 
-        private static readonly PredefinedService[] _predefinedServices = new PredefinedService[]
-			{
-				new PredefinedService(RuntimeConstants.AssemblyLoaderServiceId, typeof (IAssemblyLoaderService), typeof (AssemblyLoaderService)),
-				new PredefinedService(RuntimeConstants.BundleServiceId, typeof (IBundleService), typeof (BundleService)),
-				new PredefinedService(RuntimeConstants.ExtensionRegistryId, typeof (IExtensionRegistry), typeof (ExtensionRegistry)),
-			    //new PredefinedService(RuntimeConstants.ServiceRegistryId, typeof (IServiceRegistry), typeof (ServiceRegistry)),
-			};
-
-        internal static PredefinedService[] PredefinedServices
-        {
-            get { return _predefinedServices; }
-        }
-
-
-        public static IApplicationLaunchable BuildApplicationLaunchable(IApplicationContext context, IExtensionRegistry registry, IObjectBuilder builder)
+        public static IApplicationLaunchable BuildApplicationLaunchable(IApplicationContext context, IExtensionRegistry registry)
         {
             IExtension launchableExtension;
             if (!registry.TryGetExtension(context.ApplicationLaunchableId, out launchableExtension))
@@ -43,10 +29,8 @@ namespace jingxian.core.runtime.simpl
                 _logger.Error(msg);
                 throw new PlatformConfigurationException(msg);
             }
-            IApplicationLaunchable launchable =
-                builder.BuildTransient(launchableExtension.Implementation) as IApplicationLaunchable;
 
-            return launchable;
+            return launchableExtension.BuildTransient<IApplicationLaunchable>();
         }
 
         public static int Launch(IApplicationContext context, ICommandLineArguments arguments)
@@ -64,20 +48,33 @@ namespace jingxian.core.runtime.simpl
             {
                 using (KernelAdapter containerAdapter = new KernelAdapter())
                 {
-                    containerAdapter.Connect( typeof(IApplicationContext), context );
+                    containerAdapter.Connect(typeof(IApplicationContext), context);
 
-                    foreach (PredefinedService predefinedService in PredefinedServices)
-                    {
-                        containerAdapter.Connect(predefinedService.Id, predefinedService.Service, predefinedService.Implementation);
-                    }
+                    containerAdapter.Connect(RuntimeConstants.AssemblyLoaderServiceId
+                        , typeof(IAssemblyLoaderService)
+                        , typeof(AssemblyLoaderService));
+                    containerAdapter.Connect(RuntimeConstants.BundleServiceId
+                        , typeof(IBundleService)
+                        , typeof(BundleService));
+                    containerAdapter.Connect(RuntimeConstants.ExtensionRegistryId
+                        , typeof(IExtensionRegistry)
+                        , typeof(ExtensionRegistry));
 
                     containerAdapter.Start();
 
-                    IExtensionRegistry registry = containerAdapter.Get <IExtensionRegistry>();
+                    IExtensionRegistry registry = containerAdapter.Get<IExtensionRegistry>();
                     IObjectBuilder builder = containerAdapter.Get<IObjectBuilder>();
 
+                    ConfigurationSupplier<ComponentConfiguration> sonfigurationSupplier = builder.BuildTransient<ConfigurationSupplier<ComponentConfiguration>>();
+                    
 
-                    IApplicationLaunchable launchable = BuildApplicationLaunchable(context, registry, builder);
+                    foreach (IExtension extension in registry.GetExtensions( Constants.Points.Components  ) )
+                    {
+                        sonfigurationSupplier.BuildConfigurationFromXml( )
+                    }
+
+
+                    IApplicationLaunchable launchable = BuildApplicationLaunchable(context, registry );
                     exitCode = launchable.Launch(context);
 
                     containerAdapter.Stop();
@@ -86,7 +83,6 @@ namespace jingxian.core.runtime.simpl
             }
             finally
             {
-
                 const string exitMsg = "退出代码 {0}.";
                 _logger.InfoFormat(exitMsg, exitCode);
                 AppDomain.CurrentDomain.UnhandledException -= OnUnhandledException;

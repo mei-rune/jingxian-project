@@ -27,5 +27,6 @@ namespace jingxian.core.runtime
 
         bool HasImplementation { get; }
 
+        T   G
 	}
 }

@@ -26,7 +26,13 @@ namespace jingxian.core.runtime
 		public Type InterfaceType
 		{
             get { return _InterfaceType; }
-		}
+        }
+
+        public int ProposedLevel
+        {
+            get { return _proposedLevel; }
+        }
+
 
 		public override string Configuration
 		{
@@ -47,13 +53,23 @@ namespace jingxian.core.runtime
 		[SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
 		public string GetConfigurationXml()
 		{
-			StringBuilder builder = new StringBuilder();
-			builder.Append(string.Format(CultureInfo.InvariantCulture,
-				"<component interface='{0}' implementation='{1}' id='{2}' />",
-				Utils.GetImplementationName(InterfaceType),
-				Utils.GetImplementationName(Implementation),
-				Id));
-			return builder.ToString();
+            if (int.MaxValue == ProposedLevel)
+            {
+                return string.Format(CultureInfo.InvariantCulture,
+                    "<component interface='{0}' implementation='{1}' id='{2}' />",
+                    Utils.GetImplementationName(InterfaceType),
+                    Utils.GetImplementationName(Implementation),
+                    Id);
+            }
+            else
+            {
+                return string.Format(CultureInfo.InvariantCulture,
+                    "<component interface='{0}' implementation='{1}' id='{2}' proposedLevel='{3}' />",
+                    Utils.GetImplementationName(InterfaceType),
+                    Utils.GetImplementationName(Implementation),
+                    Id,
+                    ProposedLevel );
+            }
 		}
 	}
 }

@@ -6,11 +6,7 @@ using System.Globalization;
 
 namespace jingxian.core.runtime.simpl
 {
-	[Service(
-		typeof(IExtensionRegistry), typeof(ExtensionRegistry),
-		RuntimeConstants.ExtensionRegistryId,
-		Constants.Bundles.Internal,
-		Name = ExtensionRegistry.OriginalName)]
+    [Service(ExtensionRegistry.OriginalName, typeof(IExtensionRegistry))]
 	internal sealed partial class ExtensionRegistry: Service, IExtensionRegistry
 	{
 		public const string OriginalName = "Extension Registry";
