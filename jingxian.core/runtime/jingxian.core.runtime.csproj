@@ -60,7 +60,7 @@
     <Compile Include="IoC\Registrars\RegisteredEventArgs.cs" />
     <Compile Include="IoC\Registrars\ActivatedEventArgs.cs" />
     <Compile Include="IoC\Registrars\ActivatingEventArgs.cs" />
-    <Compile Include="IoC\ComponentConfiguration.cs" />
+    <Compile Include="ComponentConfiguration.cs" />
     <Compile Include="IoC\ComponentLifestyle.cs" />
     <Compile Include="Exception\ComponentAlreadyExistsException.cs" />
     <Compile Include="Exception\ComponentLookupException.cs" />
@@ -222,6 +222,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Error.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Schemas\xml.xsd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

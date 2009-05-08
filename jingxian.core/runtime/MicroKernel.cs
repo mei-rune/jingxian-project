@@ -300,6 +300,19 @@ namespace jingxian.core.runtime
         public void Dispose()
         {
             Stop();
+
+
+            foreach (KeyValuePair<string, object> kp in _componentsById)
+            {
+                if (this != kp.Value)
+                    Dispose(kp.Value);
+            }
+
+            foreach (KeyValuePair<Type, object> kp in _componentsByType)
+            {
+                if (this != kp.Value)
+                    Dispose(kp.Value);
+            }
         }
 
         public static void Start(object instance)
@@ -310,6 +323,11 @@ namespace jingxian.core.runtime
         public static void Stop( object instance)
         {
             invokeMethod("Stop", instance);
+        }
+
+        public static void Dispose(object instance)
+        {
+            invokeMethod("Dispose", instance);
         }
 
         static void invokeMethod(string methodName, object instance)

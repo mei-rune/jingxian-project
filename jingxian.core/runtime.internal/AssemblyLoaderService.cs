@@ -9,11 +9,8 @@ using System.Globalization;
 
 namespace jingxian.core.runtime.simpl
 {
-	[Service(
-		typeof(IAssemblyLoaderService), typeof(AssemblyLoaderService),
-		RuntimeConstants.AssemblyLoaderServiceId,
-		Constants.Bundles.Internal,
-		Name = AssemblyLoaderService.OriginalName)]
+	[Service(AssemblyLoaderService.OriginalName,
+		typeof(IAssemblyLoaderService) )]
 	internal sealed class AssemblyLoaderService: Service, IAssemblyLoaderService
 	{
 		public const string OriginalName = "Assembly Loader Service";

@@ -14,17 +14,14 @@ namespace jingxian.core.runtime
     using jingxian.logging;
     using jingxian.core.runtime.utilities;
 
-    public sealed class ConfigurationSupplier<T> where T : IConfigurationElement, IXmlSerializable, new()
+    public sealed class ConfigurationSupplier<T> where T : IXmlSerializable, new()
     {
         private readonly IExtensionRegistry _extensionRegistry;
         private readonly IAssemblyLoaderService _assemblyLoaderService;
         private readonly IBundleService _bundleService;
 
-        private bool _allowElementsWithoutId;
-        private IList<T> _elementsWithoutId;
-        private bool _ensureUniqueId = true;
+
         private IDictionary<string, T> _configurations;
-        private IList<T> _nonUniqueElements;
         private XmlReaderSettings _settings;
 
 
@@ -38,30 +35,6 @@ namespace jingxian.core.runtime
 			_bundleService = bundleService;
 		}
 
-        public bool AllowElementsWithoutId
-        {
-            get { return _allowElementsWithoutId; }
-            set { _allowElementsWithoutId = value; }
-        }
-
-        public IList<T> ElementsWithoutId
-        {
-            get
-            {
-                if (_elementsWithoutId == null)
-                    _elementsWithoutId = new List<T>();
-
-                return _elementsWithoutId;
-            }
-        }
-
-        public bool EnsureUniqueId
-        {
-            get { return _ensureUniqueId; }
-            set { _ensureUniqueId = value; }
-        }
-
-
         public IDictionary<string, T> Configurations
         {
             get
@@ -69,18 +42,6 @@ namespace jingxian.core.runtime
                 if (_configurations == null)
                     throw new InvalidOperationException("必须先调用 'Fetch' 方法");
                 return _configurations;
-            }
-        }
-
-
-        public IList<T> NonUniqueElements
-        {
-            get
-            {
-                if (_nonUniqueElements == null)
-                    _nonUniqueElements = new List<T>();
-
-                return _nonUniqueElements;
             }
         }
 
@@ -98,7 +59,7 @@ namespace jingxian.core.runtime
                 _logger.WarnFormat("没有找到扩展点'{0}'的 contributions.", pointId);
                 _logger.DebugFormat("搜索扩展点'{0}'的 contributions 结束，共找到 {1} 个."
                     , pointId
-                    , _configurations.Count + NonUniqueElements.Count + ElementsWithoutId.Count);
+                    , _configurations.Count);
                 return _configurations;
             }
             foreach (IExtension ext in extensions)
@@ -111,55 +72,30 @@ namespace jingxian.core.runtime
                     continue;
                 }
 
-                T[] configurations = BuildConfigurationsFromXml( ext );
-                _logger.DebugFormat("处理扩展 '{0}' 的 {1}个配置 ...", ext.Id, configurations.Length);
+                T configuration = BuildConfigurationFromXml(ext);
 
-                if (configurations.Length != 0)
+                if (null == configuration)
                 {
                     _logger.WarnFormat("扩展 '{0}' 没有有效的配置", ext.Id);
                     continue;
                 }
 
-                foreach (T cfgElement in configurations)
-                {
-                    if (Equals(cfgElement, default(T)))
-                        throw new PlatformConfigurationException(
-                            string.Format("扩展 '{0}' 有一个无效的配置.", ext.Id));
+                if (Equals(configuration, default(T)))
+                    throw new PlatformConfigurationException(
+                        string.Format("扩展 '{0}' 有一个无效的配置.", ext.Id));
 
-                    if (!EnsureUniqueId)
-                    {
-                        NonUniqueElements.Add(cfgElement);
 
-                        _logger.DebugFormat("     + 增加一个id不是唯一的 contribution .");
-                        continue;
-                    }
+                Debug.Assert(!_configurations.ContainsKey(ext.Id),
+                    string.Format("检测到配置类 '{0}' 一个重复的 ID '{1}'.",
+                    configuration.GetType(), ext.Id));
 
-                    if (!string.IsNullOrEmpty(cfgElement.Id))
-                    {
-                        Debug.Assert(!_configurations.ContainsKey(cfgElement.Id),
-                            string.Format("检测到配置类 '{0}' 一个重复的 ID '{1}'.",
-                            cfgElement.GetType(), cfgElement.Id));
-
-                        _configurations.Add(cfgElement.Id, cfgElement);
-                        _logger.DebugFormat("     + 添加一个id为 '{0}' 的 Contribution.", cfgElement.Id);
-                    }
-                    else if (!AllowElementsWithoutId)
-                    {
-                        string msg = string.Format("配置类 '{0}' 有一个没有 Id 的 实例.", cfgElement.GetType());
-                        throw new InvalidOperationException(msg);
-                    }
-                    else
-                    {
-                        ElementsWithoutId.Add(cfgElement);
-                        _logger.DebugFormat("     + 添加一个没有id 的 Contribution.");
-                    }
-                }
-
+                _configurations.Add(ext.Id, configuration);
+                _logger.DebugFormat("     + 添加一个id为 '{0}' 的 Contribution.", ext.Id);
             }
 
             _logger.DebugFormat("搜索扩展点'{0}'的 contributions 结束，共找到 {1} 个."
                 , pointId
-                , _configurations.Count + NonUniqueElements.Count + ElementsWithoutId.Count);
+                , _configurations.Count);
 
             return _configurations;
         }

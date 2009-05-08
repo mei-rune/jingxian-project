@@ -28,13 +28,12 @@ namespace jingxian.core.runtime
         void IConfigurationElement.Configure(IExtension declaringExtension)
         {
             Enforce.ArgumentNotNull<IExtension>(declaringExtension,
-                "declaringExtension"); 
+                "declaringExtension");
 
+            if (_declaringExtension != null)
+                throw new WriteOnceViolatedException("declaringExtension");
 
-            if (_declaringExtension == null)
-                _declaringExtension = declaringExtension;
-
-            throw new WriteOnceViolatedException("declaringExtension");
+            _declaringExtension = declaringExtension;
         }
 
 	}

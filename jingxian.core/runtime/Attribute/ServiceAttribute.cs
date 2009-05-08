@@ -7,44 +7,27 @@ namespace jingxian.core.runtime
 {
     using jingxian.core.runtime.utilities;
 
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-	public sealed class ServiceAttribute: ExtensionAttribute
-	{
-		private string _configuration;
-		private readonly Type _ServiceInterface;
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public sealed class ServiceAttribute : Attribute
+    {
+        private string _name;
+        private readonly Type _serviceInterface;
 
-		public ServiceAttribute(Type serviceInterface, Type implementation, string id, string bundleId)
-			: base(id, bundleId, Constants.Points.Services, implementation)
-		{
-            _ServiceInterface = Enforce.ArgumentNotNull <Type>( serviceInterface, "serviceInterface");
-		}
+        public ServiceAttribute(string nm, Type serviceInterface)
+        {
+            _name = nm;
+            _serviceInterface = Enforce.ArgumentNotNull<Type>(serviceInterface, "serviceInterface");
+        }
 
-		public Type ServiceInterface
-		{
-            get { return _ServiceInterface; }
-		}
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
 
-		public override string Configuration
-		{
-			get
-			{
-				if (_configuration == null)
-				{
-                    StringBuilder builder = new StringBuilder();
-					builder.Append(
-						string.Format(CultureInfo.InvariantCulture,
-						"<service interface='{0}' implementation='{1}' id='{2}' />",
-						Utils.GetImplementationName(ServiceInterface),
-						Utils.GetImplementationName(Implementation),
-						Id));
-					_configuration = builder.ToString();
-				}
-				return _configuration;
-			}
-			set
-			{
-				_configuration = value;
-			}
-		}
-	}
+        public Type ServiceInterface
+        {
+            get { return _serviceInterface; }
+        }
+    }
 }

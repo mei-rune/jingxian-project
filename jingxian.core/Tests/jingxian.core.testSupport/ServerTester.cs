@@ -6,7 +6,8 @@ namespace jingxian.core.testSupport
 {
     using jingxian.core.runtime;
 
-    [Service( typeof(IServiceProvider), typeof(ServerTester), "BBB","jingxian.core.testSupport" ) ]
+    [Service( "BBB", typeof(IServiceProvider) )]
+    [Component(typeof(IServiceProvider), typeof(ServerTester), "BBB", "jingxian.core.testSupport")]
     public class ServerTester : IService 
     {
         #region IService ≥…‘±

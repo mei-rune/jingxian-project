@@ -10,11 +10,8 @@ using System.Globalization;
 
 namespace jingxian.core.runtime.simpl
 {
-	[Service(
-		typeof(IBundleService), typeof(BundleService),
-		RuntimeConstants.BundleServiceId,
-		Constants.Bundles.Internal,
-		Name = BundleService.OriginalName)]
+	[Service(BundleService.OriginalName,
+		typeof(IBundleService) )]
 	internal sealed class BundleService: Service, IBundleService
 	{
 		public const string OriginalName = "Bundle Service";
