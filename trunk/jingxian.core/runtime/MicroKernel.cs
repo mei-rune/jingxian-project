@@ -15,7 +15,7 @@ namespace jingxian.core.runtime
         protected MethodInfo _getMethodInfo;
 
 
-        bool _isStarted = false;
+        protected bool _isStarted = false;
 
         public MicroKernel()
         { }
@@ -244,7 +244,6 @@ namespace jingxian.core.runtime
         }
 
         #endregion
-
 
         public void Start()
         {

@@ -62,15 +62,39 @@ namespace jingxian.core.runtime.simpl
 
                     containerAdapter.Start();
 
+
                     IExtensionRegistry registry = containerAdapter.Get<IExtensionRegistry>();
                     IObjectBuilder builder = containerAdapter.Get<IObjectBuilder>();
+                    List<ComponentConfiguration> components = new List<ComponentConfiguration>();
 
-                    ConfigurationSupplier<ComponentConfiguration> sonfigurationSupplier = builder.BuildTransient<ConfigurationSupplier<ComponentConfiguration>>();
-                    
-
-                    foreach (IExtension extension in registry.GetExtensions( Constants.Points.Components  ) )
+                    using (IDisposable scope = containerAdapter.Lock())
                     {
-                        sonfigurationSupplier.BuildConfigurationFromXml( )
+                        foreach (IExtension extension in registry.GetExtensions(Constants.Points.Components))
+                        {
+                            ComponentConfiguration component = extension.GetConfiguration<ComponentConfiguration>();
+                            components.Add(component);
+
+                            containerAdapter.Connect(component.Id
+                                , builder.GetType(component.Interface)
+                                , builder.GetType(component.Implementation) );
+                        }
+
+                        components.Sort(delegate(ComponentConfiguration a, ComponentConfiguration b)
+                        {
+                            return a.ProposedLevel - b.ProposedLevel;
+                        });
+
+                        List<object> componentInstances = new List<object>();
+
+                        foreach (ComponentConfiguration component in components)
+                        {
+                            componentInstances.Add( containerAdapter.GetService(component.Id) );
+                        }
+
+                        foreach( object instance in componentInstances )
+                        {
+                            Utils.Start( instance );
+                        }
                     }
 
 

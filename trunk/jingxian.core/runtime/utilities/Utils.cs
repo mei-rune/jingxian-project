@@ -42,27 +42,35 @@ namespace jingxian.core.runtime
             }
         }
 
+        public static void Start(object instance)
+        {
+            invokeMethod("Start", instance);
+        }
 
-        //public static string Join<T>(string separator, IEnumerable<T> objects, Action<T> )
-        //{
-        //    System.Text.StringBuilder sb = new System.Text.StringBuilder();
-        //    bool isFirst = true;
+        public static void Stop(object instance)
+        {
+            invokeMethod("Stop", instance);
+        }
 
-        //    foreach (T obj in objects)
-        //    {
-        //        if (isFirst)
-        //        {
-        //            isFirst = false;
-        //        }
-        //        else
-        //        {
-        //            sb.Append(separator);
-        //        }
+        public static void Dispose(object instance)
+        {
+            invokeMethod("Dispose", instance);
+        }
 
-        //        sb.Append(obj);
-        //    }
-        //    return sb.ToString();
-        //}
+        static void invokeMethod(string methodName, object instance)
+        {
+            MethodInfo methodInfo = instance.GetType().GetMethod(methodName);
+            if (null == methodInfo)
+                return;
+
+            ParameterInfo[] parameters = methodInfo.GetParameters();
+            switch (parameters.Length)
+            {
+                case 0:
+                    methodInfo.Invoke(instance, null);
+                    break;
+            }
+        }
 
         public static object invokeGetter(object instance, string key)
         {

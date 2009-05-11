@@ -43,6 +43,7 @@
     <Compile Include="BundleScanner.cs" />
     <Compile Include="BundleService.cs" />
     <Compile Include="CommandLineArguments.cs" />
+    <Compile Include="ExtensionXmlSchema.cs" />
     <Compile Include="IoC\Activator\ReflectionActivator.cs" />
     <Compile Include="Extension.cs" />
     <Compile Include="ExtensionBuilder.cs" />

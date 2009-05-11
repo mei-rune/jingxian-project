@@ -79,6 +79,43 @@ namespace jingxian.core.runtime
         #endregion
 
 
+        private bool Pause()
+        {
+            bool result = _isStarted;
+            _isStarted = false;
+            return result;
+        }
+
+        private void Restore( bool status )
+        {
+            _isStarted = status;
+        }
+
+ 
+
+        class Cookies : IDisposable
+        {
+            KernelAdapter _adapter;
+            bool _isStarted;
+            internal Cookies(KernelAdapter adapter)
+            {
+                Enforce.ArgumentNotNull(adapter, "adapter");
+
+                _adapter = adapter;
+                _isStarted = _adapter.Pause();
+            }
+
+            public void Dispose()
+            {
+                _adapter.Restore(_isStarted);
+            }
+        }
+
+        public IDisposable Lock()
+        {
+            return new Cookies( this );
+        }
+
         internal sealed class ObjectBuilder : Service, IObjectBuilder
         {
             public const string OriginalName = "Object Builder Service";

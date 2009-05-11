@@ -8,5 +8,8 @@ namespace jingxian.core.runtime.simpl
 	public interface IExtensionBuilder
 	{
 		T BuildTransient<T>(IExtension extension);
+
+        T BuildConfigurationFromXml<T>(IExtension extension)
+            where T : IXmlSerializable, new();
 	}
 }
