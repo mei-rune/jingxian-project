@@ -27,6 +27,7 @@ namespace jingxian.core.runtime
 
         bool HasImplementation { get; }
 
-        T   G
+        CFG GetConfiguration<CFG>()
+            where CFG : IXmlSerializable, new();
 	}
 }

@@ -37,11 +37,11 @@
   <ItemGroup>
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="Attribute\ServiceAttribute.cs" />
+    <Compile Include="ComponentConfiguration.cs" />
     <Compile Include="Enforce.cs" />
     <Compile Include="Exception\AssemblyUnavailableException.cs" />
     <Compile Include="BundleState.cs" />
     <Compile Include="Attribute\ComponentAttribute.cs" />
-    <Compile Include="ExtensionXmlSchema.cs" />
     <Compile Include="IoC\KernelAdapter.cs" />
     <Compile Include="IoC\Parameters\ConstantParameter.cs" />
     <Compile Include="IoC\Descriptor.cs" />
@@ -60,7 +60,6 @@
     <Compile Include="IoC\Registrars\RegisteredEventArgs.cs" />
     <Compile Include="IoC\Registrars\ActivatedEventArgs.cs" />
     <Compile Include="IoC\Registrars\ActivatingEventArgs.cs" />
-    <Compile Include="IoC\ComponentConfiguration.cs" />
     <Compile Include="IoC\ComponentLifestyle.cs" />
     <Compile Include="Exception\ComponentAlreadyExistsException.cs" />
     <Compile Include="Exception\ComponentLookupException.cs" />

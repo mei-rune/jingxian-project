@@ -41,7 +41,6 @@
     <Compile Include="Exception\AssemblyUnavailableException.cs" />
     <Compile Include="BundleState.cs" />
     <Compile Include="Attribute\ComponentAttribute.cs" />
-    <Compile Include="ExtensionXmlSchema.cs" />
     <Compile Include="IoC\Descriptor.cs" />
     <Compile Include="IoC\IComponentActivator.cs" />
     <Compile Include="IoC\IComponentDescriptor.cs" />

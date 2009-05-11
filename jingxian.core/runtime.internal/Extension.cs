@@ -73,10 +73,15 @@ namespace jingxian.core.runtime.simpl
             return _builder.BuildTransient<T>(this);
         }
 
+        public CFG GetConfiguration<CFG>()
+            where CFG : IXmlSerializable, new()
+        {
+            return _builder.BuildConfigurationFromXml<CFG>(this);
+        }
+
         public override string ToString()
         {
             return Id;
         }
-
-	}
+    }
 }
