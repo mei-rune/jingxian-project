@@ -1,3 +1,0 @@
-
-
-TargetPath=../../bin
