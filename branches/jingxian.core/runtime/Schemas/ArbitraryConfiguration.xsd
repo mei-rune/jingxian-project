@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.jingxian.org/schemas/Bundle.xsd"
+	targetNamespace="http://www.jingxian.org/schemas/Bundle.xsd"
+	elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+	
+	<xs:element name="configuration" type="ArbitraryConfiguration" />
+	
+	<xs:complexType name="ArbitraryConfiguration">
+		<xs:annotation>
+			<xs:documentation></xs:documentation>
+			</xs:annotation>
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:anyAttribute processContents="lax"/>
+	</xs:complexType>
+</xs:schema>
