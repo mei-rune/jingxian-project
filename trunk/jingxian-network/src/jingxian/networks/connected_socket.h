@@ -593,7 +593,7 @@ private:
 	/// 本对象当前所处的状态
     connection_status _state;
 	/// 日志对象
-    tracer* _trace;
+    ITracer* _trace;
 
 	/// 对象的上下文
     ProtocolContext* _context;

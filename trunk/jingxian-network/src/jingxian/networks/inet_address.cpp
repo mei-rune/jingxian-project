@@ -206,7 +206,7 @@ bool inet_address::parse (const char* address)
 const tstring& inet_address::toString( ) const
 {
 	char* ipstr = inet_ntoa( ((sockaddr_in*) &m_addr_)->sin_addr );
-	if( ipstr == 0 )
+	if( is_null( ipstr ) )
 	{
 		to_string_.clear();
 		return to_string_;

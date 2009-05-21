@@ -25,24 +25,22 @@ inline StringArray<charT,OP> split_with_string( const charT* ptr
    assert( NULL != ptr );
    assert( NULL != seps );
    
-   if( -1 == len  )
+   if( -1 == seps_len  )
       seps_len = string_traits<charT>::strlen( seps );
       
    std::list< stringData<charT> > tmpList;
-   charT* token = string_traits<charT>::strstr( ptr, seps );
-   while( NULL != token )
+   const charT* token = null_ptr;
+   while( null_ptr != (token = string_traits<charT>::strstr( ptr, seps )) )
    {
    	   stringData<charT> data;
    	   
    	   data.len = token - ptr;
-   	   data.capacity = sizeof( charT )* data.len + 20;
-   	   data.ptr = ( charT*) OP::malloc( len );
+   	   data.capacity = sizeof( charT )* (data.len + 20);
+   	   data.ptr = ( charT*) OP::malloc( data.capacity );
    	   memset( data.ptr, 0, data.capacity );
    	   string_traits<charT>::strncpy( data.ptr, data.capacity, ptr, data.len );
-   	   
        tmpList.push_back( data );
-       
-       token = string_traits<charT>::strstr( token + len, seps );
+	   ptr = token + seps_len;
    }
 
    StringArray<charT,OP> result( tmpList.size() );

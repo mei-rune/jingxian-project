@@ -14,9 +14,9 @@ static char THIS_FILE[] = __FILE__;
 
 _jingxian_begin
 
-logger* iocpLogger;
+ILogger* iocpLogger;
 
-logger* getLogger()
+ILogger* getLogger()
 {
 	if( null_ptr == iocpLogger)
 		iocpLogger = logging::makeLogger(_T("jingxian.proactor") );
@@ -24,12 +24,12 @@ logger* getLogger()
 }
 
 proactor::proactor(  )
-: m_completion_port_( NULL )
+: m_completion_port_( null_ptr )
 {
 }
 
 proactor::proactor( size_t number_of_threads )
-: m_completion_port_( NULL )
+: m_completion_port_( null_ptr )
 {
 	open( number_of_threads );
 }
@@ -40,7 +40,7 @@ proactor::~proactor(void)
 
 bool proactor::is_good() const
 {
-	return NULL != m_completion_port_;
+	return null_ptr != m_completion_port_;
 }
 
 bool proactor::open ( size_t number_of_threads )
@@ -89,7 +89,7 @@ void proactor::close (void)
 	}
 
 	::CloseHandle( m_completion_port_);
-	m_completion_port_ = NULL;
+	m_completion_port_ = null_ptr;
 
 }
 
@@ -128,7 +128,7 @@ void proactor::close (void)
 /// 不是NULL,lpNumberOfBytes等于0。
 /// 
 /// </summary>
-int proactor::handle_events (unsigned long milli_seconds)
+int proactor::handle_events (u_int32_t milli_seconds)
 {
 	OVERLAPPED *overlapped = 0;
 	u_long bytes_transferred = 0;
@@ -193,7 +193,7 @@ void proactor::application_specific_code (ICommand *asynch_result,
 	command_queue::release( asynch_result );
 }
 
-bool proactor::post(ICommand *result )
+bool proactor::post(ICommand *result)
 {
 	if( is_null( result ) )
 		return false;
@@ -213,9 +213,9 @@ HANDLE proactor::handle()
 	return m_completion_port_;
 }
 
-bool proactor::bind (HANDLE handle, const void *completion_key)
+bool proactor::bind (HANDLE handle, void *completion_key)
 {
-	ULONG_PTR comp_key = reinterpret_cast < ULONG_PTR >( (void*)completion_key);
+	ULONG_PTR comp_key = reinterpret_cast < ULONG_PTR >( completion_key);
 
 	return 0 != ::CreateIoCompletionPort (handle,
 		this->m_completion_port_,

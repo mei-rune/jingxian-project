@@ -21,7 +21,7 @@ public:
 	virtual ~IEndpoint() {}
 
 	/**
-	 * 地址的
+	 * 地址的协议
 	 */
 	virtual const tstring& protocol() const = 0;
 
@@ -36,6 +36,13 @@ public:
 	virtual size_t size (void) const = 0;
 
 	/**
+	 * 比较大小
+	 *
+	 * @return 等于返回0，小于返回负数，在于返回正数
+	 */
+	virtual int compareTo(const IEndpoint& endpoint) const = 0;
+
+	/**
 	 * 取得地址的描述
 	 */
     virtual const tstring& toString() const = 0;
@@ -45,6 +52,26 @@ inline tostream& operator<<( tostream& target, const IEndpoint& addr )
 {
 	target << addr.toString();
 	return target;
+}
+
+inline bool operator < (const IEndpoint &a,const IEndpoint &b)
+{
+	return 0 > a.compareTo( b );
+}
+
+inline bool operator > (const IEndpoint &a,const IEndpoint &b)
+{
+	return 0 < a.compareTo( b );
+}
+
+inline bool operator == (const IEndpoint &a,const IEndpoint &b)
+{
+	return 0 == a.compareTo( b );
+}
+
+inline bool operator != (const IEndpoint &a,const IEndpoint &b)
+{
+	return 0 != a.compareTo( b );
 }
 
 _jingxian_end

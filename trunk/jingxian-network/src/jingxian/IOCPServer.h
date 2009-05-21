@@ -11,6 +11,7 @@
 // Include files
 # include <hash_map>
 # include "jingxian/string/string.hpp"
+# include "jingxian/logging/logging.hpp"
 # include "jingxian/IReactorCore.h"
 # include "jingxian/networks/proactor.h"
 
@@ -59,12 +60,12 @@ public:
 	/**
 	 * 将句柄绑定到本端口
 	 */
-	virtual bool bind(HANDLE systemHandler);
+	virtual bool bind(HANDLE systemHandler, void* completion_key);
 	
 	/**
 	 *  空闲时执行的回调函数，子类可以继承本函数 
 	 */
-	virtaul void onIdle()
+	virtual void onIdle();
 
 	/**
 	* 取得地址的描述
@@ -73,19 +74,23 @@ public:
 
 private:
 	
-	NO_COPY(IOCPServer);
-	
-	tstring _toString;
+	NOCOPY(IOCPServer);
 
 	proactor _proactor;
 
+	u_int32_t _timeout;
+
+	bool _isRunning;
+
 	stdext::hash_map<tstring, IConnectionBuilder* > _connectionBuilders;
 
-	stdext::hash_map<tstring, IAcceptorFactory* > _acceptorFactorys;
+	stdext::hash_map<tstring, IAcceptorFactory* > _acceptorFactories;
 	
 	stdext::hash_map<tstring, IAcceptor* > _acceptors;
 	
-	bool _isRunning;
+	ILogger* _logger;
+
+	tstring toString_;
 };
 
 _jingxian_end

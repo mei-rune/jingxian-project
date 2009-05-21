@@ -1,22 +1,24 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Net;
-using System.Net.Sockets;
-using System.Runtime.InteropServices;
 
-namespace Betanetworks.ManagedIOCP.TCP
-{
-    using Betanetworks.Commons;
-    using Betanetworks.Commons.Error;
-    using Betanetworks.Sockets;
+#ifndef _ReadCommand_H_
+#define _ReadCommand_H_
 
-    class ReadFileOp : OverlappedOp, IOperationResult, IDisposable
+# include "jingxian/config.h"
+
+#if !defined (JINGXIAN_LACKS_PRAGMA_ONCE)
+# pragma once
+#endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
+
+// Include files
+# include "jingxian/networks/commands/ICommand.h"
+
+_jingxian_begin
+
+class ReadCommand : public ICommand
     {
         ConnectedSocket _transport;
         ByteBuffer _byteBuffer;
 
-        public ReadFileOp(ConnectedSocket transport
+        public ReadCommand(ConnectedSocket transport
             , ByteBuffer byteBuffer)
             : base(byteBuffer.Array)
         {
@@ -81,4 +83,7 @@ namespace Betanetworks.ManagedIOCP.TCP
             throw new ReadError(errCode);
         }
     }
-}
+
+_jingxian_end
+
+#endif //_ReadCommand_H_

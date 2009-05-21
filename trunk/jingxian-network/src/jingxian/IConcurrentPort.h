@@ -10,19 +10,9 @@
 
 // Include files
 # include "jingxian/string/string.hpp"
+# include "jingxian/IRunnable.h"
 
 _jingxian_begin
-
-/**
- * 方法接口
- */
-class IRunnable
-{
-public:
-	virtual ~IRunnable() {}
-
-	virtual void run() = 0;
-};
 
 /**
  * 线程接口

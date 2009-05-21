@@ -18,13 +18,13 @@ _jingxian_begin
 
 namespace logging
 {
-	logger* makeLogger( const tchar* nm );
+	ILogger* makeLogger( const tchar* nm );
 
-	logger* makeLogger( const tstring& nm );
+	ILogger* makeLogger( const tstring& nm );
 
-	tracer* makeTracer( const tchar* nm );
+	ITracer* makeTracer( const tchar* nm );
 
-	tracer* makeTracer( const tstring& nm );
+	ITracer* makeTracer( const tstring& nm );
 }
 
 _jingxian_end

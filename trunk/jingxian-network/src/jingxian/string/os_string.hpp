@@ -1,4 +1,4 @@
-
+﻿
 #ifndef os_string_h
 #define os_string_h
 

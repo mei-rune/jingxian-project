@@ -22,13 +22,13 @@ _jingxian_begin
 #endif
 
 
-class StdLogger : public logger
+class StdLogger : public ILogger
 {
 public:
 
 	StdLogger()
 	{
-	 l = Trace;
+		_levelPtr = logging::Trace;
 	}
 
 	void assertLog(bool assertion, const StringStream& message, const char* file=0, int line=-1)
@@ -112,7 +112,7 @@ public:
 
 	const LevelPtr& getLevel() const
 	{
-		return l;
+		return _levelPtr;
 	}
 
 	void pushNDC( const tchar* str )
@@ -128,7 +128,7 @@ public:
 	}
 
 private:
-	LevelPtr l;
+	LevelPtr _levelPtr;
 };
 
 _jingxian_end

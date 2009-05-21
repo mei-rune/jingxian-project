@@ -41,8 +41,9 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/DTEST"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;D:\developing\JoMoo\trunk\jingxian-network\src&quot;;."
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)src\&quot;;."
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				GeneratePreprocessedFile="0"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -183,10 +184,6 @@
 				RelativePath=".\src\jingxian\main.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\pro_config.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -194,11 +191,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\src\jingxian\config.h"
-				>
-			</File>
-			<File
-				RelativePath=".\pro_config.h"
+				RelativePath=".\src\jingxian\IRunnable.h"
 				>
 			</File>
 		</Filter>
@@ -267,11 +260,27 @@
 				RelativePath=".\src\jingxian\networks\proactor.h"
 				>
 			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\TCPAcceptor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\TCPAcceptor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\TCPEndpoint.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\TCPEndpoint.h"
+				>
+			</File>
 			<Filter
 				Name="commands"
 				>
 				<File
-					RelativePath=".\src\jingxian\networks\commands\AcceptRequest.cs"
+					RelativePath=".\src\jingxian\networks\commands\AcceptCommand.h"
 					>
 				</File>
 				<File
@@ -283,11 +292,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\src\jingxian\networks\commands\ConnectRequest.cs"
+					RelativePath=".\src\jingxian\networks\commands\ConnectCommand.h"
 					>
 				</File>
 				<File
-					RelativePath=".\src\jingxian\networks\commands\DisconnectRequest.cs"
+					RelativePath=".\src\jingxian\networks\commands\DisconnectCommand.h"
 					>
 				</File>
 				<File
@@ -295,11 +304,19 @@
 					>
 				</File>
 				<File
-					RelativePath=".\src\jingxian\networks\commands\ReadRequest.cs"
+					RelativePath=".\src\jingxian\networks\commands\ReadCommand.h"
 					>
 				</File>
 				<File
-					RelativePath=".\src\jingxian\networks\commands\write_request.h"
+					RelativePath=".\src\jingxian\networks\commands\RunCommand.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\commands\RunCommand.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\commands\WriteCommand.h"
 					>
 				</File>
 			</Filter>
@@ -461,6 +478,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\jingxian\config.h"
+			>
+		</File>
+		<File
 			RelativePath=".\src\jingxian\dictionary.h"
 			>
 		</File>
@@ -477,7 +498,7 @@
 			>
 		</File>
 		<File
-			RelativePath=".\src\jingxian\IConnector.h"
+			RelativePath=".\src\jingxian\IConnectionBuilder.h"
 			>
 		</File>
 		<File
@@ -530,6 +551,14 @@
 		</File>
 		<File
 			RelativePath=".\src\jingxian\pro.h"
+			>
+		</File>
+		<File
+			RelativePath=".\pro_config.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\pro_config.h"
 			>
 		</File>
 		<File
