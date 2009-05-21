@@ -1,20 +1,19 @@
 
+#ifndef _WriteCommand_H_
+#define _WriteCommand_H_
 
-#ifndef _write_request_h_
-#define _write_request_h_
-
-#include "jingxian/config.h"
+# include "jingxian/config.h"
 
 #if !defined (JINGXIAN_LACKS_PRAGMA_ONCE)
 # pragma once
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
-#include "jingxian/networks/commands/io_request.h"
+# include "jingxian/networks/commands/ICommand.h"
 
 _jingxian_begin
 
-class write_request : io_request
+class WriteCommand : public ICommand
 {
 
 public:
@@ -82,4 +81,4 @@ private:
 
 _jingxian_end
 
-#endif 
+#endif //_WriteCommand_H_

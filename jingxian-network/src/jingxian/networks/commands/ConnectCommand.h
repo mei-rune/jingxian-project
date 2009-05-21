@@ -1,18 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Net;
-using System.Net.Sockets;
-using System.Runtime.InteropServices;
 
-namespace Betanetworks.ManagedIOCP.TCP
-{
-    using Betanetworks.Sockets;
-    using Betanetworks.Commons;
-    using Betanetworks.Commons.Logging;
-    using Betanetworks.Commons.Error;
-    using Betanetworks.Commons.Threading;
+#ifndef _ConnectCommand_H_
+#define _ConnectCommand_H_
 
+# include "jingxian/config.h"
+
+#if !defined (JINGXIAN_LACKS_PRAGMA_ONCE)
+# pragma once
+#endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
+
+// Include files
+# include "jingxian/networks/commands/ICommand.h"
+
+_jingxian_begin
+
+class ConnectCommand : public ICommand
+    {
     public class ConnectErrorCallBack<T> : IRunnable
     {
         Connector _connector;
@@ -40,9 +42,6 @@ namespace Betanetworks.ManagedIOCP.TCP
 
         #endregion
     }
-
-    class ConnectRequest<T> : OverlappedOp, IOperationResult, IDisposable
-    {
         ILog _logger;
         IOCPCore _core;
         HazelSocket _socket;
@@ -184,4 +183,7 @@ namespace Betanetworks.ManagedIOCP.TCP
             _socket = null;
         }
     }
-}
+
+_jingxian_end
+
+#endif //_ConnectCommand_H_

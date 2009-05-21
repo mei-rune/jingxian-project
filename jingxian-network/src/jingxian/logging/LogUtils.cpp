@@ -1,4 +1,4 @@
-
+﻿
 # include "pro_config.h"
 # include "jingxian/logging/logutils.h"
 # include "jingxian/logging/stdlogger.h"
@@ -10,12 +10,12 @@ namespace logging
 
 	StdLogger _console;
 
-	logger* makeLogger( const tchar* nm )
+	ILogger* makeLogger( const tchar* nm )
 	{
 		return &_console;
 	}
 
-	logger* makeLogger( const tstring& nm )
+	ILogger* makeLogger( const tstring& nm )
 	{
 		return &_console;
 	}

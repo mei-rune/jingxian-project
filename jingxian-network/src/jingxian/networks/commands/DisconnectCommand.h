@@ -1,19 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Net;
-using System.Net.Sockets;
-using System.Runtime.InteropServices;
 
+#ifndef _DisconnectCommand_H_
+#define _DisconnectCommand_H_
 
-namespace Betanetworks.ManagedIOCP.TCP
-{
-    using Betanetworks.Sockets;
-    using Betanetworks.Commons;
-    using Betanetworks.Commons.Error;
-    using Betanetworks.Commons.Threading;
+# include "jingxian/config.h"
 
-    internal class DisconnectRequest : OverlappedOp, IOperationResult, IDisposable
+#if !defined (JINGXIAN_LACKS_PRAGMA_ONCE)
+# pragma once
+#endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
+
+// Include files
+# include "jingxian/networks/commands/ICommand.h"
+
+_jingxian_begin
+
+class DisconnectCommand : public ICommand
     {
         ConnectedSocket _connectedSocket;
         Exception _exception;
@@ -45,4 +45,7 @@ namespace Betanetworks.ManagedIOCP.TCP
             throw new ReadError(errCode);
         }
     }
-}
+
+_jingxian_end
+
+#endif //_DisconnectCommand_H_

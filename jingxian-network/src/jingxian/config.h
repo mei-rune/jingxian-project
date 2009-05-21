@@ -22,7 +22,9 @@
 #define _WINSOCKAPI_   /* Prevent inclusion of winsock.h in windows.h */
 #endif // _WINSOCKAPI_
 
-#include <windows.h>
+# include <windows.h>
+# include <assert.h>
+# include <time.h>
 
 #ifndef _u_char_
 #define _u_char_
@@ -95,7 +97,6 @@ typedef unsigned __int64 u_int64_t;
 #define _ssize_t_
 typedef int ssize_t;
 #endif // _ssize_t_
-
 
 #ifndef _int8_t_
 #define _int8_t_

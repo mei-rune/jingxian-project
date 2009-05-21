@@ -15,17 +15,9 @@
 
 _jingxian_begin
 
-/**
- * @Brief ILogger 日志接口
- * 这是BT的日志接口，每一个具体的日志都必须从它继承，每一个需要记日志的都可以得到一个这样的接，
- * 但不推荐直接使用它。有一组预定义好的宏，请使用宏
- */
-class logger
+
+namespace logging
 {
-public:
-
-	typedef long LevelPtr;
-
 	enum {
 		 Fatal
 		,Error
@@ -34,11 +26,23 @@ public:
 		,Warn
 		,Trace
 	};
+}
+
+/**
+ * @Brief ILogger 日志接口
+ * 这是BT的日志接口，每一个具体的日志都必须从它继承，每一个需要记日志的都可以得到一个这样的接，
+ * 但不推荐直接使用它。有一组预定义好的宏，请使用宏
+ */
+class ILogger
+{
+public:
+
+	typedef long LevelPtr;
 
 	/**
 	 * virtual JINGXIAN_Log_Impl destructor
 	 */
-	virtual ~logger(){};
+	virtual ~ILogger(){};
 
 	/**
 	 * assert 语句
@@ -355,8 +359,8 @@ _jingxian_end
 	logger->warn( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, m1,m2,m3,oss.str(); }
 #endif // WARN_THROW3
 
-#ifndef ERROR
-#define ERROR(logger, message) { \
+#ifndef LOG_ERROR
+#define LOG_ERROR(logger, message) { \
 	if ( logger != 0 && logger->isErrorEnabled()) {\
 	StringStream oss; \
 	oss << message; \

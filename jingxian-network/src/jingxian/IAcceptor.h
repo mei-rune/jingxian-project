@@ -75,7 +75,7 @@ public:
 	/**
 	 * 创建 IAcceptor 对象
 	 */
-	virtual IAcceptor* createAcceptor(const tchar* endPoint) = 0;
+	virtual IAcceptor* createAcceptor(const tchar* endpoint, IProtocolFactory* protocolFactory) = 0;
 
 	/**
 	 * 取得地址的描述

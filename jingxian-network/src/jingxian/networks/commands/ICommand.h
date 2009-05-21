@@ -18,7 +18,6 @@ public:
 
 	ICommand( )
 		: handle_( INVALID_HANDLE_VALUE )
-		//, instance_( 0 )
 	{
 		Internal =  0;
 		InternalHigh =  0;
@@ -27,21 +26,14 @@ public:
 		hEvent = 0;
 	}
 
-	virtual ~ICommand(void)
-	{
-	}
+	virtual ~ICommand(void){}
 
-	HANDLE handle() const
-	{
-		return handle_;
-	}
+	HANDLE handle() const { return handle_; }
 
-    virtual bool bind( void* connection ) = 0;
-	virtual bool post() = 0;
 	virtual void on_complete (size_t bytes_transferred,
                          int success,
-                         const void *completion_key,
-                         u_long error = 0) = 0;
+                         void *completion_key,
+                         u_int32_t error = 0) = 0;
 
 protected:
 	HANDLE handle_;

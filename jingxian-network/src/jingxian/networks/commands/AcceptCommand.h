@@ -1,26 +1,26 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Net;
-using System.Net.Sockets;
-using System.Runtime.InteropServices;
-using System.ComponentModel;
 
-namespace Betanetworks.ManagedIOCP.TCP
-{
-    using Betanetworks.Commons;
-    using Betanetworks.Commons.Error;
-    using Betanetworks.Commons.Threading;
-    using Betanetworks.Sockets;
+#ifndef _AcceptCommand_H_
+#define _AcceptCommand_H_
 
-    class AcceptRequest : OverlappedOp, IOperationResult, IDisposable
+# include "jingxian/config.h"
+
+#if !defined (JINGXIAN_LACKS_PRAGMA_ONCE)
+# pragma once
+#endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
+
+// Include files
+# include "jingxian/networks/commands/ICommand.h"
+
+_jingxian_begin
+
+class AcceptCommand : public ICommand
     {
         HazelSocket _listenSocket;
         HazelSocket _socket;
         ByteBuffer _byteBuffer;
         Acceptor _acceptor;
 
-        public AcceptRequest(Acceptor listeningPort, HazelSocket listenSocket, HazelSocket socket)//, int dataLength)
+        public AcceptCommand(Acceptor listeningPort, HazelSocket listenSocket, HazelSocket socket)//, int dataLength)
             : base(null)
         {
             _acceptor = listeningPort;
@@ -171,4 +171,8 @@ namespace Betanetworks.ManagedIOCP.TCP
             _socket = null;
         }
     }
-}
+
+_jingxian_end
+
+#endif //_AcceptCommand_H_
+

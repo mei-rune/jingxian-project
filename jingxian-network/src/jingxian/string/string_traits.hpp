@@ -159,6 +159,17 @@ struct string_traits<char_t>
 #endif
 	}
 
+	inline static   errno_t strncpy(char_type *strDestination, size_t length,
+				const char_type *strSource, size_t count)
+	{
+#ifdef __GNUG__
+        ::strncpy(strDestination, strSource, count);
+        return 0;
+#else
+		return ::strncpy_s( strDestination, length, strSource, count);
+#endif
+	}
+
 	inline static   errno_t strcpy(char_type *strDestination, size_t length,
 				const char_type *strSource )
 	{
@@ -458,6 +469,17 @@ struct string_traits<wchar_t>
 		return 0;
 #else
 		return ::wcscpy_s( strDestination,length, strSource );
+#endif
+	}
+
+	inline static   errno_t strncpy(char_type *strDestination, size_t length,
+				const char_type *strSource, size_t count)
+	{
+#ifdef __GNUG__
+        ::wcsncpy(strDestination, strSource, count);
+        return 0;
+#else
+		return ::wcsncpy_s( strDestination, length, strSource, count);
 #endif
 	}
 

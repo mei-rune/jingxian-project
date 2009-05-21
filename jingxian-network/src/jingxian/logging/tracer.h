@@ -26,13 +26,13 @@ namespace logging
     };
 }
 
-class tracer 
+class ITracer 
 {
 public:
 	/**
 	 * virtual tracer destructor
 	 */
-	virtual ~tracer(){};
+	virtual ~ITracer(){};
 
 	/**
 	 * 

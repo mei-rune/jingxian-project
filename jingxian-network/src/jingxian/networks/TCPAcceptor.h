@@ -11,21 +11,24 @@
 // Include files
 # include "jingxian/string/string.hpp"
 # include "jingxian/IReactorCore.h"
+# include "jingxian/networks/TCPEndpoint.h"
+# include "jingxian/networks/sockets/base_socket.h"
+# include "jingxian/networks/proactor.h"
 
 _jingxian_begin
 
-class TCPAcceptor
+class TCPAcceptor : public IAcceptor
 {
 public:
 	
-	TCPAcceptor();
+	TCPAcceptor(proactor* core, IProtocolFactory* protocolFactory, const tchar* endpoint);
 	
-	virtual ~TCPAcceptor()
+	virtual ~TCPAcceptor();
 
 	/**
 	 * @implements timeout
 	 */
-    virtual  time_t timeout () const;
+    virtual time_t timeout() const;
 
 	/**
 	 * @implements bindPoint
@@ -63,24 +66,28 @@ public:
 	virtual const tstring& toString() const;
 	
 private:
-	NO_COPY(TCPAcceptor );
-	
-	TCPEndpoint _endpoint;
-	
-	tstring _toString;
+	NOCOPY(TCPAcceptor);
+
+	proactor* proactor_;
+	IProtocolFactory* protocolFactory_;
+	base_socket socket_;
+	TCPEndpoint endpoint_;
+	tstring toString_;
 };
 
 
-class TCPAcceptorFactory
+class TCPAcceptorFactory : public IAcceptorFactory
 {
 public:
 
-	virtual ~IAcceptorFactory(){}
+	TCPAcceptorFactory(proactor* core);
+
+	virtual ~TCPAcceptorFactory();
 
 	/**
 	* @implements createAcceptor
 	 */
-	virtual IAcceptor* createAcceptor(const tchar* endPoint);
+	virtual IAcceptor* createAcceptor(const tchar* endPoint, IProtocolFactory* protocolFactory);
 
 	/**
 	* @implements toString
@@ -88,11 +95,10 @@ public:
 	virtual const tstring& toString() const;
 	
 private:
-	NO_COPY(TCPAcceptor );
+	NOCOPY(TCPAcceptorFactory);
 	
-	TCPEndpoint _endpoint;
-	
-	tstring _toString;	
+	proactor* proactor_;
+	tstring toString_;	
 };
 
 _jingxian_end

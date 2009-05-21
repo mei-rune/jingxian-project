@@ -57,6 +57,26 @@ inline S to_lower(S const &s)
     return r;
 }
 
+template <typename S>
+inline S to_upper(const typename S::value_type* s)
+{
+    S   r(s);
+
+    transform_upper(r);
+
+    return r;
+}
+
+template <typename S>
+inline S to_lower(const typename S::value_type* s)
+{
+    S   r(s);
+
+    transform_lower(r);
+
+    return r;
+}
+
 _jingxian_end
 
 #endif /* _CASE_FUNCTIONS_HPP_ */

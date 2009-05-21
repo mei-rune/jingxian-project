@@ -44,7 +44,7 @@ public:
 	/**
 	 * 将句柄绑定到本端口
 	 */
-	bool bind(HANDLE handle,const void *completion_key);
+	bool bind(HANDLE handle, void *completion_key);
 
 	/**
 	 * 发送一个已经完成的请求到完成端口
@@ -55,7 +55,7 @@ public:
 	 * 获取已完成的事件,并处理这个事件
 	 * @return 超时返回1,获取到事件并成功处理返回0,获取失败返回-1
 	 */
-	int handle_events ( u_long milli_seconds);
+	int handle_events ( u_int32_t milli_seconds);
 
 	/**
 	 * 取得本端口的句柄

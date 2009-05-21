@@ -1,0 +1,39 @@
+
+
+#ifndef _RunCommand_H_
+#define _RunCommand_H_
+
+# include "jingxian/config.h"
+
+#if !defined (JINGXIAN_LACKS_PRAGMA_ONCE)
+# pragma once
+#endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
+
+// Include files
+# include "jingxian/IRunnable.h"
+# include "jingxian/networks/commands/ICommand.h"
+
+_jingxian_begin
+
+class RunCommand : public ICommand
+{
+
+public:
+	RunCommand(IRunnable* runnable);
+
+	virtual ~RunCommand();
+
+	virtual void on_complete (size_t bytes_transferred,
+                         int success,
+                         void *completion_key,
+                         u_int32_t error);
+
+private:
+	NOCOPY(RunCommand);
+
+	std::auto_ptr< IRunnable> _ptr;
+};
+
+_jingxian_end
+
+#endif //_RunCommand_H_
