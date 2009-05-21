@@ -97,12 +97,12 @@ public:
   /**
    * 初始化socket服务
    */
-  static bool initsocket();
+  static bool initializeScket();
 
   /**
    * 关闭socket服务
    */
-  static void shutdownsock();
+  static void shutdownSocket();
 
   base_socket (void);
 

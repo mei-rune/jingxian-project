@@ -33,6 +33,11 @@ public:
     virtual const IEndpoint& bindPoint() const = 0;
 
 	/**
+	 * 是不是处理监听状态
+	 */
+	virtual bool isListening() const = 0;
+
+	/**
 	 * 停止监听
 	 */
     virtual void stopListening() = 0;
