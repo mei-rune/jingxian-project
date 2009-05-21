@@ -135,7 +135,7 @@ OS_INLINE bool base_socket::set_option (int level,
 		      void *optval, 
 		      int optlen) const
 {
-  return ( SOCKET_ERROR == setsockopt (this->get_handle (), level, 
+  return ( SOCKET_ERROR != setsockopt (this->get_handle (), level, 
 			     option, (char *) optval, optlen) );
 }
 
@@ -144,7 +144,7 @@ OS_INLINE bool base_socket::get_option (int level,
 		      void *optval, 
 		      int *optlen) const
 {
-  return ( SOCKET_ERROR == getsockopt (this->get_handle (), level, 
+  return ( SOCKET_ERROR != getsockopt (this->get_handle (), level, 
 			     option, (char *) optval, optlen) );
 }
 
@@ -209,7 +209,7 @@ OS_INLINE const tstring& base_socket::toString() const
   return toString_;
 }
 
-OS_INLINE bool  base_socket::initsocket()
+OS_INLINE bool  base_socket::initializeScket()
 {
 	WSADATA wsaData;
 	if ( 0 != WSAStartup( MAKEWORD( 2, 2 ), &wsaData ) )
@@ -321,7 +321,7 @@ OS_INLINE bool  base_socket::initsocket()
 	return true;
 }
 
-OS_INLINE void base_socket::shutdownsock()
+OS_INLINE void base_socket::shutdownSocket()
 {
 	WSACleanup( );
 }

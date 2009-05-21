@@ -109,45 +109,45 @@ inline tostream& operator<<( tostream& target, const Exception& err )
 }
 
 
-#define MakeException(theType , msg ) \
-class theType : public Exception \
-{ \
-public: \
- \
-    theType(const   char* const         srcFile \
-            , size_t        srcLine \
-            , const tstring & m             \
-            , const Exception& e                \
-            ) : \
-        Exception(srcFile, srcLine, msg + m ,e ) \
-    { \
-         \
-    } \
-    theType(const   char* const         srcFile \
-            , size_t        srcLine \
-            , const tstring & m             \
-            ) : \
-        Exception(srcFile, srcLine, msg + m ) \
-    { \
-         \
-    } \
-    theType(const   char* const         srcFile \
-            , size_t        srcLine \
-            ) : \
-        Exception(srcFile, srcLine, msg ) \
-    { \
-         \
-    } \
-    theType( ) : \
-        Exception( msg ) \
-    { \
-         \
-    } \
-    theType( const tstring & m  ) : \
-        Exception( msg + m ) \
-    { \
-         \
-    } \
+#define MakeException(theType , msg )                       \
+class theType : public Exception                            \
+{                                                           \
+public:                                                     \
+                                                            \
+    theType(const   char* const         srcFile             \
+            , size_t        srcLine                         \
+            , const tstring & m                             \
+            , const Exception& e                            \
+            ) :                                             \
+        Exception(srcFile, srcLine, msg + m ,e )            \
+    {                                                       \
+                                                            \
+    }                                                       \
+    theType(const   char* const         srcFile             \
+            , size_t        srcLine                         \
+            , const tstring & m                             \
+            ) :                                             \
+        Exception(srcFile, srcLine, msg + m )               \
+    {                                                       \
+                                                            \
+    }                                                       \
+    theType(const   char* const         srcFile             \
+            , size_t        srcLine                         \
+            ) :                                             \
+        Exception(srcFile, srcLine, msg )                   \
+    {                                                       \
+                                                            \
+    }                                                       \
+    theType( ) :                                            \
+        Exception( msg )                                    \
+    {                                                       \
+                                                            \
+    }                                                       \
+    theType( const tstring & m  ) :                         \
+        Exception( msg + m )                                \
+    {                                                       \
+                                                            \
+    }                                                       \
                                                             \
     virtual ~theType() throw() {}                           \
     virtual Exception* clone()                              \

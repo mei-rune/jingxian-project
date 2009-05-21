@@ -13,17 +13,20 @@
 
 _jingxian_begin
 
-/**
- * 连接对象的状态
- */
-enum connection_status
+namespace connection_status
 {
-	listening,
-	connecting,
-	connected,
-	disconnecting,
-	disconnected
-};
+	/**
+	* 连接对象的状态
+	*/
+	enum type
+	{
+		listening,
+		connecting,
+		connected,
+		disconnecting,
+		disconnected
+	};
+}
 
 _jingxian_end
 

@@ -36,6 +36,11 @@ public:
     virtual const IEndpoint& bindPoint() const;
 
 	/**
+	 * @implements isListening
+	 */
+	virtual bool isListening() const;
+
+	/**
 	 * @implements stopListening
 	 */
     virtual void stopListening();
@@ -49,6 +54,16 @@ public:
 	 * @implements protocolFactory
 	 */
     virtual IProtocolFactory& protocolFactory();
+
+	/**
+	 * accept 请求的回调
+	 */
+	void on_complete(size_t bytes_transferred
+								, int success
+								, void *completion_key
+								, u_int32_t error);
+
+	void decrementAccepting();
 
 	/**
 	 * @implements misc
@@ -72,6 +87,8 @@ private:
 	IProtocolFactory* protocolFactory_;
 	base_socket socket_;
 	TCPEndpoint endpoint_;
+	connection_status::type status_;
+	ILogger* logger_;
 	tstring toString_;
 };
 

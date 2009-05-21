@@ -106,8 +106,9 @@ int main(int argc, char* argv[])
 
 #endif //
 
+	_jingxian base_socket::initializeScket();
 
-
+	_jingxian base_socket::shutdownSocket();
 	int i ; 
 	std::cin  >> i;
 	return 0;
