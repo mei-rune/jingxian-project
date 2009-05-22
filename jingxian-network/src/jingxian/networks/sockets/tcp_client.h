@@ -226,7 +226,7 @@ inline tostream& operator<<( tostream& target, const tcp_client& client )
   if( client.is_good() )
   {
 	  target << _T("tcp_client[ ")
-		  <<  client.socket().get_handle() 
+		  <<  client.socket().handle() 
 		  << _T(":") << client.local_addr()
 		  << _T("<==>")<< client.remote_addr()
 		  << _T("|blocking=") << client.blocking()

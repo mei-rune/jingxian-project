@@ -68,6 +68,11 @@ public:
 	virtual void onIdle();
 
 	/**
+	 * 发生错误
+	 */
+	virtual void onExeception(int errCode, const tstring& description)
+
+	/**
 	* 取得地址的描述
 	*/
 	virtual const tstring& toString() const;

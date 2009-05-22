@@ -21,7 +21,7 @@ class TCPAcceptor : public IAcceptor
 {
 public:
 	
-	TCPAcceptor(proactor* core, IProtocolFactory* protocolFactory, const tchar* endpoint);
+	TCPAcceptor(IOCPServer* core, IProtocolFactory* protocolFactory, const tchar* endpoint);
 	
 	virtual ~TCPAcceptor();
 
@@ -58,13 +58,11 @@ public:
 	/**
 	 * accept 请求的回调
 	 */
-	void on_complete(size_t bytes_transferred
+	void on_complete( const char* ptr
+		                        , size_t bytes_transferred
 								, int success
 								, void *completion_key
 								, u_int32_t error);
-
-	void decrementAccepting();
-
 	/**
 	 * @implements misc
 	 */
@@ -83,7 +81,14 @@ public:
 private:
 	NOCOPY(TCPAcceptor);
 
-	proactor* proactor_;
+	void initializeConnection(int bytesTransferred
+		, void *completion_key);
+
+	void decrementAccepting();
+
+	bool doAccept();
+
+	IOCPServer* server_;
 	IProtocolFactory* protocolFactory_;
 	base_socket socket_;
 	TCPEndpoint endpoint_;
@@ -97,7 +102,7 @@ class TCPAcceptorFactory : public IAcceptorFactory
 {
 public:
 
-	TCPAcceptorFactory(proactor* core);
+	TCPAcceptorFactory(IOCPServer* core);
 
 	virtual ~TCPAcceptorFactory();
 
@@ -114,7 +119,7 @@ public:
 private:
 	NOCOPY(TCPAcceptorFactory);
 	
-	proactor* proactor_;
+	IOCPServer* server_;
 	tstring toString_;	
 };
 

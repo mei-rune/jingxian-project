@@ -6,8 +6,8 @@
 
 _jingxian_begin
 
-TCPAcceptor::TCPAcceptor(proactor* core, IProtocolFactory* protocolFactory, const tchar* endpoint)
-: proactor_(core)
+TCPAcceptor::TCPAcceptor(IOCPServer* core, IProtocolFactory* protocolFactory, const tchar* endpoint)
+: server_(core)
 , protocolFactory_(protocolFactory)
 , socket_()
 , endpoint_(endpoint)
@@ -16,7 +16,7 @@ TCPAcceptor::TCPAcceptor(proactor* core, IProtocolFactory* protocolFactory, cons
 , toString_(_T("TCPAcceptor"))
 {
 }
-	
+
 TCPAcceptor::~TCPAcceptor()
 {
 	assert( connection_status::disconnected == status_ );
@@ -48,6 +48,22 @@ void TCPAcceptor::stopListening()
 	status_ = connection_status::disconnecting;
 }
 
+bool TCPAcceptor::doAccept()
+{
+	std::auto_ptr< ICommand> command(new AcceptCommand( this ));
+	if(! command->execute() )
+	{
+		LOG_ERROR( _logger, _T)"启动监听地址 '") << endpoint_ 
+			<< _T("' 时发生错误 - '") << lastError()
+			<< _T("'" ));
+		return false;
+	}
+
+	status_ = connection_status::listening;
+	command.release();
+	return true;
+}
+
 bool TCPAcceptor::startListening()
 {
 	if( connection_status::disconnected != status_ )
@@ -67,7 +83,7 @@ bool TCPAcceptor::startListening()
 	}
 
 #pragma warning(disable: 4267)
-	if ( SOCKET_ERROR == ::bind( socket_.get_handle(), endpoint_.addr(), endpoint_.size() ) )
+	if ( SOCKET_ERROR == ::bind( socket_.handle(), endpoint_.addr(), endpoint_.size() ) )
 #pragma warning(default: 4267)
 	{		
 		LOG_ERROR( _logger, _T)"启动监听地址 '") << endpoint_ 
@@ -76,7 +92,7 @@ bool TCPAcceptor::startListening()
 		return false;
 	}
 
-	if(SOCKET_ERROR == ::listen( socket_.get_handle(), SOMAXCONN))
+	if(SOCKET_ERROR == ::listen( socket_.handle(), SOMAXCONN))
 	{
 		LOG_ERROR( _logger, _T)"启动监听地址 '") << endpoint_ 
 			<< _T("' 时发生错误 -  '") << lastError()
@@ -84,18 +100,13 @@ bool TCPAcceptor::startListening()
 		return false;
 	}
 
-	if(!proactor_.send(command_queue::createAcceptCommand( socket.get_handle() )))
-	{
-		LOG_ERROR( _logger, _T)"启动监听地址 '") << endpoint_ 
-			<< _T("' 时发生错误 - '") << lastError()
-			<< _T("'" ));
+	if(!doAccept())
 		return false;
-	}
+
 	INFO( _logger, _T("启动监听地址 '") << endpoint_ 
 		<< _T("' 成功!") );
-
-	status_ = connection_status::listening;
 	toString_ = _T("TCPAcceptor[ socket=") + socket_.toString() + _T(",address=") + endpoint_.toString() + _T("]");
+
 	return true;
 }
 
@@ -114,66 +125,65 @@ const IDictionary& TCPAcceptor::misc() const
 	ThrowException( NotImplementedException );
 }
 
-
-void TCPAcceptor::on_complete(size_t bytes_transferred
-								, int success
-								, void *completion_key
-								, u_int32_t error)
+void TCPAcceptor::on_complete(SOCKET handle
+							  , const char* ptr
+							  , size_t bytes_transferred
+							  , int success
+							  , void *completion_key
+							  , u_int32_t error)
 {
 	if (!isListening())
 	{
-		INFO(logger_, _T("接受器 '")<< endpoint_ <<_T("' 获取连接返回,但已经停止监听!"));
+		if( 0 != ::closesocket( handle ) )
+			INFO(logger_, _T("接受器 '")<< endpoint_ <<_T("' 获取连接返回,但已经停止监听,关闭新连接失败!"));
+		else
+			INFO(logger_, _T("接受器 '")<< endpoint_ <<_T("' 获取连接返回,但已经停止监听!"));
+
 		decrementAccepting();
 		return;
 	}
 
 	if (!success)
-	{
-		Exception err = new SocketException(error);
-		_acceptor.OnError(new AcceptError(_acceptor.BindPoint, string.Format("获取端口[{0}]的连接失败 - {1}!", _acceptor.BindPoint, err.Message), err));
-	}
+		onExeception( error );
 	else
-	{
-		InitializeConnection(bytes_transferred, completion_key);
-	}
+		initializeConnection(ptr, bytes_transferred, completion_key);
 
-	try
-	{
-		doAccept();
-	}
-	catch (AcceptError e)
-	{
-		_acceptor.OnError(e);
-	}
-	catch (Exception e)
-	{
-		_acceptor.OnError(new AcceptError(_acceptor.BindPoint, e));
-	}
+	if(doAccept())
+		return;
 
+	INFO(logger_, _T("接受器 '")<< endpoint_ <<_T("' 获取连接返回,重新发送接收请求时发生错误!"));
 	decrementAccepting();
 }
 
-void TCPAcceptor::InitializeConnection(int bytes_transferred, object context)
+void TCPAcceptor::initializeConnection(SOCKET handle
+									   , const char* ptr
+									   , int bytesTransferred
+									   , void *completion_key)
 {
-	IntPtr bytePointer = Marshal.UnsafeAddrOfPinnedArrayElement(
-		_byteBuffer.Array, _byteBuffer.End);
-	HazelAddress localAddr = null;
-	HazelAddress remoteAddr = null;
+	sockaddr *local_addr = 0;
+	sockaddr *remote_addr = 0;
+	int local_size = 0;
+	int remote_size = 0;
 
-	HazelSocket.GetAcceptExSockaddrs(bytePointer
-		, 0
-		, HazelAddress.MaxSize + 4
-		, HazelAddress.MaxSize + 4
-		, out localAddr
-		, out remoteAddr);
+	::GetAcceptExSockaddrs ( ptr,
+		static_cast < DWORD >( bytes_transferred),
+		static_cast < DWORD >( sizeof (sockaddr_in) + sizeof (sockaddr) ),
+		static_cast < DWORD >( sizeof (sockaddr_in) + sizeof (sockaddr) ),
+		&local_addr,
+		&local_size,
+		&remote_addr,
+		&remote_size);
 
-	_byteBuffer.End += bytes_transferred;
-	_byteBuffer.Begin += (2 * (HazelAddress.MaxSize + 4));
 
-	_socket.SetLocalAddress(localAddr);
-	_socket.SetRemoteAddress(remoteAddr);
+	std::auto_ptr<connected_socket> connectedSocket(new connected_socket());
+	connectedSocket
 
-	_socket.SetSockOpt(SocketOptionLevel.Socket, SocketOptionName.UpdateAcceptContext, _socket.Handle);
+
+	JOMOO_HANDLE listener = ( JOMOO_HANDLE )m_acceptor_->get_handle().get_handle();
+	setsockopt( m_acceptor_->get_handle().get_handle(), SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT,
+			(char *) &listener, sizeof listener )
+
+
 
 
 	_acceptor.Logger.InfoFormat("获取到来自[{0}]的连接,开始初始化!", _socket.RemoteEndPoint);
@@ -224,8 +234,8 @@ const tstring& TCPAcceptor::toString() const
 	return toString_;
 }
 
-TCPAcceptorFactory::TCPAcceptorFactory(proactor* core)
-: proactor_(core)
+TCPAcceptorFactory::TCPAcceptorFactory(IOCPServer* core)
+: server_(core)
 , toString_(_T("TCPAcceptorFactory"))
 {
 }
@@ -239,7 +249,7 @@ IAcceptor* TCPAcceptorFactory::createAcceptor(const tchar* endPoint, IProtocolFa
 	if(is_null(endPoint))
 		return null_ptr;
 
-	return new TCPAcceptor(proactor_, protocolFactory, endPoint );
+	return new TCPAcceptor(server_, protocolFactory, endPoint );
 }
 
 const tstring& TCPAcceptorFactory::toString() const

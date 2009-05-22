@@ -31,7 +31,7 @@ public:
 private:
 	NOCOPY(AcceptCommand);
 
-	TCPAcceptor* acceptor;
+	TCPAcceptor* acceptor_;
 	SOCKET socket_;
 	char* ptr_;
 	size_t len_;

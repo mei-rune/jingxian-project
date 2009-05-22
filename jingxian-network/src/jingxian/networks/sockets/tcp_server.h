@@ -87,7 +87,7 @@ inline tostream& operator<<( tostream& target, const tcp_server& server )
   if( server.is_good() )
   {
 	  target << _T("tcp_server[ ")
-		  <<  server.socket().get_handle() 
+		  <<  server.socket().handle() 
 		  << _T(":") << server.bind_addr()
 		  << _T("]" );
   }
