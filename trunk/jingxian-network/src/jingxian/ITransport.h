@@ -20,7 +20,7 @@ class IProtocol;
 class ITransport
 {
 public:
-	virtual ~ITransport(){}
+	    virtual ~ITransport(){}
 
 		/**
          * 指定用 @see{protocol} 接口来接收读到的数据

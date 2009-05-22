@@ -33,7 +33,7 @@ OS_INLINE bool tcp_server::is_good() const
 OS_INLINE bool tcp_server::bind( const inet_address& addr)
 {
 #pragma warning(disable: 4267)
-	if ( SOCKET_ERROR != ::bind( socket_.get_handle(), addr.addr(), addr.size() ) )
+	if ( SOCKET_ERROR != ::bind( socket_.handle(), addr.addr(), addr.size() ) )
 #pragma warning(default: 4267)
 	{
 		bind_addr_ = addr;
@@ -45,7 +45,7 @@ OS_INLINE bool tcp_server::bind( const inet_address& addr)
 
 OS_INLINE bool tcp_server::listen( int backlog )
 {
-	if( SOCKET_ERROR != ::listen( socket_.get_handle(), backlog ) )
+	if( SOCKET_ERROR != ::listen( socket_.handle(), backlog ) )
 	{
 		toString_ = _T("tcp_server ") + socket_.toString() + _T(" ¼àÌýÔÚ ") + bind_addr_.toString();
 		return true;
@@ -58,7 +58,7 @@ OS_INLINE bool tcp_server::accept( tcp_client& accepted)
 #pragma warning(disable: 4267)
 	int len = accepted.remote_addr().size();
 #pragma warning(default: 4267)
-	accepted.socket().set_handle( ::accept( socket_.get_handle(),( sockaddr* ) accepted.remote_addr().addr(),&len ) );
+	accepted.socket().set_handle( ::accept( socket_.handle(),( sockaddr* ) accepted.remote_addr().addr(),&len ) );
 	return accepted.is_good();
 }
 
@@ -71,7 +71,7 @@ OS_INLINE bool tcp_server::accept(tcp_client& accepted
 {
 	DWORD bytesReceived = 0;
 #pragma warning(disable: 4267)
-	return ( TRUE == base_socket::__acceptex( socket_.get_handle(), accepted.socket().get_handle(),data_buffer, data_len, local_addr_len, remote_addr_len, &bytesReceived, &overlapped ));
+	return ( TRUE == base_socket::__acceptex( socket_.handle(), accepted.socket().handle(),data_buffer, data_len, local_addr_len, remote_addr_len, &bytesReceived, &overlapped ));
 #pragma warning(default: 4267)
 }
 

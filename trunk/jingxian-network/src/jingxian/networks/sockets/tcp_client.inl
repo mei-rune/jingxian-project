@@ -76,7 +76,7 @@ OS_INLINE ssize_t tcp_client::recv (void *buf,
                    int flags )
 {
 
-	return ::recv ( socket_.get_handle (),
+	return ::recv ( socket_.handle (),
                     ( char* )buf,
                     ( int )len,
                     flags );
@@ -87,14 +87,14 @@ OS_INLINE ssize_t tcp_client::send (const void *buf,
                    int flags )
 {
 
-    return ::send (socket_.get_handle(), (const char *) buf, ( int )len, flags);
+    return ::send (socket_.handle(), (const char *) buf, ( int )len, flags);
 }
 
 OS_INLINE ssize_t tcp_client::recvv (iovec* iov, size_t n)
 {
 	DWORD bytes_recvd = 0;
 	DWORD Flags = 0;
-	int r = WSARecv( socket_.get_handle()
+	int r = WSARecv( socket_.handle()
 		, iov
 		, ( DWORD ) n
 		, &bytes_recvd
@@ -110,7 +110,7 @@ OS_INLINE ssize_t tcp_client::sendv ( const iovec* iov,
                     size_t n )
 {
 	DWORD bytes_sent = 0;
-	int r = ::WSASend ( socket_.get_handle(),
+	int r = ::WSASend ( socket_.handle(),
 		(WSABUF *) iov,
 		( DWORD )n,
 		&bytes_sent,
@@ -127,7 +127,7 @@ OS_INLINE bool tcp_client::send_n( const char* buf, size_t length)
 	do
 	{
  #pragma warning(disable: 4267)
-		int n = ::send( socket_.get_handle(), buf, length, 0 ); 
+		int n = ::send( socket_.handle(), buf, length, 0 ); 
  #pragma warning(default: 4267)
 		if( 0 >= n)
 			return false;
@@ -144,7 +144,7 @@ OS_INLINE bool tcp_client::recv_n( char* buf, size_t length)
 	do
 	{
  #pragma warning(disable: 4267)
-		int n = ::recv( socket_.get_handle(), buf, length, 0 ); 
+		int n = ::recv( socket_.handle(), buf, length, 0 ); 
  #pragma warning(default: 4267)
 
 		if( 0 >= n)
@@ -166,7 +166,7 @@ OS_INLINE bool tcp_client::sendv_n( const iovec* wsaBuf, size_t size)
 	{
 		DWORD numberOfBytesSent =0;
  #pragma warning(disable: 4267)
-		if( SOCKET_ERROR == ::WSASend( socket_.get_handle(), p, size, &numberOfBytesSent,0,0 , 0 ) )
+		if( SOCKET_ERROR == ::WSASend( socket_.handle(), p, size, &numberOfBytesSent,0,0 , 0 ) )
  #pragma warning(default: 4267)
 			return false;
 
@@ -197,7 +197,7 @@ OS_INLINE bool tcp_client::recvv_n( iovec* wsaBuf, size_t size)
 	{
 		DWORD numberOfBytesRecvd =0;
  #pragma warning(disable: 4267)
-		if( SOCKET_ERROR == ::WSARecv( socket_.get_handle(), p, size, &numberOfBytesRecvd,0,0 , 0 ) )
+		if( SOCKET_ERROR == ::WSARecv( socket_.handle(), p, size, &numberOfBytesRecvd,0,0 , 0 ) )
  #pragma warning(default: 4267)
 			return false;
 
@@ -225,7 +225,7 @@ OS_INLINE bool tcp_client::send (const void *buf, size_t n,
 {
 	DWORD bytes_written;
 	DWORD short_nbyte = static_cast< DWORD >( n);
-	return ::WriteFile ( ( HANDLE ) socket_.get_handle(), buf, short_nbyte, &bytes_written, &overlapped) ? true : false;
+	return ::WriteFile ( ( HANDLE ) socket_.handle(), buf, short_nbyte, &bytes_written, &overlapped) ? true : false;
 }
 
 OS_INLINE bool tcp_client::recvv (iovec* iov, size_t n,
@@ -233,7 +233,7 @@ OS_INLINE bool tcp_client::recvv (iovec* iov, size_t n,
 {
 	DWORD NumberOfBytesRecvd = 0;
 	DWORD Flags = 0;
-	return ( TRUE == WSARecv( socket_.get_handle()
+	return ( TRUE == WSARecv( socket_.handle()
 		, iov
 		, ( DWORD ) n
 		, &NumberOfBytesRecvd
@@ -246,7 +246,7 @@ OS_INLINE bool tcp_client::recv (void *buf, size_t n,
 				   OVERLAPPED& overlapped)
 {
 	DWORD bytes_read = 0;
-	return TRUE == ::ReadFile( ( HANDLE )socket_.get_handle ()
+	return TRUE == ::ReadFile( ( HANDLE )socket_.handle ()
 		, buf
 		, static_cast < DWORD>( n)
 		, &bytes_read
@@ -255,7 +255,7 @@ OS_INLINE bool tcp_client::recv (void *buf, size_t n,
 
 OS_INLINE   bool tcp_client::transmit (const iopack* iov, size_t n )
 {
-	return ( TRUE == base_socket::__transmitpackets( socket_.get_handle(),
+	return ( TRUE == base_socket::__transmitpackets( socket_.handle(),
 		( iopack* )iov,
 		( DWORD )n,
 		0,
@@ -266,7 +266,7 @@ OS_INLINE   bool tcp_client::transmit (const iopack* iov, size_t n )
 OS_INLINE   bool tcp_client::transmit (const iopack* iov, size_t n,
                  OVERLAPPED& overlapped)
 {
-	return ( TRUE == base_socket::__transmitpackets( socket_.get_handle(),
+	return ( TRUE == base_socket::__transmitpackets( socket_.handle(),
 		( iopack* )iov,
 		( DWORD )n,
 		0,
@@ -279,7 +279,7 @@ OS_INLINE bool tcp_client::transmit ( HANDLE hFile
 				, size_t nNumberOfBytesPerSend
 				, io_file_buf* transmitBuffers )
 {
-	return (TRUE == base_socket::__transmitfile( socket_.get_handle(),
+	return (TRUE == base_socket::__transmitfile( socket_.handle(),
 		hFile,
         (DWORD) nNumberOfBytesToWrite,
         (DWORD) nNumberOfBytesPerSend,
@@ -294,7 +294,7 @@ OS_INLINE bool tcp_client::transmit ( HANDLE hFile
 				, io_file_buf* transmitBuffers
                 , OVERLAPPED& overlapped)
 {
-	return ( TRUE == base_socket::__transmitfile( socket_.get_handle(),
+	return ( TRUE == base_socket::__transmitfile( socket_.handle(),
 		hFile,
         (DWORD) nNumberOfBytesToWrite,
         (DWORD) nNumberOfBytesPerSend,
@@ -308,12 +308,12 @@ OS_INLINE bool tcp_client::connect( const inet_address& addr )
 	if( !socket_.open( AF_INET , SOCK_STREAM, IPPROTO_TCP ) )
 		return false;
 
-	if( 0 != ::connect( this->socket_.get_handle(), addr.addr(), (int)addr.size() ) )
+	if( 0 != ::connect( this->socket_.handle(), addr.addr(), (int)addr.size() ) )
 		return false;
 	
 	this->remote_addr_ = addr;
 	int len = (int)this->local_addr_.size();
-	::getsockname( this->socket_.get_handle(), this->local_addr_.addr(), &len );
+	::getsockname( this->socket_.handle(), this->local_addr_.addr(), &len );
 	return true;
 }
 
@@ -326,7 +326,7 @@ OS_INLINE bool tcp_client::connect( const inet_address& addr
 
 	DWORD sendbytes = 0;
 #pragma warning(disable: 4267)
-	return (TRUE == base_socket::__connectex( socket_.get_handle(), addr.addr(), addr.size(), NULL, 0, &sendbytes, &overlapped));
+	return (TRUE == base_socket::__connectex( socket_.handle(), addr.addr(), addr.size(), NULL, 0, &sendbytes, &overlapped));
  #pragma warning(default: 4267)
 }
 
@@ -340,7 +340,7 @@ OS_INLINE bool tcp_client::connect( const inet_address& addr
 
 	 DWORD sendbytes = 0;
  #pragma warning(disable: 4267)
-	 return (TRUE == base_socket::__connectex( socket_.get_handle(), addr.addr(), addr.size(), (void*)send_buffer, send_data_len, &sendbytes, &overlapped));
+	 return (TRUE == base_socket::__connectex( socket_.handle(), addr.addr(), addr.size(), (void*)send_buffer, send_data_len, &sendbytes, &overlapped));
  #pragma warning(default: 4267)
 
 }

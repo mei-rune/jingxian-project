@@ -280,6 +280,10 @@
 				Name="commands"
 				>
 				<File
+					RelativePath=".\src\jingxian\networks\commands\AcceptCommand.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\src\jingxian\networks\commands\AcceptCommand.h"
 					>
 				</File>
@@ -292,7 +296,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\src\jingxian\networks\commands\ConnectCommand.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\src\jingxian\networks\commands\ConnectCommand.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\commands\DisconnectCommand.cpp"
 					>
 				</File>
 				<File
@@ -300,7 +312,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\src\jingxian\networks\commands\Empty.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\src\jingxian\networks\commands\ICommand.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\commands\ReadCommand.cpp"
 					>
 				</File>
 				<File
@@ -313,6 +333,10 @@
 				</File>
 				<File
 					RelativePath=".\src\jingxian\networks\commands\RunCommand.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\commands\WriteCommand.cpp"
 					>
 				</File>
 				<File

@@ -53,7 +53,7 @@ OS_INLINE base_socket::~base_socket (void)
 
 OS_INLINE bool base_socket::is_good() const
 {
-	return INVALID_SOCKET != this->get_handle ();
+	return INVALID_SOCKET != this->handle ();
 }
 
 OS_INLINE bool base_socket::open ( int protocol_family,
@@ -67,7 +67,7 @@ OS_INLINE bool base_socket::open ( int protocol_family,
                                     type,
                                     protocol));
 
-  if (this->get_handle () == INVALID_SOCKET )
+  if (this->handle () == INVALID_SOCKET )
     return false;
   else if (protocol_family != PF_UNIX 
            && reuse_addr 
@@ -98,7 +98,7 @@ OS_INLINE bool base_socket::open (int protocol_family,
                                     flags));
   int one = 1;
 
-  if (this->get_handle () == INVALID_SOCKET )
+  if (this->handle () == INVALID_SOCKET )
     return false;
   else if (reuse_addr 
            && !this->set_option (SOL_SOCKET,
@@ -113,7 +113,7 @@ OS_INLINE bool base_socket::open (int protocol_family,
     return true;
 }
 
-OS_INLINE SOCKET base_socket::get_handle (void) const
+OS_INLINE SOCKET base_socket::handle (void) const
 {
   return this->handle_;
 }
@@ -135,7 +135,7 @@ OS_INLINE bool base_socket::set_option (int level,
 		      void *optval, 
 		      int optlen) const
 {
-  return ( SOCKET_ERROR != setsockopt (this->get_handle (), level, 
+  return ( SOCKET_ERROR != setsockopt (this->handle (), level, 
 			     option, (char *) optval, optlen) );
 }
 
@@ -144,7 +144,7 @@ OS_INLINE bool base_socket::get_option (int level,
 		      void *optval, 
 		      int *optlen) const
 {
-  return ( SOCKET_ERROR != getsockopt (this->get_handle (), level, 
+  return ( SOCKET_ERROR != getsockopt (this->handle (), level, 
 			     option, (char *) optval, optlen) );
 }
 
@@ -166,12 +166,12 @@ OS_INLINE bool base_socket::disable (int value)
 
 OS_INLINE void base_socket::close (void)
 {
-	if (INVALID_SOCKET == this->get_handle () )
+	if (INVALID_SOCKET == this->handle () )
 		return;
 
 	for( int i =0 ; i < 5; i ++ )
 	{
-		if( 0 == closesocket (this->get_handle ()) )
+		if( 0 == closesocket (this->handle ()) )
 		{
 			this->set_handle (INVALID_SOCKET );
 			return ;
@@ -183,7 +183,7 @@ OS_INLINE bool base_socket::poll( const TIMEVAL& time_val, int mode)
 {
 	fd_set socket_set;
 	FD_ZERO( &socket_set );
-	FD_SET(get_handle(), &socket_set );
+	FD_SET(handle(), &socket_set );
 
 	return ( 1 == ::select( 0, (mode == select_read)?&socket_set:NULL
 		, (mode == select_write)?&socket_set:NULL

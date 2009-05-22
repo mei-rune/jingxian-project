@@ -54,7 +54,7 @@ public:
   /**
    * 取得socket对象
    */
-  SOCKET get_handle (void) const;
+  SOCKET handle (void) const;
 
   /**
    * 设置socket对象
@@ -161,13 +161,13 @@ public:
 
 inline tostream& operator<<( tostream& target, const base_socket& s )
 {
-  if( INVALID_SOCKET == s.get_handle())
+  if( INVALID_SOCKET == s.handle())
   {
 	  target << _T("INVALID_SOCKET" );
   }
   else
   {
-	  target << s.get_handle() ;
+	  target << s.handle() ;
   }
   
   return target;
