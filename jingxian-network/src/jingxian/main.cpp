@@ -2,6 +2,7 @@
 
 #include "pro_config.h"
 #include "jingxian/string/string.hpp"
+#include "jingxian/networks/sockets/BaseSocket.h"
 #include <iostream>
 
 
@@ -106,9 +107,9 @@ int main(int argc, char* argv[])
 
 #endif //
 
-	_jingxian base_socket::initializeScket();
+	_jingxian BaseSocket::initializeScket();
 
-	_jingxian base_socket::shutdownSocket();
+	_jingxian BaseSocket::shutdownSocket();
 	int i ; 
 	std::cin  >> i;
 	return 0;

@@ -1,21 +1,21 @@
 
 
-LPFN_TRANSMITFILE base_socket::__transmitfile = 0;
-LPFN_ACCEPTEX base_socket::__acceptex = 0;
-LPFN_TRANSMITPACKETS base_socket::__transmitpackets = 0;
-LPFN_CONNECTEX base_socket::__connectex = 0;
-LPFN_DISCONNECTEX base_socket::__disconnectex = 0;
-LPFN_GETACCEPTEXSOCKADDRS base_socket::__getacceptexsockaddrs = 0;
+LPFN_TRANSMITFILE BaseSocket::__transmitfile = 0;
+LPFN_ACCEPTEX BaseSocket::__acceptex = 0;
+LPFN_TRANSMITPACKETS BaseSocket::__transmitpackets = 0;
+LPFN_CONNECTEX BaseSocket::__connectex = 0;
+LPFN_DISCONNECTEX BaseSocket::__disconnectex = 0;
+LPFN_GETACCEPTEXSOCKADDRS BaseSocket::__getacceptexsockaddrs = 0;
 
 
-OS_INLINE base_socket::base_socket (void)
+OS_INLINE BaseSocket::BaseSocket (void)
 : handle_ (INVALID_SOCKET )
 , toString_( _T("INVALID_SOCKET" ))
 
 {
 }
 
-OS_INLINE base_socket::base_socket (int protocol_family,
+OS_INLINE BaseSocket::BaseSocket (int protocol_family,
 					int type, 
 					int protocol,
                     int reuse_addr)
@@ -28,7 +28,7 @@ OS_INLINE base_socket::base_socket (int protocol_family,
                   reuse_addr);
 }
 
-OS_INLINE base_socket::base_socket (int protocol_family,
+OS_INLINE BaseSocket::BaseSocket (int protocol_family,
 					int type, 
 					int protocol,
                     LPWSAPROTOCOL_INFO protocolinfo,
@@ -46,17 +46,17 @@ OS_INLINE base_socket::base_socket (int protocol_family,
                   reuse_addr);				  
 }
 
-OS_INLINE base_socket::~base_socket (void)
+OS_INLINE BaseSocket::~BaseSocket (void)
 {
 	close();
 }
 
-OS_INLINE bool base_socket::is_good() const
+OS_INLINE bool BaseSocket::is_good() const
 {
 	return INVALID_SOCKET != this->handle ();
 }
 
-OS_INLINE bool base_socket::open ( int protocol_family,
+OS_INLINE bool BaseSocket::open ( int protocol_family,
 				int type, 
                 int protocol,
                 int reuse_addr)
@@ -82,7 +82,7 @@ OS_INLINE bool base_socket::open ( int protocol_family,
   return true;
 }
 
-OS_INLINE bool base_socket::open (int protocol_family,
+OS_INLINE bool BaseSocket::open (int protocol_family,
 				int type, 
                 int protocol,
                 LPWSAPROTOCOL_INFO protocolinfo,
@@ -113,24 +113,24 @@ OS_INLINE bool base_socket::open (int protocol_family,
     return true;
 }
 
-OS_INLINE SOCKET base_socket::handle (void) const
+OS_INLINE SOCKET BaseSocket::handle (void) const
 {
   return this->handle_;
 }
 
 
-OS_INLINE void base_socket::set_handle (SOCKET handle)
+OS_INLINE void BaseSocket::set_handle (SOCKET handle)
 {
   close();
   this->handle_ = handle;
 }
 
-OS_INLINE void base_socket::swap( base_socket& r )
+OS_INLINE void BaseSocket::swap( BaseSocket& r )
 {
 	std::swap( this->handle_, r.handle_ );
 }
 
-OS_INLINE bool base_socket::set_option (int level, 
+OS_INLINE bool BaseSocket::set_option (int level, 
 		      int option, 
 		      void *optval, 
 		      int optlen) const
@@ -139,7 +139,7 @@ OS_INLINE bool base_socket::set_option (int level,
 			     option, (char *) optval, optlen) );
 }
 
-OS_INLINE bool base_socket::get_option (int level, 
+OS_INLINE bool BaseSocket::get_option (int level, 
 		      int option, 
 		      void *optval, 
 		      int *optlen) const
@@ -148,7 +148,7 @@ OS_INLINE bool base_socket::get_option (int level,
 			     option, (char *) optval, optlen) );
 }
 
-OS_INLINE bool base_socket::enable (int value)
+OS_INLINE bool BaseSocket::enable (int value)
 {
 	u_long nonblock = 1;
 	return ( 0 ==::ioctlsocket (this->handle_,
@@ -156,7 +156,7 @@ OS_INLINE bool base_socket::enable (int value)
 		&nonblock));
 }
 
-OS_INLINE bool base_socket::disable (int value)
+OS_INLINE bool BaseSocket::disable (int value)
 {
     u_long nonblock = 0;
     return ( 0 == ioctlsocket (this->handle_,
@@ -164,7 +164,7 @@ OS_INLINE bool base_socket::disable (int value)
                               &nonblock));
 }
 
-OS_INLINE void base_socket::close (void)
+OS_INLINE void BaseSocket::close (void)
 {
 	if (INVALID_SOCKET == this->handle () )
 		return;
@@ -179,7 +179,7 @@ OS_INLINE void base_socket::close (void)
 	}
 }
 
-OS_INLINE bool base_socket::poll( const TIMEVAL& time_val, int mode)
+OS_INLINE bool BaseSocket::poll( const TIMEVAL& time_val, int mode)
 {
 	fd_set socket_set;
 	FD_ZERO( &socket_set );
@@ -191,7 +191,7 @@ OS_INLINE bool base_socket::poll( const TIMEVAL& time_val, int mode)
 		, &time_val ) );
 }
 
-OS_INLINE const tstring& base_socket::toString() const
+OS_INLINE const tstring& BaseSocket::toString() const
 {
   if( INVALID_SOCKET == handle_)
   {
@@ -209,7 +209,7 @@ OS_INLINE const tstring& base_socket::toString() const
   return toString_;
 }
 
-OS_INLINE bool  base_socket::initializeScket()
+OS_INLINE bool  BaseSocket::initializeScket()
 {
 	WSADATA wsaData;
 	if ( 0 != WSAStartup( MAKEWORD( 2, 2 ), &wsaData ) )
@@ -321,7 +321,7 @@ OS_INLINE bool  base_socket::initializeScket()
 	return true;
 }
 
-OS_INLINE void base_socket::shutdownSocket()
+OS_INLINE void BaseSocket::shutdownSocket()
 {
 	WSACleanup( );
 }

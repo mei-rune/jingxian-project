@@ -2,7 +2,7 @@
 # include "pro_config.h"
 # include "jingxian/exception.hpp"
 # include "jingxian/networks/TCPAcceptor.h"
-# include "jingxian/networks/commands/command_queue.h"
+# include "jingxian/networks/commands/AcceptCommand.h"
 
 _jingxian_begin
 
@@ -32,11 +32,6 @@ const IEndpoint& TCPAcceptor::bindPoint() const
 	return endpoint_;
 }
 
-bool TCPAcceptor::bindPoint() const
-{
-	return endpoint_;
-}
-
 bool TCPAcceptor::isListening() const
 {
 	return connection_status::listening == status_;
@@ -53,7 +48,7 @@ bool TCPAcceptor::doAccept()
 	std::auto_ptr< ICommand> command(new AcceptCommand( this ));
 	if(! command->execute() )
 	{
-		LOG_ERROR( _logger, _T)"启动监听地址 '") << endpoint_ 
+		LOG_ERROR( logger_, _T("启动监听地址 '") << endpoint_ 
 			<< _T("' 时发生错误 - '") << lastError()
 			<< _T("'" ));
 		return false;
@@ -68,7 +63,7 @@ bool TCPAcceptor::startListening()
 {
 	if( connection_status::disconnected != status_ )
 	{
-		LOG_ERROR( _logger, _T)"启动监听地址 '") << endpoint_ 
+		LOG_ERROR( logger_, _T("启动监听地址 '") << endpoint_ 
 			<< _T("' 时发生错误 - 状态不正确 - '") << status_
 			<< _T("'" ));
 		return false;
@@ -76,17 +71,17 @@ bool TCPAcceptor::startListening()
 
 	if(!socket_.open(AF_INET , SOCK_STREAM, IPPROTO_TCP))
 	{
-		LOG_ERROR( _logger, _T)"启动监听地址 '") << endpoint_ 
+		LOG_ERROR( logger_, _T("启动监听地址 '") << endpoint_ 
 			<< _T("' 时发生错误 - 创建 socket失败 - '") << lastError()
 			<< _T("'" ));
 		return false;
 	}
 
 #pragma warning(disable: 4267)
-	if ( SOCKET_ERROR == ::bind( socket_.handle(), endpoint_.addr(), endpoint_.size() ) )
+	if ( SOCKET_ERROR == ::bind( socket_.handle(),( const sockaddr*) endpoint_.addr(), endpoint_.size() ) )
 #pragma warning(default: 4267)
 	{		
-		LOG_ERROR( _logger, _T)"启动监听地址 '") << endpoint_ 
+		LOG_ERROR( logger_, _T("启动监听地址 '") << endpoint_ 
 			<< _T("' 时发生错误 - 绑定端口失败 - '") << lastError()
 			<< _T("'" ));
 		return false;
@@ -94,7 +89,7 @@ bool TCPAcceptor::startListening()
 
 	if(SOCKET_ERROR == ::listen( socket_.handle(), SOMAXCONN))
 	{
-		LOG_ERROR( _logger, _T)"启动监听地址 '") << endpoint_ 
+		LOG_ERROR( logger_, _T("启动监听地址 '") << endpoint_ 
 			<< _T("' 时发生错误 -  '") << lastError()
 			<< _T("'" ));
 		return false;
@@ -103,7 +98,7 @@ bool TCPAcceptor::startListening()
 	if(!doAccept())
 		return false;
 
-	INFO( _logger, _T("启动监听地址 '") << endpoint_ 
+	INFO( logger_, _T("启动监听地址 '") << endpoint_ 
 		<< _T("' 成功!") );
 	toString_ = _T("TCPAcceptor[ socket=") + socket_.toString() + _T(",address=") + endpoint_.toString() + _T("]");
 
@@ -134,7 +129,7 @@ void TCPAcceptor::on_complete(SOCKET handle
 {
 	if (!isListening())
 	{
-		if( 0 != ::closesocket( handle ) )
+		if(0 != ::closesocket( handle ))
 			INFO(logger_, _T("接受器 '")<< endpoint_ <<_T("' 获取连接返回,但已经停止监听,关闭新连接失败!"));
 		else
 			INFO(logger_, _T("接受器 '")<< endpoint_ <<_T("' 获取连接返回,但已经停止监听!"));
@@ -175,7 +170,7 @@ void TCPAcceptor::initializeConnection(SOCKET handle
 		&remote_size);
 
 
-	std::auto_ptr<connected_socket> connectedSocket(new connected_socket());
+	std::auto_ptr<ConnectedSocket> connectedSocket(new ConnectedSocket());
 	connectedSocket
 
 

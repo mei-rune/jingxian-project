@@ -9,6 +9,7 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
+# include "jingxian/logging/logging.hpp"
 # include "jingxian/IConcurrentPort.h"
 # include "jingxian/IEndpoint.h"
 # include "jingxian/ITransport.h"

@@ -4,8 +4,9 @@
 
 _jingxian_begin
 
-RunCommand::RunCommand(IRunnable* runnbale)
-: _ptr( runnbale )
+RunCommand::RunCommand(IOCPServer* core, IRunnable* runnbale)
+: core_(core)
+, ptr_(runnbale)
 {
 	if( is_null( runnbale ) )
 		ThrowException1(ArgumentNullException, "runnbale");
@@ -20,7 +21,13 @@ void RunCommand::on_complete (size_t bytes_transferred,
                          void *completion_key,
                          u_int32_t error)
 {
-	_ptr->run();
+	ptr_->run();
+}
+
+
+bool RunCommand::execute()
+{
+	return core_->post( this );
 }
 
 _jingxian_end

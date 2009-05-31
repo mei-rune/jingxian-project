@@ -19,12 +19,6 @@ class command_queue
 {
 public:
 
-	static ICommand* createRunnable(IRunnable* runnable);
-
-	static ICommand* createAcceptCommand(SOCKET handle);
-
-	static ICommand* createWriteRequest();
-
 	static void release( ICommand* cmd );
 };
 

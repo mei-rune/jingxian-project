@@ -25,12 +25,12 @@ public:
   /**
    * 取得socket对象
    */
-  base_socket& socket();
+  BaseSocket& socket();
 
   /**
    * 取得socket对象
    */
-  const base_socket& socket() const;
+  const BaseSocket& socket() const;
 
   /**
    * 取得监听的端口
@@ -77,7 +77,7 @@ public:
 private:
 	NOCOPY( tcp_server );
 	inet_address bind_addr_;
-	base_socket socket_;
+	BaseSocket socket_;
 	mutable tstring toString_;
 };
 

@@ -4,12 +4,12 @@
 
 _jingxian_begin
 
-const static int addrbufsize = sizeof (sockaddr_in)*2 + sizeof (sockaddr)*2 + 100;
+const int addrbufsize = sizeof (sockaddr_in)*2 + sizeof (sockaddr)*2 + 100;
 
 AcceptCommand::AcceptCommand(TCPAcceptor* acceptor)
 : acceptor_(acceptor)
 , socket_(acceptor_->createSocket())
-, ptr_(malloc(addrbufsize))
+, ptr_((char*)malloc(addrbufsize))
 , len_(addrbufsize)
 {
 }
@@ -19,10 +19,10 @@ AcceptCommand::~AcceptCommand()
 	free( ptr_ );
 	ptr_ = null_ptr;
 
-	if( INVALID_HANDLE_VALUE == socket_ )
+	if( INVALID_SOCKET == socket_ )
 	{
 		acceptor_->releaseSocket(socket_, false);
-		socket_ = INVALID_HANDLE_VALUE;
+		socket_ = INVALID_SOCKET;
 	}
 }
 
@@ -33,24 +33,28 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 {
 	if (!success)
 	{
-		onExeception( error );
+		onException(0, error);
 		goto end;
 	}
+
 
 	SOCKET listener = acceptor_->handle();
 	if( SOCKET_ERROR == setsockopt(socket_, SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT,
 		(char *) &listener, sizeof(listener)))
 	{
-		acceptor_->onException( _T("接受器 '") 
-			+ endpoint_.toString() 
+		int errCode = ::WSAGetLastError();
+		acceptor_->onException(errCode, _T("接受器 '") 
+			+ acceptor_->endpoint_.toString() 
 			+ _T("' 获取连接请求返回,在对 socket 句柄设置 SO_UPDATE_ACCEPT_CONTEXT 选项时发生错误 - ")
-			+ lastError());
-		return ;
+			+ lastError(errCode));
+		goto end;
 	}
+
+	ILogger* logger = acceptor_->logger();
 
 	if (!acceptor_->isListening())
 	{
-		INFO(logger_, _T("接受器 '")<< endpoint_ <<_T("' 获取连接请求返回,但已经停止监听!"));
+		INFO( logger, _T("接受器 '")<< endpoint_ <<_T("' 获取连接请求返回,但已经停止监听!"));
 		goto end;
 	}
 
@@ -59,7 +63,7 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 	if( acceptor_->doAccept())
 		return;
 
-	INFO(logger_, _T("接受器 '")<< endpoint_ <<_T("' 获取连接返回,重新发送获取连接请求时发生错误!"));
+	INFO(logger, _T("接受器 '")<< endpoint_ <<_T("' 获取连接返回,重新发送获取连接请求时发生错误!"));
 
 end:
 	decrementAccepting();
@@ -82,7 +86,7 @@ void TCPAcceptor::initializeConnection(  int bytesTransferred
 		&remote_addr,
 		&remote_size);
 
-	std::auto_ptr<connected_socket> connectedSocket(new connected_socket( socket_ ));
+	std::auto_ptr<ConnectedSocket> connectedSocket(new ConnectedSocket( socket_ ));
 	socket_ = INVALID_HANDLE_VALUE;
 
 
@@ -128,7 +132,7 @@ void TCPAcceptor::initializeConnection(  int bytesTransferred
 bool AcceptCommand::execute()
 {
 	int bytesTransferred;
-	if (base_socket::__acceptex(acceptor_->handle()
+	if (BaseSocket::__acceptex(acceptor_->handle()
 		, socket_
 		, ptr_
 		, 0 //_byteBuffer.Space - (HazelAddress.MaxSize + 4) * 2 

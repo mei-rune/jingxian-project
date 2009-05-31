@@ -1,8 +1,9 @@
 ﻿
 # include "pro_config.h"
-# include "jingxian/IOCPServer.h"
-# include "jingxian/networks/commands/command_queue.h"
+# include "jingxian/networks/IOCPServer.h"
 # include "jingxian/networks/TCPAcceptor.h"
+# include "jingxian/networks/commands/RunCommand.h"
+
 
 #ifdef _MEMORY_DEBUG
 #undef THIS_FILE
@@ -20,7 +21,7 @@ IOCPServer::IOCPServer(void)
 	, toString_( _T("IOCPServer") )
 {
 	_logger = logging::makeLogger("IOCPServer");
-	_acceptorFactories[_T("tcp")] = new TCPAcceptorFactory();
+	_acceptorFactories[_T("tcp")] = new TCPAcceptorFactory( this );
 }
 
 IOCPServer::~IOCPServer(void)
@@ -136,7 +137,13 @@ IAcceptor* IOCPServer::listenWith(const tchar* endPoint
 	
 bool IOCPServer::send( IRunnable* runnable )
 {
-	return _proactor.post( command_queue::createRunnable( runnable ) );
+	std::auto_ptr< ICommand > ptr(new RunCommand(this, runnable));
+	if(ptr->execute())
+	{
+		ptr.release();
+		return true;
+	}
+	return false;
 }
 	
 void IOCPServer::runForever()

@@ -14,6 +14,8 @@
 # include "jingxian/logging/logging.hpp"
 # include "jingxian/IReactorCore.h"
 # include "jingxian/networks/proactor.h"
+# include "jingxian/networks/connection_status.h"
+# include "jingxian/networks/sockets/basesocket.h"
 
 _jingxian_begin
 
@@ -70,7 +72,7 @@ public:
 	/**
 	 * 发生错误
 	 */
-	virtual void onExeception(int errCode, const tstring& description)
+	virtual void onExeception(int errCode, const tstring& description);
 
 	/**
 	* 取得地址的描述

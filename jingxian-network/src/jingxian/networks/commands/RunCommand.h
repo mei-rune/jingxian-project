@@ -12,6 +12,7 @@
 // Include files
 # include "jingxian/IRunnable.h"
 # include "jingxian/networks/commands/ICommand.h"
+# include "jingxian/networks/IOCPServer.h"
 
 _jingxian_begin
 
@@ -19,7 +20,7 @@ class RunCommand : public ICommand
 {
 
 public:
-	RunCommand(IRunnable* runnable);
+	RunCommand(IOCPServer* core, IRunnable* runnable);
 
 	virtual ~RunCommand();
 
@@ -28,10 +29,13 @@ public:
                          void *completion_key,
                          u_int32_t error);
 
+	virtual bool execute();
+
 private:
 	NOCOPY(RunCommand);
 
-	std::auto_ptr< IRunnable> _ptr;
+	IOCPServer* core_;
+	std::auto_ptr< IRunnable> ptr_;
 };
 
 _jingxian_end

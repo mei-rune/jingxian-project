@@ -10,7 +10,7 @@
 
 // Include files
 # include "jingxian/networks/inet_address.h"
-# include "jingxian/networks/sockets/base_socket.h"
+# include "jingxian/networks/sockets/BaseSocket.h"
 
 _jingxian_begin
 
@@ -54,12 +54,12 @@ public:
   /**
    * 取得socket对象
    */
-  base_socket& socket();
+  BaseSocket& socket();
 	
   /**
    * 取得socket对象
    */
-  const base_socket& socket() const;
+  const BaseSocket& socket() const;
 
   /**
    * 将r与本对象的值交换
@@ -218,7 +218,7 @@ private:
   inet_address local_addr_;
   inet_address remote_addr_;
   bool blocking_;
-  base_socket socket_;
+  BaseSocket socket_;
 };
 
 inline tostream& operator<<( tostream& target, const tcp_client& client )
