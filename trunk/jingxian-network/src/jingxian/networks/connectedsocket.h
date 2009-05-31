@@ -16,6 +16,7 @@
 # include "jingxian/networks/connection_status.h"
 # include "jingxian/networks/proactor.h"
 # include "jingxian/logging/logging.hpp"
+# include "jingxian/networks/IOCPServer.h"
 
 _jingxian_begin
 
@@ -23,13 +24,13 @@ _jingxian_begin
  * On开头的函数在用户直接调用的方法中不可以使用。
  * 给用户调用的方法为ITransport接口中的方法
  */
-class connected_socket : public ITransport
+class ConnectedSocket : public ITransport
 {
 public:
 
-	connected_socket( IOCPServer* core, SOCKET socket );
+	ConnectedSocket(IOCPServer* core, SOCKET socket);
 
-	virtual ~connected_socket( );
+	virtual ~ConnectedSocket( );
 
 	/**
      * 指定用 @see{protocol} 接口来接收读到的数据
@@ -68,7 +69,7 @@ public:
 	/**
      * 关闭连接
      */
-    virtual void disconnection(const Exception& error) = 0;
+    virtual void disconnection(const tstring& error) = 0;
 
     /**
      * 源地址
@@ -89,6 +90,11 @@ public:
 	 * 取得地址的描述
 	 */
 	virtual const tstring& toString() const = 0;
+
+	
+	void onConnected();
+
+	void onDisconnected(int error, const tstring& description);
 
 	//protected void internalRead(ByteBuffer byteBuffer)
 	//{
@@ -649,7 +655,7 @@ private:
 	/// socket 对象
 	SOCKET _socket;
 	/// 本对象当前所处的状态
-	connection_status _state;
+	connection_status::type _state;
 	/// 日志对象
 	ITracer* _trace;
 

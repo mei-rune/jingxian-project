@@ -15,7 +15,7 @@
 
 _jingxian_begin
 
-class TCPEndpoint : IEndpoint
+class TCPEndpoint : public IEndpoint
 {
 public:
 	

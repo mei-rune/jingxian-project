@@ -33,10 +33,10 @@ public:
 private:
 	NOCOPY(ReadCommand);
 
-	connected_socket* transport_;
+	ConnectedSocket* transport_;
 	char* ptr_;
 	size_t len_;
-}
+};
 
 _jingxian_end
 

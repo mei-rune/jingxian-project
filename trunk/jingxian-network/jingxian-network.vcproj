@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/DTEST"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)src\&quot;;."
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)src\&quot;;."
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				GeneratePreprocessedFile="0"
 				MinimalRebuild="true"
@@ -233,11 +233,11 @@
 			Name="networks"
 			>
 			<File
-				RelativePath=".\src\jingxian\networks\connected_socket.cpp"
+				RelativePath=".\src\jingxian\networks\connectedsocket.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\networks\connected_socket.h"
+				RelativePath=".\src\jingxian\networks\connectedsocket.h"
 				>
 			</File>
 			<File
@@ -253,12 +253,60 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\jingxian\networks\IOCPServer.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\IOCPServer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\jingxian\networks\proactor.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\jingxian\networks\proactor.h"
 				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\ProtocolFactory.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\jingxian\networks\TCPAcceptor.cpp"
@@ -348,15 +396,15 @@
 				Name="sockets"
 				>
 				<File
-					RelativePath=".\src\jingxian\networks\sockets\base_socket.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\jingxian\networks\sockets\base_socket.h"
-					>
-				</File>
-				<File
 					RelativePath=".\src\jingxian\networks\sockets\base_socket.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\sockets\basesocket.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\sockets\basesocket.h"
 					>
 				</File>
 				<File

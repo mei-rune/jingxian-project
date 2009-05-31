@@ -10,12 +10,12 @@ OS_INLINE tcp_server::~tcp_server (void)
 {
 }
 
-OS_INLINE base_socket& tcp_server::socket()
+OS_INLINE BaseSocket& tcp_server::socket()
 {
 	return socket_;
 }
 
-OS_INLINE  const base_socket& tcp_server::socket() const
+OS_INLINE  const BaseSocket& tcp_server::socket() const
 {
 	return socket_;
 }
@@ -71,7 +71,7 @@ OS_INLINE bool tcp_server::accept(tcp_client& accepted
 {
 	DWORD bytesReceived = 0;
 #pragma warning(disable: 4267)
-	return ( TRUE == base_socket::__acceptex( socket_.handle(), accepted.socket().handle(),data_buffer, data_len, local_addr_len, remote_addr_len, &bytesReceived, &overlapped ));
+	return ( TRUE == BaseSocket::__acceptex( socket_.handle(), accepted.socket().handle(),data_buffer, data_len, local_addr_len, remote_addr_len, &bytesReceived, &overlapped ));
 #pragma warning(default: 4267)
 }
 

@@ -10,41 +10,32 @@
 
 // Include files
 # include "jingxian/networks/commands/ICommand.h"
+# include "jingxian/networks/connectedsocket.h"
 
 _jingxian_begin
 
 class DisconnectCommand : public ICommand
-    {
-        ConnectedSocket _connectedSocket;
-        Exception _exception;
+{
+public:
 
-        public DisconnectRequest(ConnectedSocket connectedSocket,Exception error)
-            : base( null )
-        {
-            _connectedSocket = connectedSocket;
-            _exception = error;
-        }
+	DisconnectCommand(IOCPServer* core, ConnectedSocket* connectedSocket);
 
-        public void Complete(int bytes_transferred, bool success, int error, object context)
-        {
-            _connectedSocket.OnDisconnection(_exception);
-        }
+	virtual ~DisconnectCommand();
 
-        public void Disconnect()
-        {
-            if (_connectedSocket.Socket.DisconnectEx(this.NativeOverlapped
-                , IoctlSocketConstants.TF_REUSE_SOCKET, 0))
-                return;
+	virtual void on_complete(size_t bytes_transferred
+		, int success
+		, void *completion_key
+		, u_int32_t error);
 
-            int errCode = Marshal.GetLastWin32Error();
-            if ((int)SocketError.IOPending == errCode)
-            {
-                return;
-            }
+	virtual bool execute();
 
-            throw new ReadError(errCode);
-        }
-    }
+private:
+
+	NOCOPY(DisconnectCommand);
+
+	IOCPServer* core_;
+	ConnectedSocket* connectedSocket_;
+};
 
 _jingxian_end
 

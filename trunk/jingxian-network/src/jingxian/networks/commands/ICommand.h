@@ -30,7 +30,7 @@ public:
 
 	HANDLE handle() const { return handle_; }
 
-	virtual void execute() = 0;
+	virtual bool execute() = 0;
 
 	virtual void on_complete (size_t bytes_transferred,
                          int success,

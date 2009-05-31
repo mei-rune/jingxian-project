@@ -34,14 +34,16 @@ public:
      * 
      * @param[ in ] context 会话的上下文
 	 */
-    void onConnection(ProtocolContext& context);
+    void onConnected(ProtocolContext& context);
 
     /**
      * 当会话关闭后，被调用。
      * 
      * @param[ in ] context 会话的上下文
+     * @param[ in ] errCode 关闭的原因,为0是表示主动关闭
+     * @param[ in ] reason 关闭的原因描述
 	 */
-    void onDisconnection(ProtocolContext& context, Exception& reason);
+    void onDisconnected(ProtocolContext& context, int errCode, const tstring& reason);
 
     /**
      * 当有新的信息到来时，被调用。

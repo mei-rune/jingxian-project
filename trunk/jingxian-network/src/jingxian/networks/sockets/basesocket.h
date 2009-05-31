@@ -35,11 +35,11 @@ enum select_mode
 	, select_error = 4
 };
 
-class base_socket
+class BaseSocket
 {
 public:
 
-  ~base_socket (void);
+  ~BaseSocket (void);
 
   /**
    * 是否创建有效
@@ -49,7 +49,7 @@ public:
   /**
    * 交换双方的内部值
    */
-  void swap( base_socket& r );
+  void swap( BaseSocket& r );
 
   /**
    * 取得socket对象
@@ -104,14 +104,14 @@ public:
    */
   static void shutdownSocket();
 
-  base_socket (void);
+  BaseSocket (void);
 
-  base_socket ( int protocol_family,
+  BaseSocket ( int protocol_family,
 			int type,
             int protocol = 0,
             int reuse_addr = 0);
 
-  base_socket ( int protocol_family,
+  BaseSocket ( int protocol_family,
 			int type,
             int protocol,
             LPWSAPROTOCOL_INFO protocolinfo,
@@ -145,7 +145,7 @@ public:
             int reuse_addr);
 
 private:
-  NOCOPY( base_socket );
+  NOCOPY( BaseSocket );
 
   SOCKET handle_;
   mutable tstring toString_;
@@ -159,7 +159,7 @@ public:
 	static LPFN_GETACCEPTEXSOCKADDRS __getacceptexsockaddrs;
 };
 
-inline tostream& operator<<( tostream& target, const base_socket& s )
+inline tostream& operator<<( tostream& target, const BaseSocket& s )
 {
   if( INVALID_SOCKET == s.handle())
   {
@@ -174,7 +174,7 @@ inline tostream& operator<<( tostream& target, const base_socket& s )
 }
 
 #if defined (OS_HAS_INLINED)
-#include "jingxian/networks/sockets/base_socket.inl"
+#include "jingxian/networks/sockets/BaseSocket.inl"
 #endif /* OS_HAS_INLINED */
 
 _jingxian_end

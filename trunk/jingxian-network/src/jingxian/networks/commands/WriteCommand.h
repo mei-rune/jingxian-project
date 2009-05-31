@@ -10,14 +10,14 @@
 
 // Include files
 # include "jingxian/networks/commands/ICommand.h"
-# include "jingxian/networks/connected_socket.h"
+# include "jingxian/networks/ConnectedSocket.h"
 
 _jingxian_begin
 
 class WriteCommand : public ICommand
 {
 public:
-	WriteCommand(connected_socket* transport, const iovec* iovec, size_t len);
+	WriteCommand(ConnectedSocket* transport, const iovec* iovec, size_t len);
 
 	virtual ~WriteCommand();
 	
@@ -31,7 +31,7 @@ public:
 private:
 	NOCOPY(WriteCommand);
 
-	connected_socket* transport_;
+	ConnectedSocket* transport_;
 	const iovec* iovec_;
 	size_t len_;
 };

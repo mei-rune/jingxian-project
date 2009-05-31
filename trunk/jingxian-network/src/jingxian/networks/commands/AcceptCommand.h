@@ -26,7 +26,7 @@ public:
 		, void *completion_key
 		, u_int32_t error);
 
-	virtual void execute();
+	virtual bool execute();
 
 private:
 	NOCOPY(AcceptCommand);
@@ -35,7 +35,7 @@ private:
 	SOCKET socket_;
 	char* ptr_;
 	size_t len_;
-}
+};
 
 _jingxian_end
 

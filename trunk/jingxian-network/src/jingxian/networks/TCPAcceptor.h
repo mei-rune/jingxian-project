@@ -12,8 +12,8 @@
 # include "jingxian/string/string.hpp"
 # include "jingxian/IReactorCore.h"
 # include "jingxian/networks/TCPEndpoint.h"
-# include "jingxian/networks/sockets/base_socket.h"
-# include "jingxian/networks/proactor.h"
+# include "jingxian/networks/sockets/BaseSocket.h"
+# include "jingxian/networks/IOCPServer.h"
 
 _jingxian_begin
 
@@ -56,9 +56,19 @@ public:
     virtual IProtocolFactory& protocolFactory();
 
 	/**
+	 * accept 创建 socket 句柄
+	 */
+	SOCKET createSocket();
+
+	void releaseSocket(SOCKET socket, bool fa);
+
+	void onException( int error, const tstring& description);
+
+	/**
 	 * accept 请求的回调
 	 */
-	void on_complete( const char* ptr
+	void on_complete(SOCKET handle
+								, const char* ptr
 		                        , size_t bytes_transferred
 								, int success
 								, void *completion_key
@@ -90,7 +100,7 @@ private:
 
 	IOCPServer* server_;
 	IProtocolFactory* protocolFactory_;
-	base_socket socket_;
+	BaseSocket socket_;
 	TCPEndpoint endpoint_;
 	connection_status::type status_;
 	ILogger* logger_;

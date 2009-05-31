@@ -56,12 +56,12 @@ OS_INLINE const inet_address& tcp_client::local_addr () const
   return local_addr_;
 }
 
-OS_INLINE base_socket& tcp_client::socket()
+OS_INLINE BaseSocket& tcp_client::socket()
 {
 	return socket_;
 }
 	
-OS_INLINE const base_socket& tcp_client::socket() const
+OS_INLINE const BaseSocket& tcp_client::socket() const
 {
 	return socket_;
 }
@@ -255,7 +255,7 @@ OS_INLINE bool tcp_client::recv (void *buf, size_t n,
 
 OS_INLINE   bool tcp_client::transmit (const iopack* iov, size_t n )
 {
-	return ( TRUE == base_socket::__transmitpackets( socket_.handle(),
+	return ( TRUE == BaseSocket::__transmitpackets( socket_.handle(),
 		( iopack* )iov,
 		( DWORD )n,
 		0,
@@ -266,7 +266,7 @@ OS_INLINE   bool tcp_client::transmit (const iopack* iov, size_t n )
 OS_INLINE   bool tcp_client::transmit (const iopack* iov, size_t n,
                  OVERLAPPED& overlapped)
 {
-	return ( TRUE == base_socket::__transmitpackets( socket_.handle(),
+	return ( TRUE == BaseSocket::__transmitpackets( socket_.handle(),
 		( iopack* )iov,
 		( DWORD )n,
 		0,
@@ -279,7 +279,7 @@ OS_INLINE bool tcp_client::transmit ( HANDLE hFile
 				, size_t nNumberOfBytesPerSend
 				, io_file_buf* transmitBuffers )
 {
-	return (TRUE == base_socket::__transmitfile( socket_.handle(),
+	return (TRUE == BaseSocket::__transmitfile( socket_.handle(),
 		hFile,
         (DWORD) nNumberOfBytesToWrite,
         (DWORD) nNumberOfBytesPerSend,
@@ -294,7 +294,7 @@ OS_INLINE bool tcp_client::transmit ( HANDLE hFile
 				, io_file_buf* transmitBuffers
                 , OVERLAPPED& overlapped)
 {
-	return ( TRUE == base_socket::__transmitfile( socket_.handle(),
+	return ( TRUE == BaseSocket::__transmitfile( socket_.handle(),
 		hFile,
         (DWORD) nNumberOfBytesToWrite,
         (DWORD) nNumberOfBytesPerSend,
@@ -326,7 +326,7 @@ OS_INLINE bool tcp_client::connect( const inet_address& addr
 
 	DWORD sendbytes = 0;
 #pragma warning(disable: 4267)
-	return (TRUE == base_socket::__connectex( socket_.handle(), addr.addr(), addr.size(), NULL, 0, &sendbytes, &overlapped));
+	return (TRUE == BaseSocket::__connectex( socket_.handle(), addr.addr(), addr.size(), NULL, 0, &sendbytes, &overlapped));
  #pragma warning(default: 4267)
 }
 
@@ -340,7 +340,7 @@ OS_INLINE bool tcp_client::connect( const inet_address& addr
 
 	 DWORD sendbytes = 0;
  #pragma warning(disable: 4267)
-	 return (TRUE == base_socket::__connectex( socket_.handle(), addr.addr(), addr.size(), (void*)send_buffer, send_data_len, &sendbytes, &overlapped));
+	 return (TRUE == BaseSocket::__connectex( socket_.handle(), addr.addr(), addr.size(), (void*)send_buffer, send_data_len, &sendbytes, &overlapped));
  #pragma warning(default: 4267)
 
 }

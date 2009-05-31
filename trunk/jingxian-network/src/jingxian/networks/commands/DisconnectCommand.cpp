@@ -1,34 +1,36 @@
 
 # include "pro_config.h"
 # include "jingxian/networks/commands/DisconnectCommand.h"
+# include "jingxian/networks/sockets/BaseSocket.h"
 
 _jingxian_begin
 
-DisconnectCommand::DisconnectRequest(ConnectedSocket connectedSocket,Exception error)
-: base( null )
+DisconnectCommand::DisconnectCommand(IOCPServer* core, ConnectedSocket* connectedSocket)
+: core_(core)
+, connectedSocket_(connectedSocket)
 {
-	_connectedSocket = connectedSocket;
-	_exception = error;
 }
 
-void DisconnectCommand::Complete(int bytes_transferred, bool success, int error, object context)
+void DisconnectCommand::on_complete(size_t bytes_transferred
+		, int success
+		, void *completion_key
+		, u_int32_t error)
 {
-	_connectedSocket.OnDisconnection(_exception);
+	_connectedSocket.onDisconnected(0, _T("±»³·Ïû!"));
 }
 
-void DisconnectCommand::Disconnect()
+bool DisconnectCommand::execute()
 {
-	if (_connectedSocket.Socket.DisconnectEx(this.NativeOverlapped
-		, IoctlSocketConstants.TF_REUSE_SOCKET, 0))
-		return;
+	int bytesTransferred;
+	if (BaseSocket::__disconnectex(connectedSocket_->handle()
+		, this
+		, 0
+		, 0)
+		return true;
 
-	int errCode = Marshal.GetLastWin32Error();
-	if ((int)SocketError.IOPending == errCode)
-	{
-		return;
-	}
-
-	throw new ReadError(errCode);
+	if (WSA_IO_PENDING == ::WSAGetLastError())
+		return true;
+	return false;
 }
 
 _jingxian_end
