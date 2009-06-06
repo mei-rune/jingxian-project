@@ -9,18 +9,18 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
-# include "jingxian/networks/inet_address.h"
-# include "jingxian/networks/sockets/tcp_client.h"
+# include "jingxian/networks/NetAddress.h"
+# include "jingxian/networks/sockets/tcpclient.h"
 
 _jingxian_begin
 
-class tcp_server
+class TCPServer
 {
 public:
 
-  tcp_server (void);
+  TCPServer (void);
 
-  ~tcp_server (void);
+  ~TCPServer (void);
 
   /**
    * 取得socket对象
@@ -35,7 +35,7 @@ public:
   /**
    * 取得监听的端口
    */
-  const inet_address& bind_addr() const;
+  const NetAddress& bind_addr() const;
 
   /**
    * socket是否有效
@@ -45,7 +45,7 @@ public:
   /**
    * 绑定到指定的端口
    */
-  bool bind( const inet_address& addr);
+  bool bind( const NetAddress& addr);
 
   /**
    * 启动监听
@@ -55,19 +55,19 @@ public:
   /**
    * 获取一个连接
    */
-  bool accept( tcp_client& accepted );
+  bool accept( TCPClient& accepted );
 
   /**
    * 异步获取一个连接
    */
-  bool accept( tcp_client& accepted
+  bool accept( TCPClient& accepted
 						, void* data_buffer
 						, size_t data_len
 						, size_t local_addr_len
 						, size_t remote_addr_len
 						, OVERLAPPED& overlapped);
 
-  void swap( tcp_server& r);
+  void swap( TCPServer& r);
 
   /**
    * 返回一个人可读的字符串
@@ -75,32 +75,32 @@ public:
   const tstring& toString() const;
 
 private:
-	NOCOPY( tcp_server );
-	inet_address bind_addr_;
+	NOCOPY( TCPServer );
+	NetAddress bind_addr_;
 	BaseSocket socket_;
 	mutable tstring toString_;
 };
 
 
-inline tostream& operator<<( tostream& target, const tcp_server& server )
+inline tostream& operator<<( tostream& target, const TCPServer& server )
 {
   if( server.is_good() )
   {
-	  target << _T("tcp_server[ ")
+	  target << _T("TCPServer[ ")
 		  <<  server.socket().handle() 
 		  << _T(":") << server.bind_addr()
 		  << _T("]" );
   }
   else
   {
-	  target << _T("tcp_client[ no listen ]" );
+	  target << _T("TCPClient[ no listen ]" );
   }
   
   return target;
 }
 
 #if defined (OS_HAS_INLINED)
-#include "jingxian/networks/sockets/tcp_server.inl"
+#include "jingxian/networks/sockets/TCPServer.inl"
 #endif
 
 _jingxian_end

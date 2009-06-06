@@ -56,24 +56,6 @@ public:
     virtual IProtocolFactory& protocolFactory();
 
 	/**
-	 * accept 创建 socket 句柄
-	 */
-	SOCKET createSocket();
-
-	void releaseSocket(SOCKET socket, bool fa);
-
-	void onException( int error, const tstring& description);
-
-	/**
-	 * accept 请求的回调
-	 */
-	void on_complete(SOCKET handle
-								, const char* ptr
-		                        , size_t bytes_transferred
-								, int success
-								, void *completion_key
-								, u_int32_t error);
-	/**
 	 * @implements misc
 	 */
     virtual IDictionary& misc();
@@ -87,7 +69,13 @@ public:
 	* @implements toString
 	*/
 	virtual const tstring& toString() const;
-	
+
+	TCPFactory& tcpFactory();
+	SOCKET handle();
+	IOCPServer* nextCore();
+
+	void onException( int error, const tstring& description);
+
 private:
 	NOCOPY(TCPAcceptor);
 

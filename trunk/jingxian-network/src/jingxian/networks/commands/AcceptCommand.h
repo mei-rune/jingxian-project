@@ -28,6 +28,11 @@ public:
 
 	virtual bool execute();
 
+protected:
+	
+    void initializeConnection(int bytesTransferred
+							  , void *completion_key);
+
 private:
 	NOCOPY(AcceptCommand);
 

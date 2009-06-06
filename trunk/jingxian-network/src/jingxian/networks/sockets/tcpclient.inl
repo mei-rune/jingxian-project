@@ -1,17 +1,17 @@
 
 
-OS_INLINE tcp_client::tcp_client (void)
+OS_INLINE TCPClient::TCPClient (void)
 : socket_( )   
 , blocking_( true )
 {
 	//AF_INET , SOCK_STREAM, IPPROTO_TCP
 }
 
-OS_INLINE tcp_client::~tcp_client (void)
+OS_INLINE TCPClient::~TCPClient (void)
 {
 }
 
-OS_INLINE bool tcp_client::readable()
+OS_INLINE bool TCPClient::readable()
 {
 	TIMEVAL time_val;
 	time_val.tv_sec = 0;
@@ -19,7 +19,7 @@ OS_INLINE bool tcp_client::readable()
 	return socket_.poll( time_val, select_read );
 }
 
-OS_INLINE bool tcp_client::writable()
+OS_INLINE bool TCPClient::writable()
 {
 	TIMEVAL time_val;
 	time_val.tv_sec = 0;
@@ -27,7 +27,7 @@ OS_INLINE bool tcp_client::writable()
 	return socket_.poll( time_val, select_write );
 }
 
-OS_INLINE void tcp_client::blocking(bool val)
+OS_INLINE void TCPClient::blocking(bool val)
 {
 	if( val )
 	{
@@ -41,37 +41,37 @@ OS_INLINE void tcp_client::blocking(bool val)
 	}
 }
 
-OS_INLINE bool tcp_client::blocking() const
+OS_INLINE bool TCPClient::blocking() const
 {
 	return blocking_;
 }
 
-OS_INLINE const inet_address& tcp_client::remote_addr () const
+OS_INLINE const NetAddress& TCPClient::remote_addr () const
 {
 	return remote_addr_;
 }
 
-OS_INLINE const inet_address& tcp_client::local_addr () const
+OS_INLINE const NetAddress& TCPClient::local_addr () const
 {
   return local_addr_;
 }
 
-OS_INLINE BaseSocket& tcp_client::socket()
+OS_INLINE BaseSocket& TCPClient::socket()
 {
 	return socket_;
 }
 	
-OS_INLINE const BaseSocket& tcp_client::socket() const
+OS_INLINE const BaseSocket& TCPClient::socket() const
 {
 	return socket_;
 }
 
-OS_INLINE bool tcp_client::is_good() const
+OS_INLINE bool TCPClient::is_good() const
 {
 	return socket_.is_good();
 }
 
-OS_INLINE ssize_t tcp_client::recv (void *buf,
+OS_INLINE ssize_t TCPClient::recv (void *buf,
                    size_t len,
                    int flags )
 {
@@ -82,7 +82,7 @@ OS_INLINE ssize_t tcp_client::recv (void *buf,
                     flags );
 }
 
-OS_INLINE ssize_t tcp_client::send (const void *buf,
+OS_INLINE ssize_t TCPClient::send (const void *buf,
                    size_t len,
                    int flags )
 {
@@ -90,7 +90,7 @@ OS_INLINE ssize_t tcp_client::send (const void *buf,
     return ::send (socket_.handle(), (const char *) buf, ( int )len, flags);
 }
 
-OS_INLINE ssize_t tcp_client::recvv (iovec* iov, size_t n)
+OS_INLINE ssize_t TCPClient::recvv (iovec* iov, size_t n)
 {
 	DWORD bytes_recvd = 0;
 	DWORD Flags = 0;
@@ -106,7 +106,7 @@ OS_INLINE ssize_t tcp_client::recvv (iovec* iov, size_t n)
 	return r;
 }
 
-OS_INLINE ssize_t tcp_client::sendv ( const iovec* iov,
+OS_INLINE ssize_t TCPClient::sendv ( const iovec* iov,
                     size_t n )
 {
 	DWORD bytes_sent = 0;
@@ -122,7 +122,7 @@ OS_INLINE ssize_t tcp_client::sendv ( const iovec* iov,
 	return r;
 }
 
-OS_INLINE bool tcp_client::send_n( const char* buf, size_t length)
+OS_INLINE bool TCPClient::send_n( const char* buf, size_t length)
 {
 	do
 	{
@@ -139,7 +139,7 @@ OS_INLINE bool tcp_client::send_n( const char* buf, size_t length)
 	return true;
 }
 
-OS_INLINE bool tcp_client::recv_n( char* buf, size_t length)
+OS_INLINE bool TCPClient::recv_n( char* buf, size_t length)
 {
 	do
 	{
@@ -157,7 +157,7 @@ OS_INLINE bool tcp_client::recv_n( char* buf, size_t length)
 	return true;
 }
 
-OS_INLINE bool tcp_client::sendv_n( const iovec* wsaBuf, size_t size)
+OS_INLINE bool TCPClient::sendv_n( const iovec* wsaBuf, size_t size)
 {
 	std::vector<iovec> buf( wsaBuf, wsaBuf + size );
 	iovec* p = &buf[0];
@@ -189,7 +189,7 @@ OS_INLINE bool tcp_client::sendv_n( const iovec* wsaBuf, size_t size)
 	return true;
 }
 
-OS_INLINE bool tcp_client::recvv_n( iovec* wsaBuf, size_t size)
+OS_INLINE bool TCPClient::recvv_n( iovec* wsaBuf, size_t size)
 {
 	iovec* p = wsaBuf;
 
@@ -220,7 +220,7 @@ OS_INLINE bool tcp_client::recvv_n( iovec* wsaBuf, size_t size)
 	return true;
 }
 
-OS_INLINE bool tcp_client::send (const void *buf, size_t n,
+OS_INLINE bool TCPClient::send (const void *buf, size_t n,
 				   OVERLAPPED& overlapped)
 {
 	DWORD bytes_written;
@@ -228,7 +228,7 @@ OS_INLINE bool tcp_client::send (const void *buf, size_t n,
 	return ::WriteFile ( ( HANDLE ) socket_.handle(), buf, short_nbyte, &bytes_written, &overlapped) ? true : false;
 }
 
-OS_INLINE bool tcp_client::recvv (iovec* iov, size_t n,
+OS_INLINE bool TCPClient::recvv (iovec* iov, size_t n,
 					OVERLAPPED& overlapped)
 {
 	DWORD NumberOfBytesRecvd = 0;
@@ -242,7 +242,7 @@ OS_INLINE bool tcp_client::recvv (iovec* iov, size_t n,
 		, 0 ));
 }
 
-OS_INLINE bool tcp_client::recv (void *buf, size_t n,
+OS_INLINE bool TCPClient::recv (void *buf, size_t n,
 				   OVERLAPPED& overlapped)
 {
 	DWORD bytes_read = 0;
@@ -253,7 +253,7 @@ OS_INLINE bool tcp_client::recv (void *buf, size_t n,
 		, &overlapped );
 }
 
-OS_INLINE   bool tcp_client::transmit (const iopack* iov, size_t n )
+OS_INLINE   bool TCPClient::transmit (const iopack* iov, size_t n )
 {
 	return ( TRUE == BaseSocket::__transmitpackets( socket_.handle(),
 		( iopack* )iov,
@@ -263,7 +263,7 @@ OS_INLINE   bool tcp_client::transmit (const iopack* iov, size_t n )
 		0) );
 }
 
-OS_INLINE   bool tcp_client::transmit (const iopack* iov, size_t n,
+OS_INLINE   bool TCPClient::transmit (const iopack* iov, size_t n,
                  OVERLAPPED& overlapped)
 {
 	return ( TRUE == BaseSocket::__transmitpackets( socket_.handle(),
@@ -274,7 +274,7 @@ OS_INLINE   bool tcp_client::transmit (const iopack* iov, size_t n,
 		0) );
 }
 
-OS_INLINE bool tcp_client::transmit ( HANDLE hFile
+OS_INLINE bool TCPClient::transmit ( HANDLE hFile
 				, size_t nNumberOfBytesToWrite
 				, size_t nNumberOfBytesPerSend
 				, io_file_buf* transmitBuffers )
@@ -288,7 +288,7 @@ OS_INLINE bool tcp_client::transmit ( HANDLE hFile
         0 ) );
 }
 
-OS_INLINE bool tcp_client::transmit ( HANDLE hFile
+OS_INLINE bool TCPClient::transmit ( HANDLE hFile
 				, size_t nNumberOfBytesToWrite
 				, size_t nNumberOfBytesPerSend
 				, io_file_buf* transmitBuffers
@@ -303,7 +303,7 @@ OS_INLINE bool tcp_client::transmit ( HANDLE hFile
         0 ) );
 }
 
-OS_INLINE bool tcp_client::connect( const inet_address& addr )
+OS_INLINE bool TCPClient::connect( const NetAddress& addr )
 {
 	if( !socket_.open( AF_INET , SOCK_STREAM, IPPROTO_TCP ) )
 		return false;
@@ -317,7 +317,7 @@ OS_INLINE bool tcp_client::connect( const inet_address& addr )
 	return true;
 }
 
-OS_INLINE bool tcp_client::connect( const inet_address& addr
+OS_INLINE bool TCPClient::connect( const NetAddress& addr
 									  ,OVERLAPPED& overlapped )
 {
 	
@@ -330,7 +330,7 @@ OS_INLINE bool tcp_client::connect( const inet_address& addr
  #pragma warning(default: 4267)
 }
 
-OS_INLINE bool tcp_client::connect( const inet_address& addr
+OS_INLINE bool TCPClient::connect( const NetAddress& addr
 									  , const void* send_buffer
 									  , size_t send_data_len
 									  , OVERLAPPED& overlapped )

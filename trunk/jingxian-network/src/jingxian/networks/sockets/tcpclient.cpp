@@ -1,8 +1,8 @@
 
-
 # include "pro_config.h"
 # include <vector>
-# include "jingxian/networks/sockets/tcp_server.h"
+# include "jingxian/networks/sockets/TCPClient.h"
+
 
 #ifdef _MEMORY_DEBUG
 #undef THIS_FILE
@@ -14,7 +14,7 @@ static char THIS_FILE[] = __FILE__;
 _jingxian_begin
 
 #if !defined (OS_HAS_INLINED)
-# include "jingxian/networks/sockets/tcp_server.inl"
+#include "jingxian/networks/sockets/TCPClient.inl"
 #endif /* OS_HAS_INLINED */
 
 

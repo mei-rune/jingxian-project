@@ -9,17 +9,17 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
-# include "jingxian/networks/inet_address.h"
+# include "jingxian/networks/NetAddress.h"
 # include "jingxian/networks/sockets/BaseSocket.h"
 
 _jingxian_begin
 
-class tcp_client
+class TCPClient
 {
 public:
-  tcp_client (void);
+  TCPClient (void);
 
-  ~tcp_client (void);
+  ~TCPClient (void);
 
   /**
    * 是否可以读数据
@@ -44,12 +44,12 @@ public:
   /**
    * 取得本机地址
    */
-  const inet_address& local_addr () const;
+  const NetAddress& local_addr () const;
 
   /**
    * 取得远程机地址
    */
-  const inet_address& remote_addr () const;
+  const NetAddress& remote_addr () const;
 
   /**
    * 取得socket对象
@@ -64,7 +64,7 @@ public:
   /**
    * 将r与本对象的值交换
    */
-  void swap( tcp_client& r );
+  void swap( TCPClient& r );
 
   /**
    * socket是否有效
@@ -198,34 +198,34 @@ public:
   /**
    * 连接到远程主机
    */
-  bool connect( const inet_address& addr );
+  bool connect( const NetAddress& addr );
 
   /**
    * 异步连接到远程主机
    */
-  bool connect( const inet_address& addr, OVERLAPPED& overlapped );
+  bool connect( const NetAddress& addr, OVERLAPPED& overlapped );
 
   /**
    * 异步连接到远程主机，并发送数据（仅用于 ATM ）
    */
-  bool tcp_client::connect( const inet_address& addr
+  bool TCPClient::connect( const NetAddress& addr
 									  , const void* send_buffer
 									  , size_t send_data_len
 									  , OVERLAPPED& overlapped );
 
 private:
-  NOCOPY( tcp_client );
-  inet_address local_addr_;
-  inet_address remote_addr_;
+  NOCOPY( TCPClient );
+  NetAddress local_addr_;
+  NetAddress remote_addr_;
   bool blocking_;
   BaseSocket socket_;
 };
 
-inline tostream& operator<<( tostream& target, const tcp_client& client )
+inline tostream& operator<<( tostream& target, const TCPClient& client )
 {
   if( client.is_good() )
   {
-	  target << _T("tcp_client[ ")
+	  target << _T("TCPClient[ ")
 		  <<  client.socket().handle() 
 		  << _T(":") << client.local_addr()
 		  << _T("<==>")<< client.remote_addr()
@@ -234,14 +234,14 @@ inline tostream& operator<<( tostream& target, const tcp_client& client )
   }
   else
   {
-	  target << _T("tcp_client[ disconnect ]" );
+	  target << _T("TCPClient[ disconnect ]" );
   }
   
   return target;
 }
 
 #if defined (OS_HAS_INLINED)
-#include "jingxian/networks/sockets/tcp_client.inl"
+#include "jingxian/networks/sockets/TCPClient.inl"
 #endif
 
 _jingxian_end

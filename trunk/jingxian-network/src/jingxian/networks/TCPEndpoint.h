@@ -10,7 +10,7 @@
 
 // Include files
 # include "jingxian/string/string.hpp"
-# include "jingxian/networks/inet_address.h"
+# include "jingxian/networks/NetAddress.h"
 # include "jingxian/IEndpoint.h"
 
 _jingxian_begin
@@ -53,7 +53,7 @@ private:
 
 	const static tstring _protocol;
 
-	inet_address _address;
+	NetAddress _address;
 	
 	tstring toString_;
 };
