@@ -14,39 +14,39 @@
 
 _jingxian_begin
 
-class inet_address
+class NetAddress
 {
 public:
 
-	inet_address (void);
+	NetAddress (void);
 
-	inet_address (const inet_address & );
+	NetAddress (const NetAddress & );
 
-	inet_address (const sockaddr_in *, int len);
+	NetAddress (const sockaddr_in *, int len);
 
-	inet_address (const void*, int len);
+	NetAddress (const void*, int len);
 
-	inet_address (u_long ip, u_int16_t port_number);
+	NetAddress (u_long ip, u_int16_t port_number);
 
-	inet_address (const char* name, u_int16_t number);
+	NetAddress (const char* name, u_int16_t number);
 
-	inet_address (const char* name, const char* number);
+	NetAddress (const char* name, const char* number);
 
-	explicit inet_address (const char* address);
+	explicit NetAddress (const char* address);
 
-	~inet_address (void);
+	~NetAddress (void);
 
-	bool operator < (const inet_address &rhs) const;
+	bool operator < (const NetAddress &rhs) const;
 
-	bool operator > (const inet_address &rhs) const;
+	bool operator > (const NetAddress &rhs) const;
 
-	bool operator == (const inet_address &SAP) const;
+	bool operator == (const NetAddress &SAP) const;
 
-	bool operator != (const inet_address &SAP) const;
+	bool operator != (const NetAddress &SAP) const;
 
-	inet_address& operator=( const inet_address& r);
+	NetAddress& operator=( const NetAddress& r);
 	
-	void swap( inet_address& r);
+	void swap( NetAddress& r);
 
 	void port(u_int16_t number , bool encode = true );
 	void port( const char* number);
@@ -68,6 +68,8 @@ public:
 
 	void reset (void);
 
+	void set(const sockaddr_in *, int len);
+
 	const tstring& toString( ) const;
 private:
 
@@ -77,14 +79,14 @@ private:
 	mutable tstring ip_string_;
 };
 
-inline tostream& operator<<( tostream& target, const inet_address& addr )
+inline tostream& operator<<( tostream& target, const NetAddress& addr )
 {
 	target << addr.toString();
 	return target;
 }
 
 //#if defined (OS_HAS_INLINED)
-//#include "jingxian/networks/inet_address.inl"
+//#include "jingxian/networks/NetAddress.inl"
 //#endif
 
 _jingxian_end

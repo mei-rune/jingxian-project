@@ -5,13 +5,105 @@
 _jingxian_begin
 
 ConnectedSocket::ConnectedSocket(IOCPServer* core, SOCKET socket)
-: _core( core )
+: core_(core)
+, socket_(socket)
+, state_(connection_status::connected)
+, tracer_(0)
 {
+	tracer_
 }
 
 ConnectedSocket::~ConnectedSocket( )
 {
+	ThrowException( NotImplementedException );
 }
+
+void ConnectedSocket::bindProtocol(IProtocol* protocol)
+{
+	ThrowException( NotImplementedException );
+}
+
+void ConnectedSocket::startReading()
+{
+	ThrowException( NotImplementedException );
+}
+
+void ConnectedSocket::stopReading()
+{
+	ThrowException( NotImplementedException );
+}
+
+void ConnectedSocket::write(char* buffer)
+{
+	ThrowException( NotImplementedException );
+}
+
+void ConnectedSocket::write(char* buffer, int offest, int length)
+{
+	ThrowException( NotImplementedException );
+}
+
+void ConnectedSocket::write(Buffer& buffer)
+{
+	ThrowException( NotImplementedException );
+}
+
+void ConnectedSocket::disconnection()
+{
+	ThrowException( NotImplementedException );
+}
+
+void ConnectedSocket::disconnection(const tstring& error)
+{
+	ThrowException( NotImplementedException );
+}
+
+const IEndpoint& ConnectedSocket::host() const
+{
+	ThrowException( NotImplementedException );
+}
+
+const IEndpoint& ConnectedSocket::peer() const
+{
+	ThrowException( NotImplementedException );
+}
+
+time_t ConnectedSocket::timeout() const
+{
+	ThrowException( NotImplementedException );
+}
+
+const tstring& ConnectedSocket::toString() const
+{
+	return toString_;
+}
+
+void ConnectedSocket::onConnected()
+{
+	ThrowException( NotImplementedException );
+}
+
+void ConnectedSocket::onDisconnected(int error, const tstring& description)
+{
+	ThrowException( NotImplementedException );
+}
+
+void ConnectedSocket::setPeer( sockaddr* addr)
+{
+	ThrowException( NotImplementedException );
+}
+
+void ConnectedSocket::setHost( sockaddr* addr)
+{
+	ThrowException( NotImplementedException );
+}
+
+void ConnectedSocket::initialize()
+{
+	ThrowException( NotImplementedException );
+}
+
+
 
 //protected void internalRead(ByteBuffer byteBuffer)
 //{

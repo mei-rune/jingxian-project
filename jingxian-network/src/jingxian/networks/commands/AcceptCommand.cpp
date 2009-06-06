@@ -33,8 +33,11 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 {
 	if (!success)
 	{
-		onException(0, error);
-		goto end;
+		acceptor_->onException(error, _T("接受器 '") 
+			+ acceptor_->endpoint_.toString() 
+			+ _T("' 获取连接请求失败 - ")
+			+ lastError(error));
+		return;
 	}
 
 
@@ -47,15 +50,15 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 			+ acceptor_->endpoint_.toString() 
 			+ _T("' 获取连接请求返回,在对 socket 句柄设置 SO_UPDATE_ACCEPT_CONTEXT 选项时发生错误 - ")
 			+ lastError(errCode));
-		goto end;
+		return;
 	}
-
-	ILogger* logger = acceptor_->logger();
 
 	if (!acceptor_->isListening())
 	{
-		INFO( logger, _T("接受器 '")<< endpoint_ <<_T("' 获取连接请求返回,但已经停止监听!"));
-		goto end;
+		acceptor_->onException(0, _T("接受器 '") 
+			+ acceptor_->endpoint_.toString() 
+			+ _T("' 获取连接请求返回,但已经停止监听!"));
+		return;
 	}
 
 	initializeConnection(bytes_transferred, completion_key);
@@ -63,10 +66,12 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 	if( acceptor_->doAccept())
 		return;
 
-	INFO(logger, _T("接受器 '")<< endpoint_ <<_T("' 获取连接返回,重新发送获取连接请求时发生错误!"));
-
-end:
-	decrementAccepting();
+	int errCode = ::WSAGetLastError();
+	acceptor_->onException(errCode, _T("接受器 '") 
+		+ acceptor_->endpoint_.toString() 
+		+ _T("' 获取连接请求返回,重新发送获取连接请求时发生错误 - ")
+		+ lastError(errCode));
+	return;
 }
 
 void TCPAcceptor::initializeConnection(  int bytesTransferred
@@ -86,47 +91,32 @@ void TCPAcceptor::initializeConnection(  int bytesTransferred
 		&remote_addr,
 		&remote_size);
 
-	std::auto_ptr<ConnectedSocket> connectedSocket(new ConnectedSocket( socket_ ));
+	
+	IOCPServer* core = _acceptor->nextCore();
+	std::auto_ptr<ConnectedSocket> connectedSocket(new ConnectedSocket(core, socket_));
 	socket_ = INVALID_HANDLE_VALUE;
+	connectedSocket->setPeer( remote_addr );
+	connectedSocket->setHost( local_addr );
 
 
-	_acceptor.Logger.InfoFormat("获取到来自[{0}]的连接,开始初始化!", _socket.RemoteEndPoint);
+	INFO( acceptor_->logger(), _T("获取到来自 '") << connectedSocket->peer().toString()
+							<< _T("' 的连接,开始初始化!"));
 
-	IReactorCore* core = _acceptor.GetNextCore();
-	if (!core.bind(socket))
-	{
-		Win32Exception err = new Win32Exception();
-		_acceptor.OnError(new InitializeError(_acceptor.BindPoint, string.Format("初始化来自[{0}]的连接时，绑定到iocp发生错误 - {0}", _socket.RemoteEndPoint, err.Message), err));
+	if (!core.bind(socket,connectedSocket.get()))
+	{	
+		int errCode = ::WSAGetLastError();
+		LOG_ERROR( acceptor_->logger(), _T("初始化来自 '") << connectedSocket->peer().toString()
+							<< _T("' 的连接时，绑定到iocp发生错误 - ")
+							<< lastError(errCode));
 		return;
 	}
 
-	InitializeError initializeError = null;
-	ConnectedSocket connectedSocket = null;
-	try
-	{
-		IDictionary<string, object> misc = (null == _acceptor.ProtocolFactory) ? null : _acceptor.ProtocolFactory.Misc;
-		connectedSocket = new ConnectedSocket(core, _socket, new ProtocolContext(null, misc));
-		IProtocol protocol = _acceptor.CreateProtocol(connectedSocket);
-		core.InitializeConnection(connectedSocket, protocol);
-		_acceptor.Logger.InfoFormat("初始化来自[{0}]的连接成功!", _socket.RemoteEndPoint);
-		_socket = null;
-	}
-	catch (InitializeError e)
-	{
-		initializeError = e;
-	}
-	catch (Exception e)
-	{
-		initializeError = new InitializeError(_socket.RemoteEndPoint, "在处理新连接时发生异常!", e);
-	}
+	connectedSocket->bindProtocol( acceptor_->protocolFactory().createProtocol() );
+	INFO( acceptor_->logger(), _T("初始化来自 '") << connectedSocket->peer().toString()
+							<< _T("' 的连接成功!"));
 
-	if (null != initializeError)
-	{
-		if (null != connectedSocket)
-			connectedSocket.ReleaseSocket();
-
-		_acceptor.OnError(initializeError);
-	}
+	connectedSocket->initialize();
+	connectedSocket.release();
 }
 
 bool AcceptCommand::execute()
