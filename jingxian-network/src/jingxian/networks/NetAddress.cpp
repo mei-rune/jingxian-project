@@ -5,61 +5,84 @@
 
 _jingxian_begin
 
- NetAddress::NetAddress (void)
+const size_t NetAddressLength = sizeof(struct sockaddr_in)+sizeof(struct sockaddr);
+
+NetAddress::NetAddress (void)
+: addr_((char*)::malloc(NetAddressLength))
+, len_(NetAddressLength)
 {
 	this->reset ();
 }
 
- NetAddress::NetAddress (const NetAddress &sa)
+NetAddress::NetAddress (const NetAddress &sa)
+: addr_((char*)::malloc(NetAddressLength))
+, len_(NetAddressLength)
 {
 	this->reset ();
 	*this = sa;
 }
 
- NetAddress::NetAddress (const sockaddr_in *addr, int len)
+NetAddress::NetAddress (const sockaddr_in *addr, int len)
+: addr_((char*)::malloc(NetAddressLength))
+, len_(NetAddressLength)
 {
 	this->reset ();
-	this->addr(addr, len);
+	this->set(addr, len);
 }
 
- NetAddress::NetAddress (const void* addr, int len)
+NetAddress::NetAddress (const void* addr, int len)
+: addr_((char*)::malloc(NetAddressLength))
+, len_(NetAddressLength)
 {
 	this->reset ();
-	this->addr(addr, len);
+	this->set(addr, len);
 }
 
- NetAddress::NetAddress ( u_long ip,u_int16_t number )
+NetAddress::NetAddress ( u_long ip,u_int16_t number )
+ : addr_((char*)::malloc(NetAddressLength))
+ , len_(NetAddressLength)
 {
 	this->reset ();
 	this->ip( ip );
 	this->port( number );
 }
 
- NetAddress::NetAddress ( const char* ipstr,u_int16_t number)
+NetAddress::NetAddress ( const char* ipstr,u_int16_t number)
+ : addr_((char*)::malloc(NetAddressLength))
+ , len_(NetAddressLength)
 {
 	this->reset ();
 	this->ip( ipstr );
 	this->port( number );
 }
 
- NetAddress::NetAddress ( const char* ipstr, const char* number)
+NetAddress::NetAddress ( const char* ipstr, const char* number)
+ : addr_((char*)::malloc(NetAddressLength))
+ , len_(NetAddressLength)
 {
 	this->reset ();
 	this->ip( ipstr );
 	this->port( number );
 }
 
- NetAddress::NetAddress (const char* address)
+NetAddress::NetAddress (const char* address)
+ : addr_((char*)::malloc(NetAddressLength))
+ , len_(NetAddressLength)
 {
 	this->reset ();
-	this->parse( address );
+	this->set( address );
 }
 
- NetAddress::~NetAddress (void)
+NetAddress::~NetAddress (void)
 {
+	if( null_ptr == addr_)
+	{
+		::free(addr);
+		addr_ = null_ptr;
+	}
 }
 
- bool NetAddress::operator != (const NetAddress &sap) const
+bool NetAddress::operator != (const NetAddress &sap) const
 {
 	return !((*this) == sap);
 }
@@ -73,14 +96,14 @@ bool NetAddress::operator == (const NetAddress &sap) const
 
 bool NetAddress::operator < (const NetAddress &rhs) const
 {
-  return (::memcmp (&this->m_addr_,
+	return (::memcmp (&this->m_addr_,
 		&rhs.m_addr_,
 		this->size ()) < 0 );
 }
 
 bool NetAddress::operator > (const NetAddress &rhs) const
 {
-  return (::memcmp (&this->m_addr_,
+	return (::memcmp (&this->m_addr_,
 		&rhs.m_addr_,
 		this->size ()) > 0 );
 }
@@ -88,7 +111,7 @@ bool NetAddress::operator > (const NetAddress &rhs) const
 NetAddress& NetAddress::operator=( const NetAddress& sa)
 {
 	if( this != &sa)
-		::memcpy( &this->m_addr_, &sa.m_addr_, sa.size () );
+		set(sa.addr(), sa.size ());
 
 	return *this;
 }
@@ -96,82 +119,83 @@ NetAddress& NetAddress::operator=( const NetAddress& sa)
 void NetAddress::swap( NetAddress& r)
 {
 	sockaddr address;
-	memcpy( &address, &this->m_addr_, sizeof( sockaddr ) );
-	memcpy( &this->m_addr_, &r.m_addr_, sizeof( sockaddr ) );
-	memcpy( &r.m_addr_, &address, sizeof( sockaddr ) );
+	std::swap(r.addr_, this->addr_);
+	std::swap(r.len_, this->len_);
+	std::swap(r.ip_string,this->ip_string_);
+	std::swap(r.to_string_,this->to_string_);
 }
 
 void NetAddress::reset (void)
 {
-  memset (&this->m_addr_ , 0, sizeof (this->m_addr_ ));
-  this->m_addr_.sa_family = AF_INET;
+	memset (&this->addr_ , 0, sizeof (this->addr_ ));
+	ip_string_ = _T("0.0.0.0");
+	to_string_ = _T("0.0.0.0:0");
+	this->m_addr_.sa_family = AF_INET;
 }
 
 void NetAddress::port(u_int16_t number,
-							   bool encode )
+					  bool encode )
 {
-	((sockaddr_in*) &m_addr_)->sin_port = encode?htons (number):number;
+	to_string_ = ip_string_ + ::toString(encode?number:htons(number));
+	((sockaddr_in*) &addr_)->sin_port = encode?htons (number):number;
 }
 
 void NetAddress::port( const char* number )
 {
-	((sockaddr_in*) &m_addr_)->sin_port = htons( ::atoi( number ) );
+	this->port(atoi( number ), true);
 }
 
 u_int16_t NetAddress::port( void ) const 
 {
-	return htons( ((sockaddr_in*) &m_addr_)->sin_port );
+	return htons( ((sockaddr_in*) &addr_)->sin_port );
 }
 
 void NetAddress::ip( u_long ip , bool encode )
 {
-	((sockaddr_in*) &m_addr_)->sin_addr.s_addr = encode? htonl ( ip ) : ip;
+	((sockaddr_in*)&addr_)->sin_addr.s_addr = encode? htonl ( ip ) : ip;
+	ip_string_ = inet_ntoa(((sockaddr_in*) &addr_)->sin_addr);
+	to_string_ = ip_string_ + ::toString(this->port());
 }
 
 void NetAddress::ip( const char* ipstr )
 {
-	((sockaddr_in*) &m_addr_)->sin_addr.s_addr = ::inet_addr( ipstr );
+	this->ip(::inet_addr( ipstr ),false);
 }
 
 u_long NetAddress::ip ( void ) const
 {
-	return (((sockaddr_in*) &m_addr_)->sin_addr .s_addr);
+	return (((sockaddr_in*) &addr_)->sin_addr .s_addr);
 }
 
 const tstring& NetAddress::ip_string ( ) const
 {
-	ip_string_ = toTstring( ::inet_ntoa(((sockaddr_in*) &m_addr_)->sin_addr ) );
 	return ip_string_;
 }
 
 size_t NetAddress::size (void) const
 {
-	return sizeof( this->m_addr_ );
+	return len_;
 }
 
-void NetAddress::size (size_t size)
-{
-}
 
 const sockaddr* NetAddress::addr (void) const
 {
-	return &(this->m_addr_);
+	return &(this->addr_);
 }
 
-sockaddr* NetAddress::addr (void)
-{
-	return &(this->m_addr_);
-}
-
-void NetAddress::addr ( const void * address, size_t len)
+void NetAddress::set ( const void * address, size_t len)
 {
 	if( len > size() )
-		memcpy( addr(), address, size() );
-	else
-		memcpy( addr(), address, len );
+		addr_ = (char*)::malloc(len);
+
+	memcpy( addr_, address, len );
+	len_ = len;
+
+	ip_string = inet_ntoa(((sockaddr_in*) &addr_)->sin_addr);
+	to_string_ = ip_string_ + ::toString(this->port());
 }
 
-bool NetAddress::parse (const char* address)
+bool NetAddress::set (const char* address)
 {
 	if( string_traits<char>::strnicmp( address, "TCP://", 6 ) == 0 )
 		address += 6;
@@ -204,20 +228,6 @@ bool NetAddress::parse (const char* address)
 
 const tstring& NetAddress::toString( ) const
 {
-	char* ipstr = inet_ntoa( ((sockaddr_in*) &m_addr_)->sin_addr );
-	if( is_null( ipstr ) )
-	{
-		to_string_.clear();
-		return to_string_;
-	}
-
-	to_string_ = toTstring(ipstr);
-
-	tchar tmp[ 100 ] = _T("");
-	string_traits<tstring::value_type>::itoa( port(), tmp, 100, 10);
-
-	to_string_ +=_T( ':');
-	to_string_ += tmp;
 	return to_string_;
 }
 

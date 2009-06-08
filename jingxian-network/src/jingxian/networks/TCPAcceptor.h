@@ -70,20 +70,16 @@ public:
 	*/
 	virtual const tstring& toString() const;
 
-	TCPFactory& tcpFactory();
-	SOCKET handle();
-	IOCPServer* nextCore();
-
-	void onException( int error, const tstring& description);
-
 private:
 	NOCOPY(TCPAcceptor);
 
-	void initializeConnection(int bytesTransferred
-		, void *completion_key);
+	friend class AcceptCommand;
 
-	void decrementAccepting();
+	TCPFactory& tcpFactory(){ return protocolFactory_; }
+	SOCKET handle() { return socket_; }
+	IOCPServer* nextCore(){ return server_; }
 
+	void onException( int error, const tstring& description);
 	bool doAccept();
 
 	IOCPServer* server_;
