@@ -94,9 +94,9 @@ public:
 
 	void onConnected();
 	void onDisconnected(int error, const tstring& description);
-	void setPeer( sockaddr* addr)
+	void setPeer(const sockaddr* addr, size_t len)
 	{
-		peer_.
+		peer_.set(addr, len);
 	}
 	void setHost( sockaddr* addr);
 	void initialize();
