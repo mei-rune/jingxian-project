@@ -16,6 +16,8 @@
 # include "jingxian/networks/proactor.h"
 # include "jingxian/networks/connection_status.h"
 # include "jingxian/networks/sockets/basesocket.h"
+# include "jingxian/networks/TCPFactory.h"
+
 
 _jingxian_begin
 
@@ -79,11 +81,19 @@ public:
 	*/
 	virtual const tstring& toString() const;
 
+	
+	/**
+	 * 取得socket工厂
+	 */
+	TCPFactory& tcpFactory();
+
 private:
 	
 	NOCOPY(IOCPServer);
 
 	proactor _proactor;
+
+	TCPFactory tcpFactory_;
 
 	u_int32_t _timeout;
 

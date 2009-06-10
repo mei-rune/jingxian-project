@@ -4,7 +4,7 @@
 
 _jingxian_begin
 
-RunCommand::RunCommand(IOCPServer* core, IRunnable* runnbale)
+RunCommand::RunCommand(proactor* core, IRunnable* runnbale)
 : core_(core)
 , ptr_(runnbale)
 {

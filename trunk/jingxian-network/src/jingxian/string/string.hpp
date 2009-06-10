@@ -16,6 +16,7 @@
 # include "jingxian/string/string_append_iterator.hpp"
 # include "jingxian/string/string_traits.hpp"
 # include "jingxian/string/ctype_traits.hpp"
+# include "jingxian/string/toString.hpp"
 # include "jingxian/string/trim_functions.hpp"
 # include "jingxian/string/with_functions.hpp"
 # include "jingxian/string/replace_functions.hpp"

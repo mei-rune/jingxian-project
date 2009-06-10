@@ -59,7 +59,7 @@ public:
 		/**
          * 关闭连接
          */
-        virtual void disconnection(const Exception& error) = 0;
+        virtual void disconnection(const tstring& error) = 0;
 
         /**
          * 源地址

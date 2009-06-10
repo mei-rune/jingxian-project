@@ -28,7 +28,12 @@ class ConnectedSocket : public ITransport
 {
 public:
 
-	ConnectedSocket(IOCPServer* core, SOCKET socket);
+	ConnectedSocket(IOCPServer* core
+								 , SOCKET socket
+								 , sockaddr *local_addr
+								 , int local_size
+								 , sockaddr *remote_addr
+								 , int remote_size);
 
 	virtual ~ConnectedSocket( );
 
@@ -92,16 +97,19 @@ public:
 	 */
 	virtual const tstring& toString() const;
 
+
+	SOCKET handle(){return socket_;}
+	ITracer* tracer(){return tracer_;}
+
 	void onConnected();
 	void onDisconnected(int error, const tstring& description);
-	void setPeer(const sockaddr* addr, size_t len)
-	{
-		peer_.set(addr, len);
-	}
-	void setHost( sockaddr* addr);
+
+
 	void initialize();
 
 private:
+
+	NOCOPY(ConnectedSocket);
 
 	/// iocp对象的引用
 	IOCPServer* core_;

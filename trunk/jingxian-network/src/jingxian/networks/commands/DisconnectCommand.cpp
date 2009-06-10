@@ -11,21 +11,24 @@ DisconnectCommand::DisconnectCommand(IOCPServer* core, ConnectedSocket* connecte
 {
 }
 
+DisconnectCommand::~DisconnectCommand()
+{
+}
+
 void DisconnectCommand::on_complete(size_t bytes_transferred
 		, int success
 		, void *completion_key
 		, u_int32_t error)
 {
-	_connectedSocket.onDisconnected(0, _T("被撤消!"));
+	connectedSocket_->onDisconnected(0, _T("被撤消!"));
 }
 
 bool DisconnectCommand::execute()
 {
-	int bytesTransferred;
 	if (BaseSocket::__disconnectex(connectedSocket_->handle()
 		, this
 		, 0
-		, 0)
+		, 0))
 		return true;
 
 	if (WSA_IO_PENDING == ::WSAGetLastError())

@@ -312,8 +312,11 @@ OS_INLINE bool TCPClient::connect( const NetAddress& addr )
 		return false;
 	
 	this->remote_addr_ = addr;
-	int len = (int)this->local_addr_.size();
-	::getsockname( this->socket_.handle(), this->local_addr_.addr(), &len );
+	char buf[1024];
+	int len = 1024;
+
+	if(0 == ::getsockname( this->socket_.handle(), (struct sockaddr*)buf, &len))
+		this->local_addr_.set(buf,len);
 	return true;
 }
 

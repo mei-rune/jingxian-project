@@ -137,7 +137,7 @@ IAcceptor* IOCPServer::listenWith(const tchar* endPoint
 	
 bool IOCPServer::send( IRunnable* runnable )
 {
-	std::auto_ptr< ICommand > ptr(new RunCommand(this, runnable));
+	std::auto_ptr< ICommand > ptr(new RunCommand(&_proactor, runnable));
 	if(ptr->execute())
 	{
 		ptr.release();
@@ -166,9 +166,20 @@ bool IOCPServer::bind(HANDLE systemHandler, void* completion_key)
 	return _proactor.bind(systemHandler,completion_key);
 }
 
+TCPFactory& IOCPServer::tcpFactory()
+{
+	return tcpFactory_;
+}
+
 void IOCPServer::onIdle()
 {
 	
+}
+
+void IOCPServer::onExeception(int errCode, const tstring& description)
+{
+	LOG_ERROR( _logger, _T("发生错误 - '") << errCode << _T("' ") 
+			<< description );
 }
 	
 const tstring& IOCPServer::toString() const

@@ -17,7 +17,9 @@ _jingxian_begin
 class WriteCommand : public ICommand
 {
 public:
-	WriteCommand(ConnectedSocket* transport, const iovec* iovec, size_t len);
+	WriteCommand(ConnectedSocket* transport
+		, const iovec* iovec
+		, size_t len);
 
 	virtual ~WriteCommand();
 	
@@ -26,7 +28,7 @@ public:
 		, void *completion_key
 		, u_int32_t error);
 
-	virtual void execute();
+	virtual bool execute();
 
 private:
 	NOCOPY(WriteCommand);
