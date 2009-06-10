@@ -20,15 +20,15 @@ namespace logging
 		return &_console;
 	}
 	
-	//tracer* makeTracer( const tchar* nm )
-	//{
-	//	return 0;
-	//}
+	ITracer* makeTracer( const tchar* nm )
+	{
+		return 0;
+	}
 
-	//tracer* makeTracer( const tstring& nm )
-	//{
-	//	return 0;
-	//}
+	ITracer* makeTracer( const tstring& nm )
+	{
+		return 0;
+	}
 }
 
 _jingxian_end

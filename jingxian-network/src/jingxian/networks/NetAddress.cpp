@@ -77,7 +77,7 @@ NetAddress::~NetAddress (void)
 {
 	if( null_ptr == addr_)
 	{
-		::free(addr);
+		::free(addr_);
 		addr_ = null_ptr;
 	}
 }
@@ -89,22 +89,22 @@ bool NetAddress::operator != (const NetAddress &sap) const
 
 bool NetAddress::operator == (const NetAddress &sap) const
 {
-	return (::memcmp (&this->m_addr_,
-		&sap.m_addr_,
+	return (::memcmp (&this->addr_,
+		&sap.addr_,
 		this->size ()) == 0);
 }
 
 bool NetAddress::operator < (const NetAddress &rhs) const
 {
-	return (::memcmp (&this->m_addr_,
-		&rhs.m_addr_,
+	return (::memcmp (&this->addr_,
+		&rhs.addr_,
 		this->size ()) < 0 );
 }
 
 bool NetAddress::operator > (const NetAddress &rhs) const
 {
-	return (::memcmp (&this->m_addr_,
-		&rhs.m_addr_,
+	return (::memcmp (&this->addr_,
+		&rhs.addr_,
 		this->size ()) > 0 );
 }
 
@@ -121,7 +121,7 @@ void NetAddress::swap( NetAddress& r)
 	sockaddr address;
 	std::swap(r.addr_, this->addr_);
 	std::swap(r.len_, this->len_);
-	std::swap(r.ip_string,this->ip_string_);
+	std::swap(r.ip_string_,this->ip_string_);
 	std::swap(r.to_string_,this->to_string_);
 }
 
@@ -130,7 +130,7 @@ void NetAddress::reset (void)
 	memset (&this->addr_ , 0, sizeof (this->addr_ ));
 	ip_string_ = _T("0.0.0.0");
 	to_string_ = _T("0.0.0.0:0");
-	this->m_addr_.sa_family = AF_INET;
+	((sockaddr*) &addr_)->sa_family = AF_INET;
 }
 
 void NetAddress::port(u_int16_t number,
@@ -180,7 +180,7 @@ size_t NetAddress::size (void) const
 
 const sockaddr* NetAddress::addr (void) const
 {
-	return &(this->addr_);
+	return (sockaddr*)&(this->addr_);
 }
 
 void NetAddress::set ( const void * address, size_t len)
@@ -191,7 +191,7 @@ void NetAddress::set ( const void * address, size_t len)
 	memcpy( addr_, address, len );
 	len_ = len;
 
-	ip_string = inet_ntoa(((sockaddr_in*) &addr_)->sin_addr);
+	ip_string_ = toTstring(inet_ntoa(((sockaddr_in*) &addr_)->sin_addr));
 	to_string_ = ip_string_ + ::toString(this->port());
 }
 

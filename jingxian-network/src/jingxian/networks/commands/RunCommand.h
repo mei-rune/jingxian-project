@@ -20,7 +20,7 @@ class RunCommand : public ICommand
 {
 
 public:
-	RunCommand(IOCPServer* core, IRunnable* runnable);
+	RunCommand(proactor* core, IRunnable* runnable);
 
 	virtual ~RunCommand();
 
@@ -34,7 +34,7 @@ public:
 private:
 	NOCOPY(RunCommand);
 
-	IOCPServer* core_;
+	proactor* core_;
 	std::auto_ptr< IRunnable> ptr_;
 };
 

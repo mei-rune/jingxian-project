@@ -14,6 +14,8 @@
 # include "jingxian/networks/TCPEndpoint.h"
 # include "jingxian/networks/sockets/BaseSocket.h"
 # include "jingxian/networks/IOCPServer.h"
+# include "jingxian/networks/TCPFactory.h"
+
 
 _jingxian_begin
 
@@ -75,9 +77,10 @@ private:
 
 	friend class AcceptCommand;
 
-	TCPFactory& tcpFactory(){ return protocolFactory_; }
-	SOCKET handle() { return socket_; }
+	TCPFactory& tcpFactory(){ return server_->tcpFactory(); }
+	SOCKET handle() { return socket_.handle(); }
 	IOCPServer* nextCore(){ return server_; }
+	ILogger* logger(){ return logger_; }
 
 	void onException( int error, const tstring& description);
 	bool doAccept();

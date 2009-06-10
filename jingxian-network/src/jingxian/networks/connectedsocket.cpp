@@ -4,13 +4,20 @@
 
 _jingxian_begin
 
-ConnectedSocket::ConnectedSocket(IOCPServer* core, SOCKET socket)
+ConnectedSocket::ConnectedSocket(IOCPServer* core
+								 , SOCKET socket
+								 , sockaddr *local_addr
+								 , int local_size
+								 , sockaddr *remote_addr
+								 , int remote_size)
 : core_(core)
 , socket_(socket)
+, host_(local_addr, local_size)
+, peer_(remote_addr, remote_size)
 , state_(connection_status::connected)
 , tracer_(0)
 {
-	tracer_
+	tracer_ = logging::makeTracer( _T("ConnectedSocket[") + host_.toString() + _T("-") + peer_.toString() + _T("]"));
 }
 
 ConnectedSocket::~ConnectedSocket( )
@@ -20,7 +27,7 @@ ConnectedSocket::~ConnectedSocket( )
 
 void ConnectedSocket::bindProtocol(IProtocol* protocol)
 {
-	ThrowException( NotImplementedException );
+	protocol_.reset(protocol);
 }
 
 void ConnectedSocket::startReading()
@@ -88,15 +95,6 @@ void ConnectedSocket::onDisconnected(int error, const tstring& description)
 	ThrowException( NotImplementedException );
 }
 
-void ConnectedSocket::setPeer( sockaddr* addr)
-{
-	ThrowException( NotImplementedException );
-}
-
-void ConnectedSocket::setHost( sockaddr* addr)
-{
-	ThrowException( NotImplementedException );
-}
 
 void ConnectedSocket::initialize()
 {

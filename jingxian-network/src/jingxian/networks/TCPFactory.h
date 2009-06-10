@@ -1,6 +1,6 @@
 
-#ifndef _IOCPServer_H_
-#define _IOCPServer_H_
+#ifndef _TCPFactory_H_
+#define _TCPFactory_H_
 
 #include "jingxian/config.h"
 
@@ -9,12 +9,8 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
-# include <hash_map>
 # include "jingxian/string/string.hpp"
 # include "jingxian/logging/logging.hpp"
-# include "jingxian/IReactorCore.h"
-# include "jingxian/networks/proactor.h"
-# include "jingxian/networks/connection_status.h"
 # include "jingxian/networks/sockets/basesocket.h"
 
 _jingxian_begin
@@ -40,11 +36,11 @@ public:
 
 private:
 	
-	NOCOPY(SocketFactory);
+	NOCOPY(TCPFactory);
 
 	tstring toString_;
 };
 
 _jingxian_end
 
-#endif //_IOCPServer_H_
+#endif //_TCPFactory_H_

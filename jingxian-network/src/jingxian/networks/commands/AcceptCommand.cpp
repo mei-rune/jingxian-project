@@ -1,6 +1,8 @@
 
 # include "pro_config.h"
 # include "jingxian/networks/commands/AcceptCommand.h"
+# include "jingxian/networks/ConnectedSocket.h"
+
 
 _jingxian_begin
 
@@ -8,7 +10,7 @@ const int addrbufsize = sizeof (sockaddr_in)*2 + sizeof (sockaddr)*2 + 100;
 
 AcceptCommand::AcceptCommand(TCPAcceptor* acceptor)
 : acceptor_(acceptor)
-, socket_(acceptor_->createSocket())
+, socket_(acceptor_->tcpFactory().createSocket())
 , ptr_((char*)malloc(addrbufsize))
 , len_(addrbufsize)
 {
@@ -21,7 +23,7 @@ AcceptCommand::~AcceptCommand()
 
 	if( INVALID_SOCKET == socket_ )
 	{
-		acceptor_->releaseSocket(socket_, false);
+		acceptor_->tcpFactory().releaseSocket(socket_, false);
 		socket_ = INVALID_SOCKET;
 	}
 }
@@ -74,7 +76,7 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 	return;
 }
 
-void TCPAcceptor::initializeConnection(  int bytesTransferred
+void AcceptCommand::initializeConnection(  int bytesTransferred
 									   , void *completion_key)
 {
 	sockaddr *local_addr = 0;
@@ -82,8 +84,8 @@ void TCPAcceptor::initializeConnection(  int bytesTransferred
 	int local_size = 0;
 	int remote_size = 0;
 
-	::GetAcceptExSockaddrs ( ptr,
-		static_cast < DWORD >( bytes_transferred),
+	::GetAcceptExSockaddrs (ptr_,
+		static_cast < DWORD >( bytesTransferred),
 		static_cast < DWORD >( sizeof (sockaddr_in) + sizeof (sockaddr) ),
 		static_cast < DWORD >( sizeof (sockaddr_in) + sizeof (sockaddr) ),
 		&local_addr,
@@ -92,17 +94,15 @@ void TCPAcceptor::initializeConnection(  int bytesTransferred
 		&remote_size);
 
 	
-	IOCPServer* core = _acceptor->nextCore();
-	std::auto_ptr<ConnectedSocket> connectedSocket(new ConnectedSocket(core, socket_));
-	socket_ = INVALID_HANDLE_VALUE;
-	connectedSocket->setPeer( remote_addr );
-	connectedSocket->setHost( local_addr );
+	IOCPServer* core = acceptor_->nextCore();
+	std::auto_ptr<ConnectedSocket> connectedSocket(new ConnectedSocket(core, socket_, local_addr, local_size, remote_addr, remote_size));
+	socket_ = INVALID_SOCKET;
 
 
 	INFO( acceptor_->logger(), _T("获取到来自 '") << connectedSocket->peer().toString()
 							<< _T("' 的连接,开始初始化!"));
 
-	if (!core.bind(socket,connectedSocket.get()))
+	if (!core->bind(socket,connectedSocket.get()))
 	{	
 		int errCode = ::WSAGetLastError();
 		LOG_ERROR( acceptor_->logger(), _T("初始化来自 '") << connectedSocket->peer().toString()
@@ -121,7 +121,7 @@ void TCPAcceptor::initializeConnection(  int bytesTransferred
 
 bool AcceptCommand::execute()
 {
-	int bytesTransferred;
+	DWORD bytesTransferred;
 	if (BaseSocket::__acceptex(acceptor_->handle()
 		, socket_
 		, ptr_

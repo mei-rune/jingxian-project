@@ -10,6 +10,7 @@
 
 // Include files
 # include "jingxian/networks/commands/ICommand.h"
+# include "jingxian/networks/ConnectedSocket.h"
 
 _jingxian_begin
 
@@ -17,7 +18,7 @@ class ReadCommand : public ICommand
 {
 public:
 
-	ReadCommand(ConnectedSocket transport
+	ReadCommand(ConnectedSocket* transport
 		, char* ptr
 		, size_t len );
 	
@@ -28,7 +29,7 @@ public:
 		, void *completion_key
 		, u_int32_t error);
 
-	virtual void execute();
+	virtual bool execute();
 
 private:
 	NOCOPY(ReadCommand);

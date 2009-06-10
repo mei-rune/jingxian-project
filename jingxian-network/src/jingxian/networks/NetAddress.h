@@ -40,6 +40,7 @@ public:
 	void swap( NetAddress& r);
 
 	void port(u_int16_t number , bool encode = true );
+	void port(const char* addr);
 	u_int16_t port() const;
 
 	void ip( u_long addr, bool encode = false);
