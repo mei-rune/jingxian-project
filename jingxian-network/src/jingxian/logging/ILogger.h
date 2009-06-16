@@ -719,4 +719,20 @@ _jingxian_end
 
 #endif // _NO_LOG_
 
+
+_jingxian_begin
+
+namespace logging
+{
+	ILogger* makeLogger( const tchar* nm );
+
+	ILogger* makeLogger( const tstring& nm );
+
+	ITracer* makeTracer( const tchar* nm );
+
+	ITracer* makeTracer( const tstring& nm );
+}
+
+_jingxian_end
+
 #endif // _JINGXIAN_Log_H_

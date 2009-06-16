@@ -201,27 +201,19 @@
 			Name="logging"
 			>
 			<File
-				RelativePath=".\src\jingxian\logging\logger.h"
+				RelativePath=".\src\jingxian\logging\ILogger.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\logging\ITracer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\logging\logger.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\jingxian\logging\logging.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\logging\LogUtils.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\logging\LogUtils.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\logging\stdlogger.H"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\logging\tracer.h"
 				>
 			</File>
 		</Filter>
