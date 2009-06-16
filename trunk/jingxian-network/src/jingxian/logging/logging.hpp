@@ -9,9 +9,9 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
-# include "jingxian/logging/logger.h"
-# include "jingxian/logging/logutils.h"
-# include "jingxian/logging/tracer.h"
+# include "jingxian/logging/ILogger.h"
+# include "jingxian/logging/ITracer.h"
+
 
 
 #endif // _LOGGING_HPP_
