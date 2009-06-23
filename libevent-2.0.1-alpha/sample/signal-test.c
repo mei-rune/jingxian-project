@@ -48,7 +48,16 @@ int
 main (int argc, char **argv)
 {
 	struct event signal_int;
+#ifdef WIN32
+	WORD wVersionRequested;
+	WSADATA wsaData;
+	int	err;
 
+	wVersionRequested = MAKEWORD(2, 2);
+
+	if(0 != (err = WSAStartup(wVersionRequested, &wsaData)))
+		return err;
+#endif
 	/* Initalize the event library */
 	event_init();
 
