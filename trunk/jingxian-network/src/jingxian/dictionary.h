@@ -1,6 +1,6 @@
 
-#ifndef _IDictionary_H_
-#define _IDictionary_H_
+#ifndef _Dictionary12_H_
+#define _Dictionary12_H_
 
 #include "jingxian/config.h"
 
@@ -9,46 +9,54 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
+# include <hash_map>
+# include "IDictionary.h"
 
 _jingxian_begin
 
-class IDictionary
+class Dictionary : public IDictionary
 {
 public:
-	virtual ~IDictionary(void) {}
 
-	virtual bool getBoolean(const tchar* key) const = 0;
+	typedef stdext::hash_map<tstring, tstring> container_type;
+	typedef container_type::const_iterator const_iterator;
+	typedef container_type::iterator iterator;
 
-	virtual int8_t getInt8(const tchar* key) const = 0;
+	virtual ~Dictionary(void);
 
-	virtual int16_t getInt16(const tchar* key) const = 0;
+	virtual bool has(const tstring& key) const;
+
+	virtual bool getBoolean(const tstring& key, bool defaultValue) const;
+
+	virtual int8_t getInt8(const tstring& key, int8_t defaultValue) const;
+
+	virtual int16_t getInt16(const tstring& key, int16_t defaultValue) const;
 	
-	virtual int32_t getInt32(const tchar* key) const = 0;
+	virtual int32_t getInt32(const tstring& key, int32_t defaultValue) const;
 
-	virtual int64_t getInt64(const tchar* key) const = 0;
+	virtual int64_t getInt64(const tstring& key, int64_t defaultValue) const;
 
-	virtual const tstring& getString(const tchar* key) const = 0;
+	virtual const tstring& getString(const tstring& key, const tstring& defaultValue) const;
 
-	virtual void setBoolean(const tchar* key, bool value) = 0;
 
-	virtual void setInt8(const tchar* key, int8_t value) = 0;
+	virtual void setBoolean(const tstring& key, bool value);
 
-	virtual void setInt16(const tchar* key, int16_t value) = 0;
+	virtual void setInt8(const tstring& key, int8_t value);
 
-	virtual void setInt32(const tchar* key, int32_t value) = 0;
+	virtual void setInt16(const tstring& key, int16_t value);
 
-	virtual void setInt64(const tchar* key, int64_t value) = 0;
+	virtual void setInt32(const tstring& key, int32_t value);
 
-	virtual void setString(const tchar* key, const tchar* value) = 0;
+	virtual void setInt64(const tstring& key, int64_t value);
 
-	virtual void dump( tostream& target ) const = 0;
+	virtual void setString(const tstring& key, const tchar* buf, size_t len);
+
+	virtual void dump( tostream& target ) const;
+
+private:
+
+	stdext::hash_map<tstring, tstring> _container;
 };
-
-inline tostream& operator<<( tostream& target, const IDictionary& dict )
-{
-	dict.dump( target );
-	return target;
-}
 
 _jingxian_end
 

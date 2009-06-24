@@ -160,7 +160,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libevent.lib Ws2_32.lib"
+				AdditionalDependencies="libevent.lib Ws2_32.lib Mswsock.lib"
 				OutputFile="$(OutDir)\signal_test.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"

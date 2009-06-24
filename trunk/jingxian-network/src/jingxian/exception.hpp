@@ -15,7 +15,9 @@
 
 _jingxian_begin
 
+#ifndef _RAISE
  #define _RAISE(x)  throw (x)
+#endif
 
 class Exception : public std::runtime_error
 {

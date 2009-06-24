@@ -116,7 +116,7 @@ IAcceptor* IOCPServer::listenWith(const tchar* endPoint
 	     return null_ptr;
 	}
 	     
-	std::auto_ptr< IAcceptor> acceptor = it->second->createAcceptor(endPoint, protocolFactory);
+	std::auto_ptr<IAcceptor> acceptor(it->second->createAcceptor(endPoint, protocolFactory));
     
  //   if( acceptor->startListening() )
 	//{
