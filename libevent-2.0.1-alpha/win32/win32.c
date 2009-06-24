@@ -278,6 +278,7 @@ win32_dispatch(struct event_base *base, struct timeval *tv)
 	int res = 0;
 	int i;
 	int fd_count;
+	
 
 	fd_set_copy(win32op->readset_out, win32op->readset_in);
 	fd_set_copy(win32op->exset_out, win32op->readset_in);
@@ -299,7 +300,12 @@ win32_dispatch(struct event_base *base, struct timeval *tv)
 		     (struct fd_set*)win32op->writeset_out,
 		     (struct fd_set*)win32op->exset_out, tv);
 
-	event_debug(("%s: select returned %d", __func__, res));
+	if(SOCKET_ERROR == res)
+	{
+		int err;
+		err = WSAGetLastError();
+		event_debug(("%s: select returned %d - %s", __func__, res, gai_strerrorA(err)));
+	}
 
 	if(res <= 0) {
 		evsig_process(base);

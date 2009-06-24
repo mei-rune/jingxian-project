@@ -1,16 +1,7 @@
-
-#ifndef _StdLogger_H_
-#define _StdLogger_H_
-
-#include "jingxian/config.h"
-
-#if !defined (JINGXIAN_LACKS_PRAGMA_ONCE)
-# pragma once
-#endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
-
-// Include files
+# include "pro_config.h"
 #include <iostream>
-#include "jingxian/logging/logger.h"
+#include "jingxian/logging/ILogger.h"
+#include "jingxian/logging/ITracer.h"
 
 _jingxian_begin
 
@@ -159,5 +150,3 @@ namespace logging
 }
 
 _jingxian_end
-
-#endif // _StdLogger_H_

@@ -136,6 +136,13 @@ public:
     virtual void trace(logging::TransportWay way, const StringStream& message, const char* file=0, int line=-1);
 };
 
+namespace logging
+{
+	ITracer* makeTracer( const tchar* nm );
+
+	ITracer* makeTracer( const tstring& nm );
+}
+
 _jingxian_end
 
 #endif // _JINGXIAN_Log_H_

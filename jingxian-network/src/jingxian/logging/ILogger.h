@@ -727,10 +727,6 @@ namespace logging
 	ILogger* makeLogger( const tchar* nm );
 
 	ILogger* makeLogger( const tstring& nm );
-
-	ITracer* makeTracer( const tchar* nm );
-
-	ITracer* makeTracer( const tstring& nm );
 }
 
 _jingxian_end
