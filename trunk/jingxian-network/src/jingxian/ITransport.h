@@ -64,12 +64,12 @@ public:
         /**
          * 源地址
          */
-        virtual const IEndpoint& host() const = 0;
+        virtual const tstring& host() const = 0;
 
         /**
          * 目标地址
          */
-        virtual const IEndpoint& peer() const = 0;
+        virtual const tstring& peer() const = 0;
 
         /**
          * 引发 @see{protocol} 的onTimeout事件的超时时间

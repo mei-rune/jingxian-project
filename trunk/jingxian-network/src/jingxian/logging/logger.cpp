@@ -114,7 +114,7 @@ public:
 	{
 	}
 
-	virtual virtual void clearNDC()
+	virtual void clearNDC()
 	{
 	}
 

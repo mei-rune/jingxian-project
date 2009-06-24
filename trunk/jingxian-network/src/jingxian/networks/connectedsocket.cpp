@@ -6,18 +6,16 @@ _jingxian_begin
 
 ConnectedSocket::ConnectedSocket(IOCPServer* core
 								 , SOCKET socket
-								 , sockaddr *local_addr
-								 , int local_size
-								 , sockaddr *remote_addr
-								 , int remote_size)
+								 , const tstring& host
+								 , const tstring& peer)
 : core_(core)
 , socket_(socket)
-, host_(local_addr, local_size)
-, peer_(remote_addr, remote_size)
+, host_(host)
+, peer_(peer)
 , state_(connection_status::connected)
 , tracer_(0)
 {
-	tracer_ = logging::makeTracer( _T("ConnectedSocket[") + host_.toString() + _T("-") + peer_.toString() + _T("]"));
+	tracer_ = logging::makeTracer( _T("ConnectedSocket[") + host_ + _T("-") + peer_ + _T("]"));
 }
 
 ConnectedSocket::~ConnectedSocket( )
@@ -65,19 +63,19 @@ void ConnectedSocket::disconnection(const tstring& error)
 	ThrowException( NotImplementedException );
 }
 
-const IEndpoint& ConnectedSocket::host() const
+const tstring& ConnectedSocket::host() const
 {
-	ThrowException( NotImplementedException );
+	return host_;
 }
 
-const IEndpoint& ConnectedSocket::peer() const
+const tstring& ConnectedSocket::peer() const
 {
-	ThrowException( NotImplementedException );
+	return peer_;
 }
 
 time_t ConnectedSocket::timeout() const
 {
-	ThrowException( NotImplementedException );
+	return timeout_;
 }
 
 const tstring& ConnectedSocket::toString() const
