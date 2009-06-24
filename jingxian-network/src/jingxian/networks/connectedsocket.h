@@ -30,10 +30,8 @@ public:
 
 	ConnectedSocket(IOCPServer* core
 								 , SOCKET socket
-								 , sockaddr *local_addr
-								 , int local_size
-								 , sockaddr *remote_addr
-								 , int remote_size);
+								 , const tstring& host
+								 , const tstring& peer);
 
 	virtual ~ConnectedSocket( );
 
@@ -80,12 +78,12 @@ public:
 	/**
 	 * @implements host
 	 */
-    virtual const IEndpoint& host() const;
+    virtual const tstring& host() const;
 
 	/**
 	 * @implements peer
 	 */
-    virtual const IEndpoint& peer() const;
+    virtual const tstring& peer() const;
 
 	/**
 	 * @implements timeout
@@ -116,11 +114,13 @@ private:
 	/// socket 对象
 	SOCKET socket_;
 	/// 本地地址
-	NetAddress host_;
+	tstring host_;
 	/// 远程地址
-	NetAddress peer_;
+	tstring peer_;
 	/// 本对象当前所处的状态
 	connection_status::type state_;
+	/// 超时时间
+	time_t timeout_;
 	/// 协议处理器
 	std::auto_ptr<IProtocol> protocol_;
 	/// 对象的上下文

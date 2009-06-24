@@ -118,7 +118,6 @@ NetAddress& NetAddress::operator=( const NetAddress& sa)
 
 void NetAddress::swap( NetAddress& r)
 {
-	sockaddr address;
 	std::swap(r.addr_, this->addr_);
 	std::swap(r.len_, this->len_);
 	std::swap(r.ip_string_,this->ip_string_);
