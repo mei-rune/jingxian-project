@@ -93,26 +93,36 @@ void AcceptCommand::initializeConnection(  int bytesTransferred
 		&remote_addr,
 		&remote_size);
 
+	tstring peer = _T("tcp://") 
+				+ toTstring(inet_ntoa(((sockaddr_in*)remote_addr)->sin_addr)) 
+				+ _T(":")
+				+ toString(htons(((sockaddr_in*)remote_addr)->sin_port));
+
+	tstring host = _T("tcp://") 
+				+ toTstring(inet_ntoa(((sockaddr_in*)local_addr)->sin_addr)) 
+				+ _T(":")
+				+ toString(htons(((sockaddr_in*)local_addr)->sin_port));
+
 	
 	IOCPServer* core = acceptor_->nextCore();
-	std::auto_ptr<ConnectedSocket> connectedSocket(new ConnectedSocket(core, socket_, local_addr, local_size, remote_addr, remote_size));
+	std::auto_ptr<ConnectedSocket> connectedSocket(new ConnectedSocket(core, socket_, host, peer));
 	socket_ = INVALID_SOCKET;
 
 
-	INFO( acceptor_->logger(), _T("获取到来自 '") << connectedSocket->peer().toString()
+	INFO( acceptor_->logger(), _T("获取到来自 '") << peer
 							<< _T("' 的连接,开始初始化!"));
 
 	if (!core->bind(socket,connectedSocket.get()))
 	{	
 		int errCode = ::WSAGetLastError();
-		LOG_ERROR( acceptor_->logger(), _T("初始化来自 '") << connectedSocket->peer().toString()
+		LOG_ERROR( acceptor_->logger(), _T("初始化来自 '") << peer
 							<< _T("' 的连接时，绑定到iocp发生错误 - ")
 							<< lastError(errCode));
 		return;
 	}
 
 	connectedSocket->bindProtocol( acceptor_->protocolFactory().createProtocol() );
-	INFO( acceptor_->logger(), _T("初始化来自 '") << connectedSocket->peer().toString()
+	INFO( acceptor_->logger(), _T("初始化来自 '") << peer
 							<< _T("' 的连接成功!"));
 
 	connectedSocket->initialize();
