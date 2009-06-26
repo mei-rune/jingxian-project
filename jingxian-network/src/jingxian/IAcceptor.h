@@ -17,6 +17,9 @@ _jingxian_begin
 class IEndpoint;
 class IProtocolFactory;
 
+
+typedef void (*OnConnectError)( const Exception& exception, void* context);
+
 class IAcceptor
 {
 public:
@@ -40,14 +43,7 @@ public:
 	/**
 	 * 停止监听
 	 */
-    virtual void stopListening() = 0;
-
-	/**
-	 * 启动监听
-	 * 
-	 * @return 启动监听成功返回true, 失败返回false
-	 */
-    virtual bool startListening() = 0;
+    virtual void accept( )
 
 	/**
 	 * 取得协议工厂

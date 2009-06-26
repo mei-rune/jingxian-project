@@ -546,6 +546,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\jingxian\Dictionary.cpp"
+			>
+		</File>
+		<File
 			RelativePath=".\src\jingxian\dictionary.h"
 			>
 		</File>
@@ -563,6 +567,10 @@
 		</File>
 		<File
 			RelativePath=".\src\jingxian\IConnectionBuilder.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\jingxian\IDictionary.h"
 			>
 		</File>
 		<File
