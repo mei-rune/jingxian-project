@@ -139,6 +139,29 @@
     <Compile Include="Service.cs" />
     <Compile Include="Attribute\ServiceAttribute.cs" />
     <Compile Include="Exception\WriteOnceViolatedException.cs" />
+    <Compile Include="simpl\AssemblyLoaderService.cs" />
+    <Compile Include="simpl\Bundle.cs" />
+    <Compile Include="simpl\BundleScanner.cs" />
+    <Compile Include="simpl\BundleService.cs" />
+    <Compile Include="simpl\CommandLineArguments.cs" />
+    <Compile Include="simpl\Extension.cs" />
+    <Compile Include="simpl\ExtensionBuilder.cs" />
+    <Compile Include="simpl\ExtensionConfiguration.cs" />
+    <Compile Include="simpl\ExtensionPoint.cs" />
+    <Compile Include="simpl\ExtensionPointConfiguration.cs" />
+    <Compile Include="simpl\ExtensionRegistry.cs" />
+    <Compile Include="simpl\ExtensionRegistry.Serializable.cs" />
+    <Compile Include="simpl\ExtensionXmlSchema.cs" />
+    <Compile Include="simpl\IExtensionBuilder.cs" />
+    <Compile Include="simpl\ObjectBuilder.cs" />
+    <Compile Include="simpl\Platform.cs" />
+    <Compile Include="simpl\Resources\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="simpl\ServiceConfiguration.cs" />
+    <Compile Include="simpl\ServiceLauncher.cs" />
     <Compile Include="utilities\AbstractServiceContainer.cs" />
     <Compile Include="utilities\CommandLineParser\CommandLineArgument.cs" />
     <Compile Include="utilities\CommandLineParser\CommandLineArgumentParser.cs" />
@@ -224,6 +247,13 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Schemas\xml.xsd" />
+    <EmbeddedResource Include="simpl\Resources\Messages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="simpl\Bundle.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

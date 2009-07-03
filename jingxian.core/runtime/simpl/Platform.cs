@@ -19,7 +19,7 @@ namespace jingxian.core.runtime.simpl
         private static logging.ILog _logger = logging.LogUtils.GetLogger(typeof(Platform));
 
 
-        public static IApplicationLaunchable BuildApplicationLaunchable(IApplicationContext context, IExtensionRegistry registry)
+        static IApplicationLaunchable BuildApplicationLaunchable(IApplicationContext context, IExtensionRegistry registry)
         {
             IExtension launchableExtension;
             if (!registry.TryGetExtension(context.ApplicationLaunchableId, out launchableExtension))
@@ -115,7 +115,7 @@ namespace jingxian.core.runtime.simpl
         }
 
 
-        private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             _logger.ErrorFormat("发生未抓住的异常  '{0}' .", e.ExceptionObject.GetType());
             _logger.ErrorFormat("	引发者: '{0}'", sender);

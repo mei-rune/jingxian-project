@@ -42,7 +42,7 @@
     <Compile Include="Exception\AssemblyUnavailableException.cs" />
     <Compile Include="BundleState.cs" />
     <Compile Include="Attribute\ComponentAttribute.cs" />
-    <Compile Include="IoC\KernelAdapter.cs" />
+    <Compile Include="simpl\KernelAdapter.cs" />
     <Compile Include="IoC\Parameters\ConstantParameter.cs" />
     <Compile Include="IoC\Descriptor.cs" />
     <Compile Include="IoC\IComponentActivator.cs" />
@@ -147,6 +147,25 @@
     <Compile Include="RuntimeConstants.cs" />
     <Compile Include="Service.cs" />
     <Compile Include="Exception\WriteOnceViolatedException.cs" />
+    <Compile Include="simpl\AssemblyLoaderService.cs" />
+    <Compile Include="simpl\Bundle.cs" />
+    <Compile Include="simpl\BundleScanner.cs" />
+    <Compile Include="simpl\BundleService.cs" />
+    <Compile Include="simpl\CommandLineArguments.cs" />
+    <Compile Include="simpl\Extension.cs" />
+    <Compile Include="simpl\ExtensionBuilder.cs" />
+    <Compile Include="simpl\ExtensionConfiguration.cs" />
+    <Compile Include="simpl\ExtensionPoint.cs" />
+    <Compile Include="simpl\ExtensionPointConfiguration.cs" />
+    <Compile Include="simpl\ExtensionRegistry.cs" />
+    <Compile Include="simpl\ExtensionRegistry.Serializable.cs" />
+    <Compile Include="simpl\ExtensionXmlSchema.cs" />
+    <Compile Include="simpl\IExtensionBuilder.cs" />
+    <Compile Include="simpl\ObjectBuilder.cs" />
+    <Compile Include="simpl\Platform.cs" />
+    <Compile Include="simpl\Resources\Messages.Designer.cs" />
+    <Compile Include="simpl\ServiceConfiguration.cs" />
+    <Compile Include="simpl\ServiceLauncher.cs" />
     <Compile Include="utilities\AbstractServiceContainer.cs" />
     <Compile Include="utilities\CommandLineParser\CommandLineArgument.cs" />
     <Compile Include="utilities\CommandLineParser\CommandLineArgumentParser.cs" />
@@ -219,7 +238,13 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Bundle.xml" />
+    <EmbeddedResource Include="simpl\Resources\Messages.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Xml\Expressions\Bundle.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="simpl\Bundle.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

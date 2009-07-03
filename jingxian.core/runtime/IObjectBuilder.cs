@@ -8,6 +8,7 @@ namespace jingxian.core.runtime
     public interface IObjectBuilder
     {
         bool TryGetType(string typeName, out Type type);
+
         Type GetType(string typeName);
 
 
