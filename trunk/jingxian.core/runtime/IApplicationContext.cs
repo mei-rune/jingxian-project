@@ -37,5 +37,15 @@ namespace jingxian.core.runtime
         /// 命令行参数
         /// </summary>
         ICommandLineArguments Arguments { get; }
+
+        ///// <summary>
+        ///// 用指定的
+        ///// </summary>
+        ///// <typeparam name="T"></typeparam>
+        ///// <param name="extensionId"></param>
+        ///// <returns></returns>
+        //T BuildTransient<T>(string extensionId);
+
+        //object BuildTransient(string extensionId);
     }
 }
