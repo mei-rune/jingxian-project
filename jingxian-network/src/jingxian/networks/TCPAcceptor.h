@@ -23,7 +23,10 @@ class TCPAcceptor : public IAcceptor
 public:
 	
 	TCPAcceptor(IOCPServer* core, const tchar* endpoint);
-	
+		
+	/**
+	 * @implements ~TCPAcceptor
+	 */
 	virtual ~TCPAcceptor();
 
 	/**
@@ -52,6 +55,13 @@ public:
     virtual bool startListening();
 
 	/**
+	 * @implements accept
+	 */
+    virtual void accept(OnBuildConnectionSuccess buildProtocol
+                            , OnBuildConnectionError onConnectError
+                            , void* context);
+
+	/**
 	* @implements toString
 	*/
 	virtual const tstring& toString() const;
@@ -61,13 +71,9 @@ private:
 
 	friend class AcceptCommand;
 
-	TCPFactory& tcpFactory(){ return server_->tcpFactory(); }
 	SOCKET handle() { return socket_.handle(); }
 	IOCPServer* nextCore(){ return server_; }
 	ILogger* logger(){ return logger_; }
-
-	void onException( int error, const tstring& description);
-	bool doAccept();
 
 	IOCPServer* server_;
 	BaseSocket socket_;

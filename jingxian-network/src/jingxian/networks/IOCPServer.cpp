@@ -3,6 +3,7 @@
 # include "jingxian/networks/IOCPServer.h"
 # include "jingxian/networks/TCPAcceptor.h"
 # include "jingxian/networks/commands/RunCommand.h"
+# include "jingxian/networks/commands/command_queue.h"
 
 
 #ifdef _MEMORY_DEBUG
@@ -192,11 +193,11 @@ void IOCPServer::application_specific_code (ICommand *asynch_result,
 	}
 	catch( std::exception& e )
 	{
-		FATAL( getLogger() , "error :" << e.what() );
+		FATAL( _logger , "error :" << e.what() );
 	}
 	catch( ... )
 	{	
-		FATAL( getLogger() , "unkown error!" );
+		FATAL( _logger , "unkown error!" );
 	}
 	
 	command_queue::release( asynch_result );
@@ -217,10 +218,10 @@ bool IOCPServer::post(ICommand *result)
 		);
 }
 
-HANDLE proactor::handle()
-{
-	return completion_port_;
-}
+//HANDLE IOCPServer::handle()
+//{
+//	return completion_port_;
+//}
 
 bool IOCPServer::bind (HANDLE handle, void *completion_key)
 {
@@ -233,8 +234,8 @@ bool IOCPServer::bind (HANDLE handle, void *completion_key)
 }
 
 void IOCPServer::connectWith(const tchar* endPoint
-                            , BuildProtocol buildProtocol
-                            , OnConnectError onConnectError
+                            , OnBuildConnectionSuccess onSuccess
+                            , OnBuildConnectionError onError
                             , void* context )
 {
 	StringArray<tchar> sa = split_with_string( endPoint, _T("://") );
@@ -243,8 +244,8 @@ void IOCPServer::connectWith(const tchar* endPoint
 		LOG_ERROR( _logger, _T("尝试连接到 '") << endPoint
 			<< _T("' 时发生错误 - 地址格式不正确"));
 		
-		IllegalArgumentException error( _T("地址格式不正确!") );
-		onConnectError( error, context);
+		ErrorCode error( _T("地址格式不正确!") );
+		onError( error, context);
 		return ;
 	}
 	
@@ -260,13 +261,13 @@ void IOCPServer::connectWith(const tchar* endPoint
 		err += sa.ptr(0);
 		err += _T("!");
 		
-		IllegalArgumentException error(err);
-		onConnectError( error, context);
+		ErrorCode error(err.c_str());
+		onError( error, context);
 		return ;
 	}
     
 	     
-    it->second->connect( endPoint, buildProtocol, onConnectError, context );
+    it->second->connect( endPoint, onSuccess, onError, context );
 }
 
 IAcceptor* IOCPServer::listenWith(const tchar* endPoint)
@@ -320,7 +321,7 @@ IAcceptor* IOCPServer::listenWith(const tchar* endPoint)
 	
 bool IOCPServer::send( IRunnable* runnable )
 {
-	std::auto_ptr< ICommand > ptr(new RunCommand(&_proactor, runnable));
+	std::auto_ptr< ICommand > ptr(new RunCommand(this, runnable));
 	if(ptr->execute())
 	{
 		ptr.release();
@@ -334,7 +335,7 @@ void IOCPServer::runForever()
 	_isRunning = true;
 	while( _isRunning )
 	{
-		if( 1 ==  _proactor.handle_events(_timeout) )
+		if( 1 ==  handle_events(_timeout) )
 			onIdle();
 	}
 }

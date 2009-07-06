@@ -17,7 +17,10 @@ _jingxian_begin
 class AcceptCommand : public ICommand
 {
 public:
-	AcceptCommand(TCPAcceptor* acceptor);
+	AcceptCommand(TCPAcceptor* acceptor
+							, OnBuildConnectionSuccess onSuccess
+                            , OnBuildConnectionError onError
+                            , void* context);
 
 	virtual ~AcceptCommand();
 	
@@ -35,8 +38,11 @@ protected:
 
 private:
 	NOCOPY(AcceptCommand);
+	
+	OnBuildConnectionSuccess onSuccess_;
+    OnBuildConnectionError onError_;
+    void* context_;
 
-	TCPAcceptor* acceptor_;
 	SOCKET socket_;
 	char* ptr_;
 	size_t len_;

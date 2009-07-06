@@ -33,8 +33,8 @@ public:
 	 * @remarks 回调函数可能会在调用线程中直接被调用
 	 */
     virtual void connectWith(const tchar* endPoint
-                            , BuildProtocol buildProtocol
-                            , OnConnectError onConnectError
+                            , OnBuildConnectionSuccess onSuccess
+                            , OnBuildConnectionError onError
                             , void* context ) = 0;
 
     /**

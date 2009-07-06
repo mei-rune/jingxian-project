@@ -14,7 +14,6 @@
 # include "jingxian/IProtocol.h"
 # include "jingxian/ProtocolContext.h"
 # include "jingxian/networks/connection_status.h"
-# include "jingxian/networks/proactor.h"
 # include "jingxian/logging/logging.hpp"
 # include "jingxian/networks/IOCPServer.h"
 
