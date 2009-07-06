@@ -11,7 +11,6 @@
 // Include files
 # include "jingxian/logging/logging.hpp"
 # include "jingxian/IConcurrentPort.h"
-# include "jingxian/IEndpoint.h"
 # include "jingxian/ITransport.h"
 # include "jingxian/IProtocol.h"
 # include "jingxian/IProtocolFactory.h"
@@ -46,8 +45,7 @@ public:
 	 * @return 成功进返回创建的对象，失败时返回 NULL
 	 * @remarks 不要尝试删除返回的对象，该对象已被 IReactorCore 持有。
 	 */
-    virtual IAcceptor* listenWith( const tchar* endPoint
-			, IProtocolFactory* protocolFactory) = 0;
+    virtual IAcceptor* listenWith( const tchar* endPoint ) = 0;
 	
 	/**
 	 * 开始运行直到调用Interrupt才返回

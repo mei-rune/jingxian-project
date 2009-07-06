@@ -27,7 +27,7 @@ time_t TCPAcceptor::timeout () const
 	ThrowException( NotImplementedException );
 }
 
-const IEndpoint& TCPAcceptor::bindPoint() const
+const tstring& TCPAcceptor::bindPoint() const
 {
 	return endpoint_;
 }

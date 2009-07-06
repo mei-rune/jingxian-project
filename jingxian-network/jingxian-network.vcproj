@@ -267,14 +267,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\networks\proactor.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\networks\proactor.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\jingxian\networks\ProtocolFactory.cpp"
 				>
 				<FileConfiguration
@@ -302,14 +294,6 @@
 			</File>
 			<File
 				RelativePath=".\src\jingxian\networks\TCPAcceptor.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\networks\TCPEndpoint.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\networks\TCPEndpoint.h"
 				>
 			</File>
 			<File
