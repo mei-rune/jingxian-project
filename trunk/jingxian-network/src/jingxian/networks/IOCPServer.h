@@ -88,10 +88,38 @@ public:
 	TCPFactory& tcpFactory();
 
 private:
-	
 	NOCOPY(IOCPServer);
 
-	proactor _proactor;
+	/**
+	 * 初始化端口(如果已经初始化返回true)
+     * @param[ in ] 并行线程数
+	 */
+	bool open ( size_t number_of_threads );
+	
+	/**
+	 * 关闭本对象
+	 */
+	void close (void);
+
+	/**
+	 * 发送一个已经完成的请求到完成端口
+	 */
+	bool post(ICommand *result);
+
+	/**
+	 * 获取已完成的事件,并处理这个事件
+	 * @return 超时返回1,获取到事件并成功处理返回0,获取失败返回-1
+	 */
+	int handle_events ( u_int32_t milli_seconds);
+
+	void application_specific_code (ICommand *asynch_result,
+		size_t bytes_transferred,
+		const void *completion_key,
+		u_long error);
+
+	HANDLE completion_port_;
+	u_long number_of_threads_;
+
 
 	TCPFactory tcpFactory_;
 

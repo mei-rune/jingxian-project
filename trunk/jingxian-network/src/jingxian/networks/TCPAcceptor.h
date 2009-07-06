@@ -11,7 +11,6 @@
 // Include files
 # include "jingxian/string/string.hpp"
 # include "jingxian/IReactorCore.h"
-# include "jingxian/networks/TCPEndpoint.h"
 # include "jingxian/networks/sockets/BaseSocket.h"
 # include "jingxian/networks/IOCPServer.h"
 # include "jingxian/networks/TCPFactory.h"
@@ -23,7 +22,7 @@ class TCPAcceptor : public IAcceptor
 {
 public:
 	
-	TCPAcceptor(IOCPServer* core, IProtocolFactory* protocolFactory, const tchar* endpoint);
+	TCPAcceptor(IOCPServer* core, const tchar* endpoint);
 	
 	virtual ~TCPAcceptor();
 
@@ -35,7 +34,7 @@ public:
 	/**
 	 * @implements bindPoint
 	 */
-    virtual const IEndpoint& bindPoint() const;
+    virtual const tstring& bindPoint() const;
 
 	/**
 	 * @implements isListening
@@ -51,21 +50,6 @@ public:
 	 * @implements startListening
 	 */
     virtual bool startListening();
-
-	/**
-	 * @implements protocolFactory
-	 */
-    virtual IProtocolFactory& protocolFactory();
-
-	/**
-	 * @implements misc
-	 */
-    virtual IDictionary& misc();
-
-	/**
-	 * @implements misc
-	 */
-	virtual const IDictionary& misc() const;
 
 	/**
 	* @implements toString
@@ -86,9 +70,8 @@ private:
 	bool doAccept();
 
 	IOCPServer* server_;
-	IProtocolFactory* protocolFactory_;
 	BaseSocket socket_;
-	TCPEndpoint endpoint_;
+	tstring endpoint_;
 	connection_status::type status_;
 	ILogger* logger_;
 	tstring toString_;
@@ -101,12 +84,15 @@ public:
 
 	TCPAcceptorFactory(IOCPServer* core);
 
+	/**
+	* @implements ~TCPAcceptorFactory
+	 */
 	virtual ~TCPAcceptorFactory();
 
 	/**
 	* @implements createAcceptor
 	 */
-	virtual IAcceptor* createAcceptor(const tchar* endPoint, IProtocolFactory* protocolFactory);
+	virtual IAcceptor* createAcceptor(const tchar* endPoint);
 
 	/**
 	* @implements toString

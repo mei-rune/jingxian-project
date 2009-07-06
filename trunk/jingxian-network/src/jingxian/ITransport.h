@@ -10,7 +10,6 @@
 
 // Include files
 # include "buffer.h"
-# include "IEndpoint.h"
 # include "exception.hpp"
 
 _jingxian_begin

@@ -10,15 +10,30 @@
 
 // Include files
 # include "buffer.h"
+# include "jingxian/string/string.hpp"
 # include "Dictionary.h"
 
 _jingxian_begin
 
-class IEndpoint;
-class IProtocolFactory;
+class ErrorCode
+{
+public:
+	ErrorCode( const tchar* err);
+	ErrorCode( int success, int code);
 
+	virtual ~ErrorCode();
 
-typedef void (*OnConnectError)( const Exception& exception, void* context);
+	bool isSuccess() const;
+	int getCode() const;
+	const tstring& toSting() const;
+private:
+	bool isSuccess_;
+	int code_;
+	tstring err_;
+};
+
+typedef IProtocol* (*BuildProtocol)( ITransport* transport, void* context);
+typedef void (*OnConnectError)( const ErrorCode& exception,  void* context);
 
 class IAcceptor
 {
@@ -33,7 +48,7 @@ public:
 	/**
 	 * 监听的地址
 	 */
-    virtual const IEndpoint& bindPoint() const = 0;
+    virtual const tstring& bindPoint() const = 0;
 
 	/**
 	 * 是不是处理监听状态
@@ -43,22 +58,7 @@ public:
 	/**
 	 * 停止监听
 	 */
-    virtual void accept( )
-
-	/**
-	 * 取得协议工厂
-	 */
-    virtual IProtocolFactory& protocolFactory() = 0;
-
-	/**
-	 * 取得配置字典
-	 */
-    virtual IDictionary& misc() = 0;
-
-	/**
-	 * 取得配置字典
-	 */
-	virtual const IDictionary& misc() const = 0;
+    virtual void accept( ) = 0;
 
 	/**
 	* 取得地址的描述
@@ -76,7 +76,7 @@ public:
 	/**
 	 * 创建 IAcceptor 对象
 	 */
-	virtual IAcceptor* createAcceptor(const tchar* endpoint, IProtocolFactory* protocolFactory) = 0;
+	virtual IAcceptor* createAcceptor(const tchar* endpoint) = 0;
 
 	/**
 	 * 取得地址的描述
