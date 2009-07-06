@@ -8,9 +8,14 @@ _jingxian_begin
 
 const int addrbufsize = sizeof (sockaddr_in)*2 + sizeof (sockaddr)*2 + 100;
 
-AcceptCommand::AcceptCommand(TCPAcceptor* acceptor)
-: acceptor_(acceptor)
-, socket_(acceptor_->tcpFactory().createSocket())
+AcceptCommand::AcceptCommand(TCPAcceptor* acceptor
+							, OnBuildConnectionSuccess onSuccess
+                            , OnBuildConnectionError onError
+                            , void* context)
+: onSuccess_(onSuccess)
+, onError_(onError)
+, context_(context)
+, socket_(createSocket())
 , ptr_((char*)malloc(addrbufsize))
 , len_(addrbufsize)
 {

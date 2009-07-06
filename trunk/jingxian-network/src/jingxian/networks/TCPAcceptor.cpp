@@ -6,9 +6,8 @@
 
 _jingxian_begin
 
-TCPAcceptor::TCPAcceptor(IOCPServer* core, IProtocolFactory* protocolFactory, const tchar* endpoint)
+TCPAcceptor::TCPAcceptor(IOCPServer* core, const tchar* endpoint)
 : server_(core)
-, protocolFactory_(protocolFactory)
 , socket_()
 , endpoint_(endpoint)
 , status_(connection_status::disconnected)
@@ -19,6 +18,7 @@ TCPAcceptor::TCPAcceptor(IOCPServer* core, IProtocolFactory* protocolFactory, co
 
 TCPAcceptor::~TCPAcceptor()
 {
+	stopListening();
 	assert( connection_status::disconnected == status_ );
 }
 
@@ -40,23 +40,29 @@ bool TCPAcceptor::isListening() const
 void TCPAcceptor::stopListening()
 {
 	socket_.close();
-	status_ = connection_status::disconnecting;
+	status_ = connection_status::disconnected;
 }
 
-bool TCPAcceptor::doAccept()
+void TCPAcceptor::accept(OnBuildConnectionSuccess onSuccess
+                            , OnBuildConnectionError onError
+                            , void* context)
 {
-	std::auto_ptr< ICommand> command(new AcceptCommand( this ));
+	std::auto_ptr< ICommand> command(new AcceptCommand(this, onSuccess, onError, context));
 	if(! command->execute() )
 	{
-		LOG_ERROR( logger_, _T("启动监听地址 '") << endpoint_ 
-			<< _T("' 时发生错误 - '") << lastError()
-			<< _T("'" ));
-		return false;
+		int code = WSAGetLastError();
+		tstring descr = _T("启动监听地址 '") + endpoint_ 
+			+ _T("' 时发生错误 - '") + lastError(code)
+			+ _T("'" );
+
+		LOG_ERROR( logger_,descr );
+
+		ErrorCode err(false, code, descr);
+		onError(err, context);
+		return ;
 	}
 
-	status_ = connection_status::listening;
 	command.release();
-	return true;
 }
 
 bool TCPAcceptor::startListening()
@@ -69,6 +75,25 @@ bool TCPAcceptor::startListening()
 		return false;
 	}
 
+	tstring endpoint = endpoint_;
+	tstring::size_type index = endpoint.find(_T("://"));
+	if(tstring::npos != index)
+		endpoint = endpoint.substr(index + 3);
+	
+	index = endpoint.find(_T(":"));
+	if(tstring::npos == index)
+	{
+		LOG_ERROR( logger_, _T("监听地址 '") << endpoint_ 
+			<< _T("' 格式不正确,没有端口" ));
+		return false;
+	}
+
+	struct sockaddr addr;
+	addr.sa_family = AF_INET;
+	((sockaddr_in*)&addr)->sin_addr.s_addr = inet_addr(toNarrowString( endpoint.substr(0, index)).c_str());
+	((sockaddr_in*)&addr)->sin_port = htons(atoi(endpoint.substr(index+1).c_str()));
+
+
 	if(!socket_.open(AF_INET , SOCK_STREAM, IPPROTO_TCP))
 	{
 		LOG_ERROR( logger_, _T("启动监听地址 '") << endpoint_ 
@@ -78,9 +103,9 @@ bool TCPAcceptor::startListening()
 	}
 
 #pragma warning(disable: 4267)
-	if ( SOCKET_ERROR == ::bind( socket_.handle(),( const sockaddr*) endpoint_.addr(), endpoint_.size() ) )
+	if ( SOCKET_ERROR == ::bind( socket_.handle(),&addr, sizeof(struct sockaddr) ) )
 #pragma warning(default: 4267)
-	{		
+	{
 		LOG_ERROR( logger_, _T("启动监听地址 '") << endpoint_ 
 			<< _T("' 时发生错误 - 绑定端口失败 - '") << lastError()
 			<< _T("'" ));
@@ -95,29 +120,13 @@ bool TCPAcceptor::startListening()
 		return false;
 	}
 
-	if(!doAccept())
-		return false;
+	status_ = connection_status::listening;
 
 	INFO( logger_, _T("启动监听地址 '") << endpoint_ 
 		<< _T("' 成功!") );
-	toString_ = _T("TCPAcceptor[ socket=") + socket_.toString() + _T(",address=") + endpoint_.toString() + _T("]");
+	toString_ = _T("TCPAcceptor[ socket=") + socket_.toString() + _T(",address=") + endpoint_ + _T("]");
 
 	return true;
-}
-
-IProtocolFactory& TCPAcceptor::protocolFactory()
-{
-	return *protocolFactory_;
-}
-
-IDictionary& TCPAcceptor::misc()
-{
-	ThrowException( NotImplementedException );
-}
-
-const IDictionary& TCPAcceptor::misc() const
-{
-	ThrowException( NotImplementedException );
 }
 
 const tstring& TCPAcceptor::toString() const
@@ -135,12 +144,15 @@ TCPAcceptorFactory::~TCPAcceptorFactory()
 {
 }
 
-IAcceptor* TCPAcceptorFactory::createAcceptor(const tchar* endPoint, IProtocolFactory* protocolFactory)
+IAcceptor* TCPAcceptorFactory::createAcceptor(const tchar* endPoint)
 {
 	if(is_null(endPoint))
 		return null_ptr;
 
-	return new TCPAcceptor(server_, protocolFactory, endPoint );
+	std::auto_ptr<TCPAcceptor> acceptor(new TCPAcceptor(server_, endPoint));
+	if( acceptor->startListening())
+		return acceptor.release();
+	return null_ptr;
 }
 
 const tstring& TCPAcceptorFactory::toString() const

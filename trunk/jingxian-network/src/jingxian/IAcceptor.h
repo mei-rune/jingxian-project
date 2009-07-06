@@ -11,29 +11,8 @@
 // Include files
 # include "buffer.h"
 # include "jingxian/string/string.hpp"
-# include "Dictionary.h"
 
 _jingxian_begin
-
-class ErrorCode
-{
-public:
-	ErrorCode( const tchar* err);
-	ErrorCode( int success, int code);
-
-	virtual ~ErrorCode();
-
-	bool isSuccess() const;
-	int getCode() const;
-	const tstring& toSting() const;
-private:
-	bool isSuccess_;
-	int code_;
-	tstring err_;
-};
-
-typedef IProtocol* (*BuildProtocol)( ITransport* transport, void* context);
-typedef void (*OnConnectError)( const ErrorCode& exception,  void* context);
 
 class IAcceptor
 {
@@ -56,9 +35,11 @@ public:
 	virtual bool isListening() const = 0;
 
 	/**
-	 * 停止监听
+	 * 发起一个监听请求
 	 */
-    virtual void accept( ) = 0;
+    virtual void accept(OnBuildConnectionSuccess buildProtocol
+                            , OnBuildConnectionError onConnectError
+                            , void* context) = 0;
 
 	/**
 	* 取得地址的描述

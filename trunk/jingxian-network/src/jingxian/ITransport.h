@@ -87,6 +87,52 @@ inline tostream& operator<<( tostream& target, const ITransport& transport )
 	return target;
 }
 
+
+class ErrorCode
+{
+public:
+	ErrorCode( const tchar* err)
+		: isSuccess_(false)
+		, code_( 0 )
+		, err_( err )
+	{}
+
+	ErrorCode( int success, int code)
+		: isSuccess_(success)
+		, code_(code)
+		, err_(lastError(code))
+	{
+	}
+
+	ErrorCode( int success, int code, const tstring& err)
+		: isSuccess_(success)
+		, code_(code)
+		, err_(err)
+	{
+	}
+
+	ErrorCode( int success, int code, const tchar* err)
+		: isSuccess_(success)
+		, code_(code)
+		, err_(err)
+	{
+	}
+
+	virtual ~ErrorCode() { }
+
+	bool isSuccess() const { return isSuccess_; }
+	int getCode() const { return code_; }
+	const tstring& toSting() const { return err_; }
+
+private:
+	bool isSuccess_;
+	int code_;
+	tstring err_;
+};
+
+typedef void (*OnBuildConnectionSuccess)( ITransport* transport, void* context);
+typedef void (*OnBuildConnectionError)( const ErrorCode& exception,  void* context);
+
 _jingxian_end
 
 #endif //_transport_h_

@@ -13,7 +13,7 @@
 # include "jingxian/string/string.hpp"
 # include "jingxian/logging/logging.hpp"
 # include "jingxian/IReactorCore.h"
-# include "jingxian/networks/proactor.h"
+# include "jingxian/networks/commands/ICommand.h"
 # include "jingxian/networks/connection_status.h"
 # include "jingxian/networks/sockets/basesocket.h"
 # include "jingxian/networks/TCPFactory.h"
@@ -29,40 +29,37 @@ public:
 	virtual ~IOCPServer(void);
 
 
-    /**
-	 * 创建一个连接器
+	/**
+	 * @implements connectWith
 	 */
     virtual void connectWith(const tchar* endPoint
-                            , BuildProtocol buildProtocol
-                            , OnConnectError onConnectError
+                            , OnBuildConnectionSuccess onSuccess
+                            , OnBuildConnectionError onError
                             , void* context );
 	
-    /**
-	 * 创建一个监听服务
+	/**
+	 * @implements listenWith
 	 */
-    virtual IAcceptor* listenWith(const tchar* endPoint
-			, IProtocolFactory* protocolFactory);
+    virtual IAcceptor* listenWith(const tchar* endPoint);
 
 	
-    /**
-     * 将执行方法发送到线程等待队列,稍后执行
-     *
-     * @param[ in ] run 执行方法
+	/**
+	 * @implements send
 	 */
     virtual bool send( IRunnable* runnable );
 
 	/**
-	 * 开始运行直到调用Interrupt才返回
+	 * @implements runForever
 	 */
 	virtual void runForever();
 
 	/**
-	 * 停止运行
+	 * @implements interrupt
 	 */
 	virtual void interrupt();
 
 	/**
-	 * 将句柄绑定到本端口
+	 * @implements bind
 	 */
 	virtual bool bind(HANDLE systemHandler, void* completion_key);
 	
