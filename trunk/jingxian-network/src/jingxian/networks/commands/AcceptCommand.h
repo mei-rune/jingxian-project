@@ -18,14 +18,14 @@ class AcceptCommand : public ICommand
 {
 public:
 	AcceptCommand(TCPAcceptor* acceptor
-							, OnBuildConnectionSuccess onSuccess
+							, OnBuildConnectionComplete onComplete
                             , OnBuildConnectionError onError
                             , void* context);
 
 	virtual ~AcceptCommand();
 	
 	virtual void on_complete(size_t bytes_transferred
-		, int success
+		, bool success
 		, void *completion_key
 		, u_int32_t error);
 
@@ -40,7 +40,7 @@ private:
 	NOCOPY(AcceptCommand);
 
 	IOCPServer* core_;
-	OnBuildConnectionSuccess onSuccess_;
+	OnBuildConnectionComplete onSuccess_;
     OnBuildConnectionError onError_;
     void* context_;
 

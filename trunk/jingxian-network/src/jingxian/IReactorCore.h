@@ -34,7 +34,7 @@ public:
 	 * @remarks 回调函数可能会在调用线程中直接被调用
 	 */
     virtual void connectWith(const tchar* endPoint
-                            , OnBuildConnectionSuccess onSuccess
+                            , OnBuildConnectionComplete onComplete
                             , OnBuildConnectionError onError
                             , void* context ) = 0;
 
@@ -61,7 +61,7 @@ public:
 	/**
 	 * 将句柄绑定到本端口
 	 */
-	virtual bool bind(HANDLE systemHandler) = 0;
+	virtual bool bind(HANDLE systemHandler, void* completion_key) = 0;
 };
 
 _jingxian_end

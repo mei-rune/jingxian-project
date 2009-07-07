@@ -7,21 +7,20 @@
 _jingxian_begin
 
 AcceptCommand::AcceptCommand(TCPAcceptor* acceptor
-							, OnBuildConnectionSuccess onSuccess
+							, OnBuildConnectionComplete onComplete
                             , OnBuildConnectionError onError
                             , void* context)
 : core_(acceptor->nextCore())
-, onSuccess_(onSuccess)
+, onSuccess_(onComplete)
 , onError_(onError)
 , context_(context)
 , listener_(acceptor->handle())
 , listenAddr_(acceptor->bindPoint())
-, socket_(::socket(AF_INET 
-						, SOCK_STREAM
-						, IPPROTO_TCP))
-, ptr_((char*)malloc(sizeof (sockaddr_in)*2 + sizeof (sockaddr)*2 + 100))
-, len_(sizeof (sockaddr_in)*2 + sizeof (sockaddr)*2 + 100)
+, socket_(WSASocket(AF_INET,SOCK_STREAM,IPPROTO_TCP,0,0,WSA_FLAG_OVERLAPPED))
+, ptr_((char*)malloc(sizeof (sockaddr_in)*2 + sizeof (sockaddr)*2 + 1000))
+, len_(sizeof (sockaddr_in)*2 + sizeof (sockaddr)*2 + 1000)
 {
+	memset( ptr_, 0, len_);
 }
 
 AcceptCommand::~AcceptCommand()
@@ -37,7 +36,7 @@ AcceptCommand::~AcceptCommand()
 }
 
 void AcceptCommand::on_complete(size_t bytes_transferred
-								, int success
+								, bool success
 								, void *completion_key
 								, u_int32_t error)
 {
@@ -60,28 +59,15 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 	//	return;
 	//}
 
-	if( SOCKET_ERROR == setsockopt(socket_, SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT,
-		(char *) &listener_, sizeof(listener_)))
-	{
-		int errCode = ::WSAGetLastError();
-		
-		ErrorCode err(false, errCode, _T("接受器 '") 
-			+ listenAddr_
-			+ _T("' 获取连接请求返回,在对 socket 句柄设置 SO_UPDATE_ACCEPT_CONTEXT 选项时发生错误 - ")
-			+ lastError(errCode));
-		onError_(err, context_);
-		return;
-	}
-
 	sockaddr *local_addr = 0;
 	sockaddr *remote_addr = 0;
 	int local_size = 0;
 	int remote_size = 0;
 
-	::GetAcceptExSockaddrs (ptr_,
-		static_cast < DWORD >( bytes_transferred),
-		static_cast < DWORD >( sizeof (sockaddr_in) + sizeof (sockaddr) ),
-		static_cast < DWORD >( sizeof (sockaddr_in) + sizeof (sockaddr) ),
+	BaseSocket::__getacceptexsockaddrs (ptr_,
+		0,
+		sizeof (sockaddr_in) + sizeof (sockaddr),
+		sizeof (sockaddr_in) + sizeof (sockaddr),
 		&local_addr,
 		&local_size,
 		&remote_addr,
@@ -101,9 +87,7 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 	}
 	buf[len] = 0;
 	tstring peer = concat<tstring>(_T("tcp://") 
-				, buf
-				, _T(":")
-				, htons(((sockaddr_in*)remote_addr)->sin_port));
+				, buf);
 
 	
 	len = 1024;
@@ -118,15 +102,26 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 		return;
 	}
 	tstring host = concat<tstring>(_T("tcp://") 
-				, buf
-				, _T(":")
-				, htons(((sockaddr_in*)local_addr)->sin_port));
+				, buf);
 
+	
+	if( SOCKET_ERROR == setsockopt(socket_, SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT,
+		(char *) &listener_, sizeof(listener_)))
+	{
+		int errCode = ::WSAGetLastError();
+		
+		ErrorCode err(false, errCode, _T("接受器 '") 
+			+ listenAddr_
+			+ _T("' 获取连接请求返回,在对 socket 句柄设置 SO_UPDATE_ACCEPT_CONTEXT 选项时发生错误 - ")
+			+ lastError(errCode));
+		onError_(err, context_);
+		return;
+	}
 	
 	std::auto_ptr<ConnectedSocket> connectedSocket(new ConnectedSocket(core_, socket_, host, peer));
 	socket_ = INVALID_SOCKET;
 
-	if (!core_->bind(socket,connectedSocket.get()))
+	if (!core_->bind((HANDLE)connectedSocket->handle(),connectedSocket.get()))
 	{	
 		int errCode = ::WSAGetLastError();
 		ErrorCode err(false, errCode, concat<tstring>(_T("初始化来自 '") 
@@ -147,9 +142,8 @@ bool AcceptCommand::execute()
 	if (BaseSocket::__acceptex(listener_
 		, socket_
 		, ptr_
-		, 0 //_byteBuffer.Space - (HazelAddress.MaxSize + 4) * 2 
-		//必须为0,否则会有大量的连接处于accept中，因为客户端只
-		//建立连接，没有发送数据。
+		, 0 //必须为0,否则会有大量的连接处于accept中，因为客户端只
+		    //建立连接，没有发送数据。
 		, sizeof (sockaddr_in) + sizeof (sockaddr)
 		, sizeof (sockaddr_in) + sizeof (sockaddr)
 		, &bytesTransferred

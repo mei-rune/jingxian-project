@@ -1,6 +1,6 @@
 
-#ifndef _transport_h_
-#define _transport_h_
+#ifndef _communicator_h_
+#define _communicator_h_
 
 #include "jingxian/config.h"
 
@@ -44,23 +44,24 @@ public:
 	/**
 	 * 开始运行直到调用Interrupt才返回
 	 */
-	void runForever();
+	virtual void runForever() = 0;
 
 	/**
 	 * 停止运行
 	 */
-	void interrupt();
+	virtual void interrupt() = 0;
 
 	/**
 	 * 引发一个异常事件
 	 */
-	void send(const Exception& e);
+	virtual void send(const Exception& e) = 0;
 
 	/**
 	 * 引发一个系统事件
 	 */
-	void send(const SystemEvent& e);
-}
-
+	virtual void send(const SystemEvent& e) = 0;
+};
 
 _jingxian_end
+
+#endif //_communicator_h_

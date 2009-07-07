@@ -56,13 +56,17 @@ public:
 	/**
 	 * @implements accept
 	 */
-    virtual void accept(OnBuildConnectionSuccess buildProtocol
+    virtual void accept(OnBuildConnectionComplete buildProtocol
                             , OnBuildConnectionError onConnectError
                             , void* context);
+    /**
+	 * @implements close
+	 */
+	virtual void close();
 
 	/**
-	* @implements toString
-	*/
+	 * @implements toString
+	 */
 	virtual const tstring& toString() const;
 
 private:
@@ -71,10 +75,10 @@ private:
 	friend class AcceptCommand;
 
 	SOCKET handle() { return socket_.handle(); }
-	IOCPServer* nextCore(){ return server_; }
+	IOCPServer* nextCore(){ return core_; }
 	ILogger* logger(){ return logger_; }
 
-	IOCPServer* server_;
+	IOCPServer* core_;
 	BaseSocket socket_;
 	tstring endpoint_;
 	connection_status::type status_;
@@ -107,7 +111,7 @@ public:
 private:
 	NOCOPY(TCPAcceptorFactory);
 	
-	IOCPServer* server_;
+	IOCPServer* core_;
 	tstring toString_;	
 };
 

@@ -10,6 +10,7 @@
 
 // Include files
 # include "buffer.h"
+# include <functional>
 # include "jingxian/string/string.hpp"
 
 _jingxian_begin
@@ -37,8 +38,8 @@ public:
 	/**
 	 * 发起一个监听请求
 	 */
-    virtual void accept(OnBuildConnectionSuccess buildProtocol
-                            , OnBuildConnectionError onConnectError
+    virtual void accept(OnBuildConnectionComplete on_complete
+                            , OnBuildConnectionError on_error
                             , void* context) = 0;
 
 	/**
@@ -59,30 +60,61 @@ public:
 	class closure
 	{
 	public:
-
-		closure( const F1& func1, const F2& func2, T* context)
+		closure( const F1& func1, const F2& func2, T context)
 			: function1_(func1)
 			, function2_(func2)
 			, context_(context)
 		{
 		}
 
-		static void OnSuccess(ITransport* transport, void* context)
+		static void OnComplete(ITransport* transport, void* context)
 		{
 			std::auto_ptr<closure> self(static_cast<closure*>(context));
-			self->_function1(transport, context_);
+			self->function1_(transport, self->context_);
 		}
 
-		static void OnError(const ErrorCode& exception, void* context)
+		static void OnError(const ErrorCode& err, void* context)
 		{
 			std::auto_ptr<closure> self(static_cast<closure*>(context));
-			self->_function1(transport, context_);
+			self->function2_(err, self->context_);
 		}
 
 	private:
 		F1 function1_;
 		F2 function2_;
-		T* context_;
+		T context_;
+	};
+
+	template<typename C, typename F1,typename F2, typename T>
+	class closure_0
+	{
+	public:
+
+		closure_0(C c, const F1& func1, const F2& func2, T context)
+			: c_(c)
+			, function1_(func1)
+			, function2_(func2)
+			, context_(context)
+		{
+		}
+
+		static void OnComplete(ITransport* transport, void* context)
+		{
+			std::auto_ptr<closure_0> self(static_cast<closure_0*>(context));
+			(self->c_->*(self->function1_))(transport, self->context_);
+		}
+
+		static void OnError(const ErrorCode& err, void* context)
+		{
+			std::auto_ptr<closure_0> self(static_cast<closure_0*>(context));
+			(self->c_->*(self->function2_))(err, self->context_);
+		}
+
+	private:
+		C c_;
+		F1 function1_;
+		F2 function2_;
+		T context_;
 	};
 
 	Acceptor()
@@ -132,14 +164,45 @@ public:
 	 * 发起一个监听请求
 	 */
 	template< typename F1,typename F2, typename T> 
-    void accept(F1 onSuccess
+    void accept(F1 onComplete
                             , F2 onError
-                            , T* context)
+                            , T context)
 	{
 		typedef closure<F1,F2,T> closure_type;
-		acceptor_->accept(closure_type::OnSuccess
-			, closure_type::OnSuccess
-			, new closure_type(onSuccess, onError, context));
+		acceptor_->accept(closure_type::OnComplete
+			, closure_type::OnError
+			, new closure_type(onComplete, onError, context));
+	}
+
+	/**
+	 * 发起一个监听请求
+	 */
+	template<typename C, typename F1,typename F2, typename T> 
+    void accept(C c
+				, F1 onComplete
+                , F2 onError
+                , T context)
+	{
+		typedef closure_0<C,F1,F2,T> closure_type;
+		acceptor_->accept(closure_type::OnComplete
+			, closure_type::OnError
+			, new closure_type(c, onComplete, onError, context));
+	}
+
+	
+	/**
+	 * 发起一个监听请求
+	 */
+    virtual void accept(OnBuildConnectionComplete onComplete
+                            , OnBuildConnectionError onError
+                            , void* context)
+	{
+		acceptor_->accept(onComplete, onError, context);
+	}
+
+	virtual void close()
+	{
+		reset(null_ptr);
 	}
 
 	/**
