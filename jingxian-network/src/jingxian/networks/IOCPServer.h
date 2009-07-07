@@ -30,10 +30,16 @@ public:
 
 
 	/**
+	 * 初始化端口(如果已经初始化返回true)
+     * @param[ in ] 并行线程数
+	 */
+	bool initialize( size_t number_of_threads );
+
+	/**
 	 * @implements connectWith
 	 */
     virtual void connectWith(const tchar* endPoint
-                            , OnBuildConnectionSuccess onSuccess
+                            , OnBuildConnectionComplete onComplete
                             , OnBuildConnectionError onError
                             , void* context );
 	
@@ -80,12 +86,6 @@ public:
 
 private:
 	NOCOPY(IOCPServer);
-
-	/**
-	 * 初始化端口(如果已经初始化返回true)
-     * @param[ in ] 并行线程数
-	 */
-	bool open ( size_t number_of_threads );
 	
 	/**
 	 * 关闭本对象

@@ -53,9 +53,9 @@ IOCPServer::~IOCPServer(void)
 }
 
 
-bool IOCPServer::open ( size_t number_of_threads )
+bool IOCPServer::initialize ( size_t number_of_threads )
 {
-	if( ! is_null(completion_port_) )
+	if(!is_null(completion_port_))
 		return false;
 
 	number_of_threads_ = number_of_threads;
@@ -64,7 +64,7 @@ bool IOCPServer::open ( size_t number_of_threads )
 		0,
 		number_of_threads_);
 
-	return  is_null(completion_port_);
+	return  !is_null(completion_port_);
 }
 
 void IOCPServer::close (void)
@@ -187,7 +187,7 @@ void IOCPServer::application_specific_code (ICommand *asynch_result,
 	try
 	{
 		asynch_result->on_complete (bytes_transferred,
-			error == 0 ? 0 : 1,
+			error == 0,
 			(void *) completion_key,
 			error );
 	}
@@ -234,7 +234,7 @@ bool IOCPServer::bind (HANDLE handle, void *completion_key)
 }
 
 void IOCPServer::connectWith(const tchar* endPoint
-                            , OnBuildConnectionSuccess onSuccess
+                            , OnBuildConnectionComplete onComplete
                             , OnBuildConnectionError onError
                             , void* context )
 {
@@ -267,7 +267,7 @@ void IOCPServer::connectWith(const tchar* endPoint
 	}
     
 	     
-    it->second->connect( endPoint, onSuccess, onError, context );
+    it->second->connect( endPoint, onComplete, onError, context );
 }
 
 IAcceptor* IOCPServer::listenWith(const tchar* endPoint)

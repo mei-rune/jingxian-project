@@ -1,6 +1,6 @@
 
-#ifndef _transport_h_
-#define _transport_h_
+#ifndef _itransport_h_
+#define _itransport_h_
 
 #include "jingxian/config.h"
 
@@ -130,9 +130,9 @@ private:
 	tstring err_;
 };
 
-typedef void (*OnBuildConnectionSuccess)( ITransport* transport, void* context);
-typedef void (*OnBuildConnectionError)( const ErrorCode& exception,  void* context);
+typedef void (*OnBuildConnectionComplete)( ITransport* transport, void* context);
+typedef void (*OnBuildConnectionError)( const ErrorCode& err,  void* context);
 
 _jingxian_end
 
-#endif //_transport_h_
+#endif //_itransport_h_

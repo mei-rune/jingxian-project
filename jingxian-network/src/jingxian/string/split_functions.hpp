@@ -43,6 +43,16 @@ inline StringArray<charT,OP> split_with_string( const charT* ptr
 	   ptr = token + seps_len;
    }
 
+   if(null_ptr != ptr)
+   { 	
+	   stringData<charT> data;
+   	   
+   	   data.ptr = OP::dup(ptr);
+   	   data.len = 0;
+   	   data.capacity = 0;
+       tmpList.push_back( data );
+   }
+
    StringArray<charT,OP> result( tmpList.size() );
    int i = 0;
    for( std::list<stringData<charT>>::iterator it = tmpList.begin(); it != tmpList.end(); it ++ )

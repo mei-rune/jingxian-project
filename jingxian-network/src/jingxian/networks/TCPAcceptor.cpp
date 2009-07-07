@@ -7,7 +7,7 @@
 _jingxian_begin
 
 TCPAcceptor::TCPAcceptor(IOCPServer* core, const tchar* endpoint)
-: server_(core)
+: core_(core)
 , socket_()
 , endpoint_(endpoint)
 , status_(connection_status::disconnected)
@@ -43,11 +43,11 @@ void TCPAcceptor::stopListening()
 	status_ = connection_status::disconnected;
 }
 
-void TCPAcceptor::accept(OnBuildConnectionSuccess onSuccess
+void TCPAcceptor::accept(OnBuildConnectionComplete onComplete
                             , OnBuildConnectionError onError
                             , void* context)
 {
-	std::auto_ptr< ICommand> command(new AcceptCommand(this, onSuccess, onError, context));
+	std::auto_ptr< ICommand> command(new AcceptCommand(this, onComplete, onError, context));
 	if(! command->execute() )
 	{
 		int code = WSAGetLastError();
@@ -119,6 +119,14 @@ bool TCPAcceptor::startListening()
 			<< _T("'" ));
 		return false;
 	}
+	
+	if(!core_->bind((HANDLE)socket_.handle(), this))
+	{
+		LOG_ERROR( logger_, _T("绑定监听地址 '") << endpoint_ 
+			<< _T("' 到完成端口时发生错误 -  '") << lastError()
+			<< _T("'" ));
+		return false;
+	}
 
 	status_ = connection_status::listening;
 
@@ -129,13 +137,18 @@ bool TCPAcceptor::startListening()
 	return true;
 }
 
+void TCPAcceptor::close()
+{
+	stopListening();
+}
+
 const tstring& TCPAcceptor::toString() const
 {
 	return toString_;
 }
 
 TCPAcceptorFactory::TCPAcceptorFactory(IOCPServer* core)
-: server_(core)
+: core_(core)
 , toString_(_T("TCPAcceptorFactory"))
 {
 }
@@ -149,7 +162,7 @@ IAcceptor* TCPAcceptorFactory::createAcceptor(const tchar* endPoint)
 	if(is_null(endPoint))
 		return null_ptr;
 
-	std::auto_ptr<TCPAcceptor> acceptor(new TCPAcceptor(server_, endPoint));
+	std::auto_ptr<TCPAcceptor> acceptor(new TCPAcceptor(core_, endPoint));
 	if( acceptor->startListening())
 		return acceptor.release();
 	return null_ptr;

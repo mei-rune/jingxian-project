@@ -71,16 +71,16 @@ public:
 	EchoServer(IOCPServer& core)
 	{
 		acceptor_.reset(core.listenWith("tcp://0.0.0.0:6345"));
-
-		acceptor_.accept( 
+		acceptor_.accept(this, &EchoServer::OnComplete, &EchoServer::OnError, &core);
 	}
 
 
-	void OnSuccess( ITransport* transport, IOCPServer* core)
+	void OnComplete(ITransport* transport, IOCPServer* core)
 	{
+		transport->disconnection();
 	}
 
-	void OnSuccess( const ErrerCode& err, IOCPServer* core)
+	void OnError(const ErrorCode& err, IOCPServer* core)
 	{
 	}
 
@@ -193,6 +193,15 @@ int main(int argc, char* argv[])
 #endif //
 
 	_jingxian BaseSocket::initializeScket();
+
+	_jingxian IOCPServer server;
+
+	if( !server.initialize(1) )
+		return -1;
+
+	_jingxian EchoServer echo(server);
+
+	server.runForever();
 
 	_jingxian BaseSocket::shutdownSocket();
 	int i ; 
