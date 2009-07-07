@@ -42,15 +42,54 @@ public:
                             , void* context) = 0;
 
 	/**
+	 * 关闭接受器
+	 */
+	virtual void close() = 0;
+
+	/**
 	* 取得地址的描述
 	*/
 	virtual const tstring& toString() const = 0;
 };
 
-template<typename T>
-class Acceptor<T> : IAcceptor
+class Acceptor : public IAcceptor
 {
 public:
+	template<typename F1,typename F2, typename T>
+	class closure
+	{
+	public:
+
+		closure( const F1& func1, const F2& func2, T* context)
+			: function1_(func1)
+			, function2_(func2)
+			, context_(context)
+		{
+		}
+
+		static void OnSuccess(ITransport* transport, void* context)
+		{
+			std::auto_ptr<closure> self(static_cast<closure*>(context));
+			self->_function1(transport, context_);
+		}
+
+		static void OnError(const ErrorCode& exception, void* context)
+		{
+			std::auto_ptr<closure> self(static_cast<closure*>(context));
+			self->_function1(transport, context_);
+		}
+
+	private:
+		F1 function1_;
+		F2 function2_;
+		T* context_;
+	};
+
+	Acceptor()
+		: acceptor_(null_ptr)
+	{
+	}
+
 	Acceptor(IAcceptor* acceptor)
 		: acceptor_(acceptor)
 	{
@@ -58,6 +97,14 @@ public:
 
 	virtual ~Acceptor()
 	{
+		reset(null_ptr);
+	}
+
+	void reset( IAcceptor* acceptor)
+	{
+		if(!is_null(acceptor_))
+			acceptor_->close();
+		acceptor_=acceptor;
 	}
 
     virtual  time_t timeout () const
@@ -78,26 +125,34 @@ public:
 	 */
 	virtual bool isListening() const
 	{
-		return acceptor_->bindPoint();
+		return acceptor_->isListening();
 	}
 
 	/**
 	 * 发起一个监听请求
 	 */
-    virtual void accept(OnBuildConnectionSuccess buildProtocol
-                            , OnBuildConnectionError onConnectError
-                            , void* context) = 0;
+	template< typename F1,typename F2, typename T> 
+    void accept(F1 onSuccess
+                            , F2 onError
+                            , T* context)
+	{
+		typedef closure<F1,F2,T> closure_type;
+		acceptor_->accept(closure_type::OnSuccess
+			, closure_type::OnSuccess
+			, new closure_type(onSuccess, onError, context));
+	}
 
 	/**
 	* 取得地址的描述
 	*/
-	virtual const tstring& toString() const = 0;
+	virtual const tstring& toString() const
+	{
+		return acceptor_->toString();
+	}
 private:
-	NO_COPY(Acceptor);
+	NOCOPY(Acceptor);
 
 	IAcceptor* acceptor_;
-		//OnBuildConnectionSuccess buildProtocol
-        //OnBuildConnectionError onConnectError
 };
 
 class IAcceptorFactory
