@@ -2,9 +2,83 @@
 
 #include "pro_config.h"
 #include "jingxian/string/string.hpp"
-#include "jingxian/networks/sockets/BaseSocket.h"
+#include "jingxian/networks/IOCPServer.h"
 #include <iostream>
 
+_jingxian_begin
+
+class EchoProtocol : public IProtocol
+{
+public:
+	EchoProtocol()
+		: toString_(_T("EchoProtocol"))
+	{
+	}
+    /**
+     * 在指定的时间段内没有收到任何数据
+     * 
+     * @param[ in ] context 会话的上下文
+	 */
+    virtual void onTimeout(ProtocolContext& context)
+	{
+	}
+
+    /**
+     * 当会话建立后，被调用。
+     * 
+     * @param[ in ] context 会话的上下文
+	 */
+    virtual void onConnected(ProtocolContext& context)
+	{
+		std::cout << context.transport().peer() << std::endl;
+	}
+
+    /**
+     * 当会话关闭后，被调用。
+     * 
+     * @param[ in ] context 会话的上下文
+     * @param[ in ] errCode 关闭的原因,为0是表示主动关闭
+     * @param[ in ] reason 关闭的原因描述
+	 */
+    virtual void onDisconnected(ProtocolContext& context, int errCode, const tstring& reason)
+	{
+	}
+
+    /**
+     * 当有新的信息到来时，被调用。
+     * 
+     * @param[ in ] context 会话的上下文
+     * @param[ in ] buffer 包含新到来信息的缓冲区
+	 */
+    virtual void onReceived(ProtocolContext& context, Buffer& buffer)
+	{
+	}
+
+	/**
+	* 取得地址的描述
+	*/
+	virtual const tstring& toString() const
+	{
+		return toString_;
+	}
+private:
+	tstring toString_;
+};
+
+class EchoServer
+{
+public:
+	EchoServer(IOCPServer& core)
+	{
+		acceptor_ = core.listenWith("tcp://0.0.0.0:6345");
+	}
+
+private:
+
+	IAcceptor* acceptor_;
+};
+
+_jingxian_end
 
 int main(int argc, char* argv[])
 {

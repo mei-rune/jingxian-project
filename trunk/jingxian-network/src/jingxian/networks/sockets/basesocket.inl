@@ -9,9 +9,8 @@ LPFN_GETACCEPTEXSOCKADDRS BaseSocket::__getacceptexsockaddrs = 0;
 
 
 OS_INLINE BaseSocket::BaseSocket (void)
-: handle_ (INVALID_SOCKET )
+: handle_ (INVALID_SOCKET)
 , toString_( _T("INVALID_SOCKET" ))
-
 {
 }
 

@@ -91,27 +91,27 @@ inline tostream& operator<<( tostream& target, const ITransport& transport )
 class ErrorCode
 {
 public:
-	ErrorCode( const tchar* err)
+	ErrorCode(const tchar* err)
 		: isSuccess_(false)
 		, code_( 0 )
 		, err_( err )
 	{}
 
-	ErrorCode( int success, int code)
+	ErrorCode(bool success, int code)
 		: isSuccess_(success)
 		, code_(code)
 		, err_(lastError(code))
 	{
 	}
 
-	ErrorCode( int success, int code, const tstring& err)
+	ErrorCode(bool success, int code, const tstring& err)
 		: isSuccess_(success)
 		, code_(code)
 		, err_(err)
 	{
 	}
 
-	ErrorCode( int success, int code, const tchar* err)
+	ErrorCode(bool success, int code, const tchar* err)
 		: isSuccess_(success)
 		, code_(code)
 		, err_(err)

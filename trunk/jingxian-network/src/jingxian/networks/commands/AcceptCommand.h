@@ -38,11 +38,14 @@ protected:
 
 private:
 	NOCOPY(AcceptCommand);
-	
+
+	IOCPServer* core_;
 	OnBuildConnectionSuccess onSuccess_;
     OnBuildConnectionError onError_;
     void* context_;
 
+	SOCKET listener_;
+	tstring listenAddr_;
 	SOCKET socket_;
 	char* ptr_;
 	size_t len_;

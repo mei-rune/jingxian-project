@@ -6,18 +6,21 @@
 
 _jingxian_begin
 
-const int addrbufsize = sizeof (sockaddr_in)*2 + sizeof (sockaddr)*2 + 100;
-
 AcceptCommand::AcceptCommand(TCPAcceptor* acceptor
 							, OnBuildConnectionSuccess onSuccess
                             , OnBuildConnectionError onError
                             , void* context)
-: onSuccess_(onSuccess)
+: core_(acceptor->nextCore())
+, onSuccess_(onSuccess)
 , onError_(onError)
 , context_(context)
-, socket_(createSocket())
-, ptr_((char*)malloc(addrbufsize))
-, len_(addrbufsize)
+, listener_(acceptor->handle())
+, listenAddr_(acceptor->bindPoint())
+, socket_(::socket(AF_INET 
+						, SOCK_STREAM
+						, IPPROTO_TCP))
+, ptr_((char*)malloc(sizeof (sockaddr_in)*2 + sizeof (sockaddr)*2 + 100))
+, len_(sizeof (sockaddr_in)*2 + sizeof (sockaddr)*2 + 100)
 {
 }
 
@@ -28,7 +31,7 @@ AcceptCommand::~AcceptCommand()
 
 	if( INVALID_SOCKET == socket_ )
 	{
-		acceptor_->tcpFactory().releaseSocket(socket_, false);
+		closesocket(socket_);
 		socket_ = INVALID_SOCKET;
 	}
 }
@@ -40,57 +43,43 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 {
 	if (!success)
 	{
-		acceptor_->onException(error, _T("接受器 '") 
-			+ acceptor_->endpoint_.toString() 
+		ErrorCode err(0 == success, error, _T("接受器 '") 
+			+ listenAddr_
 			+ _T("' 获取连接请求失败 - ")
 			+ lastError(error));
+		onError_(err, context_);
 		return;
 	}
 
+	//if (!acceptor_->isListening())
+	//{
+	//	ErrorCode err(_T("接受器 '") 
+	//		+ listenAddr_
+	//		+ _T("' 获取连接请求返回,但已经停止监听!"));
+	//	onError_(err, context_);
+	//	return;
+	//}
 
-	SOCKET listener = acceptor_->handle();
 	if( SOCKET_ERROR == setsockopt(socket_, SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT,
-		(char *) &listener, sizeof(listener)))
+		(char *) &listener_, sizeof(listener_)))
 	{
 		int errCode = ::WSAGetLastError();
-		acceptor_->onException(errCode, _T("接受器 '") 
-			+ acceptor_->endpoint_.toString() 
+		
+		ErrorCode err(false, errCode, _T("接受器 '") 
+			+ listenAddr_
 			+ _T("' 获取连接请求返回,在对 socket 句柄设置 SO_UPDATE_ACCEPT_CONTEXT 选项时发生错误 - ")
 			+ lastError(errCode));
+		onError_(err, context_);
 		return;
 	}
 
-	if (!acceptor_->isListening())
-	{
-		acceptor_->onException(0, _T("接受器 '") 
-			+ acceptor_->endpoint_.toString() 
-			+ _T("' 获取连接请求返回,但已经停止监听!"));
-		return;
-	}
-
-	initializeConnection(bytes_transferred, completion_key);
-
-	if( acceptor_->doAccept())
-		return;
-
-	int errCode = ::WSAGetLastError();
-	acceptor_->onException(errCode, _T("接受器 '") 
-		+ acceptor_->endpoint_.toString() 
-		+ _T("' 获取连接请求返回,重新发送获取连接请求时发生错误 - ")
-		+ lastError(errCode));
-	return;
-}
-
-void AcceptCommand::initializeConnection(  int bytesTransferred
-									   , void *completion_key)
-{
 	sockaddr *local_addr = 0;
 	sockaddr *remote_addr = 0;
 	int local_size = 0;
 	int remote_size = 0;
 
 	::GetAcceptExSockaddrs (ptr_,
-		static_cast < DWORD >( bytesTransferred),
+		static_cast < DWORD >( bytes_transferred),
 		static_cast < DWORD >( sizeof (sockaddr_in) + sizeof (sockaddr) ),
 		static_cast < DWORD >( sizeof (sockaddr_in) + sizeof (sockaddr) ),
 		&local_addr,
@@ -98,46 +87,64 @@ void AcceptCommand::initializeConnection(  int bytesTransferred
 		&remote_addr,
 		&remote_size);
 
-	tstring peer = _T("tcp://") 
-				+ toTstring(inet_ntoa(((sockaddr_in*)remote_addr)->sin_addr)) 
-				+ _T(":")
-				+ toString(htons(((sockaddr_in*)remote_addr)->sin_port));
-
-	tstring host = _T("tcp://") 
-				+ toTstring(inet_ntoa(((sockaddr_in*)local_addr)->sin_addr)) 
-				+ _T(":")
-				+ toString(htons(((sockaddr_in*)local_addr)->sin_port));
-
-	
-	IOCPServer* core = acceptor_->nextCore();
-	std::auto_ptr<ConnectedSocket> connectedSocket(new ConnectedSocket(core, socket_, host, peer));
-	socket_ = INVALID_SOCKET;
-
-
-	INFO( acceptor_->logger(), _T("获取到来自 '") << peer
-							<< _T("' 的连接,开始初始化!"));
-
-	if (!core->bind(socket,connectedSocket.get()))
-	{	
+	tchar buf[1024];
+	DWORD len = 1024;
+	if(SOCKET_ERROR == WSAAddressToString(remote_addr, remote_size, NULL,buf,&len))
+	{
 		int errCode = ::WSAGetLastError();
-		LOG_ERROR( acceptor_->logger(), _T("初始化来自 '") << peer
-							<< _T("' 的连接时，绑定到iocp发生错误 - ")
-							<< lastError(errCode));
+		ErrorCode err(false, errCode, concat<tstring, char*, tstring,char*,tstring>(_T("接受器 '") 
+			, listenAddr_
+			, _T("' 获取连接请求返回,获取远程地址失败 -")
+			, lastError(errCode)));
+		onError_(err, context_);
 		return;
 	}
+	buf[len] = 0;
+	tstring peer = concat<tstring>(_T("tcp://") 
+				, buf
+				, _T(":")
+				, htons(((sockaddr_in*)remote_addr)->sin_port));
 
-	connectedSocket->bindProtocol( acceptor_->protocolFactory().createProtocol() );
-	INFO( acceptor_->logger(), _T("初始化来自 '") << peer
-							<< _T("' 的连接成功!"));
+	
+	len = 1024;
+	if(SOCKET_ERROR == WSAAddressToString(local_addr, local_size, NULL,buf,&len))
+	{
+		int errCode = ::WSAGetLastError();
+		ErrorCode err(false, errCode, concat<tstring>(_T("接受器 '") 
+			, listenAddr_
+			, _T("' 获取连接请求返回,获取本地地址失败 -")
+			, lastError(errCode)));
+		onError_(err, context_);
+		return;
+	}
+	tstring host = concat<tstring>(_T("tcp://") 
+				, buf
+				, _T(":")
+				, htons(((sockaddr_in*)local_addr)->sin_port));
 
+	
+	std::auto_ptr<ConnectedSocket> connectedSocket(new ConnectedSocket(core_, socket_, host, peer));
+	socket_ = INVALID_SOCKET;
+
+	if (!core_->bind(socket,connectedSocket.get()))
+	{	
+		int errCode = ::WSAGetLastError();
+		ErrorCode err(false, errCode, concat<tstring>(_T("初始化来自 '") 
+			, peer
+			, _T("' 的连接时，绑定到iocp发生错误 - ")
+			, lastError(errCode)));
+		onError_(err, context_);
+		return;
+	}
 	connectedSocket->initialize();
+	onSuccess_(connectedSocket.get(), context_);
 	connectedSocket.release();
 }
 
 bool AcceptCommand::execute()
 {
 	DWORD bytesTransferred;
-	if (BaseSocket::__acceptex(acceptor_->handle()
+	if (BaseSocket::__acceptex(listener_
 		, socket_
 		, ptr_
 		, 0 //_byteBuffer.Space - (HazelAddress.MaxSize + 4) * 2 

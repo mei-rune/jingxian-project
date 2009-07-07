@@ -22,5 +22,6 @@
 # include "jingxian/string/replace_functions.hpp"
 # include "jingxian/string/case_functions.hpp"
 # include "jingxian/string/split_functions.hpp"
+# include "jingxian/string/concat_functions.hpp"
 
 #endif // _STRING_HPP_
