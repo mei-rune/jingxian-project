@@ -296,14 +296,6 @@
 				RelativePath=".\src\jingxian\networks\TCPAcceptor.h"
 				>
 			</File>
-			<File
-				RelativePath=".\src\jingxian\networks\TCPFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\networks\TCPFactory.h"
-				>
-			</File>
 			<Filter
 				Name="commands"
 				>

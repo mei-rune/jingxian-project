@@ -70,12 +70,23 @@ class EchoServer
 public:
 	EchoServer(IOCPServer& core)
 	{
-		acceptor_ = core.listenWith("tcp://0.0.0.0:6345");
+		acceptor_.reset(core.listenWith("tcp://0.0.0.0:6345"));
+
+		acceptor_.accept( 
+	}
+
+
+	void OnSuccess( ITransport* transport, IOCPServer* core)
+	{
+	}
+
+	void OnSuccess( const ErrerCode& err, IOCPServer* core)
+	{
 	}
 
 private:
 
-	IAcceptor* acceptor_;
+	Acceptor acceptor_;
 };
 
 _jingxian_end
