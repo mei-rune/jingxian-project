@@ -4,8 +4,8 @@
 
 _jingxian_begin
 
-RunCommand::RunCommand(proactor* core, IRunnable* runnbale)
-: core_(core)
+RunCommand::RunCommand(HANDLE completion_port, IRunnable* runnbale)
+: completion_port_(completion_port)
 , ptr_(runnbale)
 {
 	if( is_null( runnbale ) )
@@ -27,7 +27,13 @@ void RunCommand::on_complete (size_t bytes_transferred,
 
 bool RunCommand::execute()
 {
-	return core_->post( this );
+	DWORD bytes_transferred = 0;
+	ULONG_PTR comp_key = 0;
+	return TRUE == ::PostQueuedCompletionStatus (completion_port_, // completion port
+		bytes_transferred ,      // xfer count
+		comp_key,               // completion key
+		this                  // overlapped
+		);
 }
 
 _jingxian_end

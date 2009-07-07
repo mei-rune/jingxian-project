@@ -22,15 +22,7 @@ class ProtocolContext
 public:
 	virtual ~ProtocolContext(){}
 
-	virtual IAcceptor& acceptor() = 0;
-
-	virtual const IAcceptor& acceptor() const = 0;
-
 	virtual ITransport& transport() = 0;
-
-	virtual const IDictionary& misc() const = 0;
-
-	virtual IDictionary& misc() = 0;
 };
 
 _jingxian_end

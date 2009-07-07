@@ -27,14 +27,14 @@ public:
      * 
      * @param[ in ] context 会话的上下文
 	 */
-    void onTimeout(ProtocolContext& context);
+    virtual void onTimeout(ProtocolContext& context) = 0;
 
     /**
      * 当会话建立后，被调用。
      * 
      * @param[ in ] context 会话的上下文
 	 */
-    void onConnected(ProtocolContext& context);
+    virtual void onConnected(ProtocolContext& context) = 0;
 
     /**
      * 当会话关闭后，被调用。
@@ -43,7 +43,7 @@ public:
      * @param[ in ] errCode 关闭的原因,为0是表示主动关闭
      * @param[ in ] reason 关闭的原因描述
 	 */
-    void onDisconnected(ProtocolContext& context, int errCode, const tstring& reason);
+    virtual void onDisconnected(ProtocolContext& context, int errCode, const tstring& reason) = 0;
 
     /**
      * 当有新的信息到来时，被调用。
@@ -51,7 +51,7 @@ public:
      * @param[ in ] context 会话的上下文
      * @param[ in ] buffer 包含新到来信息的缓冲区
 	 */
-    void onReceived(ProtocolContext& context, Buffer& buffer);
+    virtual void onReceived(ProtocolContext& context, Buffer& buffer) = 0;
 
     /**
      * 创建下次用来读取数据的缓冲区
@@ -59,7 +59,7 @@ public:
      * @param[ in ] lastBuffer 上一次用来读取数据的缓冲区</param>
      * @param[ in ] buffer 包含新到来信息的缓冲区
 	 */
-	Buffer createBuffer(Buffer& lastBuffer);
+	virtual Buffer createBuffer(Buffer& lastBuffer) = 0;
 
 	/**
 	* 取得地址的描述

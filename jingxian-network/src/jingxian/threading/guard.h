@@ -36,13 +36,6 @@ public:
 			ThrowException1( LockException , _T("½øÈëËøÊ§°Ü") );
   }
 
-  //guard (LOCK &l, bool block, bool become_owner, bool nothrow )
-	 // : lock_ (&l)
-	 // , owner_ (become_owner == 0 ? false : true )
-  //{
-		////JINGXIAN_UNUSED_ARG (block);
-  //}
-
   ~guard (void)
   {
     this->unlock ();

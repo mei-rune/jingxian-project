@@ -47,6 +47,58 @@ public:
 	virtual const tstring& toString() const = 0;
 };
 
+template<typename T>
+class Acceptor<T> : IAcceptor
+{
+public:
+	Acceptor(IAcceptor* acceptor)
+		: acceptor_(acceptor)
+	{
+	}
+
+	virtual ~Acceptor()
+	{
+	}
+
+    virtual  time_t timeout () const
+	{
+		return acceptor_->timeout();
+	}
+
+	/**
+	 * 监听的地址
+	 */
+    virtual const tstring& bindPoint() const
+	{
+		return acceptor_->bindPoint();
+	}
+
+	/**
+	 * 是不是处理监听状态
+	 */
+	virtual bool isListening() const
+	{
+		return acceptor_->bindPoint();
+	}
+
+	/**
+	 * 发起一个监听请求
+	 */
+    virtual void accept(OnBuildConnectionSuccess buildProtocol
+                            , OnBuildConnectionError onConnectError
+                            , void* context) = 0;
+
+	/**
+	* 取得地址的描述
+	*/
+	virtual const tstring& toString() const = 0;
+private:
+	NO_COPY(Acceptor);
+
+	IAcceptor* acceptor_;
+		//OnBuildConnectionSuccess buildProtocol
+        //OnBuildConnectionError onConnectError
+};
 
 class IAcceptorFactory
 {

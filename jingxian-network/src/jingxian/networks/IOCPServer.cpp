@@ -345,11 +345,6 @@ void IOCPServer::interrupt()
 	_isRunning = false;
 }
 
-TCPFactory& IOCPServer::tcpFactory()
-{
-	return tcpFactory_;
-}
-
 void IOCPServer::onIdle()
 {
 	

@@ -16,6 +16,7 @@
 # include "jingxian/IProtocolFactory.h"
 # include "jingxian/IConnectionBuilder.h"
 # include "jingxian/IAcceptor.h"
+# include "jingxian/ProtocolContext.h"
 
 _jingxian_begin
 
