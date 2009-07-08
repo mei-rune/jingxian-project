@@ -11,7 +11,7 @@
 // Include files
 # include "Winsock2.h"
 # include "Mswsock.h"
-# include "jingxian/networks/NetAddress.h"
+# include "jingxian/string/string.hpp"
 
 typedef WSABUF iovec;
 

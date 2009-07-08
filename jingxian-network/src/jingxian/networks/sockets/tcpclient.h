@@ -9,7 +9,6 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
-# include "jingxian/networks/NetAddress.h"
 # include "jingxian/networks/sockets/BaseSocket.h"
 
 _jingxian_begin
@@ -49,7 +48,7 @@ public:
   /**
    * 取得远程机地址
    */
-  const NetAddress& remote_addr () const;
+  const tstring& remote_addr () const;
 
   /**
    * 取得socket对象
