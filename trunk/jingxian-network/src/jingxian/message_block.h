@@ -30,7 +30,7 @@ struct DataBlock
 	// 字符串大小（可选值，为0或-1为无效值）
     size_t len;
     // 字符串指针
-    charT* ptr;
+    char* ptr;
 };
 
 class data_block

@@ -35,16 +35,6 @@ public:
 	virtual ~ITracer(){};
 
 	/**
-	 * 
-	 */
-    virtual void WriteInboundBuffer(const Buffer& buffer) = 0;
-    
-	/**
-	 *
-	 */
-	virtual void WriteOutboundBuffer(const Buffer& buffer) = 0;
-
-	/**
 	 * debug级的日志是否可以记日志
 	 * @return 可以true,不可以false
 	 */

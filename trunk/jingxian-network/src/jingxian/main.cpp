@@ -54,7 +54,7 @@ public:
      * @param[ in ] context 会话的上下文
      * @param[ in ] buffer 包含新到来信息的缓冲区
 	 */
-    virtual void onReceived(ProtocolContext& context, Buffer& buffer)
+    virtual void onReceived(ProtocolContext& context)
 	{
 	}
 
