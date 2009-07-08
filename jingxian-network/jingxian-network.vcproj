@@ -259,6 +259,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\jingxian\networks\networking.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\networking.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\jingxian\networks\TCPAcceptor.cpp"
 				>
 			</File>
@@ -327,22 +335,6 @@
 				</File>
 				<File
 					RelativePath=".\src\jingxian\networks\commands\WriteCommand.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="sockets"
-				>
-				<File
-					RelativePath=".\src\jingxian\networks\sockets\basesocket.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\jingxian\networks\sockets\basesocket.h"
-					>
-				</File>
-				<File
-					RelativePath=".\src\jingxian\networks\sockets\basesocket.inl"
 					>
 				</File>
 			</Filter>

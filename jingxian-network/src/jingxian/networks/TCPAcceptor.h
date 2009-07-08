@@ -11,7 +11,7 @@
 // Include files
 # include "jingxian/string/string.hpp"
 # include "jingxian/IReactorCore.h"
-# include "jingxian/networks/sockets/BaseSocket.h"
+# include "jingxian/networks/networking.h"
 # include "jingxian/networks/IOCPServer.h"
 
 
@@ -74,12 +74,12 @@ private:
 
 	friend class AcceptCommand;
 
-	SOCKET handle() { return socket_.handle(); }
+	SOCKET handle() { return socket_; }
 	IOCPServer* nextCore(){ return core_; }
 	ILogger* logger(){ return logger_; }
 
 	IOCPServer* core_;
-	BaseSocket socket_;
+	SOCKET socket_;
 	tstring endpoint_;
 	connection_status::type status_;
 	ILogger* logger_;

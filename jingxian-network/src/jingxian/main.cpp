@@ -207,7 +207,7 @@ int main(int argc, char* argv[])
 
 #endif //
 
-	_jingxian BaseSocket::initializeScket();
+	_jingxian networking::initializeScket();
 
 	_jingxian IOCPServer server;
 
@@ -218,7 +218,7 @@ int main(int argc, char* argv[])
 
 	server.runForever();
 
-	_jingxian BaseSocket::shutdownSocket();
+	_jingxian networking::shutdownSocket();
 	int i ; 
 	std::cin  >> i;
 	return 0;
