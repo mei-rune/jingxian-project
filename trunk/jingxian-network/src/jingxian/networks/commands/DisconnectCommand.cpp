@@ -1,7 +1,7 @@
 
 # include "pro_config.h"
 # include "jingxian/networks/commands/DisconnectCommand.h"
-# include "jingxian/networks/sockets/BaseSocket.h"
+# include "jingxian/networks/networking.h"
 
 _jingxian_begin
 
@@ -25,7 +25,7 @@ void DisconnectCommand::on_complete(size_t bytes_transferred
 
 bool DisconnectCommand::execute()
 {
-	if (BaseSocket::__disconnectex(connectedSocket_->handle()
+	if (networking::disconnectEx(connectedSocket_->handle()
 		, this
 		, 0
 		, 0))

@@ -64,7 +64,7 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 	int local_size = 0;
 	int remote_size = 0;
 
-	BaseSocket::__getacceptexsockaddrs (ptr_,
+	networking::getAcceptExSockaddrs(ptr_,
 		0,
 		sizeof (sockaddr_in) + sizeof (sockaddr),
 		sizeof (sockaddr_in) + sizeof (sockaddr),
@@ -139,7 +139,7 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 bool AcceptCommand::execute()
 {
 	DWORD bytesTransferred;
-	if (BaseSocket::__acceptex(listener_
+	if (networking::acceptEx(listener_
 		, socket_
 		, ptr_
 		, 0 //必须为0,否则会有大量的连接处于accept中，因为客户端只

@@ -8,7 +8,7 @@ _jingxian_begin
 
 TCPAcceptor::TCPAcceptor(IOCPServer* core, const tchar* endpoint)
 : core_(core)
-, socket_()
+, socket_(INVALID_SOCKET)
 , endpoint_(endpoint)
 , status_(connection_status::disconnected)
 , logger_(null_ptr)
@@ -39,7 +39,8 @@ bool TCPAcceptor::isListening() const
 
 void TCPAcceptor::stopListening()
 {
-	socket_.close();
+	closesocket(socket_);
+	socket_ = INVALID_SOCKET;
 	status_ = connection_status::disconnected;
 }
 
@@ -121,7 +122,7 @@ bool TCPAcceptor::startListening()
 	//((sockaddr_in*)&addr)->sin_port = htons(atoi(endpoint.substr(index+1).c_str()));
 
 
-	if(!socket_.open(addr.sa_family , SOCK_STREAM, IPPROTO_TCP))
+	if(INVALID_SOCKET == (socket_ = socket(addr.sa_family , SOCK_STREAM, IPPROTO_TCP)))
 	{
 		LOG_ERROR( logger_, _T("启动监听地址 '") << endpoint_ 
 			<< _T("' 时发生错误 - 创建 socket失败 - '") << lastError()
@@ -130,7 +131,7 @@ bool TCPAcceptor::startListening()
 	}
 
 //#pragma warning(disable: 4267)
-	if (SOCKET_ERROR == ::bind(socket_.handle(),&addr, len))
+	if (SOCKET_ERROR == ::bind(socket_,&addr, len))
 //#pragma warning(default: 4267)
 	{
 		LOG_ERROR( logger_, _T("启动监听地址 '") << endpoint_ 
@@ -139,7 +140,7 @@ bool TCPAcceptor::startListening()
 		return false;
 	}
 
-	if(SOCKET_ERROR == ::listen( socket_.handle(), SOMAXCONN))
+	if(SOCKET_ERROR == ::listen( socket_, SOMAXCONN))
 	{
 		LOG_ERROR( logger_, _T("启动监听地址 '") << endpoint_ 
 			<< _T("' 时发生错误 -  '") << lastError()
@@ -147,7 +148,7 @@ bool TCPAcceptor::startListening()
 		return false;
 	}
 	
-	if(!core_->bind((HANDLE)socket_.handle(), this))
+	if(!core_->bind((HANDLE)socket_, this))
 	{
 		LOG_ERROR( logger_, _T("绑定监听地址 '") << endpoint_ 
 			<< _T("' 到完成端口时发生错误 -  '") << lastError()
@@ -159,7 +160,7 @@ bool TCPAcceptor::startListening()
 
 	INFO( logger_, _T("启动监听地址 '") << endpoint_ 
 		<< _T("' 成功!") );
-	toString_ = _T("TCPAcceptor[ socket=") + socket_.toString() + _T(",address=") + endpoint_ + _T("]");
+	toString_ = _T("TCPAcceptor[ socket=") + ::toString((int)socket_) + _T(",address=") + endpoint_ + _T("]");
 
 	return true;
 }
