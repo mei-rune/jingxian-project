@@ -5,9 +5,8 @@
 
 _jingxian_begin
 
-DisconnectCommand::DisconnectCommand(IOCPServer* core, ConnectedSocket* connectedSocket)
-: core_(core)
-, connectedSocket_(connectedSocket)
+DisconnectCommand::DisconnectCommand(ConnectedSocket* connectedSocket)
+: connectedSocket_(connectedSocket)
 {
 }
 
@@ -16,11 +15,12 @@ DisconnectCommand::~DisconnectCommand()
 }
 
 void DisconnectCommand::on_complete(size_t bytes_transferred
-		, int success
+		, bool success
 		, void *completion_key
-		, u_int32_t error)
+		, errcode_t error)
 {
-	connectedSocket_->onDisconnected(0, _T("被撤消!"));
+	connectedSocket_->onDisconnected(error, _T("被撤消!"));
+	delete connectedSocket_;
 }
 
 bool DisconnectCommand::execute()

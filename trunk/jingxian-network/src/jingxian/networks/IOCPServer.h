@@ -101,12 +101,12 @@ private:
 	 * 获取已完成的事件,并处理这个事件
 	 * @return 超时返回1,获取到事件并成功处理返回0,获取失败返回-1
 	 */
-	int handle_events ( u_int32_t milli_seconds);
+	int handle_events (u_int32_t milli_seconds);
 
 	void application_specific_code (ICommand *asynch_result,
 		size_t bytes_transferred,
 		const void *completion_key,
-		u_long error);
+		errcode_t error);
 
 	HANDLE completion_port_;
 	u_long number_of_threads_;

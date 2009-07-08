@@ -35,6 +35,11 @@ public:
 	virtual ~ConnectedSocket( );
 
 	/**
+	 * @implements initialize
+	 */
+	virtual void initialize();
+
+	/**
 	 * @implements bindProtocol
 	 */
     virtual void bindProtocol(IProtocol* protocol);
@@ -48,21 +53,11 @@ public:
 	 * @implements stopReading
 	 */
     virtual void stopReading();
-
-	/**
-	 * @implements write
-	 */
-    virtual void write(char* buffer);
 	
 	/**
 	 * @implements write
 	 */
-    virtual void write(char* buffer, int offest, int length);
-	
-	/**
-	 * @implements write
-	 */
-    virtual void write(Buffer& buffer);
+    virtual void write(char* buffer, int length);
 
 	/**
 	 * @implements disconnection
@@ -98,14 +93,9 @@ public:
 	SOCKET handle(){return socket_;}
 	ITracer* tracer(){return tracer_;}
 
-	void onConnected();
-	void onDisconnected(int error, const tstring& description);
-
-
-	void initialize();
+	void onDisconnected(errcode_t error, const tstring& description);
 
 private:
-
 	NOCOPY(ConnectedSocket);
 
 	/// iocp对象的引用
@@ -121,9 +111,11 @@ private:
 	/// 超时时间
 	time_t timeout_;
 	/// 协议处理器
-	std::auto_ptr<IProtocol> protocol_;
+	IProtocol* protocol_;
 	/// 对象的上下文
-	//ProtocolContext* context_;
+	ProtocolContext context_;
+	/// 是否已初始化
+	bool isInitialize_;
 	/// 日志对象
 	ITracer* tracer_;
 	tstring toString_;

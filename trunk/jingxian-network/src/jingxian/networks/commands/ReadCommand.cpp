@@ -19,9 +19,9 @@ ReadCommand::~ReadCommand( )
 }
 
 void ReadCommand::on_complete(size_t bytes_transferred
-		, int success
+		, bool success
 		, void *completion_key
-		, u_int32_t error)
+		, errcode_t error)
 {
 	//ReadError exception = null;
 	//try

@@ -14,6 +14,8 @@ TCPAcceptor::TCPAcceptor(IOCPServer* core, const tchar* endpoint)
 , logger_(null_ptr)
 , toString_(_T("TCPAcceptor"))
 {
+	toString_ = _T("TCPAcceptor[address=") + endpoint_ + _T("]");
+	logger_ = logging::makeLogger(_T("TCPAcceptor"));
 }
 
 TCPAcceptor::~TCPAcceptor()
@@ -99,14 +101,6 @@ bool TCPAcceptor::startListening()
 		}
 		endpoint = endpoint.substr(index + 3);
 	}
-
-	//index = endpoint.find(_T(":"));
-	//if(tstring::npos == index)
-	//{
-	//	LOG_ERROR( logger_, _T("监听地址 '") << endpoint_ 
-	//		<< _T("' 格式不正确,没有端口" ));
-	//	return false;
-	//}
 
 	int len = sizeof(addr);
 	if(SOCKET_ERROR == ::WSAStringToAddress((LPSTR)endpoint.c_str(), addr.sa_family, 0, &addr, &len))

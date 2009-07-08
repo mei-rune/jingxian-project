@@ -11,7 +11,7 @@ AcceptCommand::AcceptCommand(TCPAcceptor* acceptor
                             , OnBuildConnectionError onError
                             , void* context)
 : core_(acceptor->nextCore())
-, onSuccess_(onComplete)
+, onComplete_(onComplete)
 , onError_(onError)
 , context_(context)
 , listener_(acceptor->handle())
@@ -38,7 +38,7 @@ AcceptCommand::~AcceptCommand()
 void AcceptCommand::on_complete(size_t bytes_transferred
 								, bool success
 								, void *completion_key
-								, u_int32_t error)
+								, errcode_t error)
 {
 	if (!success)
 	{
@@ -64,6 +64,8 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 	int local_size = 0;
 	int remote_size = 0;
 
+	/// 超级奇怪!如果直接用 GetAcceptExSockaddrs 会失败,通过调
+	/// 用 GetAcceptExSockaddrs 的函数指针就没有问题.
 	networking::getAcceptExSockaddrs(ptr_,
 		0,
 		sizeof (sockaddr_in) + sizeof (sockaddr),
@@ -131,8 +133,8 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 		onError_(err, context_);
 		return;
 	}
+	onComplete_(connectedSocket.get(), context_);
 	connectedSocket->initialize();
-	onSuccess_(connectedSocket.get(), context_);
 	connectedSocket.release();
 }
 

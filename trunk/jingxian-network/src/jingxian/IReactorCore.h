@@ -13,7 +13,6 @@
 # include "jingxian/IConcurrentPort.h"
 # include "jingxian/ITransport.h"
 # include "jingxian/IProtocol.h"
-# include "jingxian/IProtocolFactory.h"
 # include "jingxian/IConnectionBuilder.h"
 # include "jingxian/IAcceptor.h"
 # include "jingxian/ProtocolContext.h"

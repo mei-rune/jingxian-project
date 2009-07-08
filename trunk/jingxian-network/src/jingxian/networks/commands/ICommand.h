@@ -35,7 +35,7 @@ public:
 	virtual void on_complete (size_t bytes_transferred,
                          bool success,
                          void *completion_key,
-                         u_int32_t error = 0) = 0;
+                         errcode_t error = 0) = 0;
 
 protected:
 	HANDLE handle_;

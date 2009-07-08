@@ -21,6 +21,12 @@ class ITransport
 public:
 	    virtual ~ITransport(){}
 
+		
+		/**
+		 * 初始化 Transport 实例
+		 */
+		virtual void initialize() = 0;
+
 		/**
          * 指定用 @see{protocol} 接口来接收读到的数据
          */
@@ -38,17 +44,10 @@ public:
 
         /**
          * 发送数据（注意它是异步的  )
-         * @param[ in ] handle  异步回调接口,当数据发送操作（不管成功，失败，撤消）
-         *				调用成功，都会回调handle的onWrite接口
          * @param[ in ] buffer 待发送的数据块
-         * @param[ in ] IOBuffer 待发送的数据块
-         * @param[ in ] IOBuffers 多个待发送的数据块
-         * @param[ in ] offest 数据偏移
          * @param[ in ] length 数据长度
          */
-        virtual void write(char* buffer) = 0;
-        virtual void write(char* buffer, int offest, int length) = 0;
-        virtual void write(Buffer& buffer) = 0;
+        virtual void write(char* buffer, int length) = 0;
 
         /**
          * 关闭连接
@@ -80,12 +79,6 @@ public:
 		 */
 		virtual const tstring& toString() const = 0;
 };
-
-inline tostream& operator<<( tostream& target, const ITransport& transport )
-{
-	target << transport.toString();
-	return target;
-}
 
 
 class ErrorCode
@@ -122,13 +115,25 @@ public:
 
 	bool isSuccess() const { return isSuccess_; }
 	int getCode() const { return code_; }
-	const tstring& toSting() const { return err_; }
+	const tstring& toString() const { return err_; }
 
 private:
 	bool isSuccess_;
 	int code_;
 	tstring err_;
 };
+
+inline tostream& operator<<( tostream& target, const ITransport& transport )
+{
+	target << transport.toString();
+	return target;
+}
+
+inline tostream& operator<<( tostream& target, const ErrorCode& err )
+{
+	target << err.toString();
+	return target;
+}
 
 typedef void (*OnBuildConnectionComplete)( ITransport* transport, void* context);
 typedef void (*OnBuildConnectionError)( const ErrorCode& err,  void* context);

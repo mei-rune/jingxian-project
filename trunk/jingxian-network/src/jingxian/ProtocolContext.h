@@ -9,20 +9,46 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
-# include "buffer.h"
-# include "Dictionary.h"
 
 _jingxian_begin
 
-class IAcceptor;
+class IReactorCore;
 class ITransport;
 
 class ProtocolContext
 {
 public:
-	virtual ~ProtocolContext(){}
+	ProtocolContext(IReactorCore* core
+		, ITransport* transport)
+		: core_(core)
+		, transport_(transport)
+	{
+	}
 
-	virtual ITransport& transport() = 0;
+	virtual ~ProtocolContext()
+	{
+	}
+
+	IReactorCore& core()
+	{
+		return *core_;
+	}
+
+	ITransport& transport()
+	{
+		return *transport_;
+	}
+
+	InBuffer& inBuffer()
+	{
+	}
+	
+	OutBuffer& outBuffer()
+	{
+	}
+private:
+	IReactorCore* core_;
+	ITransport* transport_;
 };
 
 _jingxian_end

@@ -1,6 +1,7 @@
 
 # include "pro_config.h"
 # include "jingxian/networks/ConnectedSocket.h"
+# include "jingxian/networks/commands/DisconnectCommand.h"
 
 _jingxian_begin
 
@@ -13,19 +14,45 @@ ConnectedSocket::ConnectedSocket(IOCPServer* core
 , host_(host)
 , peer_(peer)
 , state_(connection_status::connected)
+, timeout_(3*1000)
+, protocol_(0)
+, context_(core, this)
+, isInitialize_(false)
 , tracer_(0)
 {
 	tracer_ = logging::makeTracer( _T("ConnectedSocket[") + host_ + _T("-") + peer_ + _T("]"));
+	
+	if(null_ptr!=tracer_ && tracer_->isTraceEnabled())
+	{
+		StringStream oss;
+		oss << _T("创建 ConnectedSocket 对象成功");
+		tracer_->trace( logging::Both, oss, __FILE__, __LINE__);
+	}
 }
 
 ConnectedSocket::~ConnectedSocket( )
-{
-	ThrowException( NotImplementedException );
+{	
+	if(null_ptr!=tracer_ && tracer_->isTraceEnabled())
+	{
+		StringStream oss;
+		oss << _T("销毁 ConnectedSocket 对象成功");
+		tracer_->trace( logging::Both, oss, __FILE__, __LINE__);
+	}
 }
 
 void ConnectedSocket::bindProtocol(IProtocol* protocol)
 {
-	protocol_.reset(protocol);
+	protocol_ = protocol;
+}
+
+void ConnectedSocket::initialize()
+{
+	if( isInitialize_ )
+		return;
+
+	protocol_->onConnected( context_ );
+	startReading();
+	isInitialize_ = true;
 }
 
 void ConnectedSocket::startReading()
@@ -38,29 +65,27 @@ void ConnectedSocket::stopReading()
 	ThrowException( NotImplementedException );
 }
 
-void ConnectedSocket::write(char* buffer)
-{
-	ThrowException( NotImplementedException );
-}
-
-void ConnectedSocket::write(char* buffer, int offest, int length)
-{
-	ThrowException( NotImplementedException );
-}
-
-void ConnectedSocket::write(Buffer& buffer)
+void ConnectedSocket::write(char* buffer, int length)
 {
 	ThrowException( NotImplementedException );
 }
 
 void ConnectedSocket::disconnection()
 {
-	ThrowException( NotImplementedException );
+	disconnection(_T("用户主动关闭连接"));
 }
 
 void ConnectedSocket::disconnection(const tstring& error)
 {
-	ThrowException( NotImplementedException );
+	std::auto_ptr< ICommand> command(new DisconnectCommand(this));
+	if(!command->execute())
+	{
+		int code = ::WSAGetLastError();
+		onDisconnected(code, concat<tstring>(_T("断开连接时发生错误 - "), lastError(code)));
+		return ;
+	}
+
+	command.release();
 }
 
 const tstring& ConnectedSocket::host() const
@@ -83,20 +108,9 @@ const tstring& ConnectedSocket::toString() const
 	return toString_;
 }
 
-void ConnectedSocket::onConnected()
+void ConnectedSocket::onDisconnected(errcode_t error, const tstring& description)
 {
-	ThrowException( NotImplementedException );
-}
-
-void ConnectedSocket::onDisconnected(int error, const tstring& description)
-{
-	ThrowException( NotImplementedException );
-}
-
-
-void ConnectedSocket::initialize()
-{
-	ThrowException( NotImplementedException );
+	protocol_->onDisconnected(context_,error, description);
 }
 
 

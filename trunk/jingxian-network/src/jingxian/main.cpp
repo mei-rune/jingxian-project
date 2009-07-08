@@ -32,7 +32,8 @@ public:
 	 */
     virtual void onConnected(ProtocolContext& context)
 	{
-		std::cout << context.transport().peer() << std::endl;
+		std::cout << "新连接到来 - " << context.transport().peer() << std::endl;
+		context.transport().disconnection();
 	}
 
     /**
@@ -42,8 +43,9 @@ public:
      * @param[ in ] errCode 关闭的原因,为0是表示主动关闭
      * @param[ in ] reason 关闭的原因描述
 	 */
-    virtual void onDisconnected(ProtocolContext& context, int errCode, const tstring& reason)
+    virtual void onDisconnected(ProtocolContext& context, errcode_t errCode, const tstring& reason)
 	{
+		std::cout << "连接断开 - " << context.transport().peer() << std::endl;
 	}
 
     /**
@@ -73,7 +75,7 @@ public:
 	EchoServer(IOCPServer& core)
 		: AbstractServer( &core )
 	{
-		if(!this->initialize("0.0.0.0:6543"))
+		if(!this->initialize("tcp://0.0.0.0:6543"))
 		{
 			std::cout << "初始失败" << std::endl;
 			return;
@@ -85,7 +87,7 @@ public:
 	void OnComplete(ITransport* transport, IOCPServer* core)
 	{		
 		transport->bindProtocol(&protocol_);
-		transport->startReading();
+		transport->initialize();
 
 		acceptor_.accept(this, &EchoServer::OnComplete, &EchoServer::OnError, core);
 	}
@@ -101,7 +103,6 @@ public:
 private:
 
 	EchoProtocol protocol_;
-	Acceptor acceptor_;
 };
 
 _jingxian_end

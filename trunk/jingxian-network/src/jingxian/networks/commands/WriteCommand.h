@@ -24,9 +24,9 @@ public:
 	virtual ~WriteCommand();
 	
 	virtual void on_complete(size_t bytes_transferred
-		, int success
+		, bool success
 		, void *completion_key
-		, u_int32_t error);
+		, errcode_t error);
 
 	virtual bool execute();
 
