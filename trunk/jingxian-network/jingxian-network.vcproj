@@ -259,36 +259,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\networks\NetAddress.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\networks\NetAddress.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\networks\ProtocolFactory.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\src\jingxian\networks\TCPAcceptor.cpp"
 				>
 			</File>
@@ -373,30 +343,6 @@
 				</File>
 				<File
 					RelativePath=".\src\jingxian\networks\sockets\basesocket.inl"
-					>
-				</File>
-				<File
-					RelativePath=".\src\jingxian\networks\sockets\tcpclient.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\jingxian\networks\sockets\tcpclient.h"
-					>
-				</File>
-				<File
-					RelativePath=".\src\jingxian\networks\sockets\tcpclient.inl"
-					>
-				</File>
-				<File
-					RelativePath=".\src\jingxian\networks\sockets\tcpserver.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\jingxian\networks\sockets\tcpserver.h"
-					>
-				</File>
-				<File
-					RelativePath=".\src\jingxian\networks\sockets\tcpserver.inl"
 					>
 				</File>
 			</Filter>
@@ -509,6 +455,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\src\jingxian\AbstractServer.h"
+			>
+		</File>
 		<File
 			RelativePath=".\src\jingxian\Buffer.h"
 			>

@@ -205,6 +205,11 @@ public:
 		reset(null_ptr);
 	}
 
+	bool isNull() const
+	{
+		return null_ptr == acceptor_;
+	}
+
 	/**
 	* 取得地址的描述
 	*/
@@ -245,6 +250,11 @@ inline tostream& operator<<( tostream& target, const IAcceptorFactory& acceptorF
 {
 	target << acceptorFactory.toString();
 	return target;
+}
+
+inline bool is_null(const Acceptor* acceptor)
+{
+	return null_ptr==acceptor || acceptor->isNull();
 }
 
 _jingxian_end

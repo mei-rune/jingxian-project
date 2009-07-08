@@ -1,8 +1,10 @@
 // Jingxian_Network.cpp : 定义控制台应用程序的入口点。
 
 #include "pro_config.h"
-#include "jingxian/string/string.hpp"
+#include "jingxian/AbstractServer.h"
 #include "jingxian/networks/IOCPServer.h"
+
+
 #include <iostream>
 
 _jingxian_begin
@@ -65,27 +67,40 @@ private:
 	tstring toString_;
 };
 
-class EchoServer
+class EchoServer : public AbstractServer
 {
 public:
 	EchoServer(IOCPServer& core)
+		: AbstractServer( &core )
 	{
-		acceptor_.reset(core.listenWith("tcp://0.0.0.0:6345"));
+		if(!this->initialize("0.0.0.0:6543"))
+		{
+			std::cout << "初始失败" << std::endl;
+			return;
+		}
 		acceptor_.accept(this, &EchoServer::OnComplete, &EchoServer::OnError, &core);
 	}
 
 
 	void OnComplete(ITransport* transport, IOCPServer* core)
-	{
-		transport->disconnection();
+	{		
+		transport->bindProtocol(&protocol_);
+		transport->startReading();
+
+		acceptor_.accept(this, &EchoServer::OnComplete, &EchoServer::OnError, core);
 	}
 
 	void OnError(const ErrorCode& err, IOCPServer* core)
 	{
+		acceptor_.accept(this, &EchoServer::OnComplete, &EchoServer::OnError, core);
 	}
-
+	virtual const tstring& toString() const
+	{
+		return protocol_.toString();
+	}
 private:
 
+	EchoProtocol protocol_;
 	Acceptor acceptor_;
 };
 

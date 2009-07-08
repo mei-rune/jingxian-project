@@ -53,13 +53,13 @@ public:
 	 */
     virtual void onReceived(ProtocolContext& context, Buffer& buffer) = 0;
 
-    /**
-     * 创建下次用来读取数据的缓冲区
-     * 
-     * @param[ in ] lastBuffer 上一次用来读取数据的缓冲区</param>
-     * @param[ in ] buffer 包含新到来信息的缓冲区
-	 */
-	virtual Buffer createBuffer(Buffer& lastBuffer) = 0;
+ //   /**
+ //    * 创建下次用来读取数据的缓冲区
+ //    * 
+ //    * @param[ in ] lastBuffer 上一次用来读取数据的缓冲区</param>
+ //    * @param[ in ] buffer 包含新到来信息的缓冲区
+	// */
+	//virtual Buffer createBuffer(Buffer& lastBuffer) = 0;
 
 	/**
 	* 取得地址的描述

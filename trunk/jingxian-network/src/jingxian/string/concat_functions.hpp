@@ -14,6 +14,15 @@
 
 _jingxian_begin
 
+template<typename S,typename S1,typename S2>
+inline S concat(const S1& s1, const S2& s2)
+{
+	S s;
+	s += s1;
+	s += s2;
+	return s;
+}
+
 template<typename S,typename S1,typename S2,typename S3>
 inline S concat(const S1& s1, const S2& s2, const S3& s3)
 {
