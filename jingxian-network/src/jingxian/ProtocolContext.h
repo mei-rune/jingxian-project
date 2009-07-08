@@ -9,6 +9,7 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
+# include "Buffer.h"
 
 _jingxian_begin
 
@@ -22,6 +23,8 @@ public:
 		, ITransport* transport)
 		: core_(core)
 		, transport_(transport)
+		, outBuffer_(0)
+		, inBuffer_(0)
 	{
 	}
 
@@ -41,14 +44,18 @@ public:
 
 	InBuffer& inBuffer()
 	{
+		return *inBuffer_;
 	}
 	
 	OutBuffer& outBuffer()
 	{
+		return *outBuffer_;
 	}
 private:
 	IReactorCore* core_;
 	ITransport* transport_;
+	OutBuffer* outBuffer_;
+	InBuffer* inBuffer_;
 };
 
 _jingxian_end
