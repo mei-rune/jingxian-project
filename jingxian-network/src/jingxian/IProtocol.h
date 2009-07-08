@@ -43,7 +43,7 @@ public:
      * @param[ in ] errCode 关闭的原因,为0是表示主动关闭
      * @param[ in ] reason 关闭的原因描述
 	 */
-    virtual void onDisconnected(ProtocolContext& context, int errCode, const tstring& reason) = 0;
+    virtual void onDisconnected(ProtocolContext& context, errcode_t errCode, const tstring& reason) = 0;
 
     /**
      * 当有新的信息到来时，被调用。
@@ -51,7 +51,7 @@ public:
      * @param[ in ] context 会话的上下文
      * @param[ in ] buffer 包含新到来信息的缓冲区
 	 */
-    virtual void onReceived(ProtocolContext& context, Buffer& buffer) = 0;
+    virtual void onReceived(ProtocolContext& context) = 0;
 
  //   /**
  //    * 创建下次用来读取数据的缓冲区
@@ -66,6 +66,29 @@ public:
 	*/
 	virtual const tstring& toString() const = 0;
 };
+
+class IProtocolFactory
+{
+public:
+
+	virtual ~IProtocolFactory(){}
+
+	/**
+	 * 创建 IProtocol 对象
+	 */
+	virtual IProtocol* createProtocol() = 0;
+
+	/**
+	* 取得地址的描述
+	*/
+	virtual const tstring& toString() const = 0;
+};
+
+inline tostream& operator<<( tostream& target, const IProtocolFactory& protocolFactory )
+{
+	target << protocolFactory.toString();
+	return target;
+}
 
 inline tostream& operator<<( tostream& target, const IProtocol& protocol )
 {

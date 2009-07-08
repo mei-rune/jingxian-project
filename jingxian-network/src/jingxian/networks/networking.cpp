@@ -63,9 +63,9 @@ namespace networking
 		FD_ZERO( &socket_set );
 		FD_SET(sock, &socket_set );
 
-		return ( 1 == ::select( 0, (mode == select_read)?&socket_set:NULL
-			, (mode == select_write)?&socket_set:NULL
-			, (mode == select_error)?&socket_set:NULL
+		return ( 1 == ::select( 0, (mode & select_read)?&socket_set:NULL
+			, (mode & select_write)?&socket_set:NULL
+			, (mode & select_error)?&socket_set:NULL
 			, &time_val ) );
 	}
 
@@ -380,7 +380,7 @@ namespace networking
 		DWORD dwFlags,
 		DWORD reserved)
 	{
-		return __disconnectex(hSocket,
+		return TRUE == __disconnectex(hSocket,
 			lpOverlapped,
 			dwFlags,
 			reserved);
@@ -395,7 +395,7 @@ namespace networking
 		LPSOCKADDR* RemoteSockaddr,
 		LPINT RemoteSockaddrLength)
 	{
-		return getAcceptExSockaddrs(lpOutputBuffer,
+		__getacceptexsockaddrs(lpOutputBuffer,
 			dwReceiveDataLength,
 			dwLocalAddressLength,
 			dwRemoteAddressLength,

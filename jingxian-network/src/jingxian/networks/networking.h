@@ -30,39 +30,14 @@ _jingxian_begin
 
 namespace networking
 {
-	enum select_mode
-	{
+  enum select_mode
+  {
 		  select_read = 1
 		, select_write = 2
 		, select_error = 4
-	};
+  };
 
-
-  /**
-   * 设置socket选项，请见setsockopt
-   */
-  bool set_option (SOCKET sock, 
-	              int level,
-                  int option,
-                  void *optval,
-                  int optlen);
-  /**
-   * 获得socket选项，请见getsockopt
-   */
-  bool get_option (SOCKET sock, 
-				  int level,
-                  int option,
-                  void *optval,
-                  int *optlen);
   
-  /**
-   * 判断并等待直到socket可以进行读(写)操作，或出错，或超时
-   * @params[ in ] timval 超时时间
-   * @params[ in ] mode 判断的的操作类型，请见select_mode枚举
-   * @return 可以操作返回true
-   */
-  bool poll(SOCKET sock, const TIMEVAL& timeval, int select_mode);
-
   /**
    * 初始化socket服务
    */
@@ -72,26 +47,33 @@ namespace networking
    * 关闭socket服务
    */
   void shutdownSocket();
-
-  /**
-   * 启动socket的选项
-   * @params[ in ] value 可取值请见ioctlsocket
-   */
-  bool enable(SOCKET sock, int value);
-
-  /**
-   * 启动socket的选项
-   * @params[ in ] value 可取值请见ioctlsocket
-   */
-  bool disable(SOCKET sock, int value);
-
   
+  /**
+   * 判断 socket 是否有数据可读
+   */
   bool isReadable(SOCKET sock);
 
+  /**
+   * 判断 socket 是否可写
+   */
   bool isWritable(SOCKET sock);
 
+  /**
+   * 设置 socket 是否阻塞
+   */
   void setBlocking(SOCKET sock, bool val);
 
+  /**
+   * 判断并等待直到socket可以进行读(写)操作，或出错，或超时
+   * @params[ in ] timval 超时时间
+   * @params[ in ] mode 判断的的操作类型，请见select_mode枚举
+   * @return 可以操作返回true
+   */
+  bool poll(SOCKET sock, const TIMEVAL& timeval, int select_mode);
+
+  /**
+   * @see MSDN
+   */
   bool transmitFile(SOCKET hSocket,
 		  HANDLE hFile,
 		  DWORD nNumberOfBytesToWrite,
@@ -100,6 +82,9 @@ namespace networking
 		  LPTRANSMIT_FILE_BUFFERS lpTransmitBuffers,
 		  DWORD dwFlags );
 
+  /**
+   * @see MSDN
+   */
   bool acceptEx( SOCKET sListenSocket,
           SOCKET sAcceptSocket,
           PVOID lpOutputBuffer,
@@ -109,6 +94,9 @@ namespace networking
           LPDWORD lpdwBytesReceived,
           LPOVERLAPPED lpOverlapped );
   
+  /**
+   * @see MSDN
+   */
   bool transmitPackets( SOCKET hSocket,
 		  LPTRANSMIT_PACKETS_ELEMENT lpPacketArray,
 		  DWORD nElementCount,
@@ -116,6 +104,9 @@ namespace networking
 		  LPOVERLAPPED lpOverlapped,
 		  DWORD dwFlags);
 
+  /**
+   * @see MSDN
+   */
   bool connectEx(SOCKET s,
           const struct sockaddr* name,
           int namelen,
@@ -124,11 +115,17 @@ namespace networking
           LPDWORD lpdwBytesSent,
           LPOVERLAPPED lpOverlapped );
 
+  /**
+   * @see MSDN
+   */
   bool disconnectEx(SOCKET hSocket,
           LPOVERLAPPED lpOverlapped,
           DWORD dwFlags,
           DWORD reserved);
 
+  /**
+   * @see MSDN
+   */
   void getAcceptExSockaddrs(PVOID lpOutputBuffer,
           DWORD dwReceiveDataLength,
           DWORD dwLocalAddressLength,

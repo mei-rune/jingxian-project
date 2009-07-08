@@ -201,9 +201,9 @@ _jingxian_end
 
 #ifndef LOG_RETURN
 #define LOG_RETURN(logger, level, message,ret) { \
+	if ( logger != 0 && logger->isEnabledFor(level)) {\
 	StringStream oss; \
 	oss << message; \
-	if ( logger != 0 && logger->isEnabledFor(level)) {\
 	logger->fatal(level, oss, __FILE__, __LINE__); } return ( ret );}
 #endif // LOG_RETURN
 

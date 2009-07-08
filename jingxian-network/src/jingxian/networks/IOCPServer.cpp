@@ -167,7 +167,7 @@ int IOCPServer::handle_events (u_int32_t milli_seconds)
 	else
 	{
 		ICommand *asynch_result = (ICommand *) overlapped;
-		u_long error = 0;
+		errcode_t error = 0;
 		if( !result )
 			error = GetLastError();
 
@@ -182,7 +182,7 @@ int IOCPServer::handle_events (u_int32_t milli_seconds)
 void IOCPServer::application_specific_code (ICommand *asynch_result,
 														  size_t bytes_transferred,
 														  const void *completion_key,
-														  u_long error)
+														  errcode_t error)
 {
 	try
 	{
@@ -321,7 +321,7 @@ IAcceptor* IOCPServer::listenWith(const tchar* endPoint)
 	
 bool IOCPServer::send( IRunnable* runnable )
 {
-	std::auto_ptr< ICommand > ptr(new RunCommand(this, runnable));
+	std::auto_ptr< ICommand > ptr(new RunCommand(completion_port_, runnable));
 	if(ptr->execute())
 	{
 		ptr.release();

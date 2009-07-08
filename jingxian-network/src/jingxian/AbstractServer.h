@@ -34,7 +34,7 @@ public:
 	 * 取得地址的描述
 	 */
 	virtual const tstring& toString() const = 0;
-private:
+protected:
 	IReactorCore* reactor_;
 	Acceptor acceptor_;
 };

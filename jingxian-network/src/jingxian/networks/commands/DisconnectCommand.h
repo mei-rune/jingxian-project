@@ -18,14 +18,14 @@ class DisconnectCommand : public ICommand
 {
 public:
 
-	DisconnectCommand(IOCPServer* core, ConnectedSocket* connectedSocket);
+	DisconnectCommand(ConnectedSocket* connectedSocket);
 
 	virtual ~DisconnectCommand();
 
 	virtual void on_complete(size_t bytes_transferred
-		, int success
+		, bool success
 		, void *completion_key
-		, u_int32_t error);
+		, errcode_t error);
 
 	virtual bool execute();
 
@@ -33,7 +33,6 @@ private:
 
 	NOCOPY(DisconnectCommand);
 
-	IOCPServer* core_;
 	ConnectedSocket* connectedSocket_;
 };
 

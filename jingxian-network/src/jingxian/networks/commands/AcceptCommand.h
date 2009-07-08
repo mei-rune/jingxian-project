@@ -27,20 +27,15 @@ public:
 	virtual void on_complete(size_t bytes_transferred
 		, bool success
 		, void *completion_key
-		, u_int32_t error);
+		, errcode_t error);
 
 	virtual bool execute();
 
-protected:
-	
-    void initializeConnection(int bytesTransferred
-							  , void *completion_key);
-
 private:
 	NOCOPY(AcceptCommand);
-
+	
 	IOCPServer* core_;
-	OnBuildConnectionComplete onSuccess_;
+	OnBuildConnectionComplete onComplete_;
     OnBuildConnectionError onError_;
     void* context_;
 

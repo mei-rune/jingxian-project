@@ -447,6 +447,34 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="serialize"
+			>
+			<File
+				RelativePath=".\src\jingxian\serialize\reader.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\serialize\serialize.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\serialize\serialize_context.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\serialize\serialize_macro.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\serialize\writer.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\serialize\xmlserializer.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\src\jingxian\AbstractServer.h"
 			>
@@ -497,10 +525,6 @@
 		</File>
 		<File
 			RelativePath=".\src\jingxian\IProtocol.h"
-			>
-		</File>
-		<File
-			RelativePath=".\src\jingxian\IProtocolFactory.h"
 			>
 		</File>
 		<File

@@ -230,19 +230,12 @@ inline T get_ptr( T t )
 
 #ifdef __GNUG__
 #define _T L
-#endif
-
 typedef  int errno_t;
-
-#ifdef __GNUG__
 #define _THROW0() throw()
-#endif
-
-#ifdef __GNUG__
 #define __MSVCRT_VERSION__ 0x0700
 #endif
 
-
+typedef DWORD errcode_t;
 
 
 #endif // _config_h_

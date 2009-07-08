@@ -20,14 +20,14 @@ public:
 
 	ReadCommand(ConnectedSocket* transport
 		, char* ptr
-		, size_t len );
+		, size_t len);
 	
 	virtual ~ReadCommand();
 
 	virtual void on_complete(size_t bytes_transferred
-		, int success
+		, bool success
 		, void *completion_key
-		, u_int32_t error);
+		, errcode_t error);
 
 	virtual bool execute();
 
