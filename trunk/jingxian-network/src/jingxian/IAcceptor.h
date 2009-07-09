@@ -9,7 +9,6 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
-# include "buffer.h"
 # include <functional>
 # include "jingxian/string/string.hpp"
 

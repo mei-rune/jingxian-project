@@ -21,10 +21,10 @@ namespace ExceptionStyle
 	};
 }
 
-class BaseBuffer
+class IBuffer
 {
 public:
-	virtual ~BaseBuffer(){}
+	virtual ~IBuffer(){}
 
 	/**
 	 * 当从流中读或写数据时,指针当前位置也向前移动,启动事
@@ -79,7 +79,7 @@ public:
 class IOTranscationScope
 {
 public:
-	IOTranscationScope(BaseBuffer& buffer)
+	IOTranscationScope(IBuffer& buffer)
 		: buffer_(buffer)
 		, transcationId_(buffer.beginTranscation())
 	{
@@ -101,44 +101,71 @@ public:
 	}
 
 private:
-	BaseBuffer& buffer_;
+	IBuffer& buffer_;
 	int transcationId_;
 };
 
 /**
- * InBuffer 从 BaseBuffer 一般来说应该是虚继承,但
+ * InBuffer 从 IBuffer 一般来说应该是虚继承,但
  * 我不想搞得太复杂,在实现该类时请注意不要同时继
  * 承 OutBuffer;
  */
-class InBuffer : public BaseBuffer
+class IInBuffer : public IBuffer
 {
 public:
-	virtual ~InBuffer(void) {}
+	virtual ~IInBuffer(void) {}
 
-	virtual int8_t readInt8() = 0;
+	virtual bool    readBoolean() = 0;
+	virtual int8_t  readInt8() = 0;
 	virtual int16_t readInt16() = 0;
 	virtual int32_t readInt32() = 0;
 	virtual int64_t readInt64() = 0;
-	virtual void readBlob(char* blob, int32_t* len) = 0;
+	virtual void readBlob(void* blob, size_t len) = 0;
 
+	/**
+	 * 在 Buffer 中的数据的长度
+	 */
 	virtual size_t size() = 0;
+
+	/**
+	 * 查找指定的数据的第一次出现位置
+	 */
+	virtual size_t search(const void* context,size_t len) = 0;
+	
+	/**
+	 * 查找指定的字符串中任意字符第一次出现位置
+	 */
+	virtual size_t searchAny(const char* charset) = 0;
+
+	/**
+	 * 查找指定的字符串中任意字符第一次出现位置
+	 */
+	virtual size_t searchAny(const wchar_t* charset) = 0;
+
+	/**
+	 * 取出 Buffer 中的所有数据块
+	 * @params[ out ] len Buffer 中的数据块的数量
+	 * @return 返回 Buffer 中的所有数据块的指针
+	 */
+	virtual const LPWSABUF GetBuffer(size_t* len) const = 0;
 };
 
 /**
- * OutBuffer 从 BaseBuffer 一般来说应该是虚继承,但
+ * OutBuffer 从 IBuffer 一般来说应该是虚继承,但
  * 我不想搞得太复杂,在实现该类时请注意不要同时继
  * 承 InBuffer;
  */
-class OutBuffer : public BaseBuffer
+class IOutBuffer : public IBuffer
 {
 public:
-	virtual ~OutBuffer(void) {}
+	virtual ~IOutBuffer(void) {}
 
-	virtual InBuffer& writeInt8(int8_t value);
-	virtual InBuffer& writeInt16(int16_t value);
-	virtual InBuffer& writeInt32(int32_t value);
-	virtual InBuffer& writeInt64(const int64_t& value);
-	virtual InBuffer& writeBlob(const char* blob, int32_t len);
+	virtual IOutBuffer& writeBoolean(bool value) = 0;
+	virtual IOutBuffer& writeInt8(int8_t value) = 0;
+	virtual IOutBuffer& writeInt16(int16_t value) = 0;
+	virtual IOutBuffer& writeInt32(int32_t value) = 0;
+	virtual IOutBuffer& writeInt64(const int64_t& value) = 0;
+	virtual IOutBuffer& writeBlob(const void* blob, size_t len) = 0;
 };
 
 _jingxian_end

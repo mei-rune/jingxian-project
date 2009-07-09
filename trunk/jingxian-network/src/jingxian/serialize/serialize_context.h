@@ -19,7 +19,11 @@ public:
 
 	enum Type
 	{
-		Pr
+		PRIMITIVE
+		,USER
+		,STRING
+		,SEQUENUE
+		,DICTIONARY
 	};
 
 	class string_guard
@@ -119,6 +123,18 @@ public:
 	 * 当前级的字段名
 	 */
 	virtual const tstring& currentField() const = 0;
+	
+	/**
+	 * 当前正在序列化的字段的类型
+	 * @param[ in ] val 如果 val 为true则设置当前是容器,否则不是容器
+	 */
+	virtual serialize_context::Type currentType() const = 0;
+
+	/**
+	 * 当前正在序列化的字段的类型
+	 * @return 如果返回true则当前是容器,否则不是容器
+	 */
+	virtual void currentType(serialize_context::Type type) = 0;
 
 	/**
 	 * 当前深度
@@ -140,46 +156,6 @@ public:
 	 * @remarks 注意取不到时会抛出NotFindException异常
 	 */
 	virtual const tstring& operator[](const tstring& key) const = 0;
-
-	/**
-	 * 当前正在序列化的字段是一个容器
-	 * @param[ in ] val 如果 val 为true则设置当前是容器,否则不是容器
-	 */
-	virtual void isSequenue(bool val) = 0;
-
-	/**
-	 * 当前正在序列化的字段是一个容器
-	 * @return 如果返回true则当前是容器,否则不是容器
-	 */
-	virtual bool isSequenue( ) const = 0;
-
-	/**
-	 * 当前正在序列化的字段是字符串
-	 * @param[ in ] val 如果 val 为true则设置当前是字符串,否则不是字符串
-	 * @remarks 字符串也被认为是一个容器
-	 */
-	virtual void isString( bool val) = 0;
-
-	/**
-	 * 当前正在序列化的字段是字符串
-	 * @return 如果返回true则当前是字符串,否则不是字符串
-	 * @remarks 字符串也被认为是一个容器
-	 */
-	virtual bool isString( ) const = 0;
-
-	/**
-	 * 当前正在序列化的字段是字典
-	 * @param[ in ] val 如果val为true则设置当前是字典,否则不是字典
-	 * @remarks 字符串也被认为是一个容器
-	 */
-	virtual void isDictinary( bool val) = 0;
-
-	/**
-	 * 当前正在序列化的字段是字典
-	 * @return 如果返回true则当前是字典,否则不是字典
-	 * @remarks 字符串也被认为是一个容器
-	 */
-	virtual bool isDictinary( ) const = 0;
 };
 
 _jingxian_end

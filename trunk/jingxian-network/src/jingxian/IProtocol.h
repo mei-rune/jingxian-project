@@ -10,7 +10,7 @@
 
 // Include files
 # include "jingxian/exception.hpp"
-# include "jingxian/buffer.h"
+
 
 _jingxian_begin
 
