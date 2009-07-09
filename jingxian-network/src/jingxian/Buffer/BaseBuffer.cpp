@@ -7,8 +7,6 @@ _jingxian_begin
 BaseBuffer::BaseBuffer()
 : exceptionStyle_(ExceptionStyle::THROW)
 , errno_(ERROR_SUCCESS)
-, ptr_(0)
-, len_(0)
 {
 	errno_ = ERROR_SUCCESS;
 }
@@ -19,6 +17,7 @@ BaseBuffer:: ~BaseBuffer( )
 
 int BaseBuffer::beginTranscation()
 {
+	return 0;
 }
 
 void BaseBuffer::rollbackTranscation(int)
@@ -44,9 +43,18 @@ bool BaseBuffer::fail() const
 	return ERROR_SUCCESS != errno_;
 }
 
-errcode_t BaseBuffer::lastError() const
+errcode_t BaseBuffer::error() const
 {
 	return errno_;
+}
+
+void BaseBuffer::error(errcode_t err)
+{
+	if( ERROR_SUCCESS == errno_)
+		errno_ = err;
+
+	if(ExceptionStyle::THROW == exceptionStyle_)
+		ThrowException1(Exception, get_last_error(err));
 }
 
 void BaseBuffer::clearError()

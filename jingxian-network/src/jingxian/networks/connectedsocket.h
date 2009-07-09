@@ -98,6 +98,9 @@ public:
 private:
 	NOCOPY(ConnectedSocket);
 
+	void doRead();
+
+
 	/// iocp对象的引用
 	IOCPServer* core_;
 	/// socket 对象
@@ -116,6 +119,12 @@ private:
 	ProtocolContext context_;
 	/// 是否已初始化
 	bool isInitialize_;
+	////暂停数据时读来的数据临时存放位置
+	bool reading_;
+	std::list<databuffer_t*> readBuffer_;
+	std::vector<databuffer_t*> readingBuffer_;
+	 
+
 	/// 日志对象
 	ITracer* tracer_;
 	tstring toString_;
@@ -134,9 +143,6 @@ private:
 	//bool _read_shutdown = false;
 	//bool _write_shutdown = false;
 
-	////暂停数据时读来的数据临时存放位置
-	//LinkedList<ByteBuffer> _readBuffer = new LinkedList<ByteBuffer>();
-	//bool _reading = false;
 
 	//// 没有取到数据时触发timeout异常的时间间隔
 	//TimeSpan _timeout = IOCPCore.TIMEOUT_INTERVAL;

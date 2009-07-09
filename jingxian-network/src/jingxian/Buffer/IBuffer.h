@@ -9,8 +9,37 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
+# include <Winsock2.h>
+# include "jingxian/exception.hpp"
 
 _jingxian_begin
+
+
+typedef void (*freebuf_callback)(void* ptr, void* context);
+
+typedef struct databuffer
+{
+	void* context;
+	freebuf_callback freebuf;
+
+	// 内存块大小（可选值，为0时为无效值）
+	size_t capacity;
+	//数据起始位置
+	char* begin;
+	//数据结束位置
+	char* end;
+    // 数据内存指针
+    char ptr[1];
+} databuffer_t;
+
+inline size_t GETFREELENGTH(databuffer_t* buf)
+{
+	return capacity -(buf->end - buf->ptr);
+}
+inline char* GETFREEPTR(databuffer_t* buf)
+{
+	return buf->end;
+}
 
 namespace ExceptionStyle
 {
@@ -62,7 +91,7 @@ public:
 	/**
 	 * 取得错误号
 	 */
-	virtual errcode_t lastError() const = 0;
+	virtual errcode_t error() const = 0;
 	
 	/**
 	 * 清除当前流的错误状态

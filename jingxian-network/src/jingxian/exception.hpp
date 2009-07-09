@@ -87,9 +87,23 @@ public:
             << _T(" ] ");
     }
 
-    virtual Exception* clone() = 0;
-    virtual void rethrow() = 0;
-    virtual void print(tostream&) const = 0;
+    virtual Exception* clone()
+	{
+		return new Exception(*this);
+	}
+
+    virtual void rethrow()
+	{
+		Raise( *this );
+	}
+
+	virtual void print(tostream& target ) const             
+    {
+            target << _T("Exception")
+            << what()
+            << std::endl;
+            dumpFile( target );
+    }
 
  #if !_HAS_EXCEPTIONS
 protected:

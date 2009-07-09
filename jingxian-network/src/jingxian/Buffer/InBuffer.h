@@ -9,13 +9,14 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
-# include "jingxian/BaseBuffer.H"
+# include "jingxian/Buffer/BaseBuffer.H"
 
 _jingxian_begin
 
 class InBuffer : public IInBuffer, public BaseBuffer
 {
 public:
+	InBuffer(LPWSABUF ptr, size_t count, size_t totalLength);
 	virtual ~InBuffer(void);
 
 	virtual bool    readBoolean();
@@ -25,8 +26,19 @@ public:
 	virtual int64_t readInt64();
 	virtual void readBlob(void* blob, size_t len);
 
-	void readBuffer(char* blob, size_t len);
 	virtual size_t size();
+private:
+	NOCOPY(InBuffer);
+
+	LPWSABUF ptr_;
+	size_t size_;
+
+	size_t totalLength_;
+	size_t readLength_;
+
+	LPWSABUF current_;
+	const char* currentPtr_;
+	size_t currentLength_;
 };
 
 _jingxian_end

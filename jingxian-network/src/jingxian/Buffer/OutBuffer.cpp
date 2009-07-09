@@ -40,9 +40,8 @@ IOutBuffer& OutBuffer::writeInt64(const int64_t& value)
 	return *this;
 }
 
-IOutBuffer& OutBuffer::writeBlob(const char* blob, int32_t len)
+IOutBuffer& OutBuffer::writeBlob(const void* blob, size_t len)
 {
-	writeBuffer(value,lne);
 	return *this;
 }
 
