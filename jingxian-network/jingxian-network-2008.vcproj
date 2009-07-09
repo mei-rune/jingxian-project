@@ -432,10 +432,46 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\src\jingxian\Buffer.h"
+		<Filter
+			Name="buffer"
 			>
-		</File>
+			<File
+				RelativePath=".\src\jingxian\Buffer\BaseBuffer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\Buffer\BaseBuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\Buffer\IBuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\Buffer\InBuffer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\Buffer\InBuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\Buffer\InternalBuffer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\Buffer\InternalBuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\Buffer\OutBuffer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\Buffer\OutBuffer.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\src\jingxian\communicator.h"
 			>
@@ -502,14 +538,6 @@
 		</File>
 		<File
 			RelativePath=".\src\jingxian\Makefile.mak"
-			>
-		</File>
-		<File
-			RelativePath=".\src\jingxian\message_block.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\src\jingxian\message_block.h"
 			>
 		</File>
 		<File

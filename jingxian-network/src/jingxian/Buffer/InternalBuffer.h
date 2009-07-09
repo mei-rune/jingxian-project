@@ -58,31 +58,25 @@ public:
 
 	/**
 	 * 取得 Buffer 中数据内存块,以便读数据
-	 * @params[ in,out ] iovec  WSABUF指针
-	 * @params[ in ] WSABUF块大小
-	 * @return 返回填充数据后的WSABUF块数
+	 * @params[ out ] length 返回的WSABUF块大小,可选值
+	 * @return 返回填充数据的WSABUF块,最后一个WSABUF指针一定是null
 	 */
-	LPWSABUF GetBuffer();
-
-	/**
-	 * 取得 Buffer 中数据内存块,以便读数据
-	 * @params[ in,out ] iovec  WSABUF指针
-	 * @params[ in ] WSABUF块大小
-	 * @return 返回填充数据后的WSABUF块数
-	 */
-	LPWSABUF GetBuffer();
+	LPWSABUF GetBuffer(size_t* len = null_ptr);
 
 	/**
 	 * 取得 Buffer 尾部空闲内存块,以便填写数据
-	 * @params[ in,out ] iovec  WSABUF指针
-	 * @params[ in ] length WSABUF块大小
+	 * @params[ out ] length 返回的WSABUF块大小,可选值
 	 * @params[ in ] capacity 空闲内存块的字节数最小字节数
-	 * @return 返回填充数据后的WSABUF块数
+	 * @return 返回尾部空闲内存块,最后一个WSABUF指针一定是null
 	 */
-	LPWSABUF GetFreeBuffer(LPWSABUF iovec);
+	LPWSABUF GetFreeBuffer(size_t capacity, size_t* length = null_ptr);
 
+	/**
+	 * 取得指定内存块的下一块,如果没有下一块则分配一块并返回
+	 * @params[ in ] 指定的内存块指针,可以为null,如果为null则返回第一块空闲块
+	 */
+	LPWSABUF GetNextFreeBuffer( LPWSABUF wsaBuf);
 
-	size_t GetFreeBufferSize() const;
 private:
 	NOCOPY(InternalBuffer);
 	size_t bufLength_;
