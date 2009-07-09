@@ -18,6 +18,7 @@ ConnectedSocket::ConnectedSocket(IOCPServer* core
 , protocol_(0)
 , context_(core, this)
 , isInitialize_(false)
+, reading_(false)
 , tracer_(0)
 {
 	tracer_ = logging::makeTracer( _T("ConnectedSocket[") + host_ + _T("-") + peer_ + _T("]"));
@@ -57,12 +58,31 @@ void ConnectedSocket::initialize()
 
 void ConnectedSocket::startReading()
 {
-	ThrowException( NotImplementedException );
+	reading_ = true;
+	doRead();
 }
 
 void ConnectedSocket::stopReading()
 {
-	ThrowException( NotImplementedException );
+	reading_ = false;
+}
+
+void ConnectedSocket::doRead()
+{
+	size_t len =0;
+	for(std::vector<databuffer_t*>::iterator it = readingBuffer_.begin()
+		; it != readingBuffer_.end() ; ++ it)
+	{
+		len += GETFREELENGTH(*it);
+	}
+
+	if( len <= 0 )
+		readingBuffer_.push_back(protocol_->createBuffer(context_
+			, &(readingBuffer_[0])
+			, readingBuffer_.size());
+
+	
+	
 }
 
 void ConnectedSocket::write(char* buffer, int length)

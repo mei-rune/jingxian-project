@@ -14,19 +14,6 @@
 
 _jingxian_begin
 
-typedef struct databuffer
-{
-	struct databuffer* _next;
-
-	// 内存块大小（可选值，为0时为无效值）
-	size_t capacity;
-	//数据起始位置
-	char* begin;
-	//数据结束位置
-	char* end;
-    // 数据内存指针
-    char ptr[1];
-} databuffer_t;
 
 class InternalBuffer
 {

@@ -10,6 +10,7 @@
 
 // Include files
 # include "jingxian/exception.hpp"
+# include "jingxian/Buffer/IBuffer.H"
 
 
 _jingxian_begin
@@ -53,13 +54,14 @@ public:
 	 */
     virtual void onReceived(ProtocolContext& context) = 0;
 
- //   /**
- //    * 创建下次用来读取数据的缓冲区
- //    * 
- //    * @param[ in ] lastBuffer 上一次用来读取数据的缓冲区</param>
- //    * @param[ in ] buffer 包含新到来信息的缓冲区
-	// */
-	//virtual Buffer createBuffer(Buffer& lastBuffer) = 0;
+    /**
+     * 创建下次用来读取数据的缓冲区
+     * 
+     * @param[ in ] context 会话的上下文
+     * @param[ in ] lastBuffer 上一次用来读取数据的缓冲区
+     * @param[ in ] len 上一次用来读取数据的缓冲区的大小
+	 */
+	virtual databuffer_t* createBuffer(const ProtocolContext& context, databuffer_t* lastBuffer, size_t len) = 0;
 
 	/**
 	* 取得地址的描述

@@ -45,29 +45,17 @@ public:
 
 	virtual bool fail() const;
 
-	virtual errcode_t lastError() const;
+	virtual errcode_t error() const;
+
+	void error(errcode_t err);
 
 	virtual void clearError();
-
-	void crunch();
-
-	void writeBuffer(const char* blob, size_t len);
-
-	void readBuffer(char* blob, size_t len);
 
 protected:
 	NOCOPY(BaseBuffer);
 
 	ExceptionStyle::type exceptionStyle_;
 	errcode_t errno_;
-
-	LPWSABUF ptr_;
-	size_t len_;
-
-	size_t totalLength_;
-	size_t readLength_;
-
-	LPWSABUF current_;
 };
 
 _jingxian_end

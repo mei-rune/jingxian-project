@@ -58,6 +58,15 @@ public:
 	{
 	}
 
+	virtual databuffer_t* createBuffer(const ProtocolContext& context, databuffer_t* lastBuffer, size_t len)
+	{
+		databuffer_t* result = (databuffer_t*)calloc(1,sizeof(databuffer_t)+100);
+		result->capacity = 100;
+		result->begin = result->ptr;
+		result->end = result->ptr;
+		return result;
+	}
+
 	/**
 	* 取得地址的描述
 	*/
