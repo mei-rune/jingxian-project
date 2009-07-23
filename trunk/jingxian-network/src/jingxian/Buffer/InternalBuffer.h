@@ -18,61 +18,69 @@ _jingxian_begin
 class InternalBuffer
 {
 public:
-	InternalBuffer(size_t bufLength, size_t capacity);
+	InternalBuffer(size_t capacity = 30);
 
 	~InternalBuffer();
 
-	
 	/**
-	 * 从 Buffer 中读数据后,将数据起始指针后移
+	 * 向尾部添加一个空闲的内存块
+	 * @remarks 内存块的数据将被清空
 	 */
-	void DecreaseBytes(size_t len);
+	void Push(databuffer_t* buf);
 
 	/**
-	 * 向 Buffer 尾部空闲内存块写数据后,将数据结束指针后移
+	 * 向头部取一个内存块
 	 */
-	void IncreaseBytes(size_t len);
-
-	/**
-	 * 数据的字节数
-	 */
-	size_t TotalBytes() const;
-
-	/**
-	 * 清除头部空数据块
-	 */
-	void Crunch();
+	databuffer_t* Pop();
 
 	/**
 	 * 取得 Buffer 中数据内存块,以便读数据
 	 * @params[ out ] length 返回的WSABUF块大小,可选值
 	 * @return 返回填充数据的WSABUF块,最后一个WSABUF指针一定是null
 	 */
-	LPWSABUF GetBuffer(size_t* len = null_ptr);
+	LPWSABUF GetReadBuffer(size_t* len = null_ptr);
+	
+	/**
+	 * 从 Buffer 中读数据后,将数据起始指针后移
+	 */
+	size_t ReadBytes(size_t len);
+
+	/**
+	 * 数据的字节数
+	 */
+	size_t TotalReadBytes() const;
 
 	/**
 	 * 取得 Buffer 尾部空闲内存块,以便填写数据
-	 * @params[ out ] length 返回的WSABUF块大小,可选值
-	 * @params[ in ] capacity 空闲内存块的字节数最小字节数
+	 * @params[ out ] len 返回的WSABUF块大小,可选值
 	 * @return 返回尾部空闲内存块,最后一个WSABUF指针一定是null
 	 */
-	LPWSABUF GetFreeBuffer(size_t capacity, size_t* length = null_ptr);
+	LPWSABUF GetWriteBuffer(size_t* len = null_ptr);
 
 	/**
-	 * 取得指定内存块的下一块,如果没有下一块则分配一块并返回
-	 * @params[ in ] 指定的内存块指针,可以为null,如果为null则返回第一块空闲块
+	 * 向 Buffer 尾部空闲内存块写数据后,将数据结束指针后移
 	 */
-	LPWSABUF GetNextFreeBuffer( LPWSABUF wsaBuf);
+	size_t WriteBytes(size_t len);
+
+	/**
+	 * 数据的字节数
+	 */
+	size_t TotalWriteBytes() const;
 
 private:
 	NOCOPY(InternalBuffer);
-	size_t bufLength_;
-
-	databuffer_t* ptr_;
 	size_t capacity_;
+
+	databuffer_t** ptr_;
 	size_t length_;
 
-	size_t bufBytes_;
+	LPWSABUF writePtr_;
+	size_t writeLength_;
+	size_t writeBytes_;
+
+	LPWSABUF readPtr_;
+	size_t readLength_;
+	size_t readBytes_;
 };
 
 _jingxian_end

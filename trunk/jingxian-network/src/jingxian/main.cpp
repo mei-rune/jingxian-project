@@ -62,8 +62,6 @@ public:
 	{
 		databuffer_t* result = (databuffer_t*)calloc(1,sizeof(databuffer_t)+100);
 		result->capacity = 100;
-		result->begin = result->ptr;
-		result->end = result->ptr;
 		return result;
 	}
 
