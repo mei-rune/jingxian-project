@@ -21,7 +21,7 @@ ConnectedSocket::ConnectedSocket(IOCPServer* core
 , reading_(false)
 , tracer_(0)
 {
-	tracer_ = logging::makeTracer( _T("ConnectedSocket[") + host_ + _T("-") + peer_ + _T("]"));
+	tracer_ = logging::makeTracer( _T("ConnectedSocket[ip=") + host_ + _T(",port=") + peer_ + _T("]"));
 	
 	if(null_ptr!=tracer_ && tracer_->isTraceEnabled())
 	{
@@ -68,20 +68,27 @@ void ConnectedSocket::stopReading()
 }
 
 void ConnectedSocket::doRead()
-{
-	size_t len =0;
-	for(std::vector<databuffer_t*>::iterator it = readingBuffer_.begin()
-		; it != readingBuffer_.end() ; ++ it)
-	{
-		len += GETFREELENGTH(*it);
-	}
+{/*
+	size_t len = incoming_.
 
 	if( len <= 0 )
-		readingBuffer_.push_back(protocol_->createBuffer(context_
+	{
+		databuffer_t* tmp = protocol_->createBuffer(context_
 			, &(readingBuffer_[0])
 			, readingBuffer_.size());
+		if(null_ptr == tmp)
+		{
+			tmp = (databuffer_t*)calloc(sizeof(char),sizeof(databuffer_t)+100);
+			tmp->capacity = 100;
+			tmp->begin = tmp->ptr;
+			tmp->end = tmp->ptr;
+		}
 
-	
+		readingBuffer_.push_back( tmp );
+	}
+
+	std::vector<WSABUF> readingBuffer( 
+	*/
 	
 }
 

@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/DTEST"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)src\&quot;;."
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)src\&quot;;."
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				GeneratePreprocessedFile="0"
 				MinimalRebuild="true"

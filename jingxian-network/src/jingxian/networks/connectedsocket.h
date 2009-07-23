@@ -16,6 +16,7 @@
 # include "jingxian/networks/connection_status.h"
 # include "jingxian/logging/logging.hpp"
 # include "jingxian/networks/IOCPServer.h"
+# include "jingxian/buffer/InternalBuffer.h"
 
 _jingxian_begin
 
@@ -121,9 +122,7 @@ private:
 	bool isInitialize_;
 	////暂停数据时读来的数据临时存放位置
 	bool reading_;
-	std::list<databuffer_t*> readBuffer_;
-	std::vector<databuffer_t*> readingBuffer_;
-	 
+	InternalBuffer incoming_;
 
 	/// 日志对象
 	ITracer* tracer_;
