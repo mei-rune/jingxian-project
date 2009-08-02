@@ -1,11 +1,11 @@
 
 # include "pro_config.h"
-# include "jingxian/Buffer/BaseBuffer.h"
+# include "jingxian/Buffer/IncomingBuffer.h"
 
 
 _jingxian_begin
 
-InternalBuffer::InternalBuffer(size_t capacity)
+IncomingBuffer::IncomingBuffer(size_t capacity)
 : capacity_(capacity)
 , ptr_(0)
 , length_(0)
@@ -16,14 +16,14 @@ InternalBuffer::InternalBuffer(size_t capacity)
 , readLength_(0)
 , readBytes_(0)
 {
-	if( capacity_ <= 0)
+	if(capacity_ <= 0)
 		capacity_ = 10;
 
 	ptr = malloc(sizeof(databuffer_t*) * capacity_);
 	memset(ptr_, 0, sizeof(databuffer_t*) * capacity_));
 }
 
-InternalBuffer::~InternalBuffer()
+IncomingBuffer::~IncomingBuffer()
 {
 	for(size_t i = 0; i < length_; ++i)
 	{
@@ -34,7 +34,7 @@ InternalBuffer::~InternalBuffer()
 	length_ = 0;
 }
 
-void InternalBuffer::Push(databuffer_t* newbuf)
+void IncomingBuffer::Push(databuffer_t* newbuf)
 {
 	if( capacity_ <= length_ )
 	{
@@ -61,7 +61,7 @@ void InternalBuffer::Push(databuffer_t* newbuf)
 	assert((writeLength_+readLength_) == length_);
 }
 
-databuffer_t* InternalBuffer::Pop()
+databuffer_t* IncomingBuffer::Pop()
 {
 	if(length_<=0)
 		return null_ptr;
@@ -89,7 +89,7 @@ databuffer_t* InternalBuffer::Pop()
 	assert((writeLength_ + readLength_) == length_);
 }
 
-LPWSABUF InternalBuffer::GetReadBuffer(size_t* len)
+LPWSABUF IncomingBuffer::GetReadBuffer(size_t* len)
 {
 	if(null_ptr != len)
 		*len = readLength_;
@@ -97,7 +97,7 @@ LPWSABUF InternalBuffer::GetReadBuffer(size_t* len)
 	return readPtr_;
 }
 
-size_t InternalBuffer::ReadBytes(size_t len)
+size_t IncomingBuffer::ReadBytes(size_t len)
 {
 	if( readBytes_ <= len )
 	{
@@ -130,12 +130,12 @@ size_t InternalBuffer::ReadBytes(size_t len)
 	return len;
 }
 
-size_t InternalBuffer::TotalReadBytes() const
+size_t IncomingBuffer::TotalReadBytes() const
 {
 	return readBytes_;
 }
 
-LPWSABUF InternalBuffer::GetWriteBuffer(size_t* len)
+LPWSABUF IncomingBuffer::GetWriteBuffer(size_t* len)
 {	
 	if(null_ptr != len)
 		*len = writeLength_;
@@ -143,7 +143,7 @@ LPWSABUF InternalBuffer::GetWriteBuffer(size_t* len)
 	return writePtr_;
 }
 
-size_t InternalBuffer::WriteBytes(size_t len)
+size_t IncomingBuffer::WriteBytes(size_t len)
 {
 	if( writeBytes_ <= len )
 	{
@@ -175,7 +175,7 @@ size_t InternalBuffer::WriteBytes(size_t len)
 	return len;
 }
 
-size_t InternalBuffer::TotalWriteBytes() const
+size_t IncomingBuffer::TotalWriteBytes() const
 {
 	return writeBytes_;
 }

@@ -1,40 +1,41 @@
 
 # include "pro_config.h"
-# include "jingxian/Buffer/BaseBuffer.h"
-
+# include "jingxian/Buffer/OutgoingBuffer.h"
 
 _jingxian_begin
 
-InternalBuffer::InternalBuffer(size_t capacity)
+OutgoingBuffer::OutgoingBuffer(size_t capacity)
 : capacity_(capacity)
 , ptr_(0)
-, length_(0)
-, writePtr_(0)
-, writeLength_(0)
-, writeBytes_(0)
 , readPtr_(0)
-, readLength_(0)
+, length_(0)
 , readBytes_(0)
 {
 	if( capacity_ <= 0)
 		capacity_ = 10;
 
-	ptr = malloc(sizeof(databuffer_t*) * capacity_);
+	ptr = (databuffer_t**)malloc(sizeof(databuffer_t*) * capacity_);
 	memset(ptr_, 0, sizeof(databuffer_t*) * capacity_));
+
+	readPtr_ = (LPWSABUF)malloc(sizeof(WSABUF) * capacity_);
+	memset(readPtr_, 0, sizeof(WSABUF) * capacity_));
 }
 
-InternalBuffer::~InternalBuffer()
+OutgoingBuffer::~OutgoingBuffer()
 {
 	for(size_t i = 0; i < length_; ++i)
 	{
 		free_databuffer(ptr_[i]);
 	}
 	::free(ptr_);
+	::free(readPtr_);
+
 	ptr_ = null_ptr;
 	length_ = 0;
+	readBytes_ = 0;
 }
 
-void InternalBuffer::Push(databuffer_t* newbuf)
+void OutgoingBuffer::Push(databuffer_t* newbuf)
 {
 	if( capacity_ <= length_ )
 	{
@@ -44,10 +45,7 @@ void InternalBuffer::Push(databuffer_t* newbuf)
 		memset( ptr_ + length_, 0, sizeof(databuffer_t*)*(capacity_-length_));
 
 		readPtr_ = (LPWSABUF)realloc( readPtr_,sizeof(WSABUF)*capacity_);
-		memset( readPtr_ + readLength_, 0, sizeof(WSABUF)*(capacity_-readLength_));
-		
-		writePtr_ = (LPWSABUF)realloc( writePtr_,sizeof(WSABUF)*capacity_);
-		memset( writePtr_ + writeLength_, 0, sizeof(WSABUF)*(capacity_-writeLength_));
+		memset( readPtr_ + length_, 0, sizeof(WSABUF)*(capacity_-length_));
 	}
 
 	ptr_[length_] = newbuf;
@@ -61,7 +59,7 @@ void InternalBuffer::Push(databuffer_t* newbuf)
 	assert((writeLength_+readLength_) == length_);
 }
 
-databuffer_t* InternalBuffer::Pop()
+databuffer_t* OutgoingBuffer::Pop()
 {
 	if(length_<=0)
 		return null_ptr;
@@ -89,7 +87,7 @@ databuffer_t* InternalBuffer::Pop()
 	assert((writeLength_ + readLength_) == length_);
 }
 
-LPWSABUF InternalBuffer::GetReadBuffer(size_t* len)
+LPWSABUF OutgoingBuffer::GetReadBuffer(size_t* len)
 {
 	if(null_ptr != len)
 		*len = readLength_;
@@ -97,7 +95,7 @@ LPWSABUF InternalBuffer::GetReadBuffer(size_t* len)
 	return readPtr_;
 }
 
-size_t InternalBuffer::ReadBytes(size_t len)
+size_t OutgoingBuffer::ReadBytes(size_t len)
 {
 	if( readBytes_ <= len )
 	{
@@ -130,12 +128,12 @@ size_t InternalBuffer::ReadBytes(size_t len)
 	return len;
 }
 
-size_t InternalBuffer::TotalReadBytes() const
+size_t OutgoingBuffer::TotalReadBytes() const
 {
 	return readBytes_;
 }
 
-LPWSABUF InternalBuffer::GetWriteBuffer(size_t* len)
+LPWSABUF OutgoingBuffer::GetWriteBuffer(size_t* len)
 {	
 	if(null_ptr != len)
 		*len = writeLength_;
@@ -143,7 +141,7 @@ LPWSABUF InternalBuffer::GetWriteBuffer(size_t* len)
 	return writePtr_;
 }
 
-size_t InternalBuffer::WriteBytes(size_t len)
+size_t OutgoingBuffer::WriteBytes(size_t len)
 {
 	if( writeBytes_ <= len )
 	{
@@ -175,7 +173,7 @@ size_t InternalBuffer::WriteBytes(size_t len)
 	return len;
 }
 
-size_t InternalBuffer::TotalWriteBytes() const
+size_t OutgoingBuffer::TotalWriteBytes() const
 {
 	return writeBytes_;
 }
