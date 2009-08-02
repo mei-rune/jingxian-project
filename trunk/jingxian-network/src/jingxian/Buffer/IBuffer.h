@@ -28,6 +28,17 @@ typedef struct databuffer
     char ptr[1];
 } databuffer_t;
 
+inline void free_databuffer( databuffer_t* buf)
+{
+	if(is_null(buf))
+		continue;
+
+	if(is_null(buf.freebuf))
+		::free(buf);
+	else
+		buf.freebuf(buf, buf.context);
+}
+
 namespace ExceptionStyle
 {
 	enum type
