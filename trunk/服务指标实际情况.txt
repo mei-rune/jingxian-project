@@ -1,0 +1,136 @@
+windows
+主机运行时长        	ComputerSystemRunningTime  	缺少
+设备运行状态        	ComputerSystemStatus        	好的
+内存交换页换进率    	MEMSwitchPageIn             	好的
+内存交换页换出率    	MEMSwitchPageOut            	好的
+CPU负载             	CPULoad                     	好的
+MEM负载             	MEMLoad                     	好的
+磁盘剩余空间        	DiskDriverFreeSpace         	好的
+磁盘分区剩余空间率  	DiskFreeRate            	好的
+硬盘状态            	DiskDriverStatus            	缺少,只有一个总的
+主机内置盘状态信息	ComputerSystemInnerDiskStatus	缺少,只有一个总的
+主机文件系统总的可用量	FileSystemAvailableCapacity  	非windows指标
+文件系统使用率		FileSystemUsedRate		非windows指标
+关键文件大小		FileSize			缺少
+进程占用CPU时间		ProcessOccupyCPUTime		好的
+进程运行时长		ProcessRunningTime		好的
+进程状态		ProcessStatus			好的
+主机网卡的工作状态	NetworkCardStatus		好的
+
+
+aix
+主机运行时长        	ComputerSystemRunningTime  	好的
+设备运行状态        	ComputerSystemStatus        	好的
+内存交换页换进率    	MEMSwitchPageIn             	好的
+内存交换页换出率    	MEMSwitchPageOut            	好的
+CPU负载             	CPULoad                     	好的
+MEM负载             	MEMLoad                     	好的
+磁盘剩余空间        	DiskDriverFreeSpace         	非unix指标
+磁盘分区剩余空间率  	DiskFreeRate            	非unix指标
+硬盘状态            	DiskDriverStatus            	非unix指标
+主机内置盘状态信息	ComputerSystemInnerDiskStatus	缺少,只有一个总的
+主机文件系统总的可用量	FileSystemAvailableCapacity  	好的
+文件系统使用率		FileSystemUsedRate		好的
+关键文件大小		FileSize			坏的
+进程占用CPU时间		ProcessOccupyCPUTime		好的
+进程运行时长		ProcessRunningTime		好的
+进程状态		ProcessStatus			好的
+主机网卡的工作状态	NetworkCardStatus		好的
+
+hp
+主机运行时长        	ComputerSystemRunningTime  	好的
+设备运行状态        	ComputerSystemStatus        	好的
+内存交换页换进率    	MEMSwitchPageIn             	好的
+内存交换页换出率    	MEMSwitchPageOut            	好的
+CPU负载             	CPULoad                     	好的
+MEM负载             	MEMLoad                     	取不到值
+磁盘剩余空间        	DiskDriverFreeSpace         	非unix指标
+硬盘状态            	DiskDriverStatus            	非unix指标
+磁盘分区剩余空间率  	DiskFreeRate            	非unix指标
+主机内置盘状态信息	ComputerSystemInnerDiskStatus	缺少,只有一个总的
+主机文件系统总的可用量	FileSystemAvailableCapacity  	好的
+文件系统使用率		FileSystemUsedRate		好的
+关键文件大小		FileSize			坏的
+进程占用CPU时间		ProcessOccupyCPUTime		好的
+进程运行时长		ProcessRunningTime		好的
+进程状态		ProcessStatus			好的
+主机网卡的工作状态	NetworkCardStatus		好的
+
+
+
+oracle
+数据库运行状态			DataBaseStatus			好的
+Oracle日志空间使用率		OracleLogSpaceUsedRate		可以计算,南瑞那边有问题
+Oracle回滚段使用率		OracleRollUsedRate		可以计算,南瑞那边有问题
+Oracle共享内存命中率		OracleSharedMemoryHitRate	好的
+Oracle共享内存使用率		OracleSharedMemoryUsedRate	计算
+Oracle可用表空间大小		OracleAvailableTableSpaceSize	好的
+Oracle数据库表空间碎片率	OracleTableSpaceCrackRate	好的
+Oracle数据库表空间使用率	OracleTableSpaceUsedRate	好的
+
+
+DB2
+数据库运行状态		DataBaseStatus			
+DB2可用表空间大小  	DB2AvailableTableSpaceSize	
+DB2数据库表空间使用率	DB2TableSpaceUsedRate		
+
+SqlServer
+SqlServer缓存命中数	SqlServerHitNum		缺少,可能118上有
+SqlServer缓存读取数	SqlServerReadNum	缺少,可能118上有
+SqlServer缓存命中率	SqlServerHitRate	好的
+
+Sybase
+Sybase打开索引数	OpenIndexNum		现场采不到数
+Sybase缓存大小		CacheSize		现场采不到数
+Sybase缓存请求次数	RequestNum		现场采不到数
+Sybase缓存物理读次数	PhyIOReadCount		现场采不到数
+Sybase缓存命中率	SybaseServerHitRate	现场采不到数
+
+
+WebLogic
+WebLogicServer超时的事务总数	WebLogicServerOverTimeTransactionCoun	好的
+WebLogicServer回滚的事务总数	WebLogicServerRollbackTransactionCount	好的
+WebLogicServerSocket访问比率	WebLogicServerSocketAccessRate		好的
+WebLogic服务状态		WebLogicServerStatus			好的
+
+
+
+WebSphere
+WebSphere服务状态 		WebSphereServerStatus			现场无法测试
+WebSphereServer回滚的事务总数	WebSphereServerRollbackTransactionCount	现场无法测试
+WebSphereServerSocket访问比率	WebSphereServerSocketAccessRate		现场无法测试
+
+DHCP服务端口状态	IpInterfaceStatus		南瑞模块不全无法测试
+DHCP服务状态		ServiceStatus			南瑞模块不全无法测试
+
+DNS服务端口状态		IpInterfaceStatus		现场无法测试
+DNS服务状态		ServiceStatus			现场无法测试
+DNS响应时间（毫秒）	ResponseTime			现场无法测试
+
+
+LDAP服务端口状态		ServerIpInterfaceStatus	现场无法测试
+监测LDAP服务是否工作正常	LDAPRunning		现场无法测试
+LDAP查询响应延时		LDAPResponsetime	现场无法测试
+
+
+SMTP服务工作状态		WorkStatus		现场无法测试
+SMTP端口状态			IpInterfaceStatus	现场无法测试
+SMTP发送邮件测试结果		Testresult		现场无法测试
+SMTP响应时间（毫秒）		ResponseTime		现场无法测试
+POP3端口状态			IpInterfaceStatus	现场无法测试
+POP3账户状态			AccountStatus		现场无法测试
+POP3连接时间（毫秒）		Connecttime		现场无法测试
+POP3邮件数量			MailNums		现场无法测试
+POP3所占空间			Space			现场无法测试
+
+
+HTTP回应码状态			HttpResponceStatus	好的
+HTTP下载速度（kb/s）		DownloadSpeed		好的
+HTTP登录响应时间（毫秒）	LogonResponsetime	缺少
+WEB端口状态			IpInterfaceStatus	好的
+
+ftp 2,16
+FTP端口状态			IpInterfaceStatus	好的
+FTP连接建立响应时间		ConnectTime		缺少
+FTP下载速度（kb/s）		DownloadSpeed		好的
+
