@@ -507,6 +507,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\jingxian\Buffer\IncomingBuffer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\Buffer\IncomingBuffer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\jingxian\Buffer\InternalBuffer.cpp"
 				>
 			</File>
@@ -520,6 +528,14 @@
 			</File>
 			<File
 				RelativePath=".\src\jingxian\Buffer\OutBuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\Buffer\OutgoingBuffer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\Buffer\OutgoingBuffer.h"
 				>
 			</File>
 		</Filter>
@@ -589,6 +605,10 @@
 		</File>
 		<File
 			RelativePath=".\src\jingxian\lastError.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\jingxian\Link.h"
 			>
 		</File>
 		<File

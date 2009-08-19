@@ -13,17 +13,16 @@
 # include "Mswsock.h"
 # include "jingxian/string/string.hpp"
 
-typedef WSABUF iovec;
+typedef WSABUF io_mem_buf;
 
-# ifndef ___iopack___
-# define ___iopack___
- typedef TRANSMIT_PACKETS_ELEMENT iopack;
+# ifndef _io_packect_buf_
+# define _io_packect_buf_
+ typedef TRANSMIT_PACKETS_ELEMENT io_packect_buf;
 # endif // ___iopack___
 
- # ifndef ___iofile___
-# define ___iopack___
+# ifndef _io_file_buf_
  typedef TRANSMIT_FILE_BUFFERS io_file_buf;
-# endif // ___iopack___
+# endif // _io_file_buf_
 
 
 _jingxian_begin

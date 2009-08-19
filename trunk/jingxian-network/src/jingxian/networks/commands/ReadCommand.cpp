@@ -18,66 +18,48 @@ ReadCommand::~ReadCommand( )
 {
 }
 
+std::vector<io_mem_buf>& ReadCommand::iovec()
+{
+	return iovec_;
+}
+
 void ReadCommand::on_complete(size_t bytes_transferred
 		, bool success
 		, void *completion_key
 		, errcode_t error)
 {
-	//ReadError exception = null;
-	//try
-	//{
-	//	if (!success)
-	//	{
-	//		exception = new ReadError(error);
-	//	}
-	//	else if (0 == bytes_transferred)
-	//	{
-	//		exception = new ReadError(new SocketException((int)SocketError.Shutdown), "读0个字节!");
-	//	}
-	//	else
-	//	{
-	//		_byteBuffer.End += bytes_transferred;
-	//		_transport.OnRead(_byteBuffer);
-	//		return;
-	//	}
-	//}
-	//catch (ReadError err)
-	//{
-	//	exception = err;
-	//}
-	//catch (Exception e)
-	//{
-	//	exception = new ReadError(e, e.Message);
-	//}
-
-	//_transport.OnException(exception);
-	ThrowException( NotImplementedException );
+	if (!success)
+	{
+		transport_->onError(logging::Receive, error, _T("写数据时发生错误"));
+		return;
+	}
+	else if (0 == bytes_transferred)
+	{
+		transport_->onError(logging::Receive, error, _T("读0个字节"));
+		return;
+	}
+	else
+	{
+		transport_->onRead(bytes_transferred);
+	}
 }
 
 bool ReadCommand::execute()
 {
-	//if (0 == _byteBuffer.Space)
-	//	throw new ArgumentException( "缓冲区为空!" );
+	DWORD bytesTransferred;
+	if (::WSARecv(transport_->handle()
+		, &(iovec_[0])
+		, (DWORD)iovec_.size()
+		, &bytesTransferred
+		, 0
+		, this
+		, NULL))
+		return true;
 
-	//IntPtr bytePointer = Marshal.UnsafeAddrOfPinnedArrayElement(
-	//	_byteBuffer.Array, _byteBuffer.End);
+	if (WSA_IO_PENDING == ::WSAGetLastError())
+		return true;
 
-	//int bytesTransferred = 0;
-	//if (_transport.Socket.Read(bytePointer
-	//	, _byteBuffer.Space
-	//	, out bytesTransferred
-	//	, NativeOverlapped))
-	//{
-	//	return;
-	//}
-	//int errCode = Marshal.GetLastWin32Error();
-	//if ((int)SocketError.IOPending == errCode)
-	//{
-	//	return;
-	//}
-
-	//throw new ReadError(errCode);
-	ThrowException( NotImplementedException );
+	return false;
 }
 
 _jingxian_end

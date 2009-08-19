@@ -3,12 +3,8 @@
 # include "jingxian/networks/commands/WriteCommand.h"
 
 _jingxian_begin
-WriteCommand::WriteCommand(ConnectedSocket* transport
-		, const iovec* iovec
-		, size_t len)
+WriteCommand::WriteCommand(ConnectedSocket* transport)
 : transport_(transport)
-, iovec_(iovec)
-, len_(len)
 {
 }
 
@@ -16,54 +12,48 @@ WriteCommand::~WriteCommand()
 {
 }
 
+std::vector<io_mem_buf>& WriteCommand::iovec()
+{
+	return iovec_;
+}
+
 void WriteCommand::on_complete(size_t bytes_transferred,
 							   bool success,
 							   void *completion_key,
 							   errcode_t error)
 {
-	//WriteError exception = null;
-	//try
-	//{
-	//	if (!success)
-	//	{
-	//		exception = new WriteError(error);
-	//	}
-	//	else if (0 == bytes_transferred)
-	//	{
-	//		exception = new WriteError(new SocketException((int)SocketError.Shutdown), "读0个字节!");
-	//	}
-	//	else
-	//	{
-	//		_transport.OnWrite(bytes_transferred, _byteBuffer);
-	//		return;
-	//	}
-	//}
-	//catch (WriteError err)
-	//{
-	//	exception = err;
-	//}
-	//catch (Exception e)
-	//{
-	//	exception = new WriteError(e, e.Message);
-	//}
-	//_transport.OnException(exception);
-	ThrowException( NotImplementedException );
+	if (!success)
+	{
+		transport_->onError(transport_mode::Send, error, _T("写数据时发生错误"));
+		return;
+	}
+	else if (0 == bytes_transferred)
+	{
+		transport_->onError(transport_mode::Send, error, _T("读0个字节"));
+		return;
+	}
+	else
+	{
+		transport_->onWrite(bytes_transferred);
+	}
 }
 
 bool WriteCommand::execute()
 {
-	//if (_transport.Socket.Write(bytePointer
-	//	, _byteBuffer.Count
-	//	, out bytesTransferred
-	//	, NativeOverlapped))
-	//	return;
+	DWORD bytesTransferred;
+	if (::WSASend(transport_->handle()
+		, &(iovec_[0])
+		, (DWORD)iovec_.size()
+		, &bytesTransferred
+		, 0
+		, this
+		, NULL))
+		return true;
 
-	//int errCode = Marshal.GetLastWin32Error();
-	//if ((int)SocketError.IOPending == errCode)
-	//	return;
+	if (WSA_IO_PENDING == ::WSAGetLastError())
+		return true;
 
-	//throw new WriteError(errCode);
-	ThrowException( NotImplementedException );
+	return false;
 }
 
 _jingxian_end

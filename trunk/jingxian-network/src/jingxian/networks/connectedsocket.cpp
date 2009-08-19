@@ -52,49 +52,124 @@ void ConnectedSocket::initialize()
 		return;
 
 	protocol_->onConnected( context_ );
-	startReading();
 	isInitialize_ = true;
+	startReading();
 }
 
 void ConnectedSocket::startReading()
 {
-	reading_ = true;
+	stopReading_ = false;
 	doRead();
 }
 
 void ConnectedSocket::stopReading()
 {
-	reading_ = false;
+	stopReading_ = true;
 }
 
 void ConnectedSocket::doRead()
-{/*
-	size_t len = incoming_.
-
-	if( len <= 0 )
+{
+	if(reading_)
 	{
-		databuffer_t* tmp = protocol_->createBuffer(context_
-			, &(readingBuffer_[0])
-			, readingBuffer_.size());
-		if(null_ptr == tmp)
-		{
-			tmp = (databuffer_t*)calloc(sizeof(char),sizeof(databuffer_t)+100);
-			tmp->capacity = 100;
-			tmp->begin = tmp->ptr;
-			tmp->end = tmp->ptr;
-		}
-
-		readingBuffer_.push_back( tmp );
+		TP_TRACE(tracer_, transport_mode::Receive, _T("尝试读数据时发现正在读取中"));
+		return;
 	}
 
-	std::vector<WSABUF> readingBuffer( 
-	*/
+	if( connection_status::connected != state_)
+	{
+		TP_CRITICAL(tracer_, transport_mode::Receive, _T("尝试读数据时连接已断开"));
+		return;
+	}
+
+	if( stopReading_)
+	{
+		TP_CRITICAL(tracer_, transport_mode::Receive, _T("尝试读数据时发现用户主动停止读数据"));
+		return;
+	}
+
+	std::auto_ptr<ICommand> command(incoming_.makeCommand());
+	if(is_null(command))
+	{
+		TP_CRITICAL(tracer_, transport_mode::Receive, _T("尝试读数据时创建读请求失败"));
+		return;
+	}
 	
+	if(!command->execute())
+	{
+		TP_CRITICAL(tracer_, transport_mode::Receive, _T("尝试读数据时发送读请求失败"));
+		return;
+	}
+
+	reading_ = true;
+	command.release();
 }
 
-void ConnectedSocket::write(char* buffer, int length)
+void ConnectedSocket::onRead(size_t bytes_transferred)
 {
-	ThrowException( NotImplementedException );
+	reading_ = false;
+	doRead();
+}
+
+void ConnectedSocket::doWrite()
+{
+	if(writing_)
+	{
+		TP_TRACE(tracer_, transport_mode::Send, _T("尝试写数据时发现正在发送中"));
+		return;
+	}
+
+	if( connection_status::connected != state_)
+	{
+		TP_CRITICAL(tracer_, transport_mode::Send, _T("尝试写数据时连接已断开"));
+		doDisconnect(transport_mode::type mode, errcode_t error, const tstring& description);
+		return;
+	}
+
+	std::auto_ptr<ICommand> command(outgoing_.makeCommand());
+	if(is_null(command))
+	{
+		TP_TRACE(tracer_, transport_mode::Send, _T("尝试写数据时创建写请求失败"));
+		return;
+	}
+	
+	if(!command->execute())
+	{
+		TP_CRITICAL(tracer_, transport_mode::Receive, _T("尝试写数据时发送写请求失败"));
+		return;
+	}
+
+	writing_ = true;
+	command.release();
+}
+
+void ConnectedSocket::write(buffer_chain_t* buffer)
+{
+	outgoing_.push(buffer);
+	doWrite();
+}
+
+void ConnectedSocket::onRead(size_t bytes_transferred)
+{
+	writing_ = false;
+	doWrite();
+}
+
+void ConnectedSocket::onError(transport_mode::type mode, errcode_t error, const tstring& description)
+{
+	switch( mode )
+	{
+	case transport_mode::Receive:
+		reading_ = false;
+		break;
+	case transport_mode::Send:
+		reading_ = false;
+		break;
+	default:
+		assert(false);
+		break;
+	}
+
+	doDisconnect(transport_mode::type mode, errcode_t error, const tstring& description);
 }
 
 void ConnectedSocket::disconnection()

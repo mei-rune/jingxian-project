@@ -15,12 +15,21 @@ _jingxian_begin
 
 class IProtocol;
 
+typedef void (*freebuffer_callback)(void* ptr, void* context);
+
+typedef struct buffer_chain
+{
+	void* context;
+	freebuffer_callback freebuffer;
+	int type;
+	buffer_chain* _next;
+} buffer_chain_t;
+
 class ITransport
 {
 public:
 	    virtual ~ITransport(){}
 
-		
 		/**
 		 * 初始化 Transport 实例
 		 */
@@ -46,7 +55,7 @@ public:
          * @param[ in ] buffer 待发送的数据块
          * @param[ in ] length 数据长度
          */
-        virtual void write(char* buffer, int length) = 0;
+        virtual void write(buffer_chain_t* buffer) = 0;
 
         /**
          * 关闭连接
