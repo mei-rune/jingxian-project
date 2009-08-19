@@ -31,12 +31,13 @@ public:
 
 	virtual bool execute();
 
+	std::vector<io_mem_buf>& iovec();
+
 private:
 	NOCOPY(ReadCommand);
 
 	ConnectedSocket* transport_;
-	char* ptr_;
-	size_t len_;
+	std::vector<io_mem_buf> iovec_;
 };
 
 _jingxian_end

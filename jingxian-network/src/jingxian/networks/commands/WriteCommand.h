@@ -17,9 +17,7 @@ _jingxian_begin
 class WriteCommand : public ICommand
 {
 public:
-	WriteCommand(ConnectedSocket* transport
-		, const iovec* iovec
-		, size_t len);
+	WriteCommand(ConnectedSocket* transport);
 
 	virtual ~WriteCommand();
 	
@@ -30,12 +28,13 @@ public:
 
 	virtual bool execute();
 
+	std::vector<io_mem_buf>& iovec();
+
 private:
 	NOCOPY(WriteCommand);
 
 	ConnectedSocket* transport_;
-	const iovec* iovec_;
-	size_t len_;
+	std::vector<io_mem_buf> iovec_;
 };
 
 _jingxian_end

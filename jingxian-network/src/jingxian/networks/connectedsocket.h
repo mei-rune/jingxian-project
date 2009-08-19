@@ -58,7 +58,7 @@ public:
 	/**
 	 * @implements write
 	 */
-    virtual void write(char* buffer, int length);
+    virtual void write(buffer_chain_t* buffer);
 
 	/**
 	 * @implements disconnection
@@ -94,12 +94,14 @@ public:
 	SOCKET handle(){return socket_;}
 	ITracer* tracer(){return tracer_;}
 
-	void onDisconnected(errcode_t error, const tstring& description);
+	void onError(transport_mode::type mode, errcode_t error, const tstring& description);
 
 private:
 	NOCOPY(ConnectedSocket);
 
 	void doRead();
+	void doWrite();
+	void onDisconnected(errcode_t error, const tstring& description);
 
 
 	/// iocp对象的引用
@@ -121,8 +123,17 @@ private:
 	/// 是否已初始化
 	bool isInitialize_;
 	////暂停数据时读来的数据临时存放位置
+
+
+
+	bool stopReading_;
+	/// 表示发出一个读请求,但还没有返回
 	bool reading_;
-	InternalBuffer incoming_;
+	IncomingBuffer incoming_;
+
+	/// 表示发出一个写请求,但还没有返回
+	bool writing_;
+	OutgoingBuffer outgoing_;
 
 	/// 日志对象
 	ITracer* tracer_;

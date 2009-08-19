@@ -28,6 +28,18 @@ namespace connection_status
 	};
 }
 
+namespace transport_mode
+{
+    enum type
+    {
+        Receive,
+
+        Send,
+
+        Both
+    };
+}
+
 _jingxian_end
 
 #endif // _CONNECTION_STATUS_H_

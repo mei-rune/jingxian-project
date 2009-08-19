@@ -61,7 +61,7 @@ public:
      * @param[ in ] lastBuffer 上一次用来读取数据的缓冲区
      * @param[ in ] len 上一次用来读取数据的缓冲区的大小
 	 */
-	virtual databuffer_t* createBuffer(const ProtocolContext& context, databuffer_t* lastBuffer, size_t len) = 0;
+	virtual buffer_chain_t* createBuffer(const ProtocolContext& context, buffer_chain_t* lastBuffer, size_t len) = 0;
 
 	/**
 	* 取得地址的描述

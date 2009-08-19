@@ -14,73 +14,47 @@
 
 _jingxian_begin
 
-
 class InternalBuffer
 {
 public:
-	InternalBuffer(size_t capacity = 30);
+	InternalBuffer();
 
+	/**
+	 * 析构函数
+	 */
 	~InternalBuffer();
 
 	/**
 	 * 向尾部添加一个空闲的内存块
 	 * @remarks 内存块的数据将被清空
 	 */
-	void Push(databuffer_t* buf);
+	void push(databuffer_t* buf);
 
 	/**
 	 * 向头部取一个内存块
 	 */
-	databuffer_t* Pop();
+	buffer_chain_t* pop();
 
 	/**
-	 * 取得 Buffer 中数据内存块,以便读数据
-	 * @params[ out ] length 返回的WSABUF块大小,可选值
-	 * @return 返回填充数据的WSABUF块,最后一个WSABUF指针一定是null
+	 * 用于遍历buf,
 	 */
-	LPWSABUF GetReadBuffer(size_t* len = null_ptr);
-	
-	/**
-	 * 从 Buffer 中读数据后,将数据起始指针后移
-	 */
-	size_t ReadBytes(size_t len);
+	buffer_chain_t* next(buffer_chain_t* current);
 
 	/**
-	 * 数据的字节数
+	 * 用于遍历buf,
 	 */
-	size_t TotalReadBytes() const;
+	const buffer_chain_t* next(const buffer_chain_t* current)const;
 
 	/**
-	 * 取得 Buffer 尾部空闲内存块,以便填写数据
-	 * @params[ out ] len 返回的WSABUF块大小,可选值
-	 * @return 返回尾部空闲内存块,最后一个WSABUF指针一定是null
+	 * 是否为空
 	 */
-	LPWSABUF GetWriteBuffer(size_t* len = null_ptr);
+	bool empty() const;
 
-	/**
-	 * 向 Buffer 尾部空闲内存块写数据后,将数据结束指针后移
-	 */
-	size_t WriteBytes(size_t len);
-
-	/**
-	 * 数据的字节数
-	 */
-	size_t TotalWriteBytes() const;
-
+protected:
+	buffer_chain_t* head_;
+	buffer_chain_t* tail_;
 private:
 	NOCOPY(InternalBuffer);
-	size_t capacity_;
-
-	databuffer_t** ptr_;
-	size_t length_;
-
-	LPWSABUF writePtr_;
-	size_t writeLength_;
-	size_t writeBytes_;
-
-	LPWSABUF readPtr_;
-	size_t readLength_;
-	size_t readBytes_;
 };
 
 _jingxian_end
