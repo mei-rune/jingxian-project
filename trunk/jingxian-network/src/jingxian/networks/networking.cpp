@@ -128,10 +128,10 @@ namespace networking
 		return true;
 	}
 
-	bool sendv_n(SOCKET sock, const iovec* wsaBuf, size_t size)
+	bool sendv_n(SOCKET sock, const io_mem_buf* wsaBuf, size_t size)
 	{
-		std::vector<iovec> buf( wsaBuf, wsaBuf + size );
-		iovec* p = &buf[0];
+		std::vector<io_mem_buf> buf( wsaBuf, wsaBuf + size );
+		io_mem_buf* p = &buf[0];
 
 		do
 		{
@@ -160,9 +160,9 @@ namespace networking
 		return true;
 	}
 
-	bool recvv_n(SOCKET sock, iovec* wsaBuf, size_t size)
+	bool recvv_n(SOCKET sock, io_mem_buf* wsaBuf, size_t size)
 	{
-		iovec* p = wsaBuf;
+		io_mem_buf* p = wsaBuf;
 
 		do
 		{

@@ -28,7 +28,7 @@ public:
 	 * 向尾部添加一个空闲的内存块
 	 * @remarks 内存块的数据将被清空
 	 */
-	void push(databuffer_t* buf);
+	void push(buffer_chain_t* buf);
 
 	/**
 	 * 向头部取一个内存块

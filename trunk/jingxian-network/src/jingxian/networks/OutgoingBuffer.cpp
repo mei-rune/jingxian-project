@@ -1,7 +1,8 @@
 
 # include "pro_config.h"
-# include "jingxian/Buffer/OutgoingBuffer.h"
-# include "jingxian/Link.h"
+# include "jingxian/networks/OutgoingBuffer.h"
+# include "jingxian/networks/commands/WriteCommand.H"
+# include "jingxian/networks/ConnectedSocket.h"
 
 _jingxian_begin
 
@@ -23,10 +24,11 @@ ICommand* OutgoingBuffer::makeCommand()
 	switch( current->type)
 	{
 	case BUFFER_ELEMENT_MEMORY:
+		{
 		WriteCommand* command = new WriteCommand(connectedSocket_);
 		do
 		{
-			databuffer_t* data = (databuffer_cast(current);
+			databuffer_t* data = databuffer_cast(current);
 			io_mem_buf iobuf;
 
 			iobuf.buf = data->start;
@@ -36,16 +38,21 @@ ICommand* OutgoingBuffer::makeCommand()
 		while(null_ptr != (current = next(current))
 			&& 0 == current->type);
 		return command;
+		}
 	case BUFFER_ELEMENT_FILE:
-		// TODO: 加入对文件的支持
-		filebuffer_t* filebuf = filebuffer_cast(newbuf);
+		{
+			// TODO: 加入对文件的支持
+		filebuffer_t* filebuf = filebuffer_cast(current);
 		assert( false );
 		return null_ptr;
+		}
 	case BUFFER_ELEMENT_PACKET:
-		// TODO: 加入对文件的支持
-		packetbuffer_t* packetbuf = packetbuffer_cast(newbuf);
+		{
+			// TODO: 加入对文件的支持
+		packetbuffer_t* packetbuf = packetbuffer_cast(current);
 		assert( false );
 		return null_ptr;
+		}
 	default:
 		assert( false );
 		return null_ptr;
@@ -61,8 +68,8 @@ bool OutgoingBuffer::clearBytes(size_t len)
 		switch( current->type)
 		{
 		case BUFFER_ELEMENT_MEMORY:
-
-			databuffer_t* data = (databuffer_cast(current);
+			{
+			databuffer_t* data = databuffer_cast(current);
 			size_t dataLen = data->end - data->start;
 
 			if( dataLen >= exceptLen)
@@ -75,23 +82,28 @@ bool OutgoingBuffer::clearBytes(size_t len)
 			data->start += dataLen;
 			exceptLen -= dataLen;
 			break;
+			}
 		case BUFFER_ELEMENT_FILE:
-			// TODO: 加入对文件的支持
-			filebuffer_t* filebuf = filebuffer_cast(newbuf);
+			{
+				// TODO: 加入对文件的支持
+			filebuffer_t* filebuf = filebuffer_cast(current);
 			assert( false );
 			return false;
+			}
 		case BUFFER_ELEMENT_PACKET:
-			// TODO: 加入对文件的支持
-			packetbuffer_t* packetbuf = packetbuffer_cast(newbuf);
+			{
+				// TODO: 加入对文件的支持
+			packetbuffer_t* packetbuf = packetbuffer_cast(current);
 			assert( false );
 			return false;
+			}
 		default:
 			assert( false );
 			return false;
 		}
 	}
 
-	return (0 == exceptLen)
+	return (0 == exceptLen);
 }
 
 _jingxian_end

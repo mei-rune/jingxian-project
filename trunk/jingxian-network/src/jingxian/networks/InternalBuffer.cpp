@@ -1,7 +1,6 @@
 
 # include "pro_config.h"
-# include "jingxian/Buffer/BaseBuffer.h"
-# include "jingxian/Link.h"
+# include "jingxian/networks/InternalBuffer.h"
 
 _jingxian_begin
 
@@ -16,7 +15,7 @@ InternalBuffer::~InternalBuffer()
 	while(is_null(head_))
 	{
 		buffer_chain_t* current = head_;
-		head_= (_head)->_next;
+		head_= (head_)->_next;
 
 		freebuffer(current);
 	}
@@ -27,21 +26,27 @@ void InternalBuffer::push(buffer_chain_t* newbuf)
 	switch( newbuf->type)
 	{
 	case BUFFER_ELEMENT_MEMORY:
-		databuffer_t* data = (databuffer_cast(newbuf);
+		{
+		databuffer_t* data = databuffer_cast(newbuf);
 		assert( data->ptr <= data->start );
 		assert( data->start <= data->end);
 		assert( data->end <= data->ptr + data->capacity);
 		break;
+		}
 	case BUFFER_ELEMENT_FILE:
-		// TODO: 加入对文件的支持
+		{
+			// TODO: 加入对文件的支持
 		filebuffer_t* filebuf = filebuffer_cast(newbuf);
 		assert( false );
 		break;
+		}
 	case BUFFER_ELEMENT_PACKET:
-		// TODO: 加入对文件的支持
+		{
+			// TODO: 加入对文件的支持
 		packetbuffer_t* packetbuf = packetbuffer_cast(newbuf);
 		assert( false );
 		break;
+		}
 	default:
 		assert( false );
 		break;

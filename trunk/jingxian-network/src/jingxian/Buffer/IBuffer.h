@@ -10,6 +10,7 @@
 
 // Include files
 # include <Winsock2.h>
+# include <Mswsock.h>
 # include "jingxian/exception.hpp"
 
 _jingxian_begin
@@ -45,7 +46,7 @@ typedef struct databuffer
 typedef struct filebuffer
 {
 	buffer_chain_t chain;
-	HANDLE file,
+	HANDLE file;
 	DWORD  write_bytes;
 	DWORD  bytes_per_send;
     TRANSMIT_FILE_BUFFERS buf;
@@ -83,10 +84,10 @@ inline void freebuffer( databuffer_t* buf)
 	if(is_null(buf))
 		return;
 
-	if(is_null(buf->freebuffer))
+	if(is_null(buf->chain.freebuffer))
 		my_free(buf);
 	else
-		buf->freebuffer(buf, buf->context);
+		buf->chain.freebuffer(buf, buf->chain.context);
 }
 
 inline databuffer_t* databuffer_cast(buffer_chain_t* ptr)
