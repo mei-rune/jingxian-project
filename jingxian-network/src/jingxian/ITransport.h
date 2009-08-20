@@ -10,20 +10,11 @@
 
 // Include files
 # include "exception.hpp"
+# include "buffer/IBuffer.h"
 
 _jingxian_begin
 
 class IProtocol;
-
-typedef void (*freebuffer_callback)(void* ptr, void* context);
-
-typedef struct buffer_chain
-{
-	void* context;
-	freebuffer_callback freebuffer;
-	int type;
-	buffer_chain* _next;
-} buffer_chain_t;
 
 class ITransport
 {

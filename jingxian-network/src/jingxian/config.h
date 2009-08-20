@@ -25,6 +25,7 @@
 # include <windows.h>
 # include <assert.h>
 # include <time.h>
+# include <memory>
 
 #ifndef _u_char_
 #define _u_char_
@@ -203,6 +204,12 @@ inline bool is_null( T t )
 }
 
 template< typename T >
+inline bool is_null( const std::auto_ptr<T>& t )
+{
+	return ( NULL == t.get() );
+}
+
+template< typename T >
 inline T get_ptr( T t )
 {
 	return t;
@@ -236,6 +243,7 @@ typedef  int errno_t;
 #endif
 
 typedef DWORD errcode_t;
-
+#define my_free free
+#define my_malloc malloc
 
 #endif // _config_h_

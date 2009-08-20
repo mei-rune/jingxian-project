@@ -5,12 +5,8 @@
 
 _jingxian_begin
 
-ReadCommand::ReadCommand(ConnectedSocket* transport
-						, char* ptr
-						, size_t len )
+ReadCommand::ReadCommand(ConnectedSocket* transport)
 : transport_(transport)
-, ptr_(ptr)
-, len_(len)
 {
 }
 
@@ -30,12 +26,12 @@ void ReadCommand::on_complete(size_t bytes_transferred
 {
 	if (!success)
 	{
-		transport_->onError(logging::Receive, error, _T("写数据时发生错误"));
+		transport_->onError(transport_mode::Receive, error, _T("写数据时发生错误"));
 		return;
 	}
 	else if (0 == bytes_transferred)
 	{
-		transport_->onError(logging::Receive, error, _T("读0个字节"));
+		transport_->onError(transport_mode::Receive, error, _T("读0个字节"));
 		return;
 	}
 	else

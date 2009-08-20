@@ -18,9 +18,7 @@ class ReadCommand : public ICommand
 {
 public:
 
-	ReadCommand(ConnectedSocket* transport
-		, char* ptr
-		, size_t len);
+	ReadCommand(ConnectedSocket* transport);
 	
 	virtual ~ReadCommand();
 

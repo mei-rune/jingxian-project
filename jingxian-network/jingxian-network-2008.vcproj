@@ -232,6 +232,22 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\jingxian\networks\IncomingBuffer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\IncomingBuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\InternalBuffer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\InternalBuffer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\jingxian\networks\IOCPServer.cpp"
 				>
 			</File>
@@ -245,6 +261,14 @@
 			</File>
 			<File
 				RelativePath=".\src\jingxian\networks\networking.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\OutgoingBuffer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\OutgoingBuffer.h"
 				>
 			</File>
 			<File
@@ -456,35 +480,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\Buffer\IncomingBuffer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\Buffer\IncomingBuffer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\Buffer\InternalBuffer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\Buffer\InternalBuffer.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\jingxian\Buffer\OutBuffer.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\jingxian\Buffer\OutBuffer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\Buffer\OutgoingBuffer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\Buffer\OutgoingBuffer.h"
 				>
 			</File>
 		</Filter>

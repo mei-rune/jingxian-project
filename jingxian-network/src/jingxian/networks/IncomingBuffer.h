@@ -10,27 +10,30 @@
 // Include files
 # include <Winsock2.h>
 # include "jingxian/buffer/IBuffer.H"
+# include "jingxian/networks/InternalBuffer.H"
+# include "jingxian/networks/commands/ICommand.H"
 
 _jingxian_begin
 
+class ConnectedSocket;
 
 class IncomingBuffer
 {
 public:
-	IncomingBuffer();
+	IncomingBuffer(ConnectedSocket* connectedSocket);
 
 	~IncomingBuffer();
 
 	ICommand* makeCommand();
 
-	void clearBytes(size_t len);
+	bool clearBytes(size_t len);
 
 private:
 	NOCOPY(IncomingBuffer);
 
 	InternalBuffer freeBuffer_;
-
 	InternalBuffer dataBuffer_;
+	ConnectedSocket* connectedSocket_;
 };
 
 _jingxian_end

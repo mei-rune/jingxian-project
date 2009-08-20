@@ -10,6 +10,7 @@
 
 // Include files
 # include "jingxian/string/string.hpp"
+# include "jingxian/networks/connection_status.h"
 
 _jingxian_begin
 
@@ -173,6 +174,14 @@ _jingxian_end
 	oss << message; \
 	logger->fatal(way, oss, __FILE__, __LINE__); }}
 #endif // FATAL
+
+#ifndef TP_TRACE
+#define TP_TRACE(logger, way, message) { \
+	if ( logger != 0 && logger->isFatalEnabled()) {\
+	StringStream oss; \
+	oss << message; \
+	logger->trace(way, oss, __FILE__, __LINE__); }}
+#endif // TP_TRACE
 
 #else	// _NO_LOG_
 

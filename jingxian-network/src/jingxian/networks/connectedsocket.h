@@ -16,7 +16,9 @@
 # include "jingxian/networks/connection_status.h"
 # include "jingxian/logging/logging.hpp"
 # include "jingxian/networks/IOCPServer.h"
-# include "jingxian/buffer/InternalBuffer.h"
+# include "jingxian/networks/InternalBuffer.h"
+# include "jingxian/networks/IncomingBuffer.h"
+# include "jingxian/networks/OutgoingBuffer.h"
 
 _jingxian_begin
 
@@ -94,14 +96,18 @@ public:
 	SOCKET handle(){return socket_;}
 	ITracer* tracer(){return tracer_;}
 
+	
+	void onWrite(size_t bytes_transferred);
+	void onRead(size_t bytes_transferred);
 	void onError(transport_mode::type mode, errcode_t error, const tstring& description);
+	void onDisconnected(errcode_t error, const tstring& description);
 
 private:
 	NOCOPY(ConnectedSocket);
 
 	void doRead();
 	void doWrite();
-	void onDisconnected(errcode_t error, const tstring& description);
+	void doDisconnect(transport_mode::type mode, errcode_t error, const tstring& description);
 
 
 	/// iocp对象的引用
