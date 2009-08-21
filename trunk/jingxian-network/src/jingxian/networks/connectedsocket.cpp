@@ -25,8 +25,7 @@ ConnectedSocket::ConnectedSocket(IOCPServer* core
 , outgoing_(false)
 , tracer_(0)
 {
-	tracer_ = logging::makeTracer( _T("ConnectedSocket[ip=") + host_ + _T(",port=") + peer_ + _T("]"));
-
+	tracer_ = logging::makeTracer( _T("ConnectedSocket[ip=") + host_ + _T(",port=") + peer_ + _T("]"));	
 	TP_CRITICAL(tracer_, transport_mode::Both, _T("创建 ConnectedSocket 对象成功"));
 }
 
