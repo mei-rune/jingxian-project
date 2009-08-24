@@ -20,13 +20,14 @@ ConnectedSocket::ConnectedSocket(IOCPServer* core
 , isInitialize_(false)
 , stopReading_(false)
 , reading_(false)
-, incoming_(this)
 , writing_(false)
-, outgoing_(false)
 , tracer_(0)
 {
 	tracer_ = logging::makeTracer( _T("ConnectedSocket[ip=") + host_ + _T(",port=") + peer_ + _T("]"));	
 	TP_CRITICAL(tracer_, transport_mode::Both, _T("创建 ConnectedSocket 对象成功"));
+	
+	incoming_.initialize(this);
+	outgoing_.initialize(this);
 }
 
 ConnectedSocket::~ConnectedSocket( )
@@ -200,8 +201,6 @@ void ConnectedSocket::onRead(size_t bytes_transferred)
 	reading_ = false;
 	incoming_.clearBytes(bytes_transferred);
 
-
-	
 	protocol_->onConnected( context_ );
 	doRead();
 }

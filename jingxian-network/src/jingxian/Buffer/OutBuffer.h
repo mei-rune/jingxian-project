@@ -10,13 +10,18 @@
 
 // Include files
 # include "jingxian/Buffer/IBuffer.H"
+# include "jingxian/Buffer/BaseBuffer.H"
 
 _jingxian_begin
 
-class OutBuffer : public IOutBuffer
+class OutBuffer : public BaseBuffer<IOutBuffer>
 {
 public:
 	virtual ~OutBuffer( );
+
+	virtual int beginTranscation();
+	virtual void rollbackTranscation(int);
+	virtual void commitTranscation(int);
 
 	virtual IOutBuffer& writeBoolean(bool value);
 	virtual IOutBuffer& writeInt8(int8_t value);

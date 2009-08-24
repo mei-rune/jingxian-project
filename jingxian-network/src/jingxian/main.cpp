@@ -1,11 +1,13 @@
 // Jingxian_Network.cpp : 定义控制台应用程序的入口点。
 
 #include "pro_config.h"
+#include <iostream>
 #include "jingxian/AbstractServer.h"
 #include "jingxian/networks/IOCPServer.h"
 
-
-#include <iostream>
+# ifdef _GOOGLETEST_
+#include <gtest/gtest.h>
+#endif
 
 _jingxian_begin
 
@@ -119,26 +121,23 @@ private:
 
 _jingxian_end
 
-int main(int argc, char* argv[])
-{
-#ifdef TEST
 
-	{
+
+TEST(sstring, sStringOP)
+{
 	StringArray<char, detail::StringOp<char> > sa( split<char, detail::StringOp<char> >( "ad,adf,ff,d,,.d.f",",." ) );
 	StringArray<char, detail::StringOp<char> > sa1 = split<std::string, detail::StringOp<char> >( std::string("ad,adf,ff,d,,.d.f"),",." );
 
 	StringArray<char > sa2 = split( "ad,adf,ff,d,,.d.f",",." );
 	
 	StringArray<char> sa3 = split(std::string( "ad,adf,ff,d,,.d.f" ),",." );
-	if( sa.size() != 6)
-		std::cout << "ERROR split!" << std::endl;
-	if(    0 != strcmp( "ad", sa.ptr( 0 ) )
+	ASSERT_FALSE( sa.size() != 6);
+	ASSERT_FALSE(    0 != strcmp( "ad", sa.ptr( 0 ) )
 		&& 0 != strcmp( "adf", sa.ptr( 1 ) )
 		&& 0 != strcmp( "ff", sa.ptr( 2 ) )
 		&& 0 != strcmp( "d", sa.ptr( 3 ) )
 		&& 0 != strcmp( "d", sa.ptr( 4 ) )
-		&& 0 != strcmp( "f", sa.ptr( 5 ) ) )
-		std::cout << "ERROR split!" << std::endl;
+		&& 0 != strcmp( "f", sa.ptr( 5 ) ) );
 
 	try
 	{
@@ -148,78 +147,64 @@ int main(int argc, char* argv[])
 	catch( OutOfRangeException& e)
 	{
 	}
-	}
 
 
 
 	std::string str1( "asdfasdfas" );
 	std::string str2( "as" );
 
-	if( !begin_with( str1, "asd" ) )
-		std::cout << "ERROR begin_with!" << std::endl;
+	ASSERT_TRUE( begin_with( str1, "asd" ) );
 	
-	if( begin_with( str2, "asd" ) )
-		std::cout << "ERROR begin_with!" << std::endl;
+	ASSERT_FALSE( begin_with( str2, "asd" ) );
 
-	if( begin_with( str1, "as1d" ) )
-		std::cout << "ERROR begin_with!" << std::endl;
+	ASSERT_FALSE( begin_with( str1, "as1d" ) );
 
 	if( !end_with( str1, "fas" ) )
 		std::cout << "ERROR end_with!" << std::endl;
-	if( end_with( str1, "f1as" ) )
-		std::cout << "ERROR end_with!" << std::endl;
+	ASSERT_FALSE(end_with( str1, "f1as" ) );
 
 	std::string str3( "       asdkdfasdf");
 	std::string str4( "asdkdfasdf         ");
 	std::string str5( "       asdkdfasdf         ");
 
-	if( trim_left( str3 ) != "asdkdfasdf" )
-		std::cout << "ERROR trim_left!" << std::endl;
+	ASSERT_FALSE( trim_left( str3 ) != "asdkdfasdf" );
 
-	if( trim_right( str4 ) != "asdkdfasdf" )
-		std::cout << "ERROR trim_right!" << std::endl;
+	ASSERT_FALSE( trim_right( str4 ) != "asdkdfasdf" );
 
-	if( trim_all( str5 ) != "asdkdfasdf" )
-		std::cout << "ERROR trim_all!" << std::endl;
+	ASSERT_FALSE( trim_all( str5 ) != "asdkdfasdf" );
 
 	
 	std::string str6( "asdkdfasdf");
 	std::string str7( "asdkdfasdf");
 	std::string str8( "asdkdfasdf");
 	
-	if( trim_left( str6, "af" ) != "sdkdfasdf" )
-		std::cout << "ERROR trim_left!" << std::endl;
+	ASSERT_FALSE( trim_left( str6, "af" ) != "sdkdfasdf" );
 	
-	if( trim_right( str7, "af" ) != "asdkdfasd" )
-		std::cout << "ERROR trim_right!" << std::endl;
+	ASSERT_FALSE( trim_right( str7, "af" ) != "asdkdfasd" );
 
-	if( trim_all( str8, "af" ) != "sdkdfasd" )
-		std::cout << "ERROR trim_all!" << std::endl;
+	ASSERT_FALSE( trim_all( str8, "af" ) != "sdkdfasd" );
 
 	std::string str9( "asdkdfasdf");
 	std::string str10( "asdddkdfasdf");
 	std::string str11( "asdkdfasdf");
 
-	if( replace_all( str9, "a", "c" ) != "csdkdfcsdf" )
-		std::cout << "ERROR replace_all!" << std::endl;
+	ASSERT_FALSE( replace_all( str9, "a", "c" ) != "csdkdfcsdf" );
 	
-	if( replace_all( str10, "a", "cc" ) != "ccsdddkdfccsdf" )
-		std::cout << "ERROR replace_all!" << std::endl;
+	ASSERT_FALSE( replace_all( str10, "a", "cc" ) != "ccsdddkdfccsdf" );
 
-	if( replace_all( str11, "a", "aaa" ) != "aaasdkdfaaasdf" )
-		std::cout << "ERROR replace_all!" << std::endl;
+	ASSERT_FALSE( replace_all( str11, "a", "aaa" ) != "aaasdkdfaaasdf" );
 
 	std::string str12( "aAsDFddSdkdfasdf");
 	std::string str13( "asdSkdfaFAsSDdf");
 
-	if( transform_upper( str12 ) != "AASDFDDSDKDFASDF" )
-		std::cout << "ERROR transform_upper!" << std::endl;
+	ASSERT_FALSE( transform_upper( str12 ) != "AASDFDDSDKDFASDF" );
 
-	if( transform_lower( str13 ) != "asdskdfafassddf" )
-		std::cout << "ERROR transform_lower!" << std::endl;
+	ASSERT_FALSE( transform_lower( str13 ) != "asdskdfafassddf" );
+}
 
-#endif //
 
+int main(int argc, char* argv[])
+{
 	_jingxian networking::initializeScket();
 
 	_jingxian IOCPServer server;

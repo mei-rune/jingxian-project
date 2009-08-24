@@ -6,13 +6,18 @@
 
 _jingxian_begin
 
-OutgoingBuffer::OutgoingBuffer(ConnectedSocket* connectedSocket)
-: connectedSocket_(connectedSocket)
+OutgoingBuffer::OutgoingBuffer()
+: connectedSocket_(null_ptr)
 {
 }
 
 OutgoingBuffer::~OutgoingBuffer()
 {
+}
+
+void OutgoingBuffer::initialize(ConnectedSocket* connectedSocket)
+{
+	connectedSocket_ = connectedSocket;
 }
 
 ICommand* OutgoingBuffer::makeCommand()

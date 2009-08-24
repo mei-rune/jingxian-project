@@ -188,7 +188,6 @@ struct string_traits<char_t>
 		return ::strcspn( str, strCharSet );
 	}
 
-
 	//寻找str字符串第一个没有在strCharSet字符集中出现的位置
 	inline static   size_type strspn( const char_type *str,
 				const char_type *strCharSet )

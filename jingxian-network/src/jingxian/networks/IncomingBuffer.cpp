@@ -6,8 +6,8 @@
 
 _jingxian_begin
 
-IncomingBuffer::IncomingBuffer(ConnectedSocket* connectedSocket)
-: connectedSocket_(connectedSocket)
+IncomingBuffer::IncomingBuffer()
+: connectedSocket_(null_ptr)
 {
 }
 
@@ -15,9 +15,14 @@ IncomingBuffer::~IncomingBuffer()
 {
 }
 
+void IncomingBuffer::initialize(ConnectedSocket* connectedSocket)
+{
+	connectedSocket_ = connectedSocket;
+}
+
 ICommand* IncomingBuffer::makeCommand()
 {	
-	//ReadCommand* command = new ReadCommand(connectedSocket_);
+	ReadCommand* command = new ReadCommand(connectedSocket_);
 
 	//buffer_chain_t* current = null_ptr;
 	//while(null_ptr != (current = this->next(current)))

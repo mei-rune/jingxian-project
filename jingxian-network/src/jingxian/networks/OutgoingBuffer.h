@@ -22,9 +22,11 @@ class ConnectedSocket;
 class OutgoingBuffer : public InternalBuffer
 {
 public:
-	OutgoingBuffer(ConnectedSocket* connectedSocket);
+	OutgoingBuffer();
 
 	~OutgoingBuffer();
+
+	void initialize(ConnectedSocket* connectedSocket);
 
 	ICommand* makeCommand();
 

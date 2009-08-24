@@ -13,11 +13,38 @@
 
 _jingxian_begin
 
-class InBuffer : public IInBuffer, public BaseBuffer
+
+class InBuffer : public BaseBuffer<IInBuffer>
 {
 public:
+	
+	class TranscationData
+	{
+	public:
+
+		// 已读的字节数
+		size_t readLength_;
+		// 当前正在读的数据块
+		size_t current_;
+		// 当前正在读的数据指针
+		const char* currentPtr_;
+		// 当前正在读的数据块的剩余字节数
+		size_t currentLength_;
+		// 发性错误时的处理方式
+		ExceptionStyle::type exceptionStyle_;
+		// 当前是否处于错误中
+		errcode_t errno_;
+	};
+
+	InBuffer();
 	InBuffer(LPWSABUF ptr, size_t count, size_t totalLength);
 	virtual ~InBuffer(void);
+
+	virtual void reset(LPWSABUF ptr, size_t count, size_t totalLength);
+
+	virtual int beginTranscation();
+	virtual void rollbackTranscation(int);
+	virtual void commitTranscation(int);
 
 	virtual bool    readBoolean();
 	virtual int8_t  readInt8();
@@ -26,19 +53,36 @@ public:
 	virtual int64_t readInt64();
 	virtual void readBlob(void* blob, size_t len);
 
-	virtual size_t size();
+	virtual size_t size()const;
+	virtual size_t readLength() const;
+
+	virtual size_t search(char ch) const;
+	virtual size_t search(wchar_t ch) const;
+	virtual size_t search(const void* context,size_t len) const;
+	virtual size_t searchAny(const char* charset) const;
+	virtual size_t searchAny(const wchar_t* charset) const;
+
+	virtual const std::vector<io_mem_buf>& rawBuffer() const;
+	virtual void seek(int offest);
+
 private:
 	NOCOPY(InBuffer);
 
-	LPWSABUF ptr_;
-	size_t size_;
-
+	// 所有的数据内存块
+	std::vector<io_mem_buf> memory_;
+	// 数据的总字节数,此值不会被更改
 	size_t totalLength_;
-	size_t readLength_;
 
-	LPWSABUF current_;
+	// 已读的字节数
+	size_t readLength_;
+	// 当前正在读的数据块
+	size_t current_;
+	// 当前正在读的数据指针
 	const char* currentPtr_;
+	// 当前正在读的数据块的剩余字节数
 	size_t currentLength_;
+
+	std::vector<TranscationData> transcationDatas_;
 };
 
 _jingxian_end
