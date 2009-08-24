@@ -42,7 +42,24 @@ IOutBuffer& OutBuffer::writeInt64(const int64_t& value)
 
 IOutBuffer& OutBuffer::writeBlob(const void* blob, size_t len)
 {
+	ThrowException(NotImplementedException);
 	return *this;
+}
+
+
+int OutBuffer::beginTranscation()
+{
+	ThrowException(NotImplementedException);
+}
+
+void OutBuffer::rollbackTranscation(int id)
+{
+	ThrowException(NotImplementedException);
+}
+
+void OutBuffer::commitTranscation(int id)
+{
+	ThrowException(NotImplementedException);
 }
 
 _jingxian_end

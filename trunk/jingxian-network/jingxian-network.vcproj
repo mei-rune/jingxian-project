@@ -39,9 +39,9 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/DTEST"
+				AdditionalOptions="/D_GOOGLETEST_"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)src\&quot;;."
+				AdditionalIncludeDirectories="&quot;$(GOOGLETEST_ROOT)\include&quot;;&quot;$(ProjectDir)src\&quot;;."
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				GeneratePreprocessedFile="0"
 				MinimalRebuild="true"
@@ -64,8 +64,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib Mswsock.lib"
+				AdditionalDependencies="Ws2_32.lib Mswsock.lib gtestd.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(GOOGLETEST_ROOT)\msvc\Debug&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -221,23 +222,15 @@
 			Name="networks"
 			>
 			<File
-				RelativePath=".\src\jingxian\networks\connectedsocket.cpp"
+				RelativePath=".\src\jingxian\networks\ConnectedSocket.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\networks\connectedsocket.h"
+				RelativePath=".\src\jingxian\networks\ConnectedSocket.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\jingxian\networks\connection_status.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\networks\Context.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\networks\Context.h"
 				>
 			</File>
 			<File
@@ -280,6 +273,10 @@
 			</File>
 			<File
 				RelativePath=".\src\jingxian\networks\TCPAcceptor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\TCPContext.h"
 				>
 			</File>
 			<Filter
@@ -343,6 +340,34 @@
 				</File>
 				<File
 					RelativePath=".\src\jingxian\networks\commands\WriteCommand.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="buffer"
+				>
+				<File
+					RelativePath=".\src\jingxian\networks\IncomingBuffer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\IncomingBuffer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\InternalBuffer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\InternalBuffer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\OutgoingBuffer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\OutgoingBuffer.h"
 					>
 				</File>
 			</Filter>
@@ -487,10 +512,6 @@
 			Name="Buffer"
 			>
 			<File
-				RelativePath=".\src\jingxian\Buffer\BaseBuffer.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\jingxian\Buffer\BaseBuffer.h"
 				>
 			</File>
@@ -507,35 +528,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\Buffer\IncomingBuffer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\Buffer\IncomingBuffer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\Buffer\InternalBuffer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\Buffer\InternalBuffer.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\jingxian\Buffer\OutBuffer.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\jingxian\Buffer\OutBuffer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\Buffer\OutgoingBuffer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\Buffer\OutgoingBuffer.h"
 				>
 			</File>
 		</Filter>

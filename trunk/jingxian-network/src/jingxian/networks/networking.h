@@ -12,20 +12,24 @@
 # include "Winsock2.h"
 # include "Mswsock.h"
 # include "jingxian/string/string.hpp"
+# include "jingxian/buffer/IBuffer.h"
 
-typedef WSABUF io_mem_buf;
+_jingxian_begin
+
+# ifndef _io_mem_buf_buf_
+# define _io_mem_buf_buf_
+  typedef WSABUF io_mem_buf;
+# endif //_io_mem_buf_buf_
 
 # ifndef _io_packect_buf_
 # define _io_packect_buf_
- typedef TRANSMIT_PACKETS_ELEMENT io_packect_buf;
+  typedef TRANSMIT_PACKETS_ELEMENT io_packect_buf;
 # endif // ___iopack___
 
 # ifndef _io_file_buf_
- typedef TRANSMIT_FILE_BUFFERS io_file_buf;
+# define _io_file_buf_
+  typedef TRANSMIT_FILE_BUFFERS io_file_buf;
 # endif // _io_file_buf_
-
-
-_jingxian_begin
 
 namespace networking
 {

@@ -16,31 +16,12 @@
 # include "jingxian/networks/connection_status.h"
 # include "jingxian/logging/logging.hpp"
 # include "jingxian/networks/IOCPServer.h"
+# include "jingxian/networks/TCPContext.h"
 # include "jingxian/networks/InternalBuffer.h"
 # include "jingxian/networks/IncomingBuffer.h"
 # include "jingxian/networks/OutgoingBuffer.h"
 
 _jingxian_begin
-
-class ProtocolContextEx : public ProtocolContext
-{
-public:
-	ProtocolContextEx(IReactorCore* core
-		, ITransport* transport)
-		: ProtocolContext(core, transport)
-	{
-	}
-
-	void inBuffer(IInBuffer* inBuffer)
-	{
-		inBuffer_ = inBuffer;
-	}
-	
-	void outBuffer(IOutBuffer* outBuffer)
-	{
-		outBuffer_ = outBuffer_;
-	}
-};
 
 /**
  * On开头的函数在用户直接调用的方法中不可以使用。
@@ -145,7 +126,7 @@ private:
 	/// 协议处理器
 	IProtocol* protocol_;
 	/// 对象的上下文
-	ProtocolContextEx context_;
+	TCPContext context_;
 	/// 是否已初始化
 	bool isInitialize_;
 	///暂停数据时读来的数据临时存放位置

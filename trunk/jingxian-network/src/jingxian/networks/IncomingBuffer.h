@@ -20,9 +20,11 @@ class ConnectedSocket;
 class IncomingBuffer
 {
 public:
-	IncomingBuffer(ConnectedSocket* connectedSocket);
+	IncomingBuffer();
 
 	~IncomingBuffer();
+	
+	void initialize(ConnectedSocket* connectedSocket);
 
 	ICommand* makeCommand();
 

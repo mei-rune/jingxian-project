@@ -16,44 +16,63 @@ _jingxian_begin
 
 // 
 // ERROR_HANDLE_EOF
-class BaseBuffer
+template<typename IBUFFER>
+class BaseBuffer : public IBUFFER
 {
 public:
-	struct point
+
+	BaseBuffer()
+		: exceptionStyle_(ExceptionStyle::THROW)
+		, errno_(ERROR_SUCCESS)
 	{
-		int beginIndex;
-		size_t beginOffest;
+		errno_ = ERROR_SUCCESS;
+	}
 
-		int endIndex;
-		size_t endOffest;
-	};
+	virtual ~BaseBuffer( )
+	{
+	}
 
-	BaseBuffer();
+	virtual void exceptions(ExceptionStyle::type exceptionStyle)
+	{
+		exceptionStyle_ = exceptionStyle;
+	}
 
-	virtual ~BaseBuffer( );
+	virtual ExceptionStyle::type exceptions() const
+	{
+		return exceptionStyle_;
+	}
 
-	virtual int beginTranscation();
+	virtual bool fail() const
+	{
+		return ERROR_SUCCESS != errno_;
+	}
 
-	virtual void rollbackTranscation(int);
+	virtual errcode_t error() const
+	{
+		return errno_;
+	}
 
-	virtual void commitTranscation(int);
+	void error(errcode_t err)
+	{
+		if( ERROR_SUCCESS == errno_)
+			errno_ = err;
 
-	virtual void exceptions(ExceptionStyle::type exceptionStyle);
+		if(ExceptionStyle::THROW == exceptionStyle_)
+			ThrowException1(Exception, get_last_error(err));
+	}
 
-	virtual ExceptionStyle::type exceptions() const;
-
-	virtual bool fail() const;
-
-	virtual errcode_t error() const;
-
-	void error(errcode_t err);
-
-	virtual void clearError();
+	virtual void clearError()
+	{
+		errno_ = ERROR_SUCCESS;
+	}
 
 protected:
 	NOCOPY(BaseBuffer);
 
+	// 发性错误时的处理方式
 	ExceptionStyle::type exceptionStyle_;
+
+	// 当前是否处于错误中
 	errcode_t errno_;
 };
 
