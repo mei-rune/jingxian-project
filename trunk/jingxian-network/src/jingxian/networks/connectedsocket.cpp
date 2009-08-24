@@ -198,12 +198,18 @@ void ConnectedSocket::doDisconnect(transport_mode::type mode, errcode_t error, c
 void ConnectedSocket::onRead(size_t bytes_transferred)
 {
 	reading_ = false;
+	incoming_.clearBytes(bytes_transferred);
+
+
+	
+	protocol_->onConnected( context_ );
 	doRead();
 }
 
 void ConnectedSocket::onWrite(size_t bytes_transferred)
 {
 	writing_ = false;
+	incoming_.clearBytes(bytes_transferred);
 	doWrite();
 }
 

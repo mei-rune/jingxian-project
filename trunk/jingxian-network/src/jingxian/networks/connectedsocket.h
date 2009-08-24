@@ -22,6 +22,26 @@
 
 _jingxian_begin
 
+class ProtocolContextEx : public ProtocolContext
+{
+public:
+	ProtocolContextEx(IReactorCore* core
+		, ITransport* transport)
+		: ProtocolContext(core, transport)
+	{
+	}
+
+	void inBuffer(IInBuffer* inBuffer)
+	{
+		inBuffer_ = inBuffer;
+	}
+	
+	void outBuffer(IOutBuffer* outBuffer)
+	{
+		outBuffer_ = outBuffer_;
+	}
+};
+
 /**
  * On开头的函数在用户直接调用的方法中不可以使用。
  * 给用户调用的方法为ITransport接口中的方法
@@ -125,12 +145,10 @@ private:
 	/// 协议处理器
 	IProtocol* protocol_;
 	/// 对象的上下文
-	ProtocolContext context_;
+	ProtocolContextEx context_;
 	/// 是否已初始化
 	bool isInitialize_;
-	////暂停数据时读来的数据临时存放位置
-
-
+	///暂停数据时读来的数据临时存放位置
 
 	bool stopReading_;
 	/// 表示发出一个读请求,但还没有返回
