@@ -33,7 +33,6 @@ public:
     virtual void onConnected(ProtocolContext& context)
 	{
 		std::cout << "新连接到来 - " << context.transport().peer() << std::endl;
-		context.transport().disconnection();
 	}
 
     /**
@@ -56,13 +55,19 @@ public:
 	 */
     virtual void onReceived(ProtocolContext& context)
 	{
+		size_t len = context.inBuffer().size();
+		char* ptr = (char*)my_malloc(len);
+
+		context.inBuffer().readBlob(ptr, len);
+		context.outBuffer().writeBlob(ptr, len);
 	}
 
-	virtual databuffer_t* createBuffer(const ProtocolContext& context, databuffer_t* lastBuffer, size_t len)
+	virtual buffer_chain_t* createBuffer(const ProtocolContext& context, buffer_chain_t* lastBuffer, size_t len)
 	{
 		databuffer_t* result = (databuffer_t*)calloc(1,sizeof(databuffer_t)+100);
 		result->capacity = 100;
-		return result;
+		result->start = result->end = result->ptr;
+		return (buffer_chain_t*)result;
 	}
 
 	/**
