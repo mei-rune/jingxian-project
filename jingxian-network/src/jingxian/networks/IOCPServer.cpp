@@ -50,6 +50,9 @@ IOCPServer::~IOCPServer(void)
 	}
 
 	close();
+	
+	delete _logger;
+	_logger = null_ptr;
 }
 
 

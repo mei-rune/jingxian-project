@@ -1,6 +1,6 @@
 
-#ifndef _jingxian_tracer_h_
-#define _jingxian_tracer_h_
+#ifndef _ITracer_H_
+#define _ITracer_H_
 
 #include "jingxian/config.h"
 
@@ -35,7 +35,7 @@ public:
 	 * @param[ in ] file 日志记录的源文件名
 	 * @param[ in ] line 日志记录的源文件的当前行
 	 */
-	virtual void debug(transport_mode::type way, const StringStream& message, const char* file=0, int line=-1);
+	virtual void debug(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
 	
 	/**
 	 * error级的日志是否可以记日志
@@ -50,7 +50,7 @@ public:
 	 * @param[ in ] file 日志记录的源文件名
 	 * @param[ in ] line 日志记录的源文件的当前行
 	 */
-    virtual void error(transport_mode::type way, const StringStream& message, const char* file=0, int line=-1);
+    virtual void error(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
 	
 	/**
 	 * fatal级的日志是否可以记日志
@@ -65,7 +65,7 @@ public:
 	 * @param[ in ] file 日志记录的源文件名
 	 * @param[ in ] line 日志记录的源文件的当前行
 	 */
-    virtual void fatal(transport_mode::type way, const StringStream& message, const char* file=0, int line=-1);
+    virtual void fatal(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
 
 	/**
 	 * info级的日志是否可以记日志
@@ -80,7 +80,7 @@ public:
 	 * @param[ in ] file 日志记录的源文件名
 	 * @param[ in ] line 日志记录的源文件的当前行
 	 */
-    virtual void info(transport_mode::type way, const StringStream& message, const char* file=0, int line=-1);
+    virtual void info(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
 	
 	/**
 	 * warn级的日志是否可以记日志
@@ -95,7 +95,7 @@ public:
 	 * @param[ in ] file 日志记录的源文件名
 	 * @param[ in ] line 日志记录的源文件的当前行
 	 */
-    virtual void warn(transport_mode::type way, const StringStream& message, const char* file=0, int line=-1);
+    virtual void warn(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
 
 	
 	/**
@@ -111,14 +111,21 @@ public:
 	 * @param[ in ] file 日志记录的源文件名
 	 * @param[ in ] line 日志记录的源文件的当前行
 	 */
-    virtual void trace(transport_mode::type way, const StringStream& message, const char* file=0, int line=-1);
+	virtual void trace(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
 };
 
 namespace logging
 {
-	ITracer* makeTracer( const tchar* nm );
+	namespace spi
+	{
+		class ITraceFactory
+		{
+		public:
+			virtual ~ITraceFactory(){};
 
-	ITracer* makeTracer( const tstring& nm );
+			virtual ITracer* make( const tchar* nm, const tstring& host, const tstring& peer) = 0;
+		};
+	}
 }
 
 _jingxian_end
@@ -129,7 +136,7 @@ _jingxian_end
 #ifndef TP_CRITICAL
 #define TP_CRITICAL(logger, way, message) { \
 	if ( logger != 0 && logger->isDebugEnabled()) {\
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	logger->info(way, oss, __FILE__, __LINE__); }}
 #endif // DEBUG
@@ -138,7 +145,7 @@ _jingxian_end
 #ifndef TP_DEBUG
 #define TP_DEBUG(logger, way, message) { \
 	if ( logger != 0 && logger->isDebugEnabled()) {\
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	logger->debug(way, oss, __FILE__, __LINE__); }}
 #endif // DEBUG
@@ -146,7 +153,7 @@ _jingxian_end
 #ifndef TP_INFO
 #define TP_INFO(logger, way, message) { \
 	if ( logger != 0 && logger->isInfoEnabled()) {\
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	logger->info(way, oss, __FILE__, __LINE__); }}
 #endif // INFO
@@ -154,7 +161,7 @@ _jingxian_end
 #ifndef TP_WARN
 #define TP_WARN(logger, way, message ) { \
 	if ( logger != 0 && logger->isWarnEnabled()) {\
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	logger->warn(way, oss, __FILE__, __LINE__); }}
 #endif // WARN
@@ -162,7 +169,7 @@ _jingxian_end
 #ifndef TP_ERROR
 #define TP_ERROR(logger, way, message) { \
 	if ( logger != 0 && logger->isErrorEnabled()) {\
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	logger->error(way, oss, __FILE__, __LINE__); }}
 #endif // ERROR
@@ -170,7 +177,7 @@ _jingxian_end
 #ifndef TP_FATAL
 #define TP_FATAL(logger, way, message) { \
 	if ( logger != 0 && logger->isFatalEnabled()) {\
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	logger->fatal(way, oss, __FILE__, __LINE__); }}
 #endif // FATAL
@@ -178,7 +185,7 @@ _jingxian_end
 #ifndef TP_TRACE
 #define TP_TRACE(logger, way, message) { \
 	if ( logger != 0 && logger->isFatalEnabled()) {\
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	logger->trace(way, oss, __FILE__, __LINE__); }}
 #endif // TP_TRACE
@@ -215,4 +222,4 @@ _jingxian_end
 
 #endif // _NO_LOG_
 
-#endif // _JINGXIAN_Log_H_
+#endif // _ITracer_H_

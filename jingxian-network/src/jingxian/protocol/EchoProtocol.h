@@ -37,7 +37,7 @@ public:
 	 */
     virtual void onConnected(ProtocolContext& context)
 	{
-		std::cout << "新连接到来 - " << context.transport().peer() << std::endl;
+		INFO(log(), _T("新连接到来 - ") << context.transport().peer());
 	}
 
     /**
@@ -49,7 +49,7 @@ public:
 	 */
     virtual void onDisconnected(ProtocolContext& context, errcode_t errCode, const tstring& reason)
 	{
-		std::cout << "连接断开 - " << context.transport().peer() << std::endl;
+		INFO(log(), _T("连接断开 - ") << context.transport().peer());
 	}
 
     /**
@@ -64,6 +64,8 @@ public:
 		context.inBuffer().readBlob((void*)str.c_str(), str.size());		
 		context.outBuffer().writeBlob(str.c_str(), str.size());
 	}
+private:
+	NOCOPY(EchoProtocol);
 };
 
 _jingxian_end
