@@ -1,0 +1,174 @@
+
+
+#ifndef _CONNECTED_SOCKET_H_
+#define _CONNECTED_SOCKET_H_
+
+#include "jingxian/config.h"
+
+#if !defined (JINGXIAN_LACKS_PRAGMA_ONCE)
+# pragma once
+#endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
+
+// Include files
+# include <Winsock2.h>
+# include "jingxian/IProtocol.h"
+# include "jingxian/ProtocolContext.h"
+# include "jingxian/networks/connection_status.h"
+# include "jingxian/logging/logging.h"
+# include "jingxian/networks/IOCPServer.h"
+# include "jingxian/networks/TCPContext.h"
+# include "jingxian/networks/IncomingBuffer.h"
+# include "jingxian/networks/OutgoingBuffer.h"
+
+_jingxian_begin
+
+/**
+ * On开头的函数在用户直接调用的方法中不可以使用。
+ * 给用户调用的方法为ITransport接口中的方法
+ */
+class ConnectedSocket : public ITransport
+{
+public:
+
+	ConnectedSocket(IOCPServer* core
+								 , SOCKET sock
+								 , const tstring& host
+								 , const tstring& peer);
+
+	virtual ~ConnectedSocket( );
+
+	/**
+	 * @implements initialize
+	 */
+	virtual void initialize();
+
+	/**
+	 * @implements bindProtocol
+	 */
+    virtual void bindProtocol(IProtocol* protocol);
+
+	/**
+	 * @implements startReading
+	 */
+    virtual void startReading();
+
+	/**
+	 * @implements stopReading
+	 */
+    virtual void stopReading();
+	
+	/**
+	 * @implements write
+	 */
+    virtual void write(buffer_chain_t* buffer);
+
+	/**
+	 * @implements disconnection
+	 */
+    virtual void disconnection();
+	
+	/**
+	 * @implements disconnection
+	 */
+    virtual void disconnection(const tstring& error);
+
+	/**
+	 * @implements host
+	 */
+    virtual const tstring& host() const;
+
+	/**
+	 * @implements peer
+	 */
+    virtual const tstring& peer() const;
+
+	/**
+	 * @implements timeout
+	 */
+    virtual time_t timeout() const;
+
+	/**
+	 * @implements toString
+	 */
+	virtual const tstring& toString() const;
+
+
+	SOCKET handle(){return socket_;}
+	ITracer* tracer(){return tracer_;}
+
+	
+	void onWrite(size_t bytes_transferred);
+	void onRead(size_t bytes_transferred);
+	void onError(transport_mode::type mode, errcode_t error, const tstring& description);
+	void onDisconnected(errcode_t error, const tstring& description);
+
+	buffer_chain_t* allocateProtocolBuffer();
+
+private:
+	NOCOPY(ConnectedSocket);
+
+	void doRead();
+	void doWrite();
+	void doDisconnect(transport_mode::type mode, errcode_t error, const tstring& description);
+
+
+	/// iocp对象的引用
+	IOCPServer* core_;
+	/// socket 对象
+	SOCKET socket_;
+	/// 本地地址
+	tstring host_;
+	/// 远程地址
+	tstring peer_;
+	/// 本对象当前所处的状态
+	connection_status::type state_;
+	/// 超时时间
+	time_t timeout_;
+	/// 协议处理器
+	IProtocol* protocol_;
+	/// 对象的上下文
+	TCPContext context_;
+	/// 是否已初始化
+	bool isInitialize_;
+	///暂停数据时读来的数据临时存放位置
+
+	bool stopReading_;
+	/// 表示发出一个读请求,但还没有返回
+	bool reading_;
+	IncomingBuffer incoming_;
+
+	/// 表示发出一个写请求,但还没有返回
+	bool writing_;
+	OutgoingBuffer outgoing_;
+
+	/// 保存被停止的原因
+	tstring disconnectReason_;
+
+	/// 日志对象
+	ITracer* tracer_;
+	tstring toString_;
+
+	//bool _writing = false;
+	//LinkedList<ByteBuffer> _writebuf = new LinkedList<ByteBuffer>();
+	//int _writeBufferedSize = 0; //_writebuf内所有byte的总和
+
+	//bool _isDisconnectingOnEmpty = false;
+	//Exception _disconnectingArg = null;
+
+
+	//bool _isShutdownOnEmpty = false;
+	//SocketShutdown _shutdownArg = SocketShutdown.Both;
+
+	//bool _read_shutdown = false;
+	//bool _write_shutdown = false;
+
+
+	//// 没有取到数据时触发timeout异常的时间间隔
+	//TimeSpan _timeout = IOCPCore.TIMEOUT_INTERVAL;
+	//// 上一次触发timeout异常的时间
+	//DateTime _triggeredTime = DateTime.Now;
+};
+
+_jingxian_end
+
+#endif // _CONNECTED_SOCKET_H_
