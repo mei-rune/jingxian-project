@@ -56,6 +56,8 @@ private:
 	EchoProtocol protocol_;
 };
 
+
+# ifdef _GOOGLETEST_
 TEST(string, stringOP)
 {
 	StringArray<char, detail::StringOp<char> > sa( split<char, detail::StringOp<char> >( "ad,adf,ff,d,,.d.f",",." ) );
@@ -134,6 +136,7 @@ TEST(string, stringOP)
 
 	ASSERT_FALSE( transform_lower( str13 ) != "asdskdfafassddf" );
 }
+#endif
 
 _jingxian_end
 
@@ -173,14 +176,20 @@ _jingxian networking::initializeScket();
     {
 		log4cpp::PropertyConfigurator::configure(::simplify (::combinePath(getApplicationDirectory(), "log4cpp.config")));
     }
-    catch (log4cpp::ConfigureFailure e)
+	catch (const std::exception& e)
+    {
+		std::cerr << e.what() << std::endl;
+    }
+    catch (const log4cpp::ConfigureFailure& e)
     {
         log4cpp::Category::getRoot().warn(e.what());
     }
 
 	
+# ifdef _GOOGLETEST_
     testing::InitGoogleTest(&argc, argv);
     RUN_ALL_TESTS();
+#endif
 
 	_jingxian IOCPServer server;
 

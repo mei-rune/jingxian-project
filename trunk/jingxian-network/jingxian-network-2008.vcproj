@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/DTEST"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)src\&quot;;."
+				AdditionalIncludeDirectories="&quot;$(LOG4CPP_ROOT)\include&quot;;&quot;$(ProjectDir)src\&quot;;."
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				GeneratePreprocessedFile="0"
 				MinimalRebuild="true"
@@ -65,8 +65,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib Mswsock.lib"
+				AdditionalDependencies="Ws2_32.lib Mswsock.lib log4cppd.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(LOG4CPP_ROOT)\msvc\debug&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
@@ -200,6 +201,14 @@
 			Name="logging"
 			>
 			<File
+				RelativePath=".\src\jingxian\logging\ConsoleLogger.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\logging\ConsoleLogger.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\jingxian\logging\ILogger.h"
 				>
 			</File>
@@ -208,11 +217,27 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\logging\logger.cpp"
+				RelativePath=".\src\jingxian\logging\log4cpp.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\logging\logging.hpp"
+				RelativePath=".\src\jingxian\logging\log4cpp.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\logging\logging.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\logging\logging.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\logging\Tracer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\logging\Tracer.h"
 				>
 			</File>
 		</Filter>
@@ -237,14 +262,6 @@
 			</File>
 			<File
 				RelativePath=".\src\jingxian\networks\IncomingBuffer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\networks\InternalBuffer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\networks\InternalBuffer.h"
 				>
 			</File>
 			<File
@@ -277,6 +294,10 @@
 			</File>
 			<File
 				RelativePath=".\src\jingxian\networks\TCPAcceptor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\TCPContext.h"
 				>
 			</File>
 			<Filter
@@ -351,6 +372,14 @@
 		<Filter
 			Name="protocol"
 			>
+			<File
+				RelativePath=".\src\jingxian\protocol\BaseProtocol.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\protocol\EchoProtocol.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="string"
@@ -460,11 +489,11 @@
 			Name="buffer"
 			>
 			<File
-				RelativePath=".\src\jingxian\Buffer\BaseBuffer.cpp"
+				RelativePath=".\src\jingxian\Buffer\BaseBuffer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\Buffer\BaseBuffer.h"
+				RelativePath=".\src\jingxian\Buffer\Buffer.h"
 				>
 			</File>
 			<File
@@ -489,6 +518,10 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath=".\src\jingxian\AbstractServer.h"
+			>
+		</File>
+		<File
 			RelativePath=".\src\jingxian\communicator.h"
 			>
 		</File>
@@ -501,7 +534,11 @@
 			>
 		</File>
 		<File
-			RelativePath=".\src\jingxian\Dictionary.h"
+			RelativePath=".\src\jingxian\dictionary.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\jingxian\directory.h"
 			>
 		</File>
 		<File
@@ -550,6 +587,18 @@
 		</File>
 		<File
 			RelativePath=".\src\jingxian\lastError.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\jingxian\Link.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\jingxian\List.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\jingxian\log4cpp.config"
 			>
 		</File>
 		<File

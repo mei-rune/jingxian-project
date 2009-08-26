@@ -500,10 +500,13 @@ size_t InBuffer::rawLength() const
 	return totalLength_;
 }
 
+
+# ifdef _GOOGLETEST_
 TEST(buffer, bufferSearch)
 {
 	//TODO: «Î–¥”√¿˝
 }
+#endif
 
 
 _jingxian_end
