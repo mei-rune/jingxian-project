@@ -123,7 +123,7 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 	std::auto_ptr<ConnectedSocket> connectedSocket(new ConnectedSocket(core_, socket_, host, peer));
 	socket_ = INVALID_SOCKET;
 
-	if (!core_->bind((HANDLE)connectedSocket->handle(),connectedSocket.get()))
+	if (!core_->bind((HANDLE)(connectedSocket->handle()),connectedSocket.get()))
 	{	
 		int errCode = ::WSAGetLastError();
 		ErrorCode err(false, errCode, concat<tstring>(_T("初始化来自 '") 

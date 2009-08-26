@@ -6,17 +6,16 @@
 _jingxian_begin
 
 ConnectedSocket::ConnectedSocket(IOCPServer* core
-								 , SOCKET socket
+								 , SOCKET sock
 								 , const tstring& host
 								 , const tstring& peer)
 : core_(core)
-, socket_(socket)
+, socket_(sock)
 , host_(host)
 , peer_(peer)
 , state_(connection_status::connected)
 , timeout_(3*1000)
 , protocol_(0)
-, context_(core, this)
 , isInitialize_(false)
 , stopReading_(false)
 , reading_(false)
@@ -26,6 +25,7 @@ ConnectedSocket::ConnectedSocket(IOCPServer* core
 	tracer_ = logging::makeTracer( _T("ConnectedSocket[ip=") + host_ + _T(",port=") + peer_ + _T("]"));	
 	TP_CRITICAL(tracer_, transport_mode::Both, _T("创建 ConnectedSocket 对象成功"));
 	
+	context_.initialize(core, this);
 	incoming_.initialize(this);
 	outgoing_.initialize(this);
 }
@@ -75,7 +75,7 @@ void ConnectedSocket::write(buffer_chain_t* buffer)
 		return;
 	}
 
-	outgoing_.push(buffer);
+	outgoing_.send(buffer);
 	doWrite();
 }
 
@@ -105,23 +105,27 @@ void ConnectedSocket::doRead()
 
 	if( connection_status::connected != state_)
 	{
-		TP_CRITICAL(tracer_, transport_mode::Receive, _T("尝试读数据时连接已断开"));
-		doDisconnect(transport_mode::Receive, 0, null_ptr);
+		tstring err = concat<tstring>(_T("尝试读数据时连接已断开 - "), disconnectReason_);
+		TP_CRITICAL(tracer_, transport_mode::Receive, err);
+		doDisconnect(transport_mode::Receive, 0, err);
 		return;
 	}
 
 	std::auto_ptr<ICommand> command(incoming_.makeCommand());
 	if(is_null(command))
 	{
-		TP_CRITICAL(tracer_, transport_mode::Receive, _T("尝试读数据时创建读请求失败"));
-		doDisconnect(transport_mode::Receive, 0, _T("尝试读数据时创建读请求失败"));
+		tstring err = _T("尝试读数据时创建读请求失败");
+		TP_CRITICAL(tracer_, transport_mode::Receive, err);
+		doDisconnect(transport_mode::Receive, 0, err);
 		return;
 	}
 	
 	if(!command->execute())
 	{
-		TP_CRITICAL(tracer_, transport_mode::Receive, _T("尝试读数据时发送读请求失败"));
-		doDisconnect(transport_mode::Receive, ::WSAGetLastError(), null_ptr);
+		DWORD errCode = ::WSAGetLastError();
+		tstring err = ::concat<tstring>(_T("尝试读数据时发送读请求失败 - "),lastError(errCode));
+		TP_CRITICAL(tracer_, transport_mode::Receive, err);
+		doDisconnect(transport_mode::Receive, errCode, err);
 		return;
 	}
 
@@ -139,23 +143,26 @@ void ConnectedSocket::doWrite()
 
 	if( connection_status::connected != state_)
 	{
-		TP_CRITICAL(tracer_, transport_mode::Send, _T("尝试写数据时连接已断开"));
-		doDisconnect(transport_mode::Send, 0, null_ptr);
+		tstring err = concat<tstring>(_T("尝试写数据时连接已断开 - "), disconnectReason_);
+		TP_CRITICAL(tracer_, transport_mode::Send, err);
+		doDisconnect(transport_mode::Send, 0, err);
 		return;
 	}
 
 	std::auto_ptr<ICommand> command(outgoing_.makeCommand());
 	if(is_null(command))
 	{
-		TP_TRACE(tracer_, transport_mode::Send, _T("尝试写数据时创建写请求失败"));
-		doDisconnect(transport_mode::Send, 0, _T("尝试写数据时创建写请求失败"));
+		tstring err = _T("数据发送完毕! ");
+		TP_TRACE(tracer_, transport_mode::Send, err);
 		return;
 	}
 	
 	if(!command->execute())
 	{
-		TP_CRITICAL(tracer_, transport_mode::Receive, _T("尝试写数据时发送写请求失败"));
-		doDisconnect(transport_mode::Send, ::WSAGetLastError(), null_ptr);
+		DWORD errCode = ::WSAGetLastError();
+		tstring err = ::concat<tstring>(_T("尝试写数据时发送写请求失败 - "),lastError(errCode));
+		TP_CRITICAL(tracer_, transport_mode::Receive, err);
+		doDisconnect(transport_mode::Send, errCode, err);
 		return;
 	}
 
@@ -176,18 +183,19 @@ void ConnectedSocket::doDisconnect(transport_mode::type mode, errcode_t error, c
 	if(writing_)
 	{
 		assert( transport_mode::Send != mode);
+		disconnectReason_ = description;
 		TP_TRACE(tracer_, mode, _T("准备断开连接时发现写请未返回"));
 		return;
 	}
 	if(reading_)
 	{
 		assert( transport_mode::Receive != mode);
-
+		disconnectReason_ = description;
 		TP_TRACE(tracer_, mode, _T("准备断开连接时发现读请未返回"));
 		return;
 	}
 
-	std::auto_ptr<ICommand> command(new DisconnectCommand(this));
+	std::auto_ptr<ICommand> command(new DisconnectCommand(this, description));
 	if(!command->execute())
 	{
 		TP_FATAL(tracer_, mode, _T("准备断开连接时发送连接请求失败"));
@@ -199,16 +207,64 @@ void ConnectedSocket::doDisconnect(transport_mode::type mode, errcode_t error, c
 void ConnectedSocket::onRead(size_t bytes_transferred)
 {
 	reading_ = false;
-	incoming_.clearBytes(bytes_transferred);
 
-	protocol_->onConnected( context_ );
+	if(!incoming_.increaseBytes(bytes_transferred))
+	{
+		tstring err = _T("计算接收字节数时发生错误");
+		TP_FATAL(tracer_, transport_mode::Receive, err);
+		doDisconnect(transport_mode::Receive, 0, err);
+		return;
+	}
+
+	try
+	{
+		std::vector<io_mem_buf> ioBuf;
+		incoming_.dataBuffer(ioBuf);
+		context_.GetInBuffer().reset(&ioBuf, -1);
+		protocol_->onReceived( context_ );
+		if(!incoming_.decreaseBytes(context_.GetInBuffer().readLength()))
+		{
+			tstring err = _T("计算用户读字节数时发生错误");
+			TP_FATAL(tracer_, transport_mode::Receive, err);
+			doDisconnect(transport_mode::Receive, 0, err);
+			return;
+		}
+		
+		if( connection_status::connected != state_)
+			return;
+		
+		int count = 0;
+		Buffer<buffer_chain_t>& dataBuffer = context_.GetOutBuffer().rawBuffer();
+		buffer_chain_t* ptr = null_ptr;
+		while(null_ptr != (ptr = dataBuffer.pop()))
+		{
+			outgoing_.send(ptr);
+			++ count;
+		}
+		if( 0!= count)
+			doWrite();
+	}
+	catch(const Exception& ex)
+	{
+		tstring err = ::concat<tstring>(_T("计算用户读字节数时发生异常 - "), ex.what());
+		TP_FATAL(tracer_, transport_mode::Receive, _T("计算用户读字节数时发生异常 ") << ex);
+		doDisconnect(transport_mode::Receive, 0, err);
+		return;
+	}
+	catch(const std::exception& e)
+	{
+		tstring err = ::concat<tstring>(_T("计算用户读字节数时发生异常 - "), e.what());
+		TP_FATAL(tracer_, transport_mode::Receive, err);
+		doDisconnect(transport_mode::Receive, 0, err);
+		return;
+	}
 	doRead();
 }
 
 void ConnectedSocket::onWrite(size_t bytes_transferred)
 {
 	writing_ = false;
-	incoming_.clearBytes(bytes_transferred);
+	outgoing_.clearBytes(bytes_transferred);
 	doWrite();
 }
 
@@ -253,6 +309,11 @@ const tstring& ConnectedSocket::toString() const
 void ConnectedSocket::onDisconnected(errcode_t error, const tstring& description)
 {
 	protocol_->onDisconnected(context_,error, description);
+}
+
+buffer_chain_t* ConnectedSocket::allocateProtocolBuffer()
+{
+	return protocol_->createBuffer(context_, incoming_.buffer(), incoming_.current());
 }
 
 _jingxian_end

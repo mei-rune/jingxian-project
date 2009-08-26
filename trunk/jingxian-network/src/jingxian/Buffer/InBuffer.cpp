@@ -7,7 +7,8 @@
 _jingxian_begin
 
 InBuffer::InBuffer()
-: totalLength_(0)
+: memory_(null_ptr)
+, totalLength_(0)
 , readLength_(0)
 , current_(0)
 , currentPtr_(null_ptr)
@@ -15,60 +16,60 @@ InBuffer::InBuffer()
 {
 }
 
-InBuffer::InBuffer(LPWSABUF ptr, size_t count, size_t totalLength)
-: totalLength_(totalLength)
-, readLength_(0)
-, current_(0)
-, currentPtr_(null_ptr)
-, currentLength_(0)
-{
-	if(is_null(ptr))
-		ThrowException1(ArgumentNullException, "ptr");
-	if(0 == count)
-	{
-		totalLength_ = 0;
-		return;
-	}
-
-	for(size_t i =0; i < count; ++i)
-	{
-		memory_.push_back(ptr[i]);
-	}
-
-	currentPtr_ = memory_[current_].buf;
-	currentLength_ = memory_[current_].len;
-}
+//InBuffer::InBuffer(LPWSABUF ptr, size_t count, size_t totalLength)
+//: totalLength_(totalLength)
+//, readLength_(0)
+//, current_(0)
+//, currentPtr_(null_ptr)
+//, currentLength_(0)
+//{
+//	if(is_null(ptr))
+//		ThrowException1(ArgumentNullException, "ptr");
+//	if(0 == count)
+//	{
+//		totalLength_ = 0;
+//		return;
+//	}
+//
+//	for(size_t i =0; i < count; ++i)
+//	{
+//		memory_.push_back(ptr[i]);
+//	}
+//
+//	currentPtr_ = memory_[current_].buf;
+//	currentLength_ = memory_[current_].len;
+//}
 
 InBuffer::~InBuffer(void)
 {
 }
 
-void InBuffer::reset(LPWSABUF ptr, size_t count, size_t totalLength)
+void InBuffer::reset(const std::vector<io_mem_buf>* iobuf, size_t totalLength)
 {
-	totalLength_ = 0;
+	if(is_null(iobuf))
+		ThrowException1(ArgumentNullException, "iobuf");
 
+	memory_ = iobuf;
+
+	if(-1 == totalLength)
+	{
+		totalLength = 0;
+
+		for(std::vector<io_mem_buf>::const_iterator it = iobuf->begin()
+			; it != iobuf->end(); ++ it)
+		{
+			totalLength += it->len;
+		}
+	}
+
+	totalLength_ = totalLength;
 	readLength_ = 0;
 	current_ = 0;
 
-	currentPtr_ = null_ptr;
-	currentLength_ = 0;
-	memory_.clear();
+	currentPtr_ = (*memory_)[current_].buf;
+	currentLength_ = (*memory_)[current_].len;
+
 	transcationDatas_.clear();
-
-	if(is_null(ptr))
-		ThrowException1(ArgumentNullException, "ptr");
-
-	if(0 == count)
-		return;
-
-	totalLength_ = totalLength;
-	for(size_t i =0; i < count; ++i)
-	{
-		memory_.push_back(ptr[i]);
-	}
-
-	currentPtr_ = memory_[current_].buf;
-	currentLength_ = memory_[current_].len;
 }
 
 int InBuffer::beginTranscation()
@@ -104,10 +105,11 @@ void InBuffer::rollbackTranscation(int id)
 
 void InBuffer::commitTranscation(int id)
 {
-	if( id <= 0 || id > transcationDatas_.size())
+	size_t index = id;
+	if( index <= 0 || index > transcationDatas_.size())
 		ThrowException(OutOfRangeException);
 
-	for(int i = transcationDatas_.size(); i >= id; --i)
+	for(size_t i = transcationDatas_.size(); i >= index; --i)
 	{
 		TranscationData& data = transcationDatas_[i-1];
 
@@ -119,7 +121,7 @@ void InBuffer::commitTranscation(int id)
 		this->errno_ = data.errno_;
 	}
 
-	transcationDatas_.resize( id -1 );
+	transcationDatas_.resize( index -1 );
 }
 
 bool InBuffer::readBoolean()
@@ -194,7 +196,7 @@ void InBuffer::readBlob(void* blob, size_t len)
 		count -= currentLength_;
 		ptr += currentLength_;
 
-		if( memory_.size() <= ++current_)
+		if( (*memory_).size() <= ++current_)
 		{
 			currentPtr_ = null_ptr;
 			currentLength_ = 0;
@@ -202,12 +204,97 @@ void InBuffer::readBlob(void* blob, size_t len)
 		}
 		else
 		{
-			currentPtr_ = memory_[current_].buf;
-			currentLength_ = memory_[current_].len;
+			currentPtr_ = (*memory_)[current_].buf;
+			currentLength_ = (*memory_)[current_].len;
 		}
 	}
 	while(0<count);
 	readLength_ += len;
+}
+
+void InBuffer::seek(int offestLen)
+{
+	if(0 == offestLen)
+		return;
+
+	if( 0 < offestLen )
+	{
+		size_t offest = offestLen;
+
+		if( size() <= offest )
+		{
+			currentPtr_ = null_ptr;
+			currentLength_ = 0;
+			current_ = (*memory_).size();
+			readLength_ = totalLength_;
+			return;
+		}
+
+		size_t len = offest - currentLength_;
+		for(size_t i = current_+1; i < (*memory_).size(); ++i)
+		{
+			if( len <  (*memory_)[i].len)
+			{
+				current_ = i;
+				currentPtr_ =  (*memory_)[i].buf + len;
+				currentLength_ = (*memory_)[i].len - len;
+				readLength_ += offest;
+				return;
+			}
+			len += (*memory_)[i].len;
+		}
+		currentPtr_ = null_ptr;
+		currentLength_ = 0;
+		current_ = (*memory_).size();
+		readLength_ = totalLength_;
+		return ;
+	}
+
+	size_t offest = ::abs(offestLen);
+	if( readLength_ <= offest)
+	{
+		current_ = 0;
+		readLength_ = 0;
+
+		if((*memory_).empty())
+		{
+			currentPtr_ = null_ptr;
+			currentLength_ = 0;
+		}
+		else
+		{
+			currentPtr_ = (*memory_)[current_].buf;
+			currentLength_ = (*memory_)[current_].len;
+		}
+		return;
+	}
+
+	size_t len = offest - ((*memory_)[current_].len - currentLength_);
+	for(size_t i = current_ - 1; i >=0 ; --i)
+	{
+		if( len <  (*memory_)[i].len)
+		{
+			current_ = i;
+			currentPtr_ =  (*memory_)[i].buf + ((*memory_)[i].len - len);
+			currentLength_ = len;
+			readLength_ -= offest;
+			return;
+		}
+		len += (*memory_)[i].len;
+	}
+
+	current_ = 0;
+	readLength_ = 0;
+	if((*memory_).empty())
+	{
+		currentPtr_ = null_ptr;
+		currentLength_ = 0;
+	}
+	else
+	{
+		currentPtr_ = (*memory_)[current_].buf;
+		currentLength_ = (*memory_)[current_].len;
+	}
 }
 
 size_t InBuffer::size() const
@@ -228,16 +315,16 @@ size_t InBuffer::search(char ch) const
 		return p - currentPtr_;
 
 	size_t len  = currentLength_;
-	for(int i = current_+1; i < memory_.size(); ++i)
+	for(size_t i = current_+1; i < (*memory_).size(); ++i)
 	{ 
-		p = (char*)::memchr(memory_[i].buf, ch, memory_[i].len);
+		p = (char*)::memchr((*memory_)[i].buf, ch, (*memory_)[i].len);
 		if(!is_null(p))
 		{
-			len += (p - memory_[i].buf);
+			len += (p - (*memory_)[i].buf);
 			return len;
 		}
 
-		len += memory_[i].len;
+		len += (*memory_)[i].len;
 	}
 
 	return IBuffer::npos;
@@ -248,9 +335,9 @@ size_t InBuffer::search(wchar_t ch) const
 	return search(&ch, sizeof(ch));
 }
 
-inline size_t mem_search(const void* mem, int searchLen, const void* context,size_t len)
+inline size_t mem_search(const void* mem, size_t searchLen, const void* context,size_t len)
 {
-	for(int i = 0; i < searchLen; ++i)
+	for(size_t i = 0; i < searchLen; ++i)
 	{
 		if(!is_null(::memcmp(mem, context, len)))
 			return i;
@@ -280,7 +367,7 @@ size_t InBuffer::search(const void* context,size_t len) const
 
 
 	// 将要访问的下一个内存块
-	int i = current_+1;
+	size_t i = current_+1;
 	// 已查找过的内存块总长度
 	size_t seekLen = 0;
 
@@ -292,14 +379,14 @@ size_t InBuffer::search(const void* context,size_t len) const
 	do
 	{
 
-		int searchLen = 0;
+		size_t searchLen = 0;
 		if( count > len)
 		{
 			// 保存了之前访问的内存块的结尾几个字符(注意有可能是多个内存块的内容见上面所说的第3种情况),现
 			// 在将本次要搜索的内存块头部字符拷贝过来
 			if( tmpLen > 0)
 			{
-				int copy = len -1;
+				size_t copy = len -1;
 
 				if(0 != ::memcpy_s(tmpPtr + tmpLen, tmpbuf.size()-tmpLen, ptr, copy))
 					ThrowException(RuntimeException);
@@ -353,11 +440,11 @@ size_t InBuffer::search(const void* context,size_t len) const
 			seekLen += searchLen;
 		}
 
-		if(memory_.size() <= i)
+		if((*memory_).size() <= i)
 			return IBuffer::npos;
 
-		ptr = memory_[i].buf;
-		count = memory_[i].len;
+		ptr = (*memory_)[i].buf;
+		count = (*memory_)[i].len;
 		++i;
 	}
 	while(true);
@@ -373,27 +460,27 @@ size_t InBuffer::searchAny(const char* charset) const
 	if(1 == charsetLen)
 		return search(*charset);
 
-	for(int i = 0; i < currentLength_; ++i)
+	for(size_t i = 0; i < currentLength_; ++i)
 	{
 		if(!is_null(::memchr(charset, currentPtr_[i], charsetLen)))
 			return i;
 	}
 
 	size_t len  = currentLength_;
-	for(int i = current_+1; i < memory_.size(); ++i)
+	for(size_t i = current_+1; i < (*memory_).size(); ++i)
 	{ 
-		const char* ptr = memory_[i].buf;
-		int count = memory_[i].len;
+		const char* ptr = (*memory_)[i].buf;
+		int count = (*memory_)[i].len;
 
-		for(int i = 0; i < count; ++i)
+		for(int j = 0; j < count; ++j)
 		{
-			if(!is_null(::memchr(charset, ptr[i], charsetLen)))
+			if(!is_null(::memchr(charset, ptr[j], charsetLen)))
 			{
-				len += i;
+				len += j;
 				return len;
 			}
 		}
-		len += memory_[i].len;
+		len += (*memory_)[i].len;
 	}
 	return IBuffer::npos;
 }
@@ -405,90 +492,18 @@ size_t InBuffer::searchAny(const wchar_t* charset) const
 
 const std::vector<io_mem_buf>& InBuffer::rawBuffer() const
 {
-	return memory_;
+	return *memory_;
 }
 
-void InBuffer::seek(int offest)
+size_t InBuffer::rawLength() const
 {
-	if(0 == offest)
-		return;
-
-	if( 0 < offest )
-	{
-		if( size() <= offest )
-		{
-			currentPtr_ = null_ptr;
-			currentLength_ = 0;
-			current_ = memory_.size();
-			readLength_ = totalLength_;
-			return;
-		}
-
-		int len = offest - currentLength_;
-		for(int i = current_+1; i < memory_.size(); ++i)
-		{
-			if( len <  memory_[i].len)
-			{
-				current_ = i;
-				currentPtr_ =  memory_[i].buf + len;
-				currentLength_ = memory_[i].len - len;
-				readLength_ += offest;
-				return;
-			}
-			len += memory_[i].len;
-		}
-		currentPtr_ = null_ptr;
-		currentLength_ = 0;
-		current_ = memory_.size();
-		readLength_ = totalLength_;
-		return ;
-	}
-
-	offest == ::abs(offest);
-	if( readLength_ <= offest)
-	{
-		current_ = 0;
-		readLength_ = 0;
-
-		if(memory_.empty())
-		{
-			currentPtr_ = null_ptr;
-			currentLength_ = 0;
-		}
-		else
-		{
-			currentPtr_ = memory_[current_].buf;
-			currentLength_ = memory_[current_].len;
-		}
-		return;
-	}
-
-	int len = offest - (memory_[current_].len - currentLength_);
-	for(int i = current_ - 1; i >=0 ; --i)
-	{
-		if( len <  memory_[i].len)
-		{
-			current_ = i;
-			currentPtr_ =  memory_[i].buf + (memory_[i].len - len);
-			currentLength_ = len;
-			readLength_ -= offest;
-			return;
-		}
-		len += memory_[i].len;
-	}
-
-	current_ = 0;
-	readLength_ = 0;
-	if(memory_.empty())
-	{
-		currentPtr_ = null_ptr;
-		currentLength_ = 0;
-	}
-	else
-	{
-		currentPtr_ = memory_[current_].buf;
-		currentLength_ = memory_[current_].len;
-	}
+	return totalLength_;
 }
+
+TEST(buffer, bufferSearch)
+{
+	//TODO: 请写用例
+}
+
 
 _jingxian_end

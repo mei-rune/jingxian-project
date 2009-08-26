@@ -18,7 +18,7 @@ class DisconnectCommand : public ICommand
 {
 public:
 
-	DisconnectCommand(ConnectedSocket* connectedSocket);
+	DisconnectCommand(ConnectedSocket* connectedSocket, tstring reason);
 
 	virtual ~DisconnectCommand();
 
@@ -34,6 +34,7 @@ private:
 	NOCOPY(DisconnectCommand);
 
 	ConnectedSocket* connectedSocket_;
+	tstring reason_;
 };
 
 _jingxian_end

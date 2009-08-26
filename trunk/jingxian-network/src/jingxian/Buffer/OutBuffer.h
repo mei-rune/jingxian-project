@@ -10,6 +10,7 @@
 
 // Include files
 # include "jingxian/Buffer/IBuffer.H"
+# include "jingxian/Buffer/Buffer.H"
 # include "jingxian/Buffer/BaseBuffer.H"
 
 _jingxian_begin
@@ -29,6 +30,12 @@ public:
 	virtual IOutBuffer& writeInt32(int32_t value);
 	virtual IOutBuffer& writeInt64(const int64_t& value);
 	virtual IOutBuffer& writeBlob(const void* blob, size_t len);
+
+	virtual databuffer_t* allocate(size_t len);
+
+	Buffer<buffer_chain_t>& rawBuffer();
+private:
+	Buffer<buffer_chain_t> dataBuffer_;
 };
 
 _jingxian_end

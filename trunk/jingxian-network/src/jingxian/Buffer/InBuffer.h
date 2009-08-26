@@ -37,10 +37,9 @@ public:
 	};
 
 	InBuffer();
-	InBuffer(LPWSABUF ptr, size_t count, size_t totalLength);
 	virtual ~InBuffer(void);
 
-	virtual void reset(LPWSABUF ptr, size_t count, size_t totalLength);
+	virtual void reset(const std::vector<io_mem_buf>* buf, size_t totalLength);
 
 	virtual int beginTranscation();
 	virtual void rollbackTranscation(int);
@@ -53,6 +52,8 @@ public:
 	virtual int64_t readInt64();
 	virtual void readBlob(void* blob, size_t len);
 
+	virtual void seek(int offest);
+
 	virtual size_t size()const;
 	virtual size_t readLength() const;
 
@@ -63,13 +64,13 @@ public:
 	virtual size_t searchAny(const wchar_t* charset) const;
 
 	virtual const std::vector<io_mem_buf>& rawBuffer() const;
-	virtual void seek(int offest);
+	virtual size_t rawLength() const;
 
 private:
 	NOCOPY(InBuffer);
 
 	// 所有的数据内存块
-	std::vector<io_mem_buf> memory_;
+	const std::vector<io_mem_buf>* memory_;
 	// 数据的总字节数,此值不会被更改
 	size_t totalLength_;
 

@@ -41,7 +41,7 @@ void WriteCommand::on_complete(size_t bytes_transferred,
 bool WriteCommand::execute()
 {
 	DWORD bytesTransferred;
-	if (::WSASend(transport_->handle()
+	if (SOCKET_ERROR  != ::WSASend(transport_->handle()
 		, &(iovec_[0])
 		, (DWORD)iovec_.size()
 		, &bytesTransferred

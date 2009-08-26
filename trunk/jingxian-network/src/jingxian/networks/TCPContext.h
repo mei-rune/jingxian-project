@@ -22,26 +22,20 @@ _jingxian_begin
 class TCPContext : public ProtocolContext
 {
 public:
-	TCPContext(IReactorCore* core
-		, ITransport* transport)
-		: ProtocolContext(core, transport)
+	TCPContext()
 	{
-		inBuffer(&_inBuffer);
-		outBuffer(&_outBuffer);
+		inBuffer_  = &_inBuffer;
+		outBuffer_ = &_outBuffer;
 	}
 
-	void inBuffer(IInBuffer* inBuffer)
+	InBuffer& GetInBuffer()
 	{
-		inBuffer_ = inBuffer;
-	}
-	
-	void outBuffer(IOutBuffer* outBuffer)
-	{
-		outBuffer_ = outBuffer_;
+		return _inBuffer;
 	}
 
-	void inBuffer(io_mem_buf* inBuffer)
+	OutBuffer& GetOutBuffer()
 	{
+		return _outBuffer;
 	}
 
 private:

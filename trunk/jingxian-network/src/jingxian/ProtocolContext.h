@@ -19,17 +19,23 @@ class ITransport;
 class ProtocolContext
 {
 public:
-	ProtocolContext(IReactorCore* core
-		, ITransport* transport)
-		: core_(core)
-		, transport_(transport)
-		, outBuffer_(0)
-		, inBuffer_(0)
+	ProtocolContext()
+		: core_(null_ptr)
+		, transport_(null_ptr)
+		, outBuffer_(null_ptr)
+		, inBuffer_(null_ptr)
 	{
 	}
 
 	virtual ~ProtocolContext()
 	{
+	}
+
+	void initialize(IReactorCore* core
+		, ITransport* transport)
+	{	
+		core_ = core;
+		transport_ = transport;
 	}
 
 	IReactorCore& core()
@@ -46,13 +52,6 @@ public:
 		return *transport_;
 	}
 
-	const std::vector<io_mem_buf>& inMemory() const
-	{
-		if(is_null(inMemory_))
-			ThrowException( NullException );
-		return *inMemory_;
-	}
-
 	IInBuffer& inBuffer()
 	{
 		if(is_null(inBuffer_))
@@ -66,15 +65,17 @@ public:
 			ThrowException( NullException );
 		return *outBuffer_;
 	}
+
 protected:
 	IReactorCore* core_;
 	ITransport* transport_;
 	IOutBuffer* outBuffer_;
 	IInBuffer* inBuffer_;
+
 	//InternalBuffer* internalBuffer_in_free_;
 	//InternalBuffer* internalBuffer_in_data_;
 	//InternalBuffer* internalBuffer_out_;
-	std::vector<io_mem_buf>* inMemory_;
+	//std::vector<io_mem_buf>* inMemory_;
 };
 
 _jingxian_end

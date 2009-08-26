@@ -12,14 +12,15 @@
 # include <Winsock2.h>
 # include <queue>
 # include "jingxian/buffer/IBuffer.H"
+# include "jingxian/buffer/Buffer.H"
 # include "jingxian/networks/commands/ICommand.H"
-# include "jingxian/networks/InternalBuffer.H"
+
 
 _jingxian_begin
 
 class ConnectedSocket;
 
-class OutgoingBuffer : public InternalBuffer
+class OutgoingBuffer
 {
 public:
 	OutgoingBuffer();
@@ -28,6 +29,8 @@ public:
 
 	void initialize(ConnectedSocket* connectedSocket);
 
+	void send(buffer_chain_t* buf);
+
 	ICommand* makeCommand();
 
 	bool clearBytes(size_t len);
@@ -35,7 +38,11 @@ public:
 private:
 	NOCOPY(OutgoingBuffer);
 	ConnectedSocket* connectedSocket_;
+	Buffer<buffer_chain_t> buffer_;
 };
+
+
+void assertBuffer(buffer_chain_t* newbuf);
 
 _jingxian_end
 
