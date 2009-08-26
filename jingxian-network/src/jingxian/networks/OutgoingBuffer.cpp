@@ -20,9 +20,15 @@ void OutgoingBuffer::initialize(ConnectedSocket* connectedSocket)
 	connectedSocket_ = connectedSocket;
 }
 
+void OutgoingBuffer::send(buffer_chain_t* buf)
+{
+	assertBuffer(buf);
+	buffer_.push(buf);
+}
+
 ICommand* OutgoingBuffer::makeCommand()
 {
-	buffer_chain_t* current = this->next(null_ptr);
+	buffer_chain_t* current = buffer_.next(null_ptr);
 	if(is_null(current))
 		return null_ptr;
 
@@ -30,19 +36,25 @@ ICommand* OutgoingBuffer::makeCommand()
 	{
 	case BUFFER_ELEMENT_MEMORY:
 		{
-		WriteCommand* command = new WriteCommand(connectedSocket_);
-		do
-		{
-			databuffer_t* data = databuffer_cast(current);
+			std::auto_ptr<WriteCommand> command(new WriteCommand(connectedSocket_));
 			io_mem_buf iobuf;
+			do
+			{
+				databuffer_t* data = databuffer_cast(current);
 
-			iobuf.buf = data->start;
-			iobuf.len = data->end - data->start;
-			command->iovec().push_back(iobuf);
-		}
-		while(null_ptr != (current = next(current))
-			&& 0 == current->type);
-		return command;
+				iobuf.buf = data->start;
+				iobuf.len = (int)(data->end - data->start);
+				assert(0 <= iobuf.len);
+				if(0 < iobuf.len)
+					command->iovec().push_back(iobuf);
+			}
+			while(null_ptr != (current = buffer_.next(current))
+				&& BUFFER_ELEMENT_MEMORY == current->type);
+
+			if(command->iovec().empty())
+				return null_ptr;
+
+			return command.release();
 		}
 	case BUFFER_ELEMENT_FILE:
 		{
@@ -68,7 +80,7 @@ bool OutgoingBuffer::clearBytes(size_t len)
 {
 	size_t exceptLen = len;
 	buffer_chain_t* current = null_ptr;
-	while(null_ptr != (current = next(current)))
+	while(null_ptr != (current = buffer_.head()))
 	{	
 		switch( current->type)
 		{
@@ -76,10 +88,12 @@ bool OutgoingBuffer::clearBytes(size_t len)
 			{
 			databuffer_t* data = databuffer_cast(current);
 			size_t dataLen = data->end - data->start;
-
 			if( dataLen >= exceptLen)
 			{
 				data->start += exceptLen;
+				if( dataLen == exceptLen)
+					freebuffer(buffer_.pop());
+
 				exceptLen = 0;
 				return false;
 			}
@@ -106,9 +120,44 @@ bool OutgoingBuffer::clearBytes(size_t len)
 			assert( false );
 			return false;
 		}
+
+		freebuffer(buffer_.pop());
 	}
 
 	return (0 == exceptLen);
+}
+
+
+void assertBuffer(buffer_chain_t* newbuf)
+{
+	switch( newbuf->type)
+	{
+	case BUFFER_ELEMENT_MEMORY:
+		{
+			databuffer_t* data = databuffer_cast(newbuf);
+			assert( data->ptr <= data->start );
+			assert( data->start <= data->end);
+			assert( data->end <= data->ptr + data->capacity);
+			break;
+		}
+	case BUFFER_ELEMENT_FILE:
+		{
+			// TODO: 加入对文件的支持
+			filebuffer_t* filebuf = filebuffer_cast(newbuf);
+			assert( false );
+			break;
+		}
+	case BUFFER_ELEMENT_PACKET:
+		{
+			// TODO: 加入对文件的支持
+			packetbuffer_t* packetbuf = packetbuffer_cast(newbuf);
+			assert( false );
+			break;
+		}
+	default:
+		assert( false );
+		break;
+	}
 }
 
 _jingxian_end

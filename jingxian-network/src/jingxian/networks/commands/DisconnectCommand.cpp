@@ -5,8 +5,9 @@
 
 _jingxian_begin
 
-DisconnectCommand::DisconnectCommand(ConnectedSocket* connectedSocket)
+DisconnectCommand::DisconnectCommand(ConnectedSocket* connectedSocket, tstring reason)
 : connectedSocket_(connectedSocket)
+, reason_(reason)
 {
 }
 
@@ -19,7 +20,7 @@ void DisconnectCommand::on_complete(size_t bytes_transferred
 		, void *completion_key
 		, errcode_t error)
 {
-	connectedSocket_->onDisconnected(error, _T("±»³·Ïû!"));
+	connectedSocket_->onDisconnected(error, reason_);
 	delete connectedSocket_;
 }
 

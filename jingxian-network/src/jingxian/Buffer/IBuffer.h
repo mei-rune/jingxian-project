@@ -237,6 +237,13 @@ public:
 	virtual void readBlob(void* blob, size_t len) = 0;
 
 	/**
+	 * 向前读offest个字节
+	 * @params[ int ] 位置移动的字节数
+	 * @remarks  offest > 0 时则向前移动,offest < 0 时则向后移动, 当offest移动的位置超出范围时则移动开始或结束.
+	 */
+	virtual void seek(int offest) = 0;
+
+	/**
 	 * 在 Buffer 中的数据的长度
 	 */
 	virtual size_t size() const = 0;
@@ -268,17 +275,13 @@ public:
 
 	/**
 	 * 取出 Buffer 中的所有数据块
-	 * @params[ out ] len Buffer 中的数据块的数量
-	 * @return 返回 Buffer 中的所有数据块的指针
 	 */
 	virtual const std::vector<io_mem_buf>& rawBuffer() const = 0;
 
 	/**
-	 * 向前读offest个字节
-	 * @params[ int ] 位置移动的字节数
-	 * @remarks  offest > 0 时则向前移动,offest < 0 时则向后移动, 当offest移动的位置超出范围时则移动开始或结束.
+	 * 取出 Buffer 中的所有数据块的总长度
 	 */
-	virtual void seek(int offest) = 0;
+	virtual size_t rawLength() const = 0;
 };
 
 /**

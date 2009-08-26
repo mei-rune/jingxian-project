@@ -355,14 +355,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\src\jingxian\networks\InternalBuffer.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\jingxian\networks\InternalBuffer.h"
-					>
-				</File>
-				<File
 					RelativePath=".\src\jingxian\networks\OutgoingBuffer.cpp"
 					>
 				</File>
@@ -379,6 +371,14 @@
 		<Filter
 			Name="protocol"
 			>
+			<File
+				RelativePath=".\src\jingxian\protocol\BaseProtocol.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\protocol\EchoProtocol.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="string"
@@ -516,6 +516,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\jingxian\Buffer\Buffer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\jingxian\Buffer\IBuffer.h"
 				>
 			</File>
@@ -535,6 +539,10 @@
 				RelativePath=".\src\jingxian\Buffer\OutBuffer.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="util"
+			>
 		</Filter>
 		<File
 			RelativePath=".\src\jingxian\AbstractServer.h"

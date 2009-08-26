@@ -17,7 +17,6 @@
 # include "jingxian/logging/logging.hpp"
 # include "jingxian/networks/IOCPServer.h"
 # include "jingxian/networks/TCPContext.h"
-# include "jingxian/networks/InternalBuffer.h"
 # include "jingxian/networks/IncomingBuffer.h"
 # include "jingxian/networks/OutgoingBuffer.h"
 
@@ -32,7 +31,7 @@ class ConnectedSocket : public ITransport
 public:
 
 	ConnectedSocket(IOCPServer* core
-								 , SOCKET socket
+								 , SOCKET sock
 								 , const tstring& host
 								 , const tstring& peer);
 
@@ -103,6 +102,8 @@ public:
 	void onError(transport_mode::type mode, errcode_t error, const tstring& description);
 	void onDisconnected(errcode_t error, const tstring& description);
 
+	buffer_chain_t* allocateProtocolBuffer();
+
 private:
 	NOCOPY(ConnectedSocket);
 
@@ -139,6 +140,9 @@ private:
 	/// 表示发出一个写请求,但还没有返回
 	bool writing_;
 	OutgoingBuffer outgoing_;
+
+	/// 保存被停止的原因
+	tstring disconnectReason_;
 
 	/// 日志对象
 	ITracer* tracer_;
