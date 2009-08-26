@@ -32,11 +32,11 @@ namespace transport_mode
 {
     enum type
     {
-        Receive,
+        Receive = 1,
 
-        Send,
+        Send = 2,
 
-        Both
+        Both = 3
     };
 }
 

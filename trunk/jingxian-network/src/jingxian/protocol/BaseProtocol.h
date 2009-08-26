@@ -20,9 +20,27 @@ class BaseProtocol : public IProtocol
 public:
 	BaseProtocol()
 		: toString_(_T("BaseProtocol"))
+		, logger_(null_ptr)
 	{
 	}
 
+	BaseProtocol(const BaseProtocol& protocol)
+	{
+		toString_ = protocol.toString_;
+		logger_ = null_ptr;
+	}
+
+	virtual ~BaseProtocol()
+	{
+		delete logger_;
+		logger_ = null_ptr;
+	}
+	
+	BaseProtocol& operator=(const BaseProtocol& protocol)
+	{
+		toString_ = protocol.toString_;
+		logger_ = null_ptr;
+	}
 
 	virtual buffer_chain_t* createBuffer(const ProtocolContext& context, const Buffer<buffer_chain_t>& lastBuffer, const buffer_chain_t* current)
 	{
@@ -30,6 +48,14 @@ public:
 		result->capacity = 100;
 		result->start = result->end = result->ptr;
 		return (buffer_chain_t*)result;
+	}
+
+	ILogger* log()
+	{
+		if(is_null(logger_))
+			logger_ = logging::makeLogger(toString_);
+
+		return logger_;
 	}
 
 	/**
@@ -40,6 +66,7 @@ public:
 		return toString_;
 	}
 protected:
+	ILogger* logger_;
 	tstring toString_;
 };
 

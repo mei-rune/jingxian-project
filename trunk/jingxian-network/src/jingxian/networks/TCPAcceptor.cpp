@@ -22,6 +22,9 @@ TCPAcceptor::~TCPAcceptor()
 {
 	stopListening();
 	assert( connection_status::disconnected == status_ );
+
+	delete logger_;
+	logger_ = null_ptr;
 }
 
 time_t TCPAcceptor::timeout () const

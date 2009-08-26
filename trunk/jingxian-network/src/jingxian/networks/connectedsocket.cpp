@@ -22,7 +22,9 @@ ConnectedSocket::ConnectedSocket(IOCPServer* core
 , writing_(false)
 , tracer_(0)
 {
-	tracer_ = logging::makeTracer( _T("ConnectedSocket[ip=") + host_ + _T(",port=") + peer_ + _T("]"));	
+	toString_ = concat<tstring>(_T("ConnectedSocket["),host_, _T(" - "), peer_);
+
+	tracer_ = logging::makeTracer(_T("ConnectedSocket"), host_, peer_);	
 	TP_CRITICAL(tracer_, transport_mode::Both, _T("创建 ConnectedSocket 对象成功"));
 	
 	context_.initialize(core, this);
@@ -33,6 +35,8 @@ ConnectedSocket::ConnectedSocket(IOCPServer* core
 ConnectedSocket::~ConnectedSocket( )
 {
 	TP_CRITICAL(tracer_, transport_mode::Both, _T("销毁 ConnectedSocket 对象成功"));
+	delete tracer_;
+	tracer_ = null_ptr;
 }
 
 void ConnectedSocket::bindProtocol(IProtocol* protocol)

@@ -14,7 +14,6 @@
 # include "jingxian/string/string_traits.hpp"
 # include "jingxian/string/stringArray.hpp"
 
-
 _jingxian_begin
 
 template<typename charT, typename OP >

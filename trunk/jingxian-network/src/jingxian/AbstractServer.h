@@ -19,6 +19,7 @@ public:
 
 	AbstractServer(IReactorCore* reactor)
 		:reactor_(reactor)
+		, logger_(null_ptr)
 	{
 	}
 
@@ -28,15 +29,30 @@ public:
 		return !acceptor_.isNull();
 	}
 	
-	virtual ~AbstractServer(){}
+	virtual ~AbstractServer()
+	{
+		delete logger_;
+		logger_ = null_ptr;
+	}
+
+	
+	ILogger* log()
+	{
+		if(is_null(logger_))
+			logger_ = logging::makeLogger(toString());
+
+		return logger_;
+	}
 
 	/**
 	 * 取得地址的描述
 	 */
 	virtual const tstring& toString() const = 0;
 protected:
+	NOCOPY(AbstractServer);
 	IReactorCore* reactor_;
 	Acceptor acceptor_;
+	ILogger* logger_;
 };
 
 inline tostream& operator<<( tostream& target, const AbstractServer& server )

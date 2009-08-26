@@ -17,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="2"
 			>
@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/D_GOOGLETEST_"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(GOOGLETEST_ROOT)\include&quot;;&quot;$(ProjectDir)src\&quot;;."
+				AdditionalIncludeDirectories="&quot;$(LOG4CPP_ROOT)\include&quot;;&quot;$(GOOGLETEST_ROOT)\include&quot;;&quot;$(ProjectDir)src\&quot;;."
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				GeneratePreprocessedFile="0"
 				MinimalRebuild="true"
@@ -64,9 +64,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib Mswsock.lib gtestd.lib"
+				AdditionalDependencies="Ws2_32.lib Mswsock.lib gtestd.lib log4cppD.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(GOOGLETEST_ROOT)\msvc\Debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(LOG4CPP_ROOT)\msvc6\Debug&quot;;&quot;$(GOOGLETEST_ROOT)\msvc\Debug&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -202,6 +202,14 @@
 			Name="logging"
 			>
 			<File
+				RelativePath=".\src\jingxian\logging\ConsoleLogger.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\logging\ConsoleLogger.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\jingxian\logging\ILogger.h"
 				>
 			</File>
@@ -210,11 +218,45 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\logging\logger.cpp"
+				RelativePath=".\src\jingxian\logging\log4cpp.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\logging\logging.hpp"
+				RelativePath=".\src\jingxian\logging\log4cpp.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\logging\logging.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\logging\logging.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\logging\Tracer.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\logging\Tracer.h"
 				>
 			</File>
 		</Filter>
@@ -565,6 +607,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\jingxian\directory.h"
+			>
+		</File>
+		<File
 			RelativePath=".\src\jingxian\exception.hpp"
 			>
 		</File>
@@ -619,6 +665,18 @@
 		<File
 			RelativePath=".\src\jingxian\List.h"
 			>
+		</File>
+		<File
+			RelativePath=".\src\jingxian\log4cpp.config"
+			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+				/>
+			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\src\jingxian\pro.h"

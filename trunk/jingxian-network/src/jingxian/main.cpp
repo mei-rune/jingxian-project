@@ -3,12 +3,20 @@
 #include "pro_config.h"
 #include <iostream>
 #include "jingxian/AbstractServer.h"
+#include "jingxian/directory.h"
 #include "jingxian/networks/IOCPServer.h"
 #include "jingxian/protocol/EchoProtocol.h"
+
 
 # ifdef _GOOGLETEST_
 #include <gtest/gtest.h>
 #endif
+
+# include "log4cpp/PropertyConfigurator.hh"
+# include "log4cpp/Category.hh"
+# include "log4cpp/Appender.hh"
+# include "log4cpp/NTEventLogAppender.hh"
+# include "log4cpp/Priority.hh"
 
 _jingxian_begin
 
@@ -20,7 +28,7 @@ public:
 	{
 		if(!this->initialize("tcp://0.0.0.0:6543"))
 		{
-			std::cout << "³õÊ¼Ê§°Ü" << std::endl;
+			FATAL(log(), _T("³õÊ¼Ê§°Ü"));
 			return;
 		}
 		acceptor_.accept(this, &EchoServer::OnComplete, &EchoServer::OnError, &core);
@@ -157,7 +165,18 @@ tmpFlag &= ~_CRTDBG_CHECK_CRT_DF;
 _CrtSetDbgFlag( tmpFlag );
 
 
-	_jingxian networking::initializeScket();
+_jingxian networking::initializeScket();
+
+
+	
+	try
+    {
+		log4cpp::PropertyConfigurator::configure(::simplify (::combinePath(getApplicationDirectory(), "log4cpp.config")));
+    }
+    catch (log4cpp::ConfigureFailure e)
+    {
+        log4cpp::Category::getRoot().warn(e.what());
+    }
 
 	
     testing::InitGoogleTest(&argc, argv);

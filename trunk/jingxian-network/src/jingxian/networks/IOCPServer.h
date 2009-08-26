@@ -11,7 +11,7 @@
 // Include files
 # include <hash_map>
 # include "jingxian/string/string.hpp"
-# include "jingxian/logging/logging.hpp"
+# include "jingxian/logging/logging.h"
 # include "jingxian/IReactorCore.h"
 # include "jingxian/networks/commands/ICommand.h"
 # include "jingxian/networks/connection_status.h"

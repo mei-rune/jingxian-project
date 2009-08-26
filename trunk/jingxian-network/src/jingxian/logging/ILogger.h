@@ -26,6 +26,9 @@ namespace logging
 		,Warn
 		,Trace
 	};
+
+	
+	typedef long LevelPtr;
 }
 
 /**
@@ -37,7 +40,6 @@ class ILogger
 {
 public:
 
-	typedef long LevelPtr;
 
 	/**
 	 * virtual JINGXIAN_Log_Impl destructor
@@ -51,7 +53,7 @@ public:
 	 * @param[ in ] file 日志记录的源文件名
 	 * @param[ in ] line 日志记录的源文件的当前行
 	 */
-	virtual void assertLog(bool assertion, const StringStream& msg, const char* file=0, int line=-1) = 0;
+	virtual void assertLog(bool assertion, const LogStream& msg, const char* file=0, int line=-1) = 0;
 
 	/**
 	 * fatal级的日志是否可以记日志
@@ -65,7 +67,7 @@ public:
 	 * @param[ in ] file 日志记录的源文件名
 	 * @param[ in ] line 日志记录的源文件的当前行
 	 */
-	virtual void fatal(const StringStream& message, const char* file=0, int line=-1) = 0;
+	virtual void fatal(const LogStream& message, const char* file=0, int line=-1) = 0;
 
 	/**
 	 * error级的日志是否可以记日志
@@ -79,7 +81,7 @@ public:
 	 * @param[ in ] file 日志记录的源文件名
 	 * @param[ in ] line 日志记录的源文件的当前行
 	 */
-	virtual void error(const StringStream& message, const char* file=0, int line=-1) = 0;
+	virtual void error(const LogStream& message, const char* file=0, int line=-1) = 0;
 
 	/**
 	 * info级的日志是否可以记日志
@@ -93,7 +95,7 @@ public:
 	 * @param[ in ] file 日志记录的源文件名
 	 * @param[ in ] line 日志记录的源文件的当前行
 	 */
-	virtual void info(const StringStream& message, const char* file=NULL, int line=-1) = 0;
+	virtual void info(const LogStream& message, const char* file=NULL, int line=-1) = 0;
 
 	/**
 	 * debug级的日志是否可以记日志
@@ -107,7 +109,7 @@ public:
 	 * @param[ in ] file 日志记录的源文件名
 	 * @param[ in ] line 日志记录的源文件的当前行
 	 */
-	virtual void debug(const StringStream& message, const char* file=0, int line=-1) = 0;
+	virtual void debug(const LogStream& message, const char* file=0, int line=-1) = 0;
 
 	/**
 	 * warn级的日志是否可以记日志
@@ -121,7 +123,7 @@ public:
 	 * @param[ in ] file 日志记录的源文件名
 	 * @param[ in ] line 日志记录的源文件的当前行
 	 */
-	virtual void warn(const StringStream& message, const char* file=NULL, int line=-1) = 0;
+	virtual void warn(const LogStream& message, const char* file=NULL, int line=-1) = 0;
 
 	/**
 	 * Trace级的日志是否可以记日志
@@ -135,13 +137,13 @@ public:
 	 * @param[ in ] file 日志记录的源文件名
 	 * @param[ in ] line 日志记录的源文件的当前行
 	 */
-	virtual void trace(const StringStream& message, const char* file=NULL, int line=-1) = 0;
+	virtual void trace(const LogStream& message, const char* file=NULL, int line=-1) = 0;
 
 	/**
 	 * level级的日志是否可以记日志
 	 * @return 可以true,不可以false
 	 */
-	virtual bool isEnabledFor(const LevelPtr& level) const = 0;
+	virtual bool isEnabledFor(const logging::LevelPtr& level) const = 0;
 
 	/**
 	 * 记录level级的日志
@@ -149,14 +151,14 @@ public:
 	 * @param[ in ] file 日志记录的源文件名
 	 * @param[ in ] line 日志记录的源文件的当前行
 	 */
-	virtual void log(const LevelPtr& level, const StringStream& message,
+	virtual void log(const logging::LevelPtr& level, const LogStream& message,
 		const char* file=0, int line=-1) = 0;
 
 	/**
 	 * 取得当前的日志的级别
 	 * @return 日志的级别
 	 */
-	virtual const LevelPtr& getLevel() const = 0;
+	virtual logging::LevelPtr getLevel() const = 0;
 
 	/**
 	 * 基于对象的NDC,与下面的基于线程的不一样，它是只有使用这个日志对象才有
@@ -185,6 +187,22 @@ public:
 	virtual void popNDC( ) = 0;
 };
 
+namespace logging
+{
+	namespace spi
+	{
+
+		class ILogFactory
+		{
+		public:
+
+			virtual ~ILogFactory(){};
+
+			virtual ILogger* make(const tchar* nm) = 0;
+		};
+	}
+}
+
 _jingxian_end
 
 #ifndef _NO_LOG_
@@ -194,7 +212,7 @@ _jingxian_end
 #ifndef LOG
 #define LOG(logger, level, message) { \
 	if ( logger != 0 && logger->isEnabledFor(level)) {\
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	logger->fatal(level, oss, __FILE__, __LINE__); }}
 #endif // LOG
@@ -202,14 +220,14 @@ _jingxian_end
 #ifndef LOG_RETURN
 #define LOG_RETURN(logger, level, message,ret) { \
 	if ( logger != 0 && logger->isEnabledFor(level)) {\
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	logger->fatal(level, oss, __FILE__, __LINE__); } return ( ret );}
 #endif // LOG_RETURN
 
 #ifndef LOG_THROW
 #define LOG_THROW(logger, level, message ,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	if ( logger != 0 && logger->isEnabledFor(level)) {\
 	logger->fatal(level, oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__,  oss.str() );}
@@ -218,7 +236,7 @@ _jingxian_end
 #ifndef DEBUG
 #define DEBUG(logger, message) { \
 	if ( logger != 0 && logger->isDebugEnabled()) {\
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	logger->debug( oss, __FILE__, __LINE__); }}
 #endif // DEBUG
@@ -226,14 +244,14 @@ _jingxian_end
 #ifndef DEBUG_RETURN
 #define DEBUG_RETURN(logger, message, ret ) { \
 	if ( logger != 0 && logger->isDebugEnabled()) {\
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	logger->debug( oss, __FILE__, __LINE__); } return ( ret );}
 #endif // DEBUG_RETURN
 
 #ifndef DEBUG_THROW
 #define DEBUG_THROW(logger, message ,e) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	if ( logger != 0 && logger->isDebugEnabled()) {\
 	logger->debug( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, oss.str() ); }
@@ -241,7 +259,7 @@ _jingxian_end
 
 #ifndef DEBUG_THROW2
 #define DEBUG_THROW2(logger, m1,m2,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << m2; \
 	if ( logger != 0 && logger->isDebugEnabled()) {\
 	logger->debug( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, m1,oss.str() ); }
@@ -249,7 +267,7 @@ _jingxian_end
 
 #ifndef DEBUG_THROW3
 #define DEBUG_THROW3(logger, m1,m2,m3,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << m3; \
 	if ( logger != 0 && logger->isDebugEnabled()) {\
 	logger->debug( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, m1,m2,oss.str() ); }
@@ -257,7 +275,7 @@ _jingxian_end
 
 #ifndef DEBUG_THROW4
 #define DEBUG_THROW4(logger, m1,m2,m3,m4,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << m4; \
 	if ( logger != 0 && logger->isDebugEnabled()) {\
 	logger->debug( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, m1,m2,m3,oss.str() ); }
@@ -266,7 +284,7 @@ _jingxian_end
 #ifndef INFO
 #define INFO(logger, message) { \
 	if ( logger != 0 && logger->isInfoEnabled()) {\
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	logger->info( oss, __FILE__, __LINE__); }}
 #endif // INFO
@@ -274,14 +292,14 @@ _jingxian_end
 #ifndef INFO_RETURN
 #define INFO_RETURN(logger, message, ret ) { \
 	if ( logger != 0 && logger->isInfoEnabled()) {\
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	logger->info( oss, __FILE__, __LINE__); } return ( ret ); }
 #endif // INFO_RETURN
 
 #ifndef INFO_THROW
 #define INFO_THROW(logger, message ,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	if ( logger != 0 && logger->isInfoEnabled()) {\
 	logger->info( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__,  oss.str() ); }
@@ -289,7 +307,7 @@ _jingxian_end
 
 #ifndef INFO_THROW2
 #define INFO_THROW2(logger, m1,m2,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << m2; \
 	if ( logger != 0 && logger->isInfoEnabled()) {\
 	logger->info( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, m1,oss.str() ); }
@@ -297,7 +315,7 @@ _jingxian_end
 
 #ifndef INFO_THROW3
 #define INFO_THROW3(logger, m1,m2,m3,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << m3; \
 	if ( logger != 0 && logger->isInfoEnabled()) {\
 	logger->info( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, m1,m2,oss.str() ); }
@@ -305,7 +323,7 @@ _jingxian_end
 
 #ifndef INFO_THROW4
 #define INFO_THROW4(logger, m1,m2,m3,m4,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << m4; \
 	if ( logger != 0 && logger->isInfoEnabled()) {\
 	logger->info( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, m1,m2,m3,oss.str() ); }
@@ -314,7 +332,7 @@ _jingxian_end
 #ifndef WARN
 #define WARN(logger, message ) { \
 	if ( logger != 0 && logger->isWarnEnabled()) {\
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	logger->warn( oss, __FILE__, __LINE__); }}
 #endif // WARN
@@ -322,14 +340,14 @@ _jingxian_end
 #ifndef WARN_RETURN
 #define WARN_RETURN(logger, message, ret ) { \
 	if ( logger != 0 && logger->isWarnEnabled()) {\
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	logger->warn( oss, __FILE__, __LINE__); } return ( ret ); }
 #endif // WARN_RETURN
 
 #ifndef WARN_THROW
 #define WARN_THROW(logger, message ,r ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	if ( logger != 0 && logger->isWarnEnabled()) {\
 	logger->warn( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, oss.str() ); }
@@ -337,7 +355,7 @@ _jingxian_end
 
 #ifndef WARN_THROW2
 #define WARN_THROW2(logger, m1,m2,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << m2; \
 	if ( logger != 0 && logger->isWarnEnabled()) {\
 	logger->warn( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, m1,oss.str() ); }
@@ -345,7 +363,7 @@ _jingxian_end
 
 #ifndef WARN_THROW3
 #define WARN_THROW3(logger, m1,m2,m3,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << m3; \
 	if ( logger != 0 && logger->isWarnEnabled()) {\
 	logger->warn( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, m1,m2,oss.str() ); }
@@ -353,7 +371,7 @@ _jingxian_end
 
 #ifndef WARN_THROW4
 #define WARN_THROW4(logger, m1,m2,m3,m4,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << m4; \
 	if ( logger != 0 && logger->isWarnEnabled()) {\
 	logger->warn( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, m1,m2,m3,oss.str(); }
@@ -362,7 +380,7 @@ _jingxian_end
 #ifndef LOG_ERROR
 #define LOG_ERROR(logger, message) { \
 	if ( logger != 0 && logger->isErrorEnabled()) {\
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	logger->error( oss, __FILE__, __LINE__); }}
 #endif // ERROR
@@ -370,14 +388,14 @@ _jingxian_end
 #ifndef ERROR_RETURN
 #define ERROR_RETURN(logger, message, ret ) { \
 	if ( logger != 0 && logger->isErrorEnabled()) {\
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	logger->error( oss, __FILE__, __LINE__); } return ( ret );}
 #endif // ERROR_RETURN
 
 #ifndef ERROR_THROW
 #define ERROR_THROW(logger, message ,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	if ( logger != 0 && logger->isErrorEnabled()) {\
 	logger->error( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, oss.str() ); }
@@ -385,7 +403,7 @@ _jingxian_end
 
 #ifndef ERROR_THROW2
 #define ERROR_THROW2(logger, m1,m2,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << m2; \
 	if ( logger != 0 && logger->isErrorEnabled()) {\
 	logger->error( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, m1,oss.str() ); }
@@ -393,7 +411,7 @@ _jingxian_end
 
 #ifndef ERROR_THROW3
 #define ERROR_THROW3(logger, m1,m2,m3,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << m3; \
 	if ( logger != 0 && logger->isErrorEnabled()) {\
 	logger->error( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, m1,m2,oss.str() ); }
@@ -401,7 +419,7 @@ _jingxian_end
 
 #ifndef ERROR_THROW4
 #define ERROR_THROW4(logger, m1,m2,m3,m4,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << m4; \
 	if ( logger != 0 && logger->isErrorEnabled()) {\
 	logger->error( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, m1,m2,m3,oss.str(); }
@@ -411,7 +429,7 @@ _jingxian_end
 #ifndef FATAL
 #define FATAL(logger, message) { \
 	if ( logger != 0 && logger->isFatalEnabled()) {\
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	logger->fatal( oss, __FILE__, __LINE__); }}
 #endif // FATAL
@@ -419,14 +437,14 @@ _jingxian_end
 #ifndef FATAL_RETURN
 #define FATAL_RETURN(logger, message, ret ) { \
 	if ( logger != 0 && logger->isFatalEnabled()) {\
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	logger->fatal( oss, __FILE__, __LINE__); } return ( ret );}
 #endif // FATAL_RETURN
 
 #ifndef FATAL_THROW
 #define FATAL_THROW(logger, message ,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	if ( logger != 0 && logger->isFatalEnabled()) {\
 	logger->fatal( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, message ); }
@@ -434,7 +452,7 @@ _jingxian_end
 
 #ifndef FATAL_THROW2
 #define FATAL_THROW2(logger, m1,m2,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << m2; \
 	if ( logger != 0 && logger->isFatalEnabled()) {\
 	logger->fatal( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, m1,oss.str() ); }
@@ -442,7 +460,7 @@ _jingxian_end
 
 #ifndef FATAL_THROW3
 #define FATAL_THROW3(logger, m1,m2,m3,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << m3; \
 	if ( logger != 0 && logger->isFatalEnabled()) {\
 	logger->fatal( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, m1,m2,oss.str() ); }
@@ -451,7 +469,7 @@ _jingxian_end
 
 #ifndef FATAL_THROW4
 #define FATAL_THROW4(logger, m1,m2,m3,m4,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << m4; \
 	if ( logger != 0 && logger->isFatalEnabled()) {\
 	logger->fatal( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, m1,m2,m3,oss.str() ); }
@@ -460,7 +478,7 @@ _jingxian_end
 #ifndef TRACE
 #define TRACE(logger, message) { \
 	if ( logger != 0 && logger->isDebugEnabled()) {\
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	logger->debug( oss, __FILE__, __LINE__); }}
 #endif // TRACE
@@ -468,14 +486,14 @@ _jingxian_end
 #ifndef TRACE_RETURN
 #define TRACE_RETURN(logger, message, ret ) { \
 	if ( logger != 0 && logger->isDebugEnabled()) {\
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	logger->debug( oss, __FILE__, __LINE__); } return ( ret );}
 #endif // TRACE_RETURN
 
 #ifndef TRACE_THROW
 #define TRACE_THROW(logger, message , e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << message; \
 	if ( logger != 0 && logger->isDebugEnabled()) {\
 	logger->debug( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__,  oss.str() ); }
@@ -483,7 +501,7 @@ _jingxian_end
 
 #ifndef TRACE_THROW2
 #define TRACE_THROW2(logger, m1,m2,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << m2; \
 	if ( logger != 0 && logger->isDebugEnabled()) {\
 	logger->debug( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, m1,oss.str() ); }
@@ -491,7 +509,7 @@ _jingxian_end
 
 #ifndef TRACE_THROW3
 #define TRACE_THROW3(logger, m1,m2,m3,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << m3; \
 	if ( logger != 0 && logger->isDebugEnabled()) {\
 	logger->debug( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, m1,m2,oss.str() ); }
@@ -499,7 +517,7 @@ _jingxian_end
 
 #ifndef TRACE_THROW4
 #define TRACE_THROW4(logger, m1,m2,m3,m4,e ) { \
-	StringStream oss; \
+	LogStream oss; \
 	oss << m4; \
 	if ( logger != 0 && logger->isDebugEnabled()) {\
 	logger->debug( oss, __FILE__, __LINE__); } throw e( __FILE__,__LINE__, m1,m2,m3,oss.str(); }
@@ -508,7 +526,7 @@ _jingxian_end
 #ifndef LOG_ASSERT
 #define LOG_ASSERT( logger,assertion ) { \
 	if ( logger != 0 ) {\
-	StringStream oss;											\
+	LogStream oss;											\
 	logger->assertLog( assertion ,oss, __FILE__, __LINE__); 	\
 	}															\
 	else														\
@@ -593,73 +611,73 @@ _jingxian_end
 
 #ifndef DEBUG_THROW
 #define DEBUG_THROW(logger, message, e )		{ \
-	StringStream oss; oss << message;throw e( __FILE__,__LINE__, message );\
+	LogStream oss; oss << message;throw e( __FILE__,__LINE__, message );\
 }
 #endif // DEBUG_THROW
 
 #ifndef DEBUG_THROW2
 #define DEBUG_THROW2(logger, m1,m2, e )		{ \
-	StringStream oss; oss << m2;throw e( __FILE__,__LINE__, m1,oss.str();\
+	LogStream oss; oss << m2;throw e( __FILE__,__LINE__, m1,oss.str();\
 }
 #endif // DEBUG_THROW2
 
 #ifndef DEBUG_THROW3
 #define DEBUG_THROW3(logger, m1,m2,m3, e )		{ \
-	StringStream oss; oss << m3;throw e( __FILE__,__LINE__, m1,m2,oss.str();\
+	LogStream oss; oss << m3;throw e( __FILE__,__LINE__, m1,m2,oss.str();\
 }
 #endif // DEBUG_THROW3
 
 #ifndef DEBUG_THROW4
 #define DEBUG_THROW4(logger, m1,m2,m3,m4, e )		{ \
-	StringStream oss; oss << m4;throw e( __FILE__,__LINE__, m1,m2,m3,oss.str();\
+	LogStream oss; oss << m4;throw e( __FILE__,__LINE__, m1,m2,m3,oss.str();\
 }
 #endif // DEBUG_THROW4
 
 #ifndef INFO_THROW
 #define INFO_THROW(logger, message, e )		{ \
-	StringStream oss; oss << message;throw e( __FILE__,__LINE__, message );\
+	LogStream oss; oss << message;throw e( __FILE__,__LINE__, message );\
 }
 #endif // INFO_THROW
 
 #ifndef INFO_THROW2
 #define INFO_THROW2(logger, m1,m2, e )		{ \
-	StringStream oss; oss << m2;throw e( __FILE__,__LINE__, m1,oss.str();\
+	LogStream oss; oss << m2;throw e( __FILE__,__LINE__, m1,oss.str();\
 }
 #endif // INFO_THROW2
 
 #ifndef INFO_THROW3
 #define INFO_THROW3(logger, m1,m2,m3, e )		{ \
-	StringStream oss; oss << m3;throw e( __FILE__,__LINE__, m1,m2,oss.str();\
+	LogStream oss; oss << m3;throw e( __FILE__,__LINE__, m1,m2,oss.str();\
 }
 #endif // INFO_THROW3
 
 #ifndef INFO_THROW4
 #define INFO_THROW4(logger, m1,m2,m3,m4, e )		{ \
-	StringStream oss; oss << m4;throw e( __FILE__,__LINE__, m1,m2,m3,oss.str();\
+	LogStream oss; oss << m4;throw e( __FILE__,__LINE__, m1,m2,m3,oss.str();\
 }
 #endif // INFO_THROW4
 
 #ifndef WARN_THROW
 #define WARN_THROW(logger, message, e )		{ \
-	StringStream oss; oss << message;throw e( __FILE__,__LINE__, message );\
+	LogStream oss; oss << message;throw e( __FILE__,__LINE__, message );\
 }
 #endif // WARN_THROW
 
 #ifndef WARN_THROW2
 #define WARN_THROW2(logger, m1,m2, e )		{ \
-	StringStream oss; oss << m2;throw e( __FILE__,__LINE__, m1,oss.str();\
+	LogStream oss; oss << m2;throw e( __FILE__,__LINE__, m1,oss.str();\
 }
 #endif // WARN_THROW2
 
 #ifndef WARN_THROW3
 #define WARN_THROW3(logger, m1,m2,m3, e )		{ \
-	StringStream oss; oss << m3;throw e( __FILE__,__LINE__, m1,m2,oss.str();\
+	LogStream oss; oss << m3;throw e( __FILE__,__LINE__, m1,m2,oss.str();\
 }
 #endif // WARN_THROW3
 
 #ifndef WARN_THROW4
 #define WARN_THROW4(logger, m1,m2,m3,m4, e )		{ \
-	StringStream oss; oss << m4;throw e( __FILE__,__LINE__, m1,m2,m3,oss.str();\
+	LogStream oss; oss << m4;throw e( __FILE__,__LINE__, m1,m2,m3,oss.str();\
 }
 #endif // WARN_THROW4
 
@@ -671,64 +689,52 @@ _jingxian_end
 
 #ifndef FATAL_THROW
 #define FATAL_THROW(logger, message, e )		{ \
-	StringStream oss; oss << message;throw e( __FILE__,__LINE__, message );\
+	LogStream oss; oss << message;throw e( __FILE__,__LINE__, message );\
 }
 #endif // FATAL_THROW
 
 #ifndef FATAL_THROW2
 #define FATAL_THROW2(logger, m1,m2, e )		{ \
-	StringStream oss; oss << m2;throw e( __FILE__,__LINE__, m1,oss.str();\
+	LogStream oss; oss << m2;throw e( __FILE__,__LINE__, m1,oss.str();\
 }
 #endif // FATAL_THROW2
 
 #ifndef FATAL_THROW3
 #define FATAL_THROW3(logger, m1,m2,m3, e )		{ \
-	StringStream oss; oss << m3;throw e( __FILE__,__LINE__, m1,m2,oss.str();\
+	LogStream oss; oss << m3;throw e( __FILE__,__LINE__, m1,m2,oss.str();\
 }
 #endif // FATAL_THROW3
 
 #ifndef FATAL_THROW4
 #define FATAL_THROW4(logger, m1,m2,m3,m4, e )		{ \
-	StringStream oss; oss << m4;throw e( __FILE__,__LINE__, m1,m2,m3,oss.str();\
+	LogStream oss; oss << m4;throw e( __FILE__,__LINE__, m1,m2,m3,oss.str();\
 }
 #endif // FATAL_THROW4
 
 #ifndef TRACE_THROW
 #define TRACE_THROW(logger, message, e )		{ \
-	StringStream oss; oss << message;throw e( __FILE__,__LINE__, message );\
+	LogStream oss; oss << message;throw e( __FILE__,__LINE__, message );\
 }
 #endif // TRACE_THROW
 
 #ifndef TRACE_THROW2
 #define TRACE_THROW2(logger, m1,m2, e )		{ \
-	StringStream oss; oss << m2;throw e( __FILE__,__LINE__, m1,oss.str();\
+	LogStream oss; oss << m2;throw e( __FILE__,__LINE__, m1,oss.str();\
 }
 #endif // TRACE_THROW2
 
 #ifndef TRACE_THROW3
 #define TRACE_THROW3(logger, m1,m2,m3, e )		{ \
-	StringStream oss; oss << m3;throw e( __FILE__,__LINE__, m1,m2,oss.str();\
+	LogStream oss; oss << m3;throw e( __FILE__,__LINE__, m1,m2,oss.str();\
 }
 #endif // TRACE_THROW3
 
 #ifndef TRACE_THROW4
 #define TRACE_THROW4(logger, m1,m2,m3,m4, e )		{ \
-	StringStream oss; oss << m4;throw e( __FILE__,__LINE__, m1,m2,m3,oss.str();\
+	LogStream oss; oss << m4;throw e( __FILE__,__LINE__, m1,m2,m3,oss.str();\
 }
 #endif // TRACE_THROW4
 
 #endif // _NO_LOG_
-
-
-_jingxian_begin
-
-namespace logging
-{
-	ILogger* makeLogger( const tchar* nm );
-
-	ILogger* makeLogger( const tstring& nm );
-}
-
-_jingxian_end
 
 #endif // _JINGXIAN_Log_H_

@@ -18,13 +18,13 @@ typedef char char_t;
 typedef std::wstring tstring;
 typedef std::wostream tostream;
 typedef std::wstringstream tstringstream;
-typedef std::wstringstream StringStream;
+typedef std::wstringstream LogStream;
 typedef wchar_t tchar;
 #else
 typedef std::string tstring;
 typedef std::ostream tostream;
 typedef std::stringstream tstringstream;
-typedef std::stringstream StringStream;
+typedef std::stringstream LogStream;
 typedef char_t tchar;
 #endif
 
