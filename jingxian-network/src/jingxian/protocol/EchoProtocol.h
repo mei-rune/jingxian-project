@@ -10,6 +10,8 @@
 
 // Include files
 # include "jingxian/protocol/BaseProtocol.h"
+# include "jingxian/buffer/OutBuffer.h"
+
 
 _jingxian_begin
 
@@ -58,11 +60,18 @@ public:
      * @param[ in ] context 会话的上下文
      * @param[ in ] buffer 包含新到来信息的缓冲区
 	 */
-    virtual void onReceived(ProtocolContext& context)
+    virtual size_t onReceived(ProtocolContext& context)
 	{
-		std::string str(context.inBuffer().size(), 'a');
-		context.inBuffer().readBlob((void*)str.c_str(), str.size());		
-		context.outBuffer().writeBlob(str.c_str(), str.size());
+		OutBuffer out;
+		for(std::vector<io_mem_buf>::const_iterator it = context.inMemory().begin()
+			; it != context.inMemory().end(); ++ it )
+			out.writeBlob( it->buf, it->len);
+
+		std::vector<buffer_chain_t*>& tmp = out.dataBuffer();
+		context.transport().writeBatch(&tmp[0], tmp.size());
+		out.releaseBuffer();
+
+		return context.inBytes();
 	}
 private:
 	NOCOPY(EchoProtocol);

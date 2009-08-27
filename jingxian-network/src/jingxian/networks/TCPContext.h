@@ -24,23 +24,39 @@ class TCPContext : public ProtocolContext
 public:
 	TCPContext()
 	{
-		inBuffer_  = &_inBuffer;
-		outBuffer_ = &_outBuffer;
+		//inBuffer_  = &_inBuffer;
+		//outBuffer_ = &_outBuffer;
 	}
 
-	InBuffer& GetInBuffer()
+	void inMemory(const std::vector<io_mem_buf>* buffers, size_t totalLen)
 	{
-		return _inBuffer;
+		inMemory_ = buffers;
+		if(-1 == totalLen)
+		{
+			totalLen = 0;
+			for(std::vector<io_mem_buf>::const_iterator it = buffers->begin()
+				; it != buffers->end(); ++ it )
+			{
+				totalLen += it->len;
+			}
+		}
+
+		this->inBytes_ = totalLen;			
 	}
 
-	OutBuffer& GetOutBuffer()
-	{
-		return _outBuffer;
-	}
+	//InBuffer& GetInBuffer()
+	//{
+	//	return _inBuffer;
+	//}
 
-private:
-	InBuffer _inBuffer;
-	OutBuffer _outBuffer;
+	//OutBuffer& GetOutBuffer()
+	//{
+	//	return _outBuffer;
+	//}
+
+//private:
+//	InBuffer _inBuffer;
+//	OutBuffer _outBuffer;
 };
 
 _jingxian_end

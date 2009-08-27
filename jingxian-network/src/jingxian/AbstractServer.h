@@ -31,8 +31,11 @@ public:
 	
 	virtual ~AbstractServer()
 	{
-		delete logger_;
-		logger_ = null_ptr;
+		if(null_ptr != logger_)
+		{
+			delete logger_;
+			logger_ = null_ptr;
+		}
 	}
 
 	

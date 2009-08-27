@@ -52,7 +52,7 @@ public:
      * @param[ in ] context 会话的上下文
      * @param[ in ] buffer 包含新到来信息的缓冲区
 	 */
-    virtual void onReceived(ProtocolContext& context) = 0;
+    virtual size_t onReceived(ProtocolContext& context) = 0;
 
     /**
      * 创建下次用来读取数据的缓冲区

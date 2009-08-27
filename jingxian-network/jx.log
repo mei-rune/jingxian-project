@@ -9,3 +9,8 @@
 [2009-08-26 23:52:24](CRIT)EchoProtocol : 新连接到来 - tcp://127.0.0.1:2068
 [2009-08-26 23:53:01](CRIT)EchoProtocol : 连接断开 - tcp://127.0.0.1:2068
 [2009-08-26 23:53:01](CRIT)ConnectedSocket : [tcp://127.0.0.1:6543 - tcp://127.0.0.1:2068] Both 销毁 ConnectedSocket 对象成功
+[2009-08-27 14:15:50](CRIT)TCPAcceptor : 启动监听地址 'tcp://0.0.0.0:6543' 成功!
+[2009-08-27 14:15:52](CRIT)ConnectedSocket : [tcp://127.0.0.1:6543 - tcp://127.0.0.1:4662] Both 创建 ConnectedSocket 对象成功
+[2009-08-27 14:15:52](CRIT)EchoProtocol : 新连接到来 - tcp://127.0.0.1:4662
+[2009-08-27 14:16:12](CRIT)EchoProtocol : 连接断开 - tcp://127.0.0.1:4662
+[2009-08-27 14:16:12](CRIT)ConnectedSocket : [tcp://127.0.0.1:6543 - tcp://127.0.0.1:4662] Both 销毁 ConnectedSocket 对象成功

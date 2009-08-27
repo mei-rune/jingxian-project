@@ -1,0 +1,56 @@
+ 	
+[ 转载文档 本文适合中级读者 已阅读5028次 ] 	
+(RFC1929)SOCKS V5的用户名/密码鉴定
+作者：Marcus Leech
+
+提交者：eastvc 发布日期：2003-9-25 20:36:20
+原文出处：http://www.china-pub.com/computers/eMook/emooknew/rfctxt/RFC1929.txt
+
+
+组织：中国互动出版网（http://www.china-pub.com/）
+RFC文档中文翻译计划（http://www.china-pub.com/compters/emook/aboutemook.htm）
+E-mail：ouyang@china-pub.com
+译者：Radeon（Radeon bise@cmmail.com）
+译文发布时间：2001-6-10
+版权：本中文翻译文档版权归中国互动出版网所有。可以用于非商业用途自由转载，但必须保留本文档的翻译及版权信息。
+
+Network Working Group M. Leech
+Request for Comments:1929 Bell-Northern Research Ltd
+Category: Standard Track March 1996
+
+
+SOCKS V5的用户名/密码鉴定
+（RFC1929 Username/Password Authentication for SOCKS V5）
+
+本备忘录状态：
+本文档讲述了一种Internet社区的Internet标准跟踪协议，它需要进一步进行讨论和建议以得到改进。请参考最新版的“Internet正式协议标准” (STD1)来获得本协议的标准化程度和状态。本备忘录的发布不受任何限制。
+
+1． 介绍
+关于SOCKS V5的协议规范说明了在初始化SOCKS连接时所用到的任意验证协议的大致框架。这篇文档描述了这些协议中的其中一个适合SOCKS V5验证子协商(subnegotiation)。
+注意：
+除非特别注明，所有出现在数据包格式图中的十进制数字均以字节表示相应域的长度。如果某域需要给定一个字节的值，用X’hh’来表示这个字节中的值。如果某域中用到单词’Variable’，这表示该域的长度是可变的，且该长度定义在一个和这个域相关联（1 – 2个字节）的域中，或一个数据类型域中。
+
+2．初始协商
+一旦SOCKS V5服务器运行并且客户端选择了用户名/密码认证协议以后，就开始了用户名/密码协议的子协商过程。客户端先产生一个用户名/密码协议的请求：
+VER 	ULEN 	UNAME 	PLEN 	PASSWD
+1 	1 	1 to 255 	1 	1 to 255
+
+VER中指明了子协商的当前版本，现在使用的是X’01’。ULEN域中包含了下一个UNAME域的长度。UNAME中包含一个源操作系统(source operating system)所知道的用户名。PLEN中指明了紧随其后的PASSWD的长度。PASSWD中则包含了对应UNAME用户的密码。
+服务器验证用户名和密码，并且返回：
+VER 	STATUS
+1 	1
+
+如果STATUS中返回X’00’则说明通过验证。如果服务器返回非X’00’则说明验证失败，并且关闭连接。
+
+3．安全考虑
+这篇文档描述了为SOCKS V5协议提供验证服务的子协商过程。因为密码是以明文传输的，所以这个子协商过程在可能被工具“嗅探(sniffing)”到的环境中不建议使用该子协商过程。
+
+4．作者地址
+Marcus Leech
+Bell-Northern Research Ltd
+P.O. Box 3511, Station C
+Ottawa, ON
+CANADA K1Y 4H7
+Phone: +1 613 763 9145
+EMail: mleech@bnr.ca
+

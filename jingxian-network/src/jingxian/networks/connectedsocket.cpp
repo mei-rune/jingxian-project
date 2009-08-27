@@ -73,14 +73,26 @@ void ConnectedSocket::stopReading()
 
 void ConnectedSocket::write(buffer_chain_t* buffer)
 {
-	if( connection_status::connected != state_)
-	{
-		TP_TRACE(tracer_, transport_mode::Send, _T("尝试写数据时连接已断开"));
-		return;
-	}
+	if(is_null(buffer))
+		ThrowException1(ArgumentNullException, "buffer");
 
 	outgoing_.send(buffer);
 	doWrite();
+}
+
+
+void ConnectedSocket::writeBatch(buffer_chain_t** buffers, size_t len)
+{
+	if(is_null(buffers))
+		ThrowException1(ArgumentNullException, "buffers");
+
+	for(size_t i = 0; i < len; ++i)
+	{
+		outgoing_.send(buffers[i]);
+	}
+
+	if(0 != len)
+		doWrite();
 }
 
 void ConnectedSocket::disconnection()
@@ -224,9 +236,10 @@ void ConnectedSocket::onRead(size_t bytes_transferred)
 	{
 		std::vector<io_mem_buf> ioBuf;
 		incoming_.dataBuffer(ioBuf);
-		context_.GetInBuffer().reset(&ioBuf, -1);
-		protocol_->onReceived( context_ );
-		if(!incoming_.decreaseBytes(context_.GetInBuffer().readLength()))
+		context_.inMemory(&ioBuf, -1);
+
+		size_t readLen = protocol_->onReceived( context_ );
+		if(!incoming_.decreaseBytes(readLen))
 		{
 			tstring err = _T("计算用户读字节数时发生错误");
 			TP_FATAL(tracer_, transport_mode::Receive, err);
@@ -237,16 +250,16 @@ void ConnectedSocket::onRead(size_t bytes_transferred)
 		if( connection_status::connected != state_)
 			return;
 		
-		int count = 0;
-		Buffer<buffer_chain_t>& dataBuffer = context_.GetOutBuffer().rawBuffer();
-		buffer_chain_t* ptr = null_ptr;
-		while(null_ptr != (ptr = dataBuffer.pop()))
-		{
-			outgoing_.send(ptr);
-			++ count;
-		}
-		if( 0!= count)
-			doWrite();
+		//int count = 0;
+		//Buffer<buffer_chain_t>& dataBuffer = context_.GetOutBuffer().rawBuffer();
+		//buffer_chain_t* ptr = null_ptr;
+		//while(null_ptr != (ptr = dataBuffer.pop()))
+		//{
+		//	outgoing_.send(ptr);
+		//	++ count;
+		//}
+		//if( 0!= count)
+		//	doWrite();
 	}
 	catch(const Exception& ex)
 	{

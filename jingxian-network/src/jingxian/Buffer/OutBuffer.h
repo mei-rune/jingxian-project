@@ -9,15 +9,16 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
-# include "jingxian/Buffer/IBuffer.H"
-# include "jingxian/Buffer/Buffer.H"
-# include "jingxian/Buffer/BaseBuffer.H"
+# include "jingxian/buffer/IBuffer.H"
+# include "jingxian/buffer/Buffer.H"
+# include "jingxian/buffer/BaseBuffer.H"
 
 _jingxian_begin
 
 class OutBuffer : public BaseBuffer<IOutBuffer>
 {
 public:
+	OutBuffer();
 	virtual ~OutBuffer( );
 
 	virtual int beginTranscation();
@@ -33,9 +34,10 @@ public:
 
 	virtual databuffer_t* allocate(size_t len);
 
-	Buffer<buffer_chain_t>& rawBuffer();
+	std::vector<buffer_chain_t*>& dataBuffer();
+	void releaseBuffer();
 private:
-	Buffer<buffer_chain_t> dataBuffer_;
+	std::vector<buffer_chain_t*> dataBuffer_;
 };
 
 _jingxian_end
