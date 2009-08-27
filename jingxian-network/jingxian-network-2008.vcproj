@@ -493,7 +493,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\Buffer\Buffer.h"
+				RelativePath=".\src\jingxian\Buffer\buffer-internal.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\Buffer\buffer-internal.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\Buffer\buffer.h"
 				>
 			</File>
 			<File
