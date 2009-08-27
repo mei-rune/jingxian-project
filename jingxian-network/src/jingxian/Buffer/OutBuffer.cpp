@@ -1,6 +1,6 @@
 
 # include "pro_config.h"
-# include "jingxian/Buffer/OutBuffer.h"
+# include "jingxian/buffer/OutBuffer.h"
 
 
 _jingxian_begin

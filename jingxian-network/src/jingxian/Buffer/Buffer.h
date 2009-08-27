@@ -12,112 +12,49 @@
 
 _jingxian_begin
 
+# ifndef _io_mem_buf_buf_
+# define _io_mem_buf_buf_
+  typedef WSABUF io_mem_buf;
+# endif //_io_mem_buf_buf_
 
-template<typename T>
-class Buffer
+# ifndef _io_packect_buf_
+# define _io_packect_buf_
+  typedef TRANSMIT_PACKETS_ELEMENT io_packect_buf;
+# endif // ___iopack___
+
+# ifndef _io_file_buf_
+# define _io_file_buf_
+  typedef TRANSMIT_FILE_BUFFERS io_file_buf;
+# endif // _io_file_buf_
+
+struct buffer_chain;
+
+typedef void (*freebuffer_callback)(struct buffer_chain* ptr, void* context);
+
+typedef struct buffer_chain
 {
-public:
-	Buffer()
-		: head_(0)
-		, tail_(0)
-		, length_(0)
-	{
-	}
+	void* context;
+	freebuffer_callback freebuffer;
+	int type;
+	struct buffer_chain* _next;
+} buffer_chain_t;
 
-	/**
-	 * 析构函数
-	 */
-	~Buffer()
-	{
-		while(null_ptr != head_)
-		{
-			T* current = head_;
-			head_= (head_)->_next;
 
-			freebuffer(current);
-		}
-	}
+inline bool is_null(const freebuffer_callback cb)
+{
+	return NULL == cb;
+}
 
-	T* head()
-	{
-		return head_;
-	}
+inline void freebuffer(buffer_chain_t* buf)
+{
+	if(is_null(buf))
+		return;
 
-	T* tail()
-	{
-		return is_null(head_)? null_ptr : tail_;
-	}
-
-	/**
-	 * 向尾部添加一个空闲的内存块
-	 */
-	void push(T* newbuf)
-	{
-		newbuf->_next = NULL;
-		if( is_null(head_))
-			head_ = newbuf;
-		else
-			tail_->_next = newbuf;
-		tail_ = newbuf;
-		++ length_;
-	}
-
-	/**
-	 * 向头部取一个内存块
-	 */
-	T* pop()
-	{
-		T* current = head_;
-
-		if(null_ptr != head_)
-		{
-			-- length_;
-			head_ = head_->_next;
-		}
-		else
-		{
-			length_ = 0;
-			tail_ = NULL;
-		}		
-		return current;
-	}
-
-	/**
-	 * 用于遍历buf,
-	 */
-	T* next(T* current)
-	{
-		return is_null(current)?head_:current->_next;
-	}
-
-	/**
-	 * 用于遍历buf,v
-	 */
-	const T* next(const T* current) const
-	{
-		return is_null(current)?head_:current->_next;
-	}
-
-	/**
-	 * 是否为空
-	 */
-	bool empty() const
-	{
-		return is_null(head_);
-	}
-
-	size_t size()
-	{
-		return length_;
-	}
-
-protected:
-	T* head_;
-	T* tail_;
-	size_t length_;
-private:
-	NOCOPY(Buffer);
-};
+	if(is_null(buf->freebuffer))
+		my_free(buf);
+	else
+		buf->freebuffer(buf, buf->context);
+}
 
 _jingxian_end
 
