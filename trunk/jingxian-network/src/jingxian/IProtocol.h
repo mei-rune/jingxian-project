@@ -58,10 +58,8 @@ public:
      * 创建下次用来读取数据的缓冲区
      * 
      * @param[ in ] context 会话的上下文
-     * @param[ in ] lastBuffer 上一次用来读取数据的缓冲区
-     * @param[ in ] len 上一次用来读取数据的缓冲区的大小
 	 */
-	virtual buffer_chain_t* createBuffer(const ProtocolContext& context, const Buffer<buffer_chain_t>& lastBuffer, const buffer_chain_t* current) = 0;
+	virtual buffer_chain_t* createBuffer(const ProtocolContext& context) = 0;
 
 	/**
 	 * 取得地址的描述

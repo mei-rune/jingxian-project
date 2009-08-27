@@ -27,9 +27,10 @@ public:
 		virtual void initialize() = 0;
 
 		/**
-         * 指定用 @see{protocol} 接口来接收读到的数据
+         * 指定用 @see{IProtocol} 接口来接收读到的数据
+		 * @return 返回旧的 @see{IProtocol} 接口
          */
-        virtual void bindProtocol(IProtocol* protocol) = 0;
+        virtual IProtocol* bindProtocol(IProtocol* protocol) = 0;
 
         /**
          * 开始读数据

@@ -13,8 +13,6 @@
 # include "jingxian/IReactorCore.h"
 # include "jingxian/ProtocolContext.h"
 # include "jingxian/networks/networking.h"
-# include "jingxian/buffer/InBuffer.h"
-# include "jingxian/buffer/OutBuffer.h"
 
 
 _jingxian_begin

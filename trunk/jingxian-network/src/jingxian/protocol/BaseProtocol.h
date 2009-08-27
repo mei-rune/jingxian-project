@@ -10,10 +10,11 @@
 
 // Include files
 # include "jingxian/IProtocol.h"
-
+# include "jingxian/buffer/buffer-internal.h"
+# include "jingxian/buffer/OutBuffer.h"
+# include "jingxian/buffer/InBuffer.h"
 
 _jingxian_begin
-
 
 class BaseProtocol : public IProtocol
 {
