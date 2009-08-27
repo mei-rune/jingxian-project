@@ -1,0 +1,557 @@
+SOCKS 4A
+维基百科，自由的百科全书
+Jump to: navigation, search
+
+SOCKS 4A是SOCKS 4 协议的简单扩展，允许客户端对无法解析的目的主机，进行自行规定。
+
+客户端对DSTIP的头三个字节设定为NULL，最后一个字节为非零；对应的IP地址就是0.0.0.x，其中x是非零，这当然不可能是目的主机的地址，这样即使客户端可以解析域名，对此也不会发生冲突。USERID以紧跟的NULL字节作结尾，客户端必须发送目的主机的域名，并以另一个NULL字节作结尾。CONNECT和BIND请求的时候，都要按照这种格式（以字节为单位）：
+
++----+----+----+----+----+----+----+----+----+----+....+----+----+----+....+----+
+| VN | CD | DSTPORT | DSTIP 0.0.0.x     | USERID       |NULL| HOSTNAME     |NULL|
++----+----+----+----+----+----+----+----+----+----+....+----+----+----+....+----+
+   1    1      2              4           variable       1    variable       1
+
+使用4a协议的服务器必须检查请求包里的DSTIP字段，如果表示地址0.0.0.x，x是非零结尾，那么服务器就得读取客户端所发包中的域名字段，然后服务器就得解析这个域名，可以的话，对目的主机进行连接。
+
+
+
+
+
+
+
+SOCKS 4 协议
+
+下面是客户端向SOCKS 4代理服务器，发送的连接请求包的格式（以字节为单位）：
+
++----+----+----+----+----+----+----+----+----+----+....+----+
+| VN | CD | DSTPORT |      DSTIP        | USERID       |NULL|
++----+----+----+----+----+----+----+----+----+----+....+----+
+   1    1      2              4           variable       1
+
+    * VN是SOCK版本，应该是4；
+    * CD是SOCK的命令码，1表示CONNECT请求，2表示BIND请求；
+    * DSTRORT表示目的主机的端口；
+    * DSTIP指目的主机的IP地址；
+    * NULL是0；
+
+代理服务器而后发送回应包（以字节为单位）：
+
++----+----+----+----+----+----+----+----+
+| VN | CD | DSTPORT |      DSTIP        |
++----+----+----+----+----+----+----+----+
+   1    1      2              4
+
+    * VN是回应码的版本，应该是0；
+    * CD是代理服务器答复，有几种可能：
+
+        * 90，请求得到允许；
+        * 91，请求被拒绝或失败；
+        * 92，由于SOCKS服务器无法连接到客户端的identd（一个验证身份的进程），请求被拒绝；
+        * 93，由于客户端程序与identd报告的用户身份不同，连接被拒绝。
+
+    * DSTPORT与DSTIP与请求包中的内容相同，但被忽略。
+
+如果请求被拒绝，SOCKS服务器马上与客户端断开连接；如果请求被允许，代理服务器就充当客户端与目的主机之间进行双向传递，对客户端而言，就如同直接在与目的主机相连。
+
+
+
+
+
+SOCKS：防火墙安全会话转换协议
+      
+（Socks: Protocol for sessions traversal across firewall securely）
+
+　　SOCKS v5 的协议框架是为了让使用 TCP 和 UDP 的客户/服务器应用程序更方便安全地使用。
+
+　　网络防火墙所提供的服务所设计的。这个协议从概念上来讲是介于应用层和传输层之间的“中介层（shim-layer）”，因而不提供如传递 ICMP 信息之类由网络层网关的所提供的服务。
+
+　　利用网络防火墙可以将组织内部的网络结构从外部网络如 INTERNET 中有效地隔离，这种方法在许多网络系统中正变得流行起来。这种防火墙系统通常以应用层网关的形式工作在两个网络之间，提供 TELNET、FTP、SMTP 等的接入。SOCKS 提供一个通用框架来使这些协议安全透明地穿过防火墙。
+
+　　SOCKS v5 提供了有力的认证方案，而 SOCKS v4 为 TELNET、FTP、HTTP、WAIS 和 GOPHER 等基于 TCP 协议的客户/服务器程序提供了一个不安全的防火墙。这个新的协议 SOCKS v5 扩展了 SOCKS V4 以使其支持 UDP，并扩展了其框架规定以支持安全认证方案。同时它还支持地址解析方案（addressing scheme）中所规定的域名和 IPV6 地址。
+
+　　为了实现这个 SOCKS 协议，通常需要重新编译或者重新链接基于 TCP 的客户端应用程序以使用 SOCKS 库中相应的加密函数。
+
+	协议结构
+
+　　 SOCKS v5 具有以下一些不同格式的信息：
+
+　　版本标识符/信息选择方法：
+
+1 byte 	1 byte 	1-255 byte
+Version 	NMethods 	Methods
+
+　　SOCKS 请求信息：
+
+1 byte 	1 byte 	Value of 0 	1 byte 	Variable 	2 bytes
+Version 	CMD 	Rsv 	ATYP 	DST Addr 	DST Port
+
+　　信息选择方法：
+
+1 byte 	1 byte
+Version 	Method
+
+　　答复信息：
+
+1 byte 	1 byte 	Value of 0 	1 byte 	Variable 	2 bytes
+Version 	REP 	RSV 	ATYP 	BND Addr 	BND Port
+
+　　UDP 请求头：
+
+2byte 	1 byte 	1 byte 	Variable 	2 	Variable
+RSV 	FRAG 	ATYP 	DST Addr 	DST Port 	Data
+
+相关协议 	TCP、UDP、ICMP、HTTP、Gopher、Telnet、FTP
+组织来源 	SOCKS 由 IETF （www.ietf.org） 定义在 RFC 1928中。
+相关链接 	http://www.javvin.com/protocol/rfc1928.pdf：SOCKS Protocol Version 5.
+
+< 返 回 >
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+穿透Socks5 代理的UDP编程
+2003-01-31· · ··天极论坛
+
+1 2  下一页
+　　网络编程中，对于数据传输实时性要求较高的场合，大家都会选择UDP来作为数据传输协议，在TCP/IP协议族中UDP协议较TCP协议需要的网络系统资源更少。然而在企业应用中，由于网络安全原因等会导致除了特定端口以外的IP数据无法通过专用的路由或网关。为了支持这类应用，制定了专门的支持 Socks连接的socks4/socsk5协议。Socks协议允许实现此类功能的代理软件可以允许防火墙(本文以下内容中防火墙与代理的称谓可以等同视之)以内的客户通过防火墙实现对外部的访问，甚至可以允许等待外部的连接。对于防火墙内部的软件客户端，仅同防火墙协商，同防火墙的特定端口取得联系，然后交换数据，而防火墙外部的程序也直同防火墙进行数据交换，外部看不到防火墙的内部网情况，这样起到了防火墙的监护功能，也满足了大多数通过非常用（如 http ftp等）端口交换数据的应用程序需求。防火墙内部的应用程序如何通过防火墙将UDP数据传输到防火墙外部，并且接受外部的UDP数据报文，这就是所谓穿透Socks代理的UDP编程。
+
+　　RFC1928描述了Socks协议的细节，告诉我们客户程序如何同Socks代理协商，取得透过该协议对外传输的途径。英文的URL为： http://www.ietf.org/rfc/rfc1928.txt，中文的翻译参考不是很贴切（但译者还是值得尊敬的），但对于E文不大好的可以将就一下：http://www.china-pub.com/computers/emook/0541/info.htm。建议先了解以上链接内容后在阅读下文。
+
+　　一般的代理软件都实现了两个版本的Socks协议—Socks4以及Socks5,其中Socks5协议支持UDP报文的传输以及多种验证方法，该协议还考虑IP发展需要，支持Ipv6。
+
+　　TCP透过代理支持两种方法：Bind以及Connection。Connection是指作为客户端，主动连接代理外部的服务程序，在这种方式中代理将替代客户程序发起真正的对外部服务程序的连接，并来回传输在此连接中需要交流的数据；Bind方式则用在那些需要客户机接受到服务器连接的协议中，例如FTP协议之类的除了需要建立一个客户--服务器的连接报告状态外，还需要建立一个服务器—客户的连接来传输实际的数据（当然要注意这里的FTP 协议通过Socks协议连接远程主机，并非通过FTP代理协议）。UDP报文传输则意味着代理充当UDP数据传输的中间人，将防火墙内的主机对外的数据传递出去，将需要引入到防火墙内的UDP数据报文转给防火墙特定的主机。关于TCP穿透的讨论和例子很多（给出一个实现的例子：http: //www.codeproject.com/internet/casyncproxysocket.asp ），就不多讲了，在此着重讨论如何实现UDP数据的穿透Socks5代理。
+
+　　为了测试方便我简单写了一个服务进程在代理外IP为192。168。0。250上监听UDP8100端口，接收到一个UDP的数据报后，返回服务器上的当前时间给发送UDP报文的客户端。代理采用Wingate,他在192。168。0。1上运行，Socks的标准端口1080来运行服务监听程序。我的机器为192。168。0。10，你可以看到，我不能够直接联系运行时间服务的机器，我会向代理提出我的要求，由代理进程负责UDP数据报文的转发。代理软件选择Wingate，并且为了简单起见，采用不需要验证客户的验证方法。好了，交代了背景后，下面我们就开始穿越代理的旅程吧。
+
+　　无论是TCP还是UDP通过代理，首先要同代理取得联系。为了能够确保在第一阶段顺利确保数据传输，协议规定客户端采用TCP方式连接联系代理服务器。
+
+　　一旦客户同代理的1080端口连接上，客户首先要发送一个版本标识/方法选择的TCP报文给代理服务器，具体格式为：
+
+　　版本号（1字节） | 可供选择的认证方法(1字节) | 方法序列（1-255个字节长度）
+
+　　如果是socks4协议，版本号就是0x04，但是这里是支持UDP的Socks5，所以是字节0x05。此说明对于后面的报文格式解释的版本部分也都适用。
+
+　　Socks协议定义了0-255种通过代理的认证方法：
+
+　　0x00 无验证需求
+
+　　0x01 通用安全服务应用程序接口(GSSAPI)
+
+　　0x02 用户名/密码(USERNAME/PASSWORD)
+
+　　0x03 至 X'7F' IANA 分配(IANA ASSIGNED)
+
+　　0x80 至 X'FE' 私人方法保留(RESERVED FOR PRIVATE METHODS)
+
+　　0xFF 无可接受方法(NO ACCEPTABLE METHODS)
+
+　　显然，无论是发起Socks请求的客户端还是负责转发Socks数据的代理都不可能完全实现所有的（起码目前还没有）方法，所以客户端需要把自己能够支持的方法列出来供代理服务器选择。如果支持无验证，那么此报文的字节序列就为：0x05 0x01 0x00，其中的0x01表示客户端只支持一种验证，0x00表示能够支持的方法是编号为0x00的（无验证）的方法。如果客户端还支持用户名/密码的验证方式，那么报文就应当是：0x05 0x02 0x00 0x02。
+
+　　代理接收到客户的请求，会根据自身系统的实现返回告诉客户验证采用哪一种方法，返回的保文格式为：
+
+
+　版本号 | 服务器选定的方法
+
+　　如果服务器仅支持无验证的验证方法，它返回字节序列：0x05 0x00。客户端同代理的数据报文的来回应答就是Socks协议的验证方法选择阶段。
+
+　　接下来就是根据选择的方法来，验证客户身份了。虽然我们这里不需要验证，但是还是简单讲一下0x02的用户名/口令的验证客户端发送报文格式：
+
+　　0x01 | 用户名长度（1字节）| 用户名（长度根据用户名长度域指定） | 口令长度（1字节） | 口令（长度由口令长度域指定）
+
+　　不清楚为什么报文的首字节是0x01(按照惯例应当是0x05)。整个报文长度根据用户名和口令的实际长度决定。用户名和口令都不需要以’\0’结束。服务器会根据提供的信息进行验证，返回如下的报文字节序列映像为：
+
+　　0x01 | 验证结果标志
+
+　　验证结果标志可以为：0x00 验证通过，其余均表示有故障，不可以继续下一步的协议步骤。
+
+　　在通过了验证步骤之后，接下来就是确定UDP传输的端口了。这里面需要确定两个重要的端口：1、客户端发送UDP数据的本机端口，一方面可以为发送数据指定端口，另一方面告诉代理，如果有数据返回，就传递给该端口，构成一个UDP传输回路。2、代理想在哪个端口接收客户发送的UDP数据报，作为对外UDP Socket的申请方，双方协商确定一个端口后，可以持续通过此端口向外部主机发送数据，也可以通过此端口由代理接收外部主机发回的UDP数据，再通过此端口发给UDP发送请求客户端。客户端会按照以下格式发送TCP数据字节序列：
+
+　　协议版本 | Socks命令 |　保留字节　| 地址类型 | 特定地址 | 特定端口
+
+　　Socks命令有3种：CONNECT （编号0x01） BIND (0x02) UDP(编号0x03)
+
+　　保留字节长度1，为0x00
+
+　　地址类型有3种：
+
+　　0X01　　该地址是IPv4地址，长4个8bit字节。
+
+　　0X03　　该地址包含一个完全的域名。第一个8bit字节包含了后面名称的8bit的数目，没有中止的’\0’。
+
+　　0X04 该地址是IPv6地址，长16个8bit字节。
+
+　　特定地址一般对于多IP的主机有意义，如果不是或者不关心哪一个IP发起UDP数据传输，就可以填0。0。0。0，地址类型选择0x01。比较重要的就是UDP传输将要从哪一个UDP端口发起。一般为了避免因为硬性指定一个端口导致引起冲突，会首先生成一个UDP套接字，用生成的套接字既定端口来作为自己传输UDP的端口，并通过此步骤告知代理服务器。譬如临时生成一个UDP套接字，UDP选择端口2233作为传输UDP数据的本地端口，那么此报文就为：0x05 0x03 0x00 0x00 0x00 0x00 0x00 0x08 0xb9 其中0x08 0xb9换算成10进制就是2233。
+
+　　代理服务器会根据自己的端口占用情况，给出一个有关代理服务器的端口的回复字节序列，告诉客户可以将UDP数据发送到此地址和端口中去，以实现UDP穿透代理。返回的字节序列为：
+
+　　版本 | 代理的应答 |　保留1字节　| 地址类型 | 代理服务器地址 | 绑定的代理端口
+
+　　代理的应答可以为值：
+
+　　0X00 成功协商
+
+　　0X01 常见的Socks故障
+
+　　0x02 不允许连接
+
+　　0X03 网络不可到达
+
+　　0X04 主机不可到达
+
+　　0X05 连接被重置
+
+　　0X06 TTL 失效
+
+　　0X07 命令不支持
+
+　　0X08 地址类型不支持
+
+　　0X09 一直到0xff都保留
+
+　　代理的地址指客户端需要发给那一个IP，绑定的端口指代理将在哪一个端口上为客户接收数据并转发出去。地址类型、地址参照上面的解释。
+
+　　通过以上的TCP协商几个步骤后，现在客户端明确了自己将需要发送的UDP数据发给代理服务器的某个IP的某个端口了。代理服务器也知道是哪一个IP发送数据报给自己，如果接收到由于转发此UDP数据报而从远端目标主机传回的数据报，他需要根据协议将收到的数据报返回给客户的特定端口。此特定端口就是此步骤中字节序列中绑定的代理端口
+
+　　在传输UDP数据时，由于通过代理，所以需要按照一定的格式进行包装，在需要传送的数据之前添加一个报头，具体为：
+
+　　保留2字节的0 | 是否数据报分段重组标志 | 地址类型 | 将要发到代理外的目标地址 | 远端目标主机的端口 |　需要通过代理传送出去的数据
+
+　　是否数据报分段重组标志为0表示该数据报文是独立的不需要重新组合，其他的表示特定的序列号，以利于UDP报文整合。
+
+　　这里的地址是最终接收此UDP数据的代理外的服务器地址，我们这个例子中就是192。168。0。250。端口就是8100。根据地址类型不同，具体的需要传送的数据起始位置也不同。如果是Ipv4，那么数据从整个UDP报文的10字节处开始，如果是指定了域名，那么就是从262处开始， Ipv6地址类型就从20处开始为数据字段。这些需要我们在实际传输数据时注意。假如要传送10字节的数据9到96.96.96.96的1024端口，那么传送的数据字节序列大致为：
+
+　　00 00 00 01 60 60 60 60 04 00 09 09 09 …….09
+
+　　保留 是否分段重组 Ipv4 96.96.96.96目标主机IP 端口1024 从此处开始为数据
+
+　　而这之后，如果远端的目标主机有数据返回，代理服务器会在将数据传回给UDP 客户端时将数据也做类似上面的封装，即添加一个报头。客户需要接收这个报头，实际上也明确通知UDP 客户端，这个数据报是哪一个服务器发回的。
+
+　　下面就来看一看给出的代码：见附件工程。我将支持Socks5的UDP写成一个Java类，供大家参考。相关解释见注释部分。
+
+　　通过上面分析我们可以大体上总结到透过Socks5进行UDP编程需要注意的几点：
+
+　　1、 Socks5编程的身份验证
+
+　　由于防火墙作用几乎是隔绝内外的非正常连接，而Socket可以通过任何端口连接到外部，所以作为对Socket4的改进，Socket5增加了对socket协议访问的验证功能。这些验证功能没有规定一定采用什么方法，一般看防火墙自身支持以及客户端能够支持什么方法，这意味着作为客户端必须将自己支持的方法在协商阶段之初就告诉代理服务器，而代理服务器自己根据已经实现支持哪种验证方法而选择特定的方法回复客户端。意味着针对不同的代理服务器以及不同的客户端，很可能对于验证方法支持上有区别，需要视具体的应用环境而定。这些增加了Socket5客户端以及Proxy server软件的编写难度，但是增强了安全性。
+
+　　2、 TCP保持重要性
+
+　　要发送穿透代理服务器的UDP数据报，其实首先需要建立客户端到代理服务器的TCP连接，通过一系列的交互，获得代理服务器的许可才能够发送出去（同时代理服务器业记录下连接的在Socks5服务的客户IP和端口），也确保从远端发回的数据能够通过代理服务启发回给某个UDP客户端（因为它登记了一个关于Socket UDP的通路映射）。所以为了发送UDP数据，必须建立和保持这个TCP数据。RFC1928也提到，不能取得代理服务器的通道后就关闭TCP连接，否则代理服务器以为UDP Socket通过代理的请求已经结束，不需要继续保留UDP的对外Socket映射记录，从而导致每发送一次UDP就要重新建立TCP连接协商UDP映射，增加不必要的麻烦。所以，我们需要保持UDP客户端到到代理服务器的TCP连接持久，不必显式关闭它。
+
+　　3、 UDP本地端口选定
+
+　　UDP大多数是同具体端口相关的，所以一定要在同代理服务器协商UDP映射时告知客户端UDP的端口。一来将UDP同某个端口绑定，使得代理服务器接收UDP数据并转发，二来也告诉了代理服务器将来在某个端口发出去后得到的反馈数据也按照线路返回给客户的此端口。这一点很重要，笔者在此处犯了错误导致浪费了很多时间。
+
+　　4、 TCP/UDP连接二重性
+
+　　可以看到Socks5 的使用会占用至少一个TCP连接，这样导致代理服务器的负担很重。所以在具体的应用时，需要考虑关于代理服务器的存在的负载问题。
+
+　　以上即关于UDP穿透Socks5代理的一点心得，希望能够得到大家的指正。
+
+
+
+
+
+☆ RFC 1928意译版(非直译版)
+
+http://www.ietf.org/rfc/rfc1928.txt
+http://www.opencjk.org/~scz/200503311423.txt
+
+SOCKS协议位于传输层(TCP/UDP等)与应用层之间，因而显然地位于网络层(IP)之上。
+诸如IP层报文转发、ICMP协议等等都因太低层而与SOCKS协议无关。
+
+SOCKS 4不支持认证、UDP协议以及远程解析FQDN。SOCKS 5支持。
+
+SOCKS Server缺省侦听在1080/TCP口。这是SOCKS Client连接到SOCKS Server之后发
+送的第一个报文:
+
++----+----------+----------+
+|VER | NMETHODS | METHODS  |
++----+----------+----------+
+| 1  |    1     | 1 to 255 |
++----+----------+----------+
+
+对于SOCKS 5，VER字段为0x05，版本4对应0x04。NMETHODS字段指定METHODS域的字节
+数。不知NMETHODS可以为0否，看上图所示，可取值[1,255]。METHODS字段有多少字
+节(假设不重复)，就意味着SOCKS Client支持多少种认证机制。
+
+SOCKS Server从METHODS字段中选中一个字节(一种认证机制)，并向SOCKS Client发
+送响应报文:
+
++----+--------+
+|VER | METHOD |
++----+--------+
+| 1  |   1    |
++----+--------+
+
+目前可用METHOD值有:
+
+0x00        NO AUTHENTICATION REQUIRED(无需认证)
+0x01        GSSAPI
+0x02        USERNAME/PASSWORD(用户名/口令认证机制)
+0x03-0x7F   IANA ASSIGNED
+0x80-0xFE   RESERVED FOR PRIVATE METHODS(私有认证机制)
+0xFF        NO ACCEPTABLE METHODS(完全不兼容)
+
+如果SOCKS Server响应以0xFF，表示SOCKS Server与SOCKS Client完全不兼容，
+SOCKS Client必须关闭TCP连接。认证机制协商完成后，SOCKS Client与
+SOCKS Server进行认证机制相关的子协商，参看其它文档。为保持最广泛兼容性，
+SOCKS Client、SOCKS Server必须支持0x01，同时应该支持0x02。
+
+认证机制相关的子协商完成后，SOCKS Client提交转发请求:
+
++----+-----+-------+------+----------+----------+
+|VER | CMD |  RSV  | ATYP | DST.ADDR | DST.PORT |
++----+-----+-------+------+----------+----------+
+| 1  |  1  | X'00' |  1   | Variable |    2     |
++----+-----+-------+------+----------+----------+
+
+VER         对于版本5这里是0x05
+
+CMD         可取如下值:
+
+            0x01    CONNECT
+            0x02    BIND
+            0x03    UDP ASSOCIATE
+
+RSV         保留字段，必须为0x00
+
+ATYP        用于指明DST.ADDR域的类型，可取如下值:
+
+            0x01    IPv4地址
+            0x03    FQDN(全称域名)
+            0x04    IPv6地址
+
+DST.ADDR    CMD相关的地址信息，不要为DST所迷惑
+
+            如果是IPv4地址，这里是big-endian序的4字节数据
+
+            如果是FQDN，比如"www.nsfocus.net"，这里将是:
+
+            0F 77 77 77 2E 6E 73 66 6F 63 75 73 2E 6E 65 74
+
+            注意，没有结尾的NUL字符，非ASCIZ串，第一字节是长度域
+
+            如果是IPv6地址，这里是16字节数据。
+
+DST.PORT    CMD相关的端口信息，big-endian序的2字节数据
+
+SOCKS Server评估来自SOCKS Client的转发请求并发送响应报文:
+
++----+-----+-------+------+----------+----------+
+|VER | REP |  RSV  | ATYP | BND.ADDR | BND.PORT |
++----+-----+-------+------+----------+----------+
+| 1  |  1  | X'00' |  1   | Variable |    2     |
++----+-----+-------+------+----------+----------+
+
+VER         对于版本5这里是0x05
+
+REP         可取如下值:
+
+            0x00        成功
+            0x01        一般性失败
+            0x02        规则不允许转发
+            0x03        网络不可达
+            0x04        主机不可达
+            0x05        连接拒绝
+            0x06        TTL超时
+            0x07        不支持请求包中的CMD
+            0x08        不支持请求包中的ATYP
+            0x09-0xFF   unassigned
+
+RSV         保留字段，必须为0x00
+
+ATYP        用于指明BND.ADDR域的类型
+
+BND.ADDR    CMD相关的地址信息，不要为BND所迷惑
+
+BND.PORT    CMD相关的端口信息，big-endian序的2字节数据
+
+1) CONNECT命令
+
+假设CMD为CONNECT，SOCKS Client、SOCKS Server之间通信的相关四元组是:
+
+SOCKSCLIENT.ADDR，SOCKSCLIENT.PORT，SOCKSSERVER.ADDR，SOCKSSERVER.PORT
+
+一般SOCKSSERVER.PORT是1080/TCP。
+
+CONNECT请求包中的DST.ADDR/DST.PORT指明转发目的地。SOCKS Server可以靠
+DST.ADDR、DST.PORT、SOCKSCLIENT.ADDR、SOCKSCLIENT.PORT进行评估，以决定建立
+到转发目的地的TCP连接还是拒绝转发。
+
+假设规则允许转发并且成功建立到转发目的地的TCP连接，相关四元组是:
+
+BND.ADDR，BND.PORT，DST.ADDR，DST.PORT
+
+此时SOCKS Server向SOCKS Client发送的CONNECT响应包中将指明BND.ADDR/BND.PORT。
+注意，BND.ADDR可能不同于SOCKSSERVER.ADDR，SOCKS Server所在主机可能是多目(
+multi-homed)主机。
+
+假设拒绝转发或未能成功建立到转发目的地的TCP连接，CONNECT响应包中REP字段将
+指明具体原因。
+
+响应包中REP非零时表示失败，SOCKS Server必须在发送响应包后不久(不超过10s)关
+闭与SOCKS Client之间的TCP连接。
+
+响应包中REP为零时表示成功。之后SOCKS Client直接在当前TCP连接上发送待转发数
+据。
+
+2) BIND命令
+
+假设CMD为BIND。这多用于FTP协议，FTP协议在某些情况下要求FTP Server主动建立
+到FTP Client的连接，即FTP数据流。
+
+FTP Client - SOCKS Client - SOCKS Server - FTP Server
+
+a. FTP Client试图建立FTP控制流。SOCKS Client向SOCKS Server发送CONNECT请求，
+   后者响应请求，最终FTP控制流建立。
+
+   CONNECT请求包中指明FTPSERVER.ADDR/FTPSERVER.PORT。
+
+b. FTP Client试图建立FTP数据流。SOCKS Client建立新的到SOCKS Server的TCP连
+   接，并在新的TCP连接上发送BIND请求。
+
+   BIND请求包中仍然指明FTPSERVER.ADDR/FTPSERVER.PORT。SOCKS Server应该据此
+   进行评估。
+
+   SOCKS Server收到BIND请求，创建新套接字，侦听在AddrA/PortA上，并向SOCKS
+   Client发送第一个BIND响应包，包中BND.ADDR/BND.PORT即AddrA/PortA。
+
+c. SOCKS Client收到第一个BIND响应包。FTP Client通过FTP控制流向FTP Server发
+   送PORT命令，通知FTP Server应该主动建立到AddrA/PortA的TCP连接。
+
+d. FTP Server收到PORT命令，主动建立到AddrA/PortA的TCP连接，假设TCP连接相关
+   四元组是:
+
+   AddrB，PortB，AddrA，PortA
+
+e. SOCKS Server收到来自FTP Server的TCP连接请求，向SOCKS Client发送第二个
+   BIND响应包，包中BND.ADDR/BND.PORT即AddrB/PortB。然后SOCKS Server开始转
+   发FTP数据流。
+
+下面是一些讨论记录:
+
+scz
+
+为什么需要发送第二个BIND响应包，指明AddrB/PortB的意义何在。
+
+knightmare@apue
+
+指明AddrB/PortB的意义在于，FTP Client出于安全考虑，会检查FTP数据流的源IP、
+源端口，比如FTP数据流的源端只允许是FTPSERVER.ADDR/20。
+
+scz
+
+knightmare的答案是正确的，但我的疑惑可能源于我对SOCKS协议的错误理解，以至
+提出一个产生歧义的问题。事实上应该查看David Koblas的原始文档以理解BIND请求
+的全过程。前面关于FTP数据流的描述部分已做了修正，因此看不出提问的缘由了。
+
+3) UDP ASSOCIATE命令
+
+假设CMD为UDP ASSOCIATE。此时DST.ADDR与DST.PORT指明发送UDP报文时的源IP、源
+端口，而不是UDP转发目的地，SOCKS Server可以据此进行评估以决定是否进行UDP转
+发。如果SOCKS Client发送UDP ASSOCIATE命令时无法提供DST.ADDR与DST.PORT，则
+必须将这两个域置零。
+
+下面是一些讨论记录:
+
+scz
+
+什么情况下SOCKS Client发送UDP ASSOCIATE命令，又无法提供DST.ADDR与DST.PORT，
+或者说出于什么考虑才需要刻意将这两个域置零。有现实例子存在吗。
+
+shixudong@163.com
+
+考虑这种情况:
+
+Application Client - SOCKS Client - NAT - SOCKS Server - Application Server
+
+SOCKS Client在UDP ASSOCIATE命令中指明DST.ADDR/DST.PORT，SOCKS Server靠这些
+信息决定是否转发某个UDP报文。上图中SOCKS Client与SOCKS Server之间有NAT，前
+者无法预知UDP报文经过NAT后源IP、源端口会变成什么样，但肯定会变，因此前者无
+法提前在UDP ASSOCIATE命令中指明DST.ADDR/DST.PORT，如果强行指定非零值，后者
+会检测到待转发UDP报文的源IP、源端口与DST.ADDR/DST.PORT不匹配而拒绝转发。针
+对这种情况，RFC 1928建议SOCKS Client将DST.ADDR/DST.PORT置零，SOCKS Server
+此时不再检查待转发UDP报文的源IP、源端口。
+
+在一条TCP连接上SOCKS Client向SOCKS Server发送了UDP ASSOCIATE命令，后续UDP
+转发要求此TCP连接继续维持，此TCP连接关闭时相应的UDP转发也将中止。换句话说，
+UDP转发必然伴随着一个TCP连接，这将消耗额外的资源。
+
+SOCKS Server向SOCKS Client发送UDP ASSOCIATE响应包，BND.ADDR/BND.PORT指明
+SOCKS Client应向哪里发送待转发UDP报文。
+
+对于UDP转发，SOCKS Client发送出去的UDP数据区如下:
+
++----+------+------+----------+----------+----------+
+|RSV | FRAG | ATYP | DST.ADDR | DST.PORT |   DATA   |
++----+------+------+----------+----------+----------+
+| 2  |  1   |  1   | Variable |    2     | Variable |
++----+------+------+----------+----------+----------+
+
+RSV         保留字段，必须为0x0000
+
+FRAG        Current fragment number
+
+            0x00        这是一个非碎片的SOCKS UDP报文
+            0x01-0x7F   SOCKS碎片序号
+            0x80-0xFF   最高位置1表示碎片序列结束，即这是最后一个SOCKS碎片
+
+ATYP        用于指明DST.ADDR域的类型，可取如下值:
+
+            0x01    IPv4地址
+            0x03    FQDN(全称域名)
+            0x04    IPv6地址
+
+DST.ADDR    转发目标地址
+
+DST.PORT    转发目标端口
+
+DATA        原始UDP数据区
+
+SOCKS Server静静地为SOCKS Client进行UDP转发，并不通知后者转发完成还是被拒
+绝。
+
+FRAG用于支持SOCKS碎片。SOCKS碎片接收方一般实现有重组队列与重组定时器。假设
+重组定时器超时或者低序SOCKS碎片后于高序SOCKS碎片到达重组队列，此时必须重置
+重组队列。重组定时器不得小于5秒。应该尽可能地避免出现SOCKS碎片。
+
+是否支持SOCKS碎片是可选的，如果一个SOCKS实现不支持SOCKS碎片，则必须丢弃所
+有接收到的SOCKS碎片，即那些FRAG字段非零的SOCKS UDP报文。
+
+由于SOCKS实现在支持UDP转发时会在原始UDP数据区前增加一个SOCKS协议相关的头，
+因此为UDP数据区分配空间时要为这个头留足空间:
+
+ATYP    头占用字节  原因
+0x01    10          IPv4地址占4字节，4+6=10
+0x03    262         长度域是一个字节，因此最大0xFF，1+255+6=262
+0x04    20          这里我怀疑是笔误，IPv6地址占16字节，16+6=22
+
+我怀疑RFC 1928这里有笔误，写信询问mleech@bnr.ca、ietf-web@ietf.org去了。

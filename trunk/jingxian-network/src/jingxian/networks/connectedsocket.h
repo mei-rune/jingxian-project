@@ -61,6 +61,7 @@ public:
 	 * @implements write
 	 */
     virtual void write(buffer_chain_t* buffer);
+	virtual void writeBatch(buffer_chain_t** buffers, size_t len);
 
 	/**
 	 * @implements disconnection

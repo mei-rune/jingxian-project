@@ -5,8 +5,16 @@
 
 _jingxian_begin
 
+OutBuffer::OutBuffer()
+{
+}
+
 OutBuffer::~OutBuffer()
 {
+	for(std::vector<buffer_chain_t*>::iterator it = dataBuffer_.begin()
+		; it != dataBuffer_.end(); ++it)
+		freebuffer(*it);
+	dataBuffer_.clear();
 }
 
 IOutBuffer& OutBuffer::writeBoolean(bool value)
@@ -53,19 +61,22 @@ IOutBuffer& OutBuffer::writeBlob(const void* blob, size_t len)
 	size_t exceptLen = len;
 	const char* ptr = (const char*)blob;
 
-	databuffer_t* data = databuffer_cast(dataBuffer_.tail());
-	if(!is_null(data))
+	if(!dataBuffer_.empty())
 	{
-		size_t capacity = data->ptr + data->capacity - data->end;
-		::memcpy(data->end, ptr, capacity);
-		data->end += capacity;
-		ptr += capacity;
-		exceptLen -= capacity;
+		databuffer_t* data = databuffer_cast(dataBuffer_[dataBuffer_.size() - 1]);
+		if(!is_null(data))
+		{
+			size_t capacity = data->ptr + data->capacity - data->end;
+			::memcpy(data->end, ptr, capacity);
+			data->end += capacity;
+			ptr += capacity;
+			exceptLen -= capacity;
+		}
 	}
 
 	size_t bytes = max(exceptLen, 100 );
-	data = allocate(bytes);
-	dataBuffer_.push((buffer_chain_t*)data);
+	databuffer_t* data = allocate(bytes);
+	dataBuffer_.push_back((buffer_chain_t*)data);
 
 	memcpy(data->end, ptr, exceptLen);
 	data->end += exceptLen;
@@ -74,9 +85,14 @@ IOutBuffer& OutBuffer::writeBlob(const void* blob, size_t len)
 	return *this;
 }
 
-Buffer<buffer_chain_t>& OutBuffer::rawBuffer()
+std::vector<buffer_chain_t*>& OutBuffer::dataBuffer()
 {
 	return dataBuffer_;
+}
+
+void OutBuffer::releaseBuffer()
+{
+	dataBuffer_.clear();
 }
 
 int OutBuffer::beginTranscation()

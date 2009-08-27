@@ -44,10 +44,15 @@ public:
         /**
          * 发送数据（注意它是异步的  )
          * @param[ in ] buffer 待发送的数据块
-         * @param[ in ] length 数据长度
-		 * @remarks 应调用context的 outBuffer 对象的方法
          */
-        //virtual void write(buffer_chain_t* buffer) = 0;
+        virtual void write(buffer_chain_t* buffer) = 0;
+
+		/**
+         * 发送多块数据（注意它是异步的  )
+         * @param[ in ] buffers 待发送的数据块数组指针
+         * @param[ in ] len 数据块的个数
+         */
+        virtual void writeBatch(buffer_chain_t** buffers, size_t len) = 0;
 
         /**
          * 关闭连接
