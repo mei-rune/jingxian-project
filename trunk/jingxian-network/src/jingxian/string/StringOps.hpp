@@ -19,19 +19,19 @@ namespace detail
 	class StringOp
 	{
 	public:
-		static void* malloc( size_t size )
+		static charT* malloc( size_t size )
 		{
-			return ::malloc( size );
+			return (charT*)::my_malloc(size);
 		}
 
 		static charT* dup( const charT* p )
 		{
-			return string_traits< charT>::strdup( p );
+			return string_traits< charT>::strdup(p);
 		}
 
 		static void free( void* p)
 		{
-			::free( p );
+			::my_free(p);
 		}
 	};
 };

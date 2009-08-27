@@ -261,14 +261,19 @@ struct string_traits<char_t>
 	}
 #pragma warning(default: 4996)
 
+	inline static char_type *malloc(size_t len)
+	{
+		return (char_type*)::my_malloc( sizeof(char_type)*len );
+	}
+
 	inline static char_type *strdup( const char_type *strSource )
 	{
-		return ::_strdup( strSource );
+		return ::my_strdup( strSource );
 	}
 
 	inline static void free( char_type *strSource )
 	{
-		return ::free( strSource );
+		return ::my_free( strSource );
 	}
 
 	///反转字符串
@@ -562,14 +567,19 @@ struct string_traits<wchar_t>
 	}
 #pragma warning(default: 4996)
 
+	inline static char_type *malloc(size_t len)
+	{
+		return (char_type*)::my_malloc( sizeof(char_type)*len );
+	}
+
 	inline static  char_type *strdup( const char_type *strSource )
 	{
-		return ::_wcsdup( strSource );
+		return ::my_wcsdup( strSource );
 	}
 
 	inline static void free( char_type *strSource )
 	{
-		return ::free( strSource );
+		return ::my_free( strSource );
 	}
 
 	///反转字符串

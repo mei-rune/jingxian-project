@@ -17,7 +17,7 @@ AcceptCommand::AcceptCommand(TCPAcceptor* acceptor
 , listener_(acceptor->handle())
 , listenAddr_(acceptor->bindPoint())
 , socket_(WSASocket(AF_INET,SOCK_STREAM,IPPROTO_TCP,0,0,WSA_FLAG_OVERLAPPED))
-, ptr_((char*)malloc(sizeof (sockaddr_in)*2 + sizeof (sockaddr)*2 + 1000))
+, ptr_((char*)my_malloc(sizeof (sockaddr_in)*2 + sizeof (sockaddr)*2 + 1000))
 , len_(sizeof (sockaddr_in)*2 + sizeof (sockaddr)*2 + 1000)
 {
 	memset( ptr_, 0, len_);
@@ -25,7 +25,7 @@ AcceptCommand::AcceptCommand(TCPAcceptor* acceptor
 
 AcceptCommand::~AcceptCommand()
 {
-	free( ptr_ );
+	my_free( ptr_ );
 	ptr_ = null_ptr;
 
 	if( INVALID_SOCKET == socket_ )

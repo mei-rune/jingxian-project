@@ -245,5 +245,9 @@ typedef  int errno_t;
 typedef DWORD errcode_t;
 #define my_free free
 #define my_malloc malloc
+#define my_calloc calloc
+#define my_realloc realloc
+#define my_strdup _strdup
+#define my_wcsdup _wcsdup
 
 #endif // _config_h_

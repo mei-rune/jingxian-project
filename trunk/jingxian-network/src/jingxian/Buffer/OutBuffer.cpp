@@ -42,7 +42,7 @@ IOutBuffer& OutBuffer::writeInt64(const int64_t& value)
 
 databuffer_t* OutBuffer::allocate(size_t len)
 {
-	databuffer_t* result = (databuffer_t*)calloc(1,sizeof(databuffer_t)+len);
+	databuffer_t* result = (databuffer_t*)my_calloc(1,sizeof(databuffer_t)+len);
 	result->capacity = len;
 	result->start = result->end = result->ptr;
 	return result;

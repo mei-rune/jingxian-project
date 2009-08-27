@@ -176,13 +176,13 @@ _jingxian networking::initializeScket();
     {
 		log4cpp::PropertyConfigurator::configure(::simplify (::combinePath(getApplicationDirectory(), "log4cpp.config")));
     }
-	catch (const std::exception& e)
-    {
-		std::cerr << e.what() << std::endl;
-    }
     catch (const log4cpp::ConfigureFailure& e)
     {
         log4cpp::Category::getRoot().warn(e.what());
+    }
+	catch (const std::exception& e)
+    {
+		std::cerr << e.what() << std::endl;
     }
 
 	

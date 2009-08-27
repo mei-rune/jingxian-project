@@ -44,7 +44,7 @@ public:
 
 	virtual buffer_chain_t* createBuffer(const ProtocolContext& context, const Buffer<buffer_chain_t>& lastBuffer, const buffer_chain_t* current)
 	{
-		databuffer_t* result = (databuffer_t*)calloc(1,sizeof(databuffer_t)+100);
+		databuffer_t* result = (databuffer_t*)my_calloc(1,sizeof(databuffer_t)+100);
 		result->capacity = 100;
 		result->start = result->end = result->ptr;
 		return (buffer_chain_t*)result;
