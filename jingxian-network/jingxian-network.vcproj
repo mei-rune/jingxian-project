@@ -66,7 +66,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="Ws2_32.lib Mswsock.lib gtestd.lib log4cppD.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(LOG4CPP_ROOT)\msvc6\Debug&quot;;&quot;$(GOOGLETEST_ROOT)\msvc\Debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(LOG4CPP_ROOT)\msvc\Debug&quot;;&quot;$(GOOGLETEST_ROOT)\msvc\Debug&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
