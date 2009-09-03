@@ -7,7 +7,7 @@
 # pragma once
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
-# include "jingxian/string/string.hpp"
+# include "jingxian/string/string.h"
 
 _jingxian_begin
 

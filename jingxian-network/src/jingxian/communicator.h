@@ -11,7 +11,7 @@
 // Include files
 # include "jingxian/buffer.h"
 # include "jingxian/endpoint.h"
-# include "jingxian/exception.hpp"
+# include "jingxian/exception.h"
 # include "jingxian/IConcurrentPort.h"
 
 _jingxian_begin

@@ -10,7 +10,7 @@
 
 // Include files
 # include <hash_map>
-# include "jingxian/string/string.hpp"
+# include "jingxian/string/string.h"
 # include "jingxian/logging/logging.h"
 # include "jingxian/IReactorCore.h"
 # include "jingxian/networks/commands/ICommand.h"

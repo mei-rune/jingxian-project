@@ -11,7 +11,7 @@
 // Include files
 # include "Winsock2.h"
 # include "Mswsock.h"
-# include "jingxian/string/string.hpp"
+# include "jingxian/string/string.h"
 # include "jingxian/buffer/IBuffer.h"
 
 _jingxian_begin

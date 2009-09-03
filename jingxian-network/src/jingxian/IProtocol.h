@@ -9,7 +9,7 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
-# include "jingxian/exception.hpp"
+# include "jingxian/exception.h"
 # include "jingxian/Buffer/IBuffer.H"
 # include "jingxian/Buffer/Buffer.H"
 

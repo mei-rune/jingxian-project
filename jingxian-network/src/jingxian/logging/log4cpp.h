@@ -10,7 +10,7 @@
 
 // Include files
 # include <iostream>
-# include "jingxian/string/string.hpp"
+# include "jingxian/string/string.h"
 # include "jingxian/logging/ILogger.h"
 # include "jingxian/logging/ITracer.h"
 

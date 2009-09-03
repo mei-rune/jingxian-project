@@ -10,7 +10,7 @@
 
 // Include files
 # include <assert.h>
-# include "jingxian/string/string.hpp"
+# include "jingxian/string/string.h"
 # include "jingxian/jingxian_export.h"
 
 _jingxian_begin

@@ -409,7 +409,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\string.hpp"
+				RelativePath=".\src\jingxian\string\string.h"
 				>
 			</File>
 			<File
@@ -550,7 +550,7 @@
 			>
 		</File>
 		<File
-			RelativePath=".\src\jingxian\exception.hpp"
+			RelativePath=".\src\jingxian\exception.h"
 			>
 		</File>
 		<File
