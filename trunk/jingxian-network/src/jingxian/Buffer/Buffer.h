@@ -9,6 +9,9 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
+# include <Winsock2.h>
+# include <Mswsock.h>
+# include <vector>
 
 _jingxian_begin
 

@@ -12,7 +12,9 @@
 # include <Winsock2.h>
 # include <Mswsock.h>
 # include <vector>
-# include "jingxian/exception.hpp"
+
+# include "jingxian/exception.h"
+# include "jingxian/buffer/buffer.h"
 
 _jingxian_begin
 

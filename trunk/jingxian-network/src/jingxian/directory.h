@@ -35,8 +35,8 @@
 # include <dirent.h>
 #endif
 
-# include "jingxian/exception.hpp"
-# include "jingxian/string/string.hpp"
+# include "jingxian/exception.h"
+# include "jingxian/string/string.h"
 
 _jingxian_begin
 

@@ -9,8 +9,8 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
-# include "jingxian/string/string.hpp"
-# include "jingxian/Exception.hpp"
+# include "jingxian/string/string.h"
+# include "jingxian/exception.h"
 # include "jingxian/ITransport.h"
 
 _jingxian_begin

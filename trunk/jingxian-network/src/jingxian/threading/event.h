@@ -13,8 +13,8 @@
 #ifdef JINGXIAN_MT
 
 // Include files
-# include "jingxian/string/string.hpp"
-# include "jingxian/exception.hpp"
+# include "jingxian/string/string.h"
+# include "jingxian/exception.h"
 
 _jingxian_begin
 
