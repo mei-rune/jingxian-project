@@ -9,8 +9,8 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
+# include "jingxian/linklist.h"
 # include "jingxian/IProtocol.h"
-# include "jingxian/buffer/buffer-internal.h"
 # include "jingxian/buffer/OutBuffer.h"
 # include "jingxian/buffer/InBuffer.h"
 
@@ -86,9 +86,18 @@ public:
 		return context.inBytes();
 	}
 
-	virtual buffer_chain_t* createBuffer(const ProtocolContext& context, const Buffer<buffer_chain_t>& lastBuffer, const buffer_chain_t* current)
+	static void freeBuffer(buffer_chain_t* chain, void* context)
+	{
+		my_free(context);
+	}
+
+	virtual buffer_chain_t* createBuffer(const ProtocolContext& context)
 	{
 		databuffer_t* result = (databuffer_t*)my_calloc(1,sizeof(databuffer_t)+100);
+		result->chain.context = result;
+		result->chain.freebuffer = &freeBuffer;
+		result->chain.type = BUFFER_ELEMENT_MEMORY;
+
 		result->capacity = 100;
 		result->start = result->end = result->ptr;
 		return (buffer_chain_t*)result;

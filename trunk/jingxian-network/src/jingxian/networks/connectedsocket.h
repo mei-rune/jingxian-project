@@ -17,8 +17,8 @@
 # include "jingxian/logging/logging.h"
 # include "jingxian/networks/IOCPServer.h"
 # include "jingxian/networks/TCPContext.h"
-# include "jingxian/networks/IncomingBuffer.h"
-# include "jingxian/networks/OutgoingBuffer.h"
+# include "jingxian/networks/buffer/IncomingBuffer.h"
+# include "jingxian/networks/buffer/OutgoingBuffer.h"
 
 _jingxian_begin
 
@@ -45,7 +45,7 @@ public:
 	/**
 	 * @implements bindProtocol
 	 */
-    virtual void bindProtocol(IProtocol* protocol);
+    virtual IProtocol* bindProtocol(IProtocol* protocol);
 
 	/**
 	 * @implements startReading

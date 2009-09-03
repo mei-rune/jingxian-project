@@ -9,8 +9,9 @@
 
 // Include files
 # include <Winsock2.h>
-# include "jingxian/buffer/IBuffer.H"
-# include "jingxian/buffer/Buffer.H"
+# include "jingxian/linklist.h"
+# include "jingxian/buffer/buffer.h"
+# include "jingxian/buffer/IBuffer.h"
 # include "jingxian/networks/commands/ICommand.H"
 
 _jingxian_begin
@@ -32,7 +33,7 @@ public:
 
 	bool increaseBytes(size_t len);
 
-	const Buffer<buffer_chain_t>& buffer() const;
+	const linklist<buffer_chain_t>& buffer() const;
 
 	const buffer_chain_t* current() const;
 
@@ -42,7 +43,7 @@ private:
 	NOCOPY(IncomingBuffer);
 
 	ConnectedSocket* connectedSocket_;
-	Buffer<buffer_chain_t> dataBuffer_;
+	linklist<buffer_chain_t> dataBuffer_;
 	buffer_chain_t* current_;
 };
 

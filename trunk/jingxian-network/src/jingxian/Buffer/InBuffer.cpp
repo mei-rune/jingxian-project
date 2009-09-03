@@ -327,7 +327,7 @@ size_t InBuffer::search(char ch) const
 		len += (*memory_)[i].len;
 	}
 
-	return IBuffer::npos;
+	return buffer_type::npos;
 }
 
 size_t InBuffer::search(wchar_t ch) const
@@ -342,13 +342,13 @@ inline size_t mem_search(const void* mem, size_t searchLen, const void* context,
 		if(!is_null(::memcmp(mem, context, len)))
 			return i;
 	}
-	return IBuffer::npos;
+	return buffer_type::npos;
 }
 
 size_t InBuffer::search(const void* context,size_t len) const
 {
 	if(is_null(context) || 0 == len || size() < len)
-		return IBuffer::npos;
+		return buffer_type::npos;
 
 	if(1 == len)
 		return search(*(char*)context);
@@ -393,7 +393,7 @@ size_t InBuffer::search(const void* context,size_t len) const
 
 				searchLen = tmpLen;
 				size_t index = mem_search(tmpPtr, searchLen, context, len);
-				if( IBuffer::npos != index )
+				if( buffer_type::npos != index )
 				{
 					seekLen += index;
 					return seekLen;
@@ -406,7 +406,7 @@ size_t InBuffer::search(const void* context,size_t len) const
 			// 计算当前内存块要搜索的长度,并搜索当前的内存块,
 			searchLen = (count - len + 1);
 			size_t index = mem_search(ptr, searchLen, context, len);
-			if( IBuffer::npos != index )
+			if( buffer_type::npos != index )
 			{
 				seekLen += index;
 				return seekLen;
@@ -427,7 +427,7 @@ size_t InBuffer::search(const void* context,size_t len) const
 			// 计算当前内存块要搜索的长度,并搜索当前的内存块,
 			searchLen = (tmpLen - len + 1);
 			size_t index = mem_search(tmpPtr, searchLen, context, len);
-			if( IBuffer::npos != index )
+			if( buffer_type::npos != index )
 			{
 				seekLen += index;
 				return seekLen;
@@ -441,20 +441,20 @@ size_t InBuffer::search(const void* context,size_t len) const
 		}
 
 		if((*memory_).size() <= i)
-			return IBuffer::npos;
+			return buffer_type::npos;
 
 		ptr = (*memory_)[i].buf;
 		count = (*memory_)[i].len;
 		++i;
 	}
 	while(true);
-	return IBuffer::npos;
+	return buffer_type::npos;
 }
 
 size_t InBuffer::searchAny(const char* charset) const
 {
 	if(is_null(charset))
-		return IBuffer::npos;
+		return buffer_type::npos;
 
 	size_t charsetLen = string_traits<char>::strlen(charset);
 	if(1 == charsetLen)
@@ -482,7 +482,7 @@ size_t InBuffer::searchAny(const char* charset) const
 		}
 		len += (*memory_)[i].len;
 	}
-	return IBuffer::npos;
+	return buffer_type::npos;
 }
 
 size_t InBuffer::searchAny(const wchar_t* charset) const

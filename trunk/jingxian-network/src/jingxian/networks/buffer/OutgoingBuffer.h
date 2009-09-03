@@ -11,8 +11,9 @@
 // Include files
 # include <Winsock2.h>
 # include <queue>
+# include "jingxian/linklist.h"
+# include "jingxian/buffer/buffer.h"
 # include "jingxian/buffer/IBuffer.H"
-# include "jingxian/buffer/Buffer.H"
 # include "jingxian/networks/commands/ICommand.H"
 
 
@@ -38,7 +39,7 @@ public:
 private:
 	NOCOPY(OutgoingBuffer);
 	ConnectedSocket* connectedSocket_;
-	Buffer<buffer_chain_t> buffer_;
+	linklist<buffer_chain_t> buffer_;
 };
 
 
