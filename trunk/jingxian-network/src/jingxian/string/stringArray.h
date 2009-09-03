@@ -11,8 +11,8 @@
 // Include files
 # include <ctype.h>
 # include "jingxian/exception.h"
-# include "jingxian/string/os_string.hpp"
-# include "jingxian/string/stringOps.hpp"
+# include "jingxian/string/os_string.h"
+# include "jingxian/string/stringOps.h"
 
 _jingxian_begin
 

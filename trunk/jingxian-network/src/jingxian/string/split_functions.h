@@ -11,8 +11,8 @@
 // Include files
 # include <functional>
 # include <list>
-# include "jingxian/string/string_traits.hpp"
-# include "jingxian/string/stringArray.hpp"
+# include "jingxian/string/string_traits.h"
+# include "jingxian/string/stringArray.h"
 
 _jingxian_begin
 

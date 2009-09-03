@@ -8,8 +8,8 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
-# include "jingxian/string/string_traits.hpp"
-# include "jingxian/string/stringOps.hpp"
+# include "jingxian/string/string_traits.h"
+# include "jingxian/string/stringOps.h"
 
 _jingxian_begin
 

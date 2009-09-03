@@ -10,7 +10,7 @@
 
 // Include files
 # include <ctype.h>
-# include "jingxian/string/os_string.hpp"
+# include "jingxian/string/os_string.h"
 
 _jingxian_begin
 

@@ -409,27 +409,27 @@
 			Name="string"
 			>
 			<File
-				RelativePath=".\src\jingxian\string\case_functions.hpp"
+				RelativePath=".\src\jingxian\string\case_functions.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\concat_functions.hpp"
+				RelativePath=".\src\jingxian\string\concat_functions.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\ctype_traits.hpp"
+				RelativePath=".\src\jingxian\string\ctype_traits.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\os_string.hpp"
+				RelativePath=".\src\jingxian\string\os_string.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\replace_functions.hpp"
+				RelativePath=".\src\jingxian\string\replace_functions.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\split_functions.hpp"
+				RelativePath=".\src\jingxian\string\split_functions.h"
 				>
 			</File>
 			<File
@@ -437,39 +437,39 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\string_append_iterator.hpp"
+				RelativePath=".\src\jingxian\string\string_append_iterator.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\string_token_iterator.hpp"
+				RelativePath=".\src\jingxian\string\string_token_iterator.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\string_traits.hpp"
+				RelativePath=".\src\jingxian\string\string_traits.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\stringArray.hpp"
+				RelativePath=".\src\jingxian\string\stringArray.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\StringOps.hpp"
+				RelativePath=".\src\jingxian\string\stringOps.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\stringPtr.hpp"
+				RelativePath=".\src\jingxian\string\stringPtr.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\toString.hpp"
+				RelativePath=".\src\jingxian\string\toString.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\trim_functions.hpp"
+				RelativePath=".\src\jingxian\string\trim_functions.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\with_functions.hpp"
+				RelativePath=".\src\jingxian\string\with_functions.h"
 				>
 			</File>
 		</Filter>

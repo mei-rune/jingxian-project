@@ -12,11 +12,11 @@
 
 // Include files
 # ifdef HAS_BOOST
-# include "boost/tr1/memory.hpp"
-# include "boost/tr1/type_traits.hpp"
+# include "boost/tr1/memory.h"
+# include "boost/tr1/type_traits.h"
 # else
 # include <tr1/memory>
-# include <tr1/type_traits.hpp>
+# include <tr1/type_traits.h>
 # endif
 
 _jingxian_begin

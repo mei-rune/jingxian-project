@@ -9,7 +9,7 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
-#include "jingxian/string/os_string.hpp"
+#include "jingxian/string/os_string.h"
 
 _jingxian_begin
 

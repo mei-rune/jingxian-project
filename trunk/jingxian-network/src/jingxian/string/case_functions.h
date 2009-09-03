@@ -10,7 +10,7 @@
 
 // Include files
 # include <algorithm>
-# include "jingxian/string/ctype_traits.hpp"
+# include "jingxian/string/ctype_traits.h"
 
 _jingxian_begin
 
