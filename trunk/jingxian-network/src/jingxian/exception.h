@@ -10,7 +10,7 @@
 
 // Include files
 #include <stdexcept>
-#include "jingxian/string/string.hpp"
+#include "jingxian/string/string.h"
 #include "jingxian/lastError.h"
 
 _jingxian_begin
