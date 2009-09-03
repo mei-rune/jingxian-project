@@ -15,7 +15,7 @@ ConnectedSocket::ConnectedSocket(IOCPServer* core
 , peer_(peer)
 , state_(connection_status::connected)
 , timeout_(3*1000)
-, protocol_(0)
+, protocol_(null_ptr)
 , isInitialize_(false)
 , stopReading_(false)
 , reading_(false)
@@ -39,9 +39,11 @@ ConnectedSocket::~ConnectedSocket( )
 	tracer_ = null_ptr;
 }
 
-void ConnectedSocket::bindProtocol(IProtocol* protocol)
+IProtocol* ConnectedSocket::bindProtocol(IProtocol* protocol)
 {
+	IProtocol* old = protocol_;
 	protocol_ = protocol;
+	return old;
 }
 
 void ConnectedSocket::initialize()
@@ -330,7 +332,7 @@ void ConnectedSocket::onDisconnected(errcode_t error, const tstring& description
 
 buffer_chain_t* ConnectedSocket::allocateProtocolBuffer()
 {
-	return protocol_->createBuffer(context_, incoming_.buffer(), incoming_.current());
+	return protocol_->createBuffer(context_);
 }
 
 _jingxian_end

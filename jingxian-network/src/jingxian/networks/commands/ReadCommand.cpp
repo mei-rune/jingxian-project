@@ -31,7 +31,7 @@ void ReadCommand::on_complete(size_t bytes_transferred
 	}
 	else if (0 == bytes_transferred)
 	{
-		transport_->onError(transport_mode::Receive, error, _T("读0个字节"));
+		transport_->onError(transport_mode::Receive, error, _T("对方主动关闭!"));
 		return;
 	}
 	else

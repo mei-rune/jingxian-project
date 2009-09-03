@@ -10,6 +10,7 @@
 
 // Include files
 # include "jingxian/Buffer/BaseBuffer.H"
+# include "jingxian/Buffer/IInBuffer.H"
 
 _jingxian_begin
 

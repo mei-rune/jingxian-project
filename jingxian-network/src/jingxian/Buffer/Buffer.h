@@ -1,6 +1,6 @@
 
-#ifndef _InternalBuffer_H_
-#define _InternalBuffer_H_
+#ifndef _Buffer_H_
+#define _Buffer_H_
 
 #include "jingxian/config.h"
 
@@ -11,7 +11,6 @@
 // Include files
 # include <Winsock2.h>
 # include <Mswsock.h>
-# include <vector>
 
 _jingxian_begin
 
@@ -59,6 +58,46 @@ inline void freebuffer(buffer_chain_t* buf)
 		buf->freebuffer(buf, buf->context);
 }
 
+void freeBuffer(buffer_chain_t* chain, void* context);
+
+
+const int BUFFER_ELEMENT_MEMORY = 1;
+const int BUFFER_ELEMENT_FILE = 2;
+const int BUFFER_ELEMENT_PACKET = 3;
+
+typedef struct databuffer
+{
+	buffer_chain_t chain;
+	// 内存块大小（可选值，为0时为无效值）
+	size_t capacity;
+	// 数据在 buf 的起始位置
+	char* start;
+	// 数据在 buf 的结束位置
+    char* end;
+    // 数据内存指针
+    char ptr[1];
+} databuffer_t;
+
+typedef struct filebuffer
+{
+	buffer_chain_t chain;
+	HANDLE file;
+	DWORD  write_bytes;
+	DWORD  bytes_per_send;
+    TRANSMIT_FILE_BUFFERS buf;
+} filebuffer_t;
+
+typedef struct packetbuffer
+{
+	buffer_chain_t chain;
+	
+	DWORD element_count;
+	DWORD send_size;
+
+	TRANSMIT_PACKETS_ELEMENT packetArray[1];
+
+} packetbuffer_t;
+
 _jingxian_end
 
-#endif //_InternalBuffer_H_
+#endif //_Buffer_H_

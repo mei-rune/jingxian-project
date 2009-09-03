@@ -18,8 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)$(ConfigurationName)\tmp"
 			ConfigurationType="1"
 			CharacterSet="2"
 			>
@@ -257,14 +257,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\networks\IncomingBuffer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\networks\IncomingBuffer.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\jingxian\networks\IOCPServer.cpp"
 				>
 			</File>
@@ -278,14 +270,6 @@
 			</File>
 			<File
 				RelativePath=".\src\jingxian\networks\networking.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\networks\OutgoingBuffer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\networks\OutgoingBuffer.h"
 				>
 			</File>
 			<File
@@ -361,6 +345,46 @@
 				</File>
 				<File
 					RelativePath=".\src\jingxian\networks\commands\WriteCommand.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="buffer"
+				>
+				<File
+					RelativePath=".\src\jingxian\networks\buffer\buffer-internal.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\buffer\buffer-internal.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\buffer\FileBufferHandler.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\buffer\IncomingBuffer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\buffer\IncomingBuffer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\buffer\MemoryBufferHandler.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\buffer\OutgoingBuffer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\buffer\OutgoingBuffer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\buffer\PacketBufferHandler.h"
 					>
 				</File>
 			</Filter>
@@ -493,14 +517,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\Buffer\buffer-internal.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\Buffer\buffer-internal.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\jingxian\Buffer\buffer.h"
 				>
 			</File>
@@ -509,11 +525,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\jingxian\Buffer\IInBuffer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\jingxian\Buffer\InBuffer.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\jingxian\Buffer\InBuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\Buffer\IOutBuffer.h"
 				>
 			</File>
 			<File
@@ -598,11 +622,7 @@
 			>
 		</File>
 		<File
-			RelativePath=".\src\jingxian\Link.h"
-			>
-		</File>
-		<File
-			RelativePath=".\src\jingxian\List.h"
+			RelativePath=".\src\jingxian\linklist.h"
 			>
 		</File>
 		<File

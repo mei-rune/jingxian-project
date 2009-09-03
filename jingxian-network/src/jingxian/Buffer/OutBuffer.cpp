@@ -5,6 +5,17 @@
 
 _jingxian_begin
 
+void freeBuffer(buffer_chain_t* chain, void* context)
+{
+		my_free(context);
+}
+
+inline databuffer_t* databuffer_cast(buffer_chain_t* chain)
+{
+	assert( BUFFER_ELEMENT_MEMORY == chain->type);
+	return (databuffer_t*)chain;
+}
+
 OutBuffer::OutBuffer()
 {
 }
@@ -51,6 +62,11 @@ IOutBuffer& OutBuffer::writeInt64(const int64_t& value)
 databuffer_t* OutBuffer::allocate(size_t len)
 {
 	databuffer_t* result = (databuffer_t*)my_calloc(1,sizeof(databuffer_t)+len);
+	
+		result->chain.context = result;
+		result->chain.freebuffer = &freeBuffer;
+		result->chain.type = BUFFER_ELEMENT_MEMORY;
+
 	result->capacity = len;
 	result->start = result->end = result->ptr;
 	return result;
