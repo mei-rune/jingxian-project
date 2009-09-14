@@ -644,6 +644,14 @@
 		<Filter
 			Name="utilities"
 			>
+			<File
+				RelativePath=".\src\jingxian\utilities\StackTracer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\utilities\StackTracer.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\src\jingxian\AbstractServer.h"
