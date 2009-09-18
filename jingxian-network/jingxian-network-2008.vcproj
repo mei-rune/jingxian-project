@@ -65,9 +65,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib Mswsock.lib log4cppd.lib"
+				AdditionalDependencies="Ws2_32.lib Mswsock.lib libLog4CPPd.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(LOG4CPP_ROOT)\msvc\debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(LOG4CPP_ROOT)\msvc\debug\vs2008&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				RandomizedBaseAddress="1"

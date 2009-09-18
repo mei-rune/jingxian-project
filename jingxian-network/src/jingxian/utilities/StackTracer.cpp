@@ -267,7 +267,8 @@ public:
             m_hDbhHelp = LoadLibrary(szTemp);
           }
         }
-          // Still not found? Then try to load the 64-Bit version:
+        
+	// Still not found? Then try to load the 64-Bit version:
         if ( (m_hDbhHelp == NULL) && (GetEnvironmentVariable(_T("ProgramFiles"), szTemp, 4096) > 0) )
         {
           _tcscat_s(szTemp, _T("\\Debugging Tools for Windows 64-Bit\\dbghelp.dll"));
