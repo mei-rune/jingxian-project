@@ -30,7 +30,7 @@ public:
 
 	virtual int64_t getInt64(const tstring& key, int64_t defaultValue=0) const = 0;
 
-	virtual const tstring& getString(const tstring& key, const tstring& defaultValue = "") const = 0;
+	virtual const tstring& getString(const tstring& key, const tstring& defaultValue = _T("")) const = 0;
 
 	virtual void setBoolean(const tstring& key, bool value) = 0;
 

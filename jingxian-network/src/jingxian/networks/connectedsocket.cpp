@@ -76,7 +76,7 @@ void ConnectedSocket::stopReading()
 void ConnectedSocket::write(buffer_chain_t* buffer)
 {
 	if(is_null(buffer))
-		ThrowException1(ArgumentNullException, "buffer");
+		ThrowException1(ArgumentNullException, _T("buffer"));
 
 	outgoing_.send(buffer);
 	doWrite();
@@ -86,7 +86,7 @@ void ConnectedSocket::write(buffer_chain_t* buffer)
 void ConnectedSocket::writeBatch(buffer_chain_t** buffers, size_t len)
 {
 	if(is_null(buffers))
-		ThrowException1(ArgumentNullException, "buffers");
+		ThrowException1(ArgumentNullException, _T("buffers"));
 
 	for(size_t i = 0; i < len; ++i)
 	{
@@ -265,14 +265,14 @@ void ConnectedSocket::onRead(size_t bytes_transferred)
 	}
 	catch(const Exception& ex)
 	{
-		tstring err = ::concat<tstring>(_T("计算用户读字节数时发生异常 - "), ex.what());
+		tstring err = ::concat<tstring>(_T("计算用户读字节数时发生异常 - "), toTstring(ex.what()));
 		TP_FATAL(tracer_, transport_mode::Receive, _T("计算用户读字节数时发生异常 ") << ex);
 		doDisconnect(transport_mode::Receive, 0, err);
 		return;
 	}
 	catch(const std::exception& e)
 	{
-		tstring err = ::concat<tstring>(_T("计算用户读字节数时发生异常 - "), e.what());
+		tstring err = ::concat<tstring>(_T("计算用户读字节数时发生异常 - "), toTstring(e.what()));
 		TP_FATAL(tracer_, transport_mode::Receive, err);
 		doDisconnect(transport_mode::Receive, 0, err);
 		return;

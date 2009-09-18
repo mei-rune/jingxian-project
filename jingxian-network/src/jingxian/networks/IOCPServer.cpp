@@ -14,7 +14,7 @@ IOCPServer::IOCPServer(void)
 	, _logger( null_ptr )
 	, toString_( _T("IOCPServer") )
 {
-	_logger = logging::makeLogger("IOCPServer");
+	_logger = logging::makeLogger(_T("IOCPServer"));
 	_acceptorFactories[_T("tcp")] = new TCPAcceptorFactory( this );
 }
 
@@ -277,7 +277,7 @@ IAcceptor* IOCPServer::listenWith(const tchar* endPoint)
 		return null_ptr;
 	}
 	
-	StringArray<tchar> sa = split_with_string( endPoint, "://" );
+	StringArray<tchar> sa = split_with_string( endPoint, _T("://") );
 	if( 2 != sa.size() )
 	{
 		LOG_ERROR( _logger, _T("尝试监听地址 '") << endPoint 

@@ -16,7 +16,7 @@
 _jingxian_begin
 
 #ifdef  _UNICODE
-typedef std::wcout tcout; 
+#define tcout std::wcout
 #else
 #define tcout std::cout
 #endif

@@ -47,7 +47,7 @@ InBuffer::~InBuffer(void)
 void InBuffer::reset(const std::vector<io_mem_buf>* iobuf, size_t totalLength)
 {
 	if(is_null(iobuf))
-		ThrowException1(ArgumentNullException, "iobuf");
+		ThrowException1(ArgumentNullException, _T("iobuf"));
 
 	memory_ = iobuf;
 
