@@ -9,7 +9,7 @@ RunCommand::RunCommand(HANDLE completion_port, IRunnable* runnbale)
 , ptr_(runnbale)
 {
 	if( is_null( runnbale ) )
-		ThrowException1(ArgumentNullException, "runnbale");
+		ThrowException1(ArgumentNullException, _T("runnbale"));
 }
 
 RunCommand::~RunCommand()

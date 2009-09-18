@@ -88,12 +88,12 @@ bool TCPAcceptor::startListening()
 	if(tstring::npos != index)
 	{
 		tstring prefix = endpoint.substr(0, index);
-		if(0 == string_traits<tstring::value_type>::stricmp( prefix.c_str(), "tcp"))
+		if(0 == string_traits<tstring::value_type>::stricmp( prefix.c_str(), _T("tcp")))
 		{
 			addr.sa_family = AF_INET;
 		}
-		else if(0 == string_traits<tstring::value_type>::stricmp( prefix.c_str(), "tcp6")
-			  || 0 == string_traits<tstring::value_type>::stricmp( prefix.c_str(), "tcpv6"))
+		else if(0 == string_traits<tstring::value_type>::stricmp( prefix.c_str(), _T("tcp6"))
+			  || 0 == string_traits<tstring::value_type>::stricmp( prefix.c_str(), _T("tcpv6")))
 		{
 			addr.sa_family = AF_INET6;
 		}
@@ -106,7 +106,7 @@ bool TCPAcceptor::startListening()
 	}
 
 	int len = sizeof(addr);
-	if(SOCKET_ERROR == ::WSAStringToAddress((LPSTR)endpoint.c_str(), addr.sa_family, 0, &addr, &len))
+	if(SOCKET_ERROR == ::WSAStringToAddress((LPTSTR)endpoint.c_str(), addr.sa_family, 0, &addr, &len))
 	{
 		LOG_ERROR( logger_, _T("监听地址 '") << endpoint_ 
 			<< _T("' 格式不正确 - ") << lastError(WSAGetLastError()));

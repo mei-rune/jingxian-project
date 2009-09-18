@@ -26,7 +26,7 @@ public:
 	EchoServer(IOCPServer& core)
 		: AbstractServer( &core )
 	{
-		if(!this->initialize("tcp://0.0.0.0:6543"))
+		if(!this->initialize(_T("tcp://0.0.0.0:6543")))
 		{
 			FATAL(log(), _T("≥ı º ß∞‹"));
 			return;
@@ -174,7 +174,7 @@ _jingxian networking::initializeScket();
 	
 	try
     {
-		log4cpp::PropertyConfigurator::configure(::simplify (::combinePath(getApplicationDirectory(), "log4cpp.config")));
+		log4cpp::PropertyConfigurator::configure(toNarrowString(::simplify (::combinePath(getApplicationDirectory(), _T("log4cpp.config")))));
     }
     catch (const log4cpp::ConfigureFailure& e)
     {

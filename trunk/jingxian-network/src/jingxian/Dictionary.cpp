@@ -6,7 +6,7 @@ _jingxian_begin
 
 inline bool toBoolean(const tstring& s)
 {
-	return s == "true" || s == "1";
+	return s == _T("true") || s == _T("1");
 }
 
 inline int8_t toInt8(const tstring& s, int8_t defaultValue)

@@ -9,7 +9,7 @@ namespace log4cppAdaptor
 {
 
 Logger::Logger(const tchar* nm)
-: logger_(::log4cpp::Category::getInstance(nm))
+: logger_(::log4cpp::Category::getInstance(toNarrowString(nm)))
 {
 }
 
@@ -29,7 +29,7 @@ bool Logger::isFatalEnabled() const
 
 void Logger::fatal(const LogStream& message, const char* file, int line)
 {
-	logger_.fatal(message.str());
+	logger_.fatal(toNarrowString(message.str()));
 }
 
 bool Logger::isErrorEnabled() const
@@ -39,7 +39,7 @@ bool Logger::isErrorEnabled() const
 
 void Logger::error(const LogStream& message, const char* file, int line)
 {
-	logger_.error(message.str());
+	logger_.error(toNarrowString(message.str()));
 }
 
 bool Logger::isInfoEnabled() const
@@ -49,7 +49,7 @@ bool Logger::isInfoEnabled() const
 
 void Logger::info(const LogStream& message, const char* file, int line)
 {
-	logger_.crit(message.str());
+	logger_.crit(toNarrowString(message.str()));
 }
 
 bool Logger::isDebugEnabled() const
@@ -59,7 +59,7 @@ bool Logger::isDebugEnabled() const
 
 void Logger::debug(const LogStream& message, const char* file, int line)
 {
-	logger_.debug(message.str());
+	logger_.debug(toNarrowString(message.str()));
 }
 
 bool Logger::isWarnEnabled() const
@@ -69,7 +69,7 @@ bool Logger::isWarnEnabled() const
 
 void Logger::warn(const LogStream& message, const char* file, int line)
 {
-	logger_.warn(message.str());
+	logger_.warn(toNarrowString(message.str()));
 }
 
 bool Logger::isTraceEnabled() const
@@ -79,7 +79,7 @@ bool Logger::isTraceEnabled() const
 
 void Logger::trace(const LogStream& message, const char* file, int line)
 {
-	logger_.log(750, message.str());
+	logger_.log(750, toNarrowString(message.str()));
 }
 
 bool Logger::isEnabledFor(const logging::LevelPtr& level) const
@@ -90,7 +90,7 @@ bool Logger::isEnabledFor(const logging::LevelPtr& level) const
 void Logger::log(const logging::LevelPtr& level, const LogStream& message,
 	const char* file, int line)
 {
-	logger_.log(level, message.str());
+	logger_.log(level, toNarrowString(message.str()));
 }
 
 logging::LevelPtr Logger::getLevel() const
@@ -114,7 +114,7 @@ void Logger::clearNDC()
 const tchar* TRANSPORT_MODE[] = { _T(""), _T("Receive"),_T("Send"),_T("Both") };
 
 Tracer::Tracer(const tchar* nm, const tstring& host, const tstring& peer)
-: logger_(::log4cpp::Category::getInstance(nm))
+: logger_(::log4cpp::Category::getInstance(toNarrowString(nm)))
 , name_(null_ptr)
 {
 	size_t len = host.size() + peer.size() + 20;
@@ -122,9 +122,9 @@ Tracer::Tracer(const tchar* nm, const tstring& host, const tstring& peer)
 	memset(name_, 0, len);
 	name_[0] = '[';
 	memcpy(name_ + 1, host.c_str(), host.size());
-	memcpy(name_ + 1 +  host.size(), " - ", 3);
+	memcpy(name_ + 1 +  host.size(), _T(" - "), 3);
 	memcpy(name_ + 4 +  host.size(), peer.c_str(), peer.size());
-	memcpy(name_ + 4 +  host.size() + peer.size(), "]", 1);
+	memcpy(name_ + 4 +  host.size() + peer.size(), _T("]"), 1);
 }
 
 Tracer::~Tracer(void)

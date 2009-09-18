@@ -14,10 +14,22 @@
 **********************************************************************/
 // #pragma once is supported starting with _MCS_VER 1000, 
 // so we need not to check the version (because we only support _MSC_VER >= 1100)!
-#pragma once
 
+#ifndef _StackTracer_h_
+#define _StackTracer_h_
+
+#include "jingxian/config.h"
+
+#if !defined (JINGXIAN_LACKS_PRAGMA_ONCE)
+# pragma once
+#endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
+
+// Include files
 #include <windows.h>
 #include <string>
+#include <sstream>
+
+_jingxian_begin
 
 // special defines for VC5/6 (if no actual PSDK is installed):
 #if _MSC_VER < 1300
@@ -28,6 +40,8 @@ typedef unsigned __int64 SIZE_T, *PSIZE_T;
 typedef unsigned long SIZE_T, *PSIZE_T;
 #endif
 #endif  // _MSC_VER < 1300
+
+
 
 class StackWalkerInternal;  // forward
 class StackTracer
@@ -95,6 +109,11 @@ public:
     LPVOID pUserData = NULL  // optional to identify some data in the 'readMemoryFunction'-callback
     );
 
+  std::string GetCallStack() const
+  {
+	  return m_buffer.str();
+  }
+
 #if _MSC_VER >= 1300
 // due to some reasons, the "STACKWALK_MAX_NAMELEN" must be declared as "public" 
 // in older compilers in order to use it... starting with VC7 we can declare it as "protected"
@@ -127,7 +146,7 @@ protected:
   virtual void OnLoadModule(LPCSTR img, LPCSTR mod, DWORD64 baseAddr, DWORD size, DWORD result, LPCSTR symType, LPCSTR pdbName, ULONGLONG fileVersion);
   virtual void OnCallstackEntry(CallstackEntryType eType, CallstackEntry &entry);
   virtual void OnDbgHelpErr(LPCSTR szFuncName, DWORD gle, DWORD64 addr);
-  void OnOutput(LPCSTR szText) { m_buffer += szText; };
+  void OnOutput(LPCSTR szText) { m_buffer << szText; };
 
   StackWalkerInternal *m_sw;
   HANDLE m_hProcess;
@@ -136,7 +155,7 @@ protected:
   LPSTR m_szSymPath;
 
   int m_options;
-  std::string m_buffer;
+  std::stringstream m_buffer;
 
   static BOOL __stdcall myReadProcMem(HANDLE hProcess, DWORD64 qwBaseAddress, PVOID lpBuffer, DWORD nSize, LPDWORD lpNumberOfBytesRead);
 
@@ -144,3 +163,6 @@ protected:
 };
 
 
+_jingxian_end
+
+#endif

@@ -12,6 +12,7 @@
 #include <stdexcept>
 #include "jingxian/string/string.h"
 #include "jingxian/lastError.h"
+#include "jingxian/utilities/StackTracer.h"
 
 _jingxian_begin
 
@@ -49,6 +50,7 @@ public:
         , fSrcFile( 0 )
         , fSrcLine( 0 )
     {
+		initStackTrace(3);
     }
 
     Exception( const tstring& message )
@@ -56,6 +58,7 @@ public:
         , fSrcFile( 0 )
         , fSrcLine( 0 )
     {
+		initStackTrace(3);
     }
 
     Exception(const char* const srcFile, size_t srcLine , const tstring& message )
@@ -63,6 +66,7 @@ public:
         , fSrcFile( srcFile )
         , fSrcLine(srcLine)
     {
+		initStackTrace(3);
     }
 
     Exception(const char* const srcFile, size_t srcLine , const tstring& message , const Exception& e )
@@ -70,6 +74,7 @@ public:
         , fSrcFile( srcFile )
         , fSrcLine(srcLine)
     {
+		initStackTrace(3);
     }
 
     template< typename E >
@@ -78,13 +83,15 @@ public:
         throw e;
     }
 
-    void dumpFile( tostream& target ) const
+    void dump( tostream& target ) const
     {
             target << _T( "[ file:" )
             << toTstring( getFile() )
             << _T( " line:" )
             << ( int ) getLine()
-            << _T(" ] ");
+            << _T(" ] ")
+			<< std::endl
+			<< _stack;
     }
 
     virtual Exception* clone()
@@ -97,13 +104,13 @@ public:
 		Raise( *this );
 	}
 
-	virtual void print(tostream& target ) const             
-    {
-            target << _T("Exception")
-            << what()
-            << std::endl;
-            dumpFile( target );
-    }
+	virtual void print(tostream& target) const             
+	{
+		target << _T("Exception: ")
+			<< what();
+		dump( target );
+
+	}
 
  #if !_HAS_EXCEPTIONS
 protected:
@@ -114,8 +121,25 @@ protected:
  #endif /* _HAS_EXCEPTIONS */
 
 protected :
+
+	Exception(const Exception& ex)
+		: std::runtime_error(ex)
+		, fSrcFile(ex.fSrcFile)
+		, fSrcLine(ex.fSrcLine)
+		, _stack(ex._stack)
+	{
+	}
+
+	void initStackTrace(int skipFrames)
+	{
+		StackTracer stackWalker( StackTracer::RetrieveLine ); 
+		stackWalker.ShowCallstack( skipFrames ); 
+		_stack = toTstring(stackWalker.GetCallStack());
+	}
+
     const char*     fSrcFile;
     size_t    fSrcLine;
+	tstring   _stack;
 };
 
 inline tostream& operator<<( tostream& target, const Exception& err )
@@ -174,12 +198,11 @@ public:                                                     \
     {                                                       \
         Raise( *this );                                     \
     }                                                       \
-    virtual void print(tostream& Target ) const             \
+    virtual void print(tostream& target) const              \
     {                                                       \
-            Target << MAKE_STRING( theType )                \
-            << what()                                       \
-            << std::endl;                                   \
-            dumpFile( Target );                             \
+            target << MAKE_STRING( theType )                \
+			<< what();										\
+			dump( target );									\
     }                                                       \
 };
 

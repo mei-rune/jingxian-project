@@ -8,6 +8,7 @@
 #include "jingxian/utilities/StackTracer.h"
 
 
+_jingxian_begin
 
 // The "ugly" assembler-implementation is needed for systems before XP
 // If you have a new PSDK and you only compile for XP and later, then you can use 
@@ -1257,3 +1258,6 @@ void StackTracer::OnSymInit(LPCSTR szSearchPath, DWORD symOptions, LPCSTR szUser
 #endif
 	}
 }
+
+
+_jingxian_end

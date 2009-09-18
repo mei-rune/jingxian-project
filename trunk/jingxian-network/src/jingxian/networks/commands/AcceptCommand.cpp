@@ -80,7 +80,7 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 	if(SOCKET_ERROR == WSAAddressToString(remote_addr, remote_size, NULL,buf,&len))
 	{
 		int errCode = ::WSAGetLastError();
-		ErrorCode err(false, errCode, concat<tstring, char*, tstring,char*,tstring>(_T("接受器 '") 
+		ErrorCode err(false, errCode, concat<tstring,tchar*, tstring,tchar*,tstring>(_T("接受器 '") 
 			, listenAddr_
 			, _T("' 获取连接请求返回,获取远程地址失败 -")
 			, lastError(errCode)));
