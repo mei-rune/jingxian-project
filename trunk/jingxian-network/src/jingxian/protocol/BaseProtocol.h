@@ -11,8 +11,10 @@
 // Include files
 # include "jingxian/linklist.h"
 # include "jingxian/IProtocol.h"
+# include "jingxian/ProtocolContext.h"
 # include "jingxian/buffer/OutBuffer.h"
 # include "jingxian/buffer/InBuffer.h"
+# include "jingxian/logging/logging.h"
 
 _jingxian_begin
 

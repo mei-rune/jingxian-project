@@ -19,10 +19,6 @@ namespace proxy
 	{
 		struct Configuration
 		{
-			tstring Name;
-			tstring Version;
-			tstring Manufacturer;
-
 			std::vector<Credential> Credentials;
 			std::vector<tstring> AllowedIPs;
 			std::vector<tstring> BlockingIPs;

@@ -12,6 +12,7 @@
 # include <list>
 # include "jingxian/protocol/proxy/ICredentialPolicy.h"
 
+
 _jingxian_begin
 
 namespace proxy
@@ -30,31 +31,14 @@ namespace proxy
 	{
 	public:
 
-		virtual ~Credentials()
-		{
-		}
+		virtual ~Credentials();
 
-		virtual ICredentialPolicy GetCredential(const std::vector<int>& authTypes)
-		{
-			for(std::list<ICredentialPolicyFactory*>::iterator it = _policies.begin()
-				; it != _policies.end(); ++it)
-			{
-				for(std::vector<int>::const_iterator it2 = authTypes.begin()
-					; it2 != authTypes.end(); ++ it2)
-				{
-					if (*it2 == it->authenticationType())
-						return it->make();
-				}
-			}
-			return new NotSupportedCredentialPolicy();
-		}
+		virtual ICredentialPolicy* GetCredential(const std::vector<int>& authTypes);
 
-		std::list<ICredentialPolicyFactory*>& policies()
-		{
-			return _policies;
-		}
+		std::list<ICredentialPolicyFactory*>& policies();
+
 	private:
-		std::list<ICredentialPolicyFactory*> _policies = new List<ICredentialPolicyFactory*>();
+		std::list<ICredentialPolicyFactory*> _policies;
 	};
 }
 

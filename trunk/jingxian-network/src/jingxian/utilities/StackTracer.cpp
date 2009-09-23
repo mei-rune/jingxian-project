@@ -324,10 +324,10 @@ public:
     // SymSetOptions
     symOptions = this->pSSO(symOptions);
 
-    char buf[StackTracer::STACKWALK_MAX_NAMELEN] = {0};
+    char buf[STACKWALK_MAX_NAMELEN] = {0};
     if (this->pSGSP != NULL)
     {
-      if (this->pSGSP(m_hProcess, buf, StackTracer::STACKWALK_MAX_NAMELEN) == FALSE)
+      if (this->pSGSP(m_hProcess, buf, STACKWALK_MAX_NAMELEN) == FALSE)
         this->m_parent->OnDbgHelpErr("SymGetSearchPath", GetLastError(), 0);
     }
     char szUserName[1024] = {0};
@@ -925,7 +925,7 @@ static LPVOID s_readMemoryFunction_UserData = NULL;
 BOOL StackTracer::ShowCallstack(int skipFramesCount, HANDLE hThread, const CONTEXT *context, PReadProcessMemoryRoutine readMemoryFunction, LPVOID pUserData)
 {
   CONTEXT c;;
-  CallstackEntry csEntry;
+  StackFrame csEntry;
   IMAGEHLP_SYMBOL64 *pSym = NULL;
   StackWalkerInternal::IMAGEHLP_MODULE64_V2 Module;
   IMAGEHLP_LINE64 Line;
@@ -1040,6 +1040,7 @@ BOOL StackTracer::ShowCallstack(int skipFramesCount, HANDLE hThread, const CONTE
       this->OnDbgHelpErr("StackWalk64-Endless-Callstack!", 0, s.AddrPC.Offset);
       break;
     }
+
     if (s.AddrPC.Offset != 0 && frameNum >= skipFramesCount)
     {
       // we seem to have a valid PC
@@ -1127,7 +1128,7 @@ BOOL StackTracer::ShowCallstack(int skipFramesCount, HANDLE hThread, const CONTE
       }
     } // we seem to have a valid PC
 
-    CallstackEntryType et = nextEntry;
+    StackFrameType et = nextEntry;
 	if (frameNum == skipFramesCount)
 	{
 		et = firstEntry;
@@ -1194,7 +1195,7 @@ void StackTracer::OnLoadModule(LPCSTR img, LPCSTR mod, DWORD64 baseAddr, DWORD s
 	}
 }
 
-void StackTracer::OnCallstackEntry(CallstackEntryType eType, CallstackEntry &entry)
+void StackTracer::OnCallstackEntry(StackFrameType eType, StackFrame &entry)
 {
   CHAR buffer[STACKWALK_MAX_NAMELEN];
   if ( (eType != lastEntry) && (entry.offset != 0) )

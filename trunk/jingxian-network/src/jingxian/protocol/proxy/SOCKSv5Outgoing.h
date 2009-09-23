@@ -14,35 +14,30 @@
 
 _jingxian_begin
 
-    public class SOCKSv5Outgoing : public BaseProtocol
-    {
-        public SOCKSv5 _socks;
+namespace proxy
+{
+	class SOCKSv5Protocol;
 
-        public SOCKSv5Outgoing(SOCKSv5 peer)
-        {
-            _socks = peer;
-        }
+	class SOCKSv5Outgoing : public BaseProtocol
+	{
+	public:
+		SOCKSv5Outgoing();
 
-        #region IProtocol ≥…‘±
+		void initialize(SOCKSv5Protocol* socks);
 
-        public override void OnReceived(ProtocolContext context, IOBuffer data)
-        {
-            _socks.Write(data);
-        }
+		void write(const std::vector<io_mem_buf>& bufs);
 
-        public override void OnConnection(ProtocolContext context)
-        {
-            base.OnConnection(context);
-            _socks.OnConnectSuccess(_socks, this, (TCPEndpoint)Transport.Host);
-        }
+		virtual size_t onReceived(ProtocolContext& context);
 
-        public override void OnDisconnection(ProtocolContext context, Exception reason)
-        {
-            _socks.Transport.Disconnection();
-        }
+		virtual void onConnected(ProtocolContext& context);
 
-        #endregion
-    };
+		virtual void onDisconnected(ProtocolContext& context, errcode_t errCode, const tstring& reason);
+	private:
+		SOCKSv5Protocol* socks_;
+		ITransport* transport_;
+	};
+
+}
 
 _jingxian_end
 

@@ -416,6 +416,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\src\jingxian\protocol\proxy\Credentials.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\src\jingxian\protocol\proxy\Credentials.h"
 					>
 				</File>
@@ -440,11 +444,23 @@
 					>
 				</File>
 				<File
+					RelativePath=".\src\jingxian\protocol\proxy\SOCKSv5Incoming.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\src\jingxian\protocol\proxy\SOCKSv5Incoming.h"
 					>
 				</File>
 				<File
+					RelativePath=".\src\jingxian\protocol\proxy\SOCKSv5Outgoing.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\src\jingxian\protocol\proxy\SOCKSv5Outgoing.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\protocol\proxy\SOCKSv5Protocol.cpp"
 					>
 				</File>
 				<File

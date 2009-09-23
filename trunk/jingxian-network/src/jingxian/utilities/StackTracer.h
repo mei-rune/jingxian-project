@@ -41,6 +41,24 @@ typedef unsigned long SIZE_T, *PSIZE_T;
 #endif
 #endif  // _MSC_VER < 1300
 
+const int STACKWALK_MAX_NAMELEN = 1024;
+
+  typedef struct StackFrame
+  {
+    DWORD64 offset;  // if 0, we have no valid entry
+    CHAR name[STACKWALK_MAX_NAMELEN];
+    CHAR undName[STACKWALK_MAX_NAMELEN];
+    CHAR undFullName[STACKWALK_MAX_NAMELEN];
+    DWORD64 offsetFromSmybol;
+    DWORD offsetFromLine;
+    DWORD lineNumber;
+    CHAR lineFileName[STACKWALK_MAX_NAMELEN];
+    DWORD symType;
+    LPCSTR symTypeString;
+    CHAR moduleName[STACKWALK_MAX_NAMELEN];
+    DWORD64 baseOfImage;
+    CHAR loadedImageName[STACKWALK_MAX_NAMELEN];
+  } StackFrame;
 
 
 class StackWalkerInternal;  // forward
@@ -119,32 +137,17 @@ public:
 // in older compilers in order to use it... starting with VC7 we can declare it as "protected"
 protected:
 #endif
-	enum { STACKWALK_MAX_NAMELEN = 1024 }; // max name length for found symbols
+	
 
 protected:
   // Entry for each Callstack-Entry
-  typedef struct CallstackEntry
-  {
-    DWORD64 offset;  // if 0, we have no valid entry
-    CHAR name[STACKWALK_MAX_NAMELEN];
-    CHAR undName[STACKWALK_MAX_NAMELEN];
-    CHAR undFullName[STACKWALK_MAX_NAMELEN];
-    DWORD64 offsetFromSmybol;
-    DWORD offsetFromLine;
-    DWORD lineNumber;
-    CHAR lineFileName[STACKWALK_MAX_NAMELEN];
-    DWORD symType;
-    LPCSTR symTypeString;
-    CHAR moduleName[STACKWALK_MAX_NAMELEN];
-    DWORD64 baseOfImage;
-    CHAR loadedImageName[STACKWALK_MAX_NAMELEN];
-  } CallstackEntry;
 
-  typedef enum CallstackEntryType {firstEntry, nextEntry, lastEntry};
+
+  typedef enum StackFrameType {firstEntry, nextEntry, lastEntry};
 
   virtual void OnSymInit(LPCSTR szSearchPath, DWORD symOptions, LPCSTR szUserName);
   virtual void OnLoadModule(LPCSTR img, LPCSTR mod, DWORD64 baseAddr, DWORD size, DWORD result, LPCSTR symType, LPCSTR pdbName, ULONGLONG fileVersion);
-  virtual void OnCallstackEntry(CallstackEntryType eType, CallstackEntry &entry);
+  virtual void OnCallstackEntry(StackFrameType eType, StackFrame &entry);
   virtual void OnDbgHelpErr(LPCSTR szFuncName, DWORD gle, DWORD64 addr);
   void OnOutput(LPCSTR szText) { m_buffer << szText; };
 

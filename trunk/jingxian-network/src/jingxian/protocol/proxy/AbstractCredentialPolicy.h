@@ -9,8 +9,9 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
-# include "jingxian/protocol/proxy/AbstractCredentialPolicy.h"
+# include "jingxian/protocol/proxy/ICredentialPolicy.h"
 # include "jingxian/protocol/proxy/config/Credential.h"
+# include "jingxian/protocol/proxy/Proxy.h"
 
 _jingxian_begin
 
@@ -19,9 +20,10 @@ namespace proxy
 	class AbstractCredentialPolicy : public ICredentialPolicy
 	{
 	public:
-		AbstractCredentialPolicy(const config::Credential& credential, Proxy* server)
-			: _credential(credential)
-			, _server(server)
+		AbstractCredentialPolicy(Proxy* server, const config::Credential& credential)
+			: _server(server)
+			, _credential(credential)
+			, _complete(false)
 		{
 		}
 
@@ -40,9 +42,9 @@ namespace proxy
 		}
 
 	protected:
-		bool _complete = false;
-		config::Credential _credential;
 		Proxy* _server;
+		config::Credential _credential;
+		bool _complete;
 	};
 }
 
