@@ -11,77 +11,76 @@
 // Include files
 # include <list>
 # include "jingxian/protocol/proxy/ICredentialPolicy.h"
+# include "jingxian/protocol/proxy/Credentials.h"
 # include "jingxian/protocol/proxy/config/Configuration.h"
 # include "jingxian/networks/IOCPServer.h"
+# include "jingxian/protocol/proxy/SOCKSv5Protocol.h"
 
 _jingxian_begin
 
 namespace proxy
 {
-    struct BindPort
-    {
-        bool IsUsed;
-        int Port;
+	struct BindPort
+	{
+		bool IsUsed;
+		int Port;
 
 		BindPort()
 		{
 			IsUsed = false;
 			Port = 0;
 		}
-    };
+	};
 
-    class BindPorts
-    {
-
+	class BindPorts
+	{
 	public:
 		BindPorts(int begin, int end)
 			: _begin(begin)
 			, _end(end)
 			, _position(-1)
-        {
-            if (begin > end)
-                throw new ArgumentException("begin 不能比 end 还要大!");
+		{
+			if (begin > end)
+				ThrowException1(IllegalArgumentException, _T("begin 不能比 end 还要大!"));
 
-            _ports = new BindPort[ Math.Min( 1000,_end - _begin  ) ];
+			//_ports = new BindPort[ Math.Min( 1000,_end - _begin  ) ];
 
 			BindPort bindPort;
-            for (int i = _begin; i <= _end; i++)
-            {
-                bindPort.IsUsed = false;
-                bindPort.Port = i;
+			for (int i = _begin; i <= _end; ++ i)
+			{
+				bindPort.IsUsed = false;
+				bindPort.Port = i;
 
 				_ports.push_back(bindPort);
-            }
-        }
+			}
+		}
 
-        public int GetPort()
-        {
+		int GetPort()
+		{
+			for (size_t i = 0; i < _ports.size(); ++ i)
+			{
+				if (!_ports[++_position % _ports.size()].IsUsed)
+					return _ports[_position % _ports.size()].Port;
+			}
+			return 0;
+		}
 
-            for (size_t i = 0; i < _ports.size(); i++)
-            {
-                _position++;
-                if (!_ports[_position % _ports.size()].IsUsed)
-                    return _ports[_position % _ports.size()].Port;
-            }
-            return 0;
-        }
+		void ReleasePort( int port)
+		{
+			if( _begin > port || _end < port )
+				return;
 
-        public void ReleasePort( int port)
-        {
-            if( _begin > port || _end < port )
-                return;
-
-            _ports[ port - _begin ].IsUsed = false;
-        }
+			_ports[ port - _begin ].IsUsed = false;
+		}
 
 	private:
-		
-        int _begin;
-        int _end;
+
+		int _begin;
+		int _end;
 
 		std::vector<BindPort> _ports;
-        int _position;
-    };
+		int _position;
+	};
 
 	class Proxy  : public AbstractServer
 	{
@@ -89,182 +88,63 @@ namespace proxy
 		Proxy(IOCPServer& core, const tstring& addr)
 			: AbstractServer( &core )
 		{
+			_toString = _T("socks 代理");
 			if(!this->initialize(addr))
 			{
 				FATAL(log(), _T("初始代理服务失败"));
 				return;
 			}
-			acceptor_.accept(this, &EchoServer::OnComplete, &EchoServer::OnError, &core);
+
+			//_allowedIPs = ParseIPSeg( config.AllowedIPs );
+			//_blockingIPs = ParseIPSeg(config.BlockingIPs );
+
+			acceptor_.accept(this, &Proxy::onComplete, &Proxy::onError, &core);
 		}
 
-        static ILog _logger = LogUtils.Factory.GetLogger( typeof(Proxy) );
-        Config.Configuration _configuration;
-        //IServiceProvider _serviceProvider;
-        Credentials _credentials = new Credentials();
+		void onComplete(ITransport* transport, IOCPServer* core)
+		{
+			std::auto_ptr<SOCKSv5Protocol> protocol(new SOCKSv5Protocol(this));
+			transport->bindProtocol(protocol.get());
+			protocol.release();
 
-        BindPorts _bindPorts;
-        IPAddress _bindIP;
+			acceptor_.accept(this, &Proxy::onComplete, &Proxy::onError, core);
+		}
 
-        IPSeg[] _allowedIPs;
-        IPSeg[] _blockingIPs;
+		void onError(const ErrorCode& err, IOCPServer* core)
+		{
+			acceptor_.accept(this, &Proxy::onComplete, &Proxy::onError, core);
+		}
 
-        public Proxy(IInitializeContext context)
-            : base(null)
-        {
-            if (null == _logger)
-                _logger = context.LogFactory.GetLogger(typeof(Proxy));
+		//bool IsBlockingIP(const tstring& ip)
+		//{
+		//	if (null == _blockingIPs)
+		//		return false;
 
-            IVirtualFileSystem vfs = (IVirtualFileSystem)context.GetService(typeof(IVirtualFileSystem));
-            string path = vfs.GetRunPath("proxy.config");
-            if (!File.Exists(path))
-            {
-                string message = string.Format("载入配置失败 - 文件[{0}]不存在!", path);
-                throw new RuntimeError(message);
-            }
-
-            Initialize(Helper.DeserializeObject<Config.Configuration>(path));
-        }
-
-        void Initialize(Config.Configuration config)
-        {
-            _configuration = config;
-
-            string action = "载入授权模块";
-
-            foreach (Config.Credential credential in _configuration.Credentials)
-            {
-                try
-                {
-                    action = "载入授权模块[" + credential.Name + "]";
-
-                    Type type = Helper.GetType(credential.Implement);
-                    if (null == type)
-                    {
-                        _logger.ErrorFormat("在{0}时，发生错误 - 不能载入类型[{1}]!", action, credential.Implement);
-                        continue;
-                    }
-
-                    if (!typeof(ICredentialPolicy).IsAssignableFrom(type))
-                    {
-                        _logger.ErrorFormat("在{0}时，发生错误 - 类型[{1}]没有实现接口[ICredentialPolicy]!", action, credential.Implement);
-                        continue;
-                    }
-
-                    _credentials.Add(new CredentialPolicyFactory(type, credential, this));
-
-                    _logger.InfoFormat(action + "成功!");
-                }
-                catch (Exception e)
-                {
-                    _logger.Error(string.Format("在{0}时，发生异常!", action), e);
-                }
-            }
-
-            foreach (Item item in config.Misc)
-            {
-                Misc[item.Key] = item.Value;
-            }
-
-            string bindPort = Helper.Read(Misc, "BindPort", "30010-30020");
-            string[] ar = bindPort.Split('-');
-            int begin = 0;
-            int end = 0;
-
-            if (!int.TryParse(ar[0].Trim(), out begin))
-                begin = 30010;
-
-            if ( 1 == ar.Length || !int.TryParse(ar[1].Trim(), out end))
-                end = 30020;
-
-            _bindPorts = new BindPorts(begin, end);
-            _bindIP = Helper.Read(Misc, "BindIP", IPAddress.Any);
+		//	foreach (IPSeg seg in _blockingIPs)
+		//	{
+		//		if (seg.In(ip)) return true;
+		//	}
+		//	return false;
+		//}
 
 
-            _allowedIPs = ParseIPSeg( config.AllowedIPs );
-            _blockingIPs = ParseIPSeg(config.BlockingIPs );
-        }
+		//bool IsAllowedIP(IPAddress ip)
+		//{
+		//    if (IsBlockingIP(ip))
+		//        return false;
 
-        public IPSeg[] ParseIPSeg( string[] ipStr )
-        {
-            if ( null == ipStr)
-                return null;
+		//    if (null == _allowedIPs)
+		//        return true;
 
-            List<IPSeg> ipSegs = new List<IPSeg>();
+		//    foreach (IPSeg seg in _allowedIPs)
+		//    {
+		//        if (seg.In(ip)) return true;
+		//    }
+		//    return false;
+		//}
 
-            foreach (string allowedIP in ipStr)
-            {
-                try
-                {
-                    ipSegs.Add(new IPSeg(allowedIP));
-                }
-                catch
-                { }
-            }
-
-            return 0 == ipSegs.Count ? null : ipSegs.ToArray();
-        }
-
-        public Config.Configuration Configuration
-        {
-            get { return _configuration; }
-            set { _configuration = value; }
-        }
-
-        public ICredentials Credentials
-        {
-            get { return _credentials; }
-        }
-
-        public bool IsBlockingIP(IPAddress ip)
-        {
-            if (null == _blockingIPs)
-                return false;
-
-            foreach (IPSeg seg in _blockingIPs)
-            {
-                if (seg.In(ip)) return true;
-            }
-            return false;
-        }
-
-
-        public bool IsAllowedIP(IPAddress ip)
-        {
-            if (IsBlockingIP(ip))
-                return false;
-
-            if (null == _allowedIPs)
-                return true;
-
-            foreach (IPSeg seg in _allowedIPs)
-            {
-                if (seg.In(ip)) return true;
-            }
-            return false;
-        }
-
-        public IPAddress BindIP
-        {
-            get{return _bindIP;}
-        }
-
-        public int GetBindPort()
-        {
-            return _bindPorts.GetPort();
-        }
-
-        public void ReleaseBindPort( int port)
-        {
-             _bindPorts.ReleasePort(port);
-        }
-
-        #region IProtocolFactory 成员
-
-        public override IProtocol BuildProtocol(ITransport transport)
-        {
-            return new SOCKSProtocol(this);
-        }
-        #endregion
+	private:
+		proxy::Credentials _credentials;
 	};
 }
 

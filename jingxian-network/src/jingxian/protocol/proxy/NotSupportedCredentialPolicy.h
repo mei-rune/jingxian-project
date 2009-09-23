@@ -9,7 +9,7 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
-# include "jingxian/protocol/proxy/AbstractCredentialPolicy.h"
+# include "jingxian/protocol/proxy/ICredentialPolicy.h"
 
 _jingxian_begin
 
@@ -25,12 +25,12 @@ namespace proxy
 
 		virtual int authenticationType()
 		{
-			return (int) AuthenticationType::NotSupported;
+			return -1;
 		}
 
 		virtual  size_t onReceived(ProtocolContext& context)
 		{
-			ThrowException(RuntimeException, _T( "不支持的授权!" ));
+			ThrowException1(RuntimeException, _T( "不支持的授权!" ));
 		}
 
 		virtual  bool isComplete()

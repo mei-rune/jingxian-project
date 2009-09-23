@@ -6,6 +6,7 @@
 #include "jingxian/directory.h"
 #include "jingxian/networks/IOCPServer.h"
 #include "jingxian/protocol/EchoProtocol.h"
+#include "jingxian/protocol/Proxy/Proxy.h"
 
 
 # ifdef _GOOGLETEST_
@@ -56,6 +57,21 @@ private:
 	EchoProtocol protocol_;
 };
 
+void testStackTracer3()
+{
+	ThrowException1(Exception, _T("test")); 
+}
+
+
+void testStackTracer2()
+{
+	testStackTracer3();
+}
+
+void testStackTracer1()
+{
+	testStackTracer2();
+}
 
 # ifdef _GOOGLETEST_
 TEST(string, stringOP)
@@ -135,6 +151,15 @@ TEST(string, stringOP)
 	ASSERT_FALSE( transform_upper( str12 ) != "AASDFDDSDKDFASDF" );
 
 	ASSERT_FALSE( transform_lower( str13 ) != "asdskdfafassddf" );
+
+	try
+	{
+	testStackTracer1();
+	}
+	catch(Exception& e)
+	{
+		std::wcerr << e << std::endl;
+	}
 }
 #endif
 
@@ -170,7 +195,6 @@ _CrtSetDbgFlag( tmpFlag );
 
 _jingxian networking::initializeScket();
 
-
 	
 	try
     {
@@ -196,6 +220,7 @@ _jingxian networking::initializeScket();
 	if( !server.initialize(1) )
 		return -1;
 
+	_jingxian proxy::Proxy proxy(server, _T("TCP://0.0.0.0:6544"));
 	_jingxian EchoServer echo(server);
 
 	server_ = &server;

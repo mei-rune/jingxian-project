@@ -28,6 +28,11 @@ public:
 		acceptor_.reset(reactor_->listenWith(addr));
 		return !acceptor_.isNull();
 	}
+
+	bool initialize(const tstring& addr)
+	{
+		return initialize(addr.c_str());
+	}
 	
 	virtual ~AbstractServer()
 	{
@@ -50,9 +55,13 @@ public:
 	/**
 	 * 取得地址的描述
 	 */
-	virtual const tstring& toString() const = 0;
+	virtual const tstring& toString() const
+	{
+		return _toString;
+	}
 protected:
 	NOCOPY(AbstractServer);
+	tstring _toString;
 	IReactorCore* reactor_;
 	Acceptor acceptor_;
 	ILogger* logger_;
