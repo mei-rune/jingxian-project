@@ -20,7 +20,7 @@ namespace bufferOP
 	
 	IBufferHandler* GetBufferHandler(int type)
 	{
-		assert( 0 < type < 4);
+		assert( 0 < type && type < 4);
 
 		return buffer_handler_[type];
 	}

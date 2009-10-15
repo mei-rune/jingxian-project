@@ -17,8 +17,6 @@
 # include "jingxian/networks/connection_status.h"
 # include "jingxian/networks/networking.h"
 
-
-
 _jingxian_begin
 
 class IOCPServer : public IReactorCore
@@ -101,7 +99,7 @@ private:
 	 * 获取已完成的事件,并处理这个事件
 	 * @return 超时返回1,获取到事件并成功处理返回0,获取失败返回-1
 	 */
-	int handle_events (u_int32_t milli_seconds);
+	int handle_events (uint32_t milli_seconds);
 
 	void application_specific_code (ICommand *asynch_result,
 		size_t bytes_transferred,
@@ -111,7 +109,7 @@ private:
 	HANDLE completion_port_;
 	u_long number_of_threads_;
 
-	u_int32_t _timeout;
+	uint32_t _timeout;
 
 	bool _isRunning;
 

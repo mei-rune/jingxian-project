@@ -137,6 +137,15 @@ namespace networking
           LPINT LocalSockaddrLength,
           LPSOCKADDR* RemoteSockaddr,
           LPINT RemoteSockaddrLength);
+
+
+  bool stringToAddress(const tchar* host
+	  , struct sockaddr* addr
+	  , int* len);
+
+  bool addressToString(struct sockaddr* name
+	  , int len
+	  , tstring& host);
 }
 
 _jingxian_end

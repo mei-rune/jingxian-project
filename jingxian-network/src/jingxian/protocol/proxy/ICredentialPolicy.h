@@ -13,6 +13,19 @@
 
 _jingxian_begin
 
+namespace AuthenticationType
+{
+	enum Type
+	{
+		NONE = 0x00 //(无需认证)
+		,
+		GSSAPI = 0x01
+		,
+		BASE = 0x02 //USERNAME/PASSWORD(用户名/口令认证机制)
+		,
+		NOTSUPPORTED = 0xFF //(完全不兼容)
+	};
+}
 
 namespace AuthenticationStatus
 {
@@ -34,9 +47,9 @@ namespace proxy
 
 		virtual ~ICredentialPolicy(){}
 
-		virtual int authenticationType() = 0;
+		virtual int authenticationType() const = 0;
 
-		virtual size_t onReceived(ProtocolContext& context) = 0;
+		virtual size_t onReceived(ProtocolContext& context, InBuffer& inBuffer) = 0;
 
 		/**
 		* 如果身份验证过程已完成，则为 true；否则为 false

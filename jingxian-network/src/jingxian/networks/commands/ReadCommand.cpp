@@ -26,7 +26,8 @@ void ReadCommand::on_complete(size_t bytes_transferred
 {
 	if (!success)
 	{
-		transport_->onError(transport_mode::Receive, error, _T("写数据时发生错误"));
+		tstring err = ::concat<tstring>(_T("读数据时发生错误 - "), lastError(error));
+		transport_->onError(transport_mode::Receive, error,err);
 		return;
 	}
 	else if (0 == bytes_transferred)

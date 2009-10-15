@@ -2,6 +2,7 @@
 # include "pro_config.h"
 # include "jingxian/networks/IOCPServer.h"
 # include "jingxian/networks/TCPAcceptor.h"
+# include "jingxian/networks/TCPConnector.h"
 # include "jingxian/networks/commands/RunCommand.h"
 # include "jingxian/networks/commands/command_queue.h"
 
@@ -16,6 +17,7 @@ IOCPServer::IOCPServer(void)
 {
 	_logger = logging::makeLogger(_T("IOCPServer"));
 	_acceptorFactories[_T("tcp")] = new TCPAcceptorFactory( this );
+	_connectionBuilders[_T("tcp")] = new TCPConnector( this );
 }
 
 IOCPServer::~IOCPServer(void)
@@ -133,7 +135,7 @@ void IOCPServer::close (void)
 /// 不是NULL,lpNumberOfBytes等于0。
 /// 
 /// </summary>
-int IOCPServer::handle_events (u_int32_t milli_seconds)
+int IOCPServer::handle_events (uint32_t milli_seconds)
 {
 	OVERLAPPED *overlapped = 0;
 	u_long bytes_transferred = 0;

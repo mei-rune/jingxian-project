@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jingxian-network", "jingxian-network-2008.vcproj", "{9B77668A-C8D2-45C2-924A-78E8C3B82316}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jingxian-network-2008", "jingxian-network-2008.vcproj", "{9B77668A-C8D2-45C2-924A-78E8C3B82316}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

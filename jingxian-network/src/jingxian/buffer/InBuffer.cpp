@@ -6,7 +6,7 @@
 
 _jingxian_begin
 
-InBuffer::InBuffer()
+InBuffer::InBuffer(const std::vector<io_mem_buf>* buf, size_t totalLength)
 : memory_(null_ptr)
 , totalLength_(0)
 , readLength_(0)
@@ -14,6 +14,7 @@ InBuffer::InBuffer()
 , currentPtr_(null_ptr)
 , currentLength_(0)
 {
+	reset(buf, totalLength);
 }
 
 //InBuffer::InBuffer(LPWSABUF ptr, size_t count, size_t totalLength)

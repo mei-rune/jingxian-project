@@ -44,6 +44,18 @@ inline S concat(const S1& s1, const S2& s2, const S3& s3, const S4& s4)
 	return s;
 }
 
+template<typename S,typename S1,typename S2,typename S3,typename S4,typename S5>
+inline S concat(const S1& s1, const S2& s2, const S3& s3, const S4& s4, const S5& s5)
+{
+	S s;
+	s += s1;
+	s += s2;
+	s += s3;
+	s += s4;
+	s += s5;
+	return s;
+}
+
 _jingxian_end
 
 #endif /* _concat_functions_hpp_ */

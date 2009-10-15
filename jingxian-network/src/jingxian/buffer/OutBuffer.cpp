@@ -5,7 +5,7 @@
 
 _jingxian_begin
 
-void freeBuffer(buffer_chain_t* chain, void* context)
+void free_Buffer(buffer_chain_t* chain, void* context)
 {
 		my_free(context);
 }
@@ -16,11 +16,33 @@ inline databuffer_t* databuffer_cast(buffer_chain_t* chain)
 	return (databuffer_t*)chain;
 }
 
-OutBuffer::OutBuffer()
+OutBuffer::OutBuffer(ITransport* transport)
+: bytes_(0)
+, transport_(transport)
 {
 }
 
 OutBuffer::~OutBuffer()
+{
+	try
+	{
+
+		if(null_ptr != transport_)
+		{
+			transport_->writeBatch(&dataBuffer_[0], dataBuffer_.size());
+			return;
+		}
+		
+		freeBuffer();
+	}
+	catch( ... )
+	{
+		freeBuffer();
+		throw;
+	}
+}
+
+void OutBuffer::freeBuffer()
 {
 	for(std::vector<buffer_chain_t*>::iterator it = dataBuffer_.begin()
 		; it != dataBuffer_.end(); ++it)
@@ -62,10 +84,10 @@ IOutBuffer& OutBuffer::writeInt64(const int64_t& value)
 databuffer_t* OutBuffer::allocate(size_t len)
 {
 	databuffer_t* result = (databuffer_t*)my_calloc(1,sizeof(databuffer_t)+len);
-	
-		result->chain.context = result;
-		result->chain.freebuffer = &freeBuffer;
-		result->chain.type = BUFFER_ELEMENT_MEMORY;
+
+	result->chain.context = result;
+	result->chain.freebuffer = &free_Buffer;
+	result->chain.type = BUFFER_ELEMENT_MEMORY;
 
 	result->capacity = len;
 	result->start = result->end = result->ptr;
@@ -83,6 +105,15 @@ IOutBuffer& OutBuffer::writeBlob(const void* blob, size_t len)
 		if(!is_null(data))
 		{
 			size_t capacity = data->ptr + data->capacity - data->end;
+
+			if(capacity > len)
+			{
+				memcpy(data->end, ptr, len);
+				data->end += len;
+				exceptLen = 0;
+				return *this;
+			}
+
 			::memcpy(data->end, ptr, capacity);
 			data->end += capacity;
 			ptr += capacity;
@@ -98,18 +129,26 @@ IOutBuffer& OutBuffer::writeBlob(const void* blob, size_t len)
 	data->end += exceptLen;
 	exceptLen = 0;
 
+
+	bytes_ += len;
+
 	return *this;
 }
 
-std::vector<buffer_chain_t*>& OutBuffer::dataBuffer()
+size_t OutBuffer::size() const
 {
-	return dataBuffer_;
+	return bytes_;
 }
 
-void OutBuffer::releaseBuffer()
-{
-	dataBuffer_.clear();
-}
+//std::vector<buffer_chain_t*>& OutBuffer::dataBuffer()
+//{
+//	return dataBuffer_;
+//}
+//
+//void OutBuffer::releaseBuffer()
+//{
+//	dataBuffer_.clear();
+//}
 
 int OutBuffer::beginTranscation()
 {

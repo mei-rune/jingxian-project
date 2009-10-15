@@ -34,8 +34,8 @@ inline StringArray<charT,OP> split_with_string( const charT* ptr
    	   stringData<charT> data;
    	   
    	   data.len = token - ptr;
-   	   data.capacity = sizeof( charT )* (data.len + 20);
-   	   data.ptr = ( charT*) OP::malloc( data.capacity );
+   	   data.capacity = (data.len + 20);
+   	   data.ptr = ( charT*) OP::malloc( sizeof( charT ) * data.capacity );
    	   memset( data.ptr, 0, data.capacity );
    	   string_traits<charT>::strncpy( data.ptr, data.capacity, ptr, data.len );
        tmpList.push_back( data );

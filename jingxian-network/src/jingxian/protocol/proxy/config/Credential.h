@@ -22,7 +22,6 @@ namespace proxy
 			int AuthenticationType;
 			tstring Name;
 			tstring Description;
-			tstring Implement;
 		};
 	}
 }

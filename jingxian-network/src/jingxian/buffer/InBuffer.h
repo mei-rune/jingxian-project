@@ -37,7 +37,7 @@ public:
 		errcode_t errno_;
 	};
 
-	InBuffer();
+	InBuffer(const std::vector<io_mem_buf>* buf = null_ptr, size_t totalLength = 0);
 	virtual ~InBuffer(void);
 
 	virtual void reset(const std::vector<io_mem_buf>* buf, size_t totalLength);
@@ -56,7 +56,6 @@ public:
 	virtual void seek(int offest);
 
 	virtual size_t size()const;
-	virtual size_t readLength() const;
 
 	virtual size_t search(char ch) const;
 	virtual size_t search(wchar_t ch) const;
@@ -64,6 +63,7 @@ public:
 	virtual size_t searchAny(const char* charset) const;
 	virtual size_t searchAny(const wchar_t* charset) const;
 
+	virtual size_t readLength() const;
 	virtual const std::vector<io_mem_buf>& rawBuffer() const;
 	virtual size_t rawLength() const;
 

@@ -1,5 +1,6 @@
 
 # include "pro_config.h"
+# include "jingxian/protocol/NullProtocol.h"
 # include "jingxian/networks/ConnectedSocket.h"
 # include "jingxian/networks/commands/DisconnectCommand.h"
 
@@ -50,6 +51,12 @@ void ConnectedSocket::initialize()
 {
 	if( isInitialize_ )
 		return;
+
+	if(null_ptr == protocol_)
+	{
+		static NullProtocol nullProtocol(true);
+		protocol_ = &nullProtocol;
+	}
 
 	protocol_->onConnected( context_ );
 	isInitialize_ = true;

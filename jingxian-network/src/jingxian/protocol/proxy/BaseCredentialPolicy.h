@@ -15,11 +15,11 @@ _jingxian_begin
 
 namespace proxy
 {
-	public class BaseCredentialPolicy : AbstractCredentialPolicy
+	class BaseCredentialPolicy : public AbstractCredentialPolicy
 	{
 	public:
-		BaseCredentialPolicy(const config.Credential& credential, Proxy* server)
-			: AbstractCredentialPolicy( credential, server )
+		BaseCredentialPolicy(Proxy* server,const config::Credential& credential)
+			: AbstractCredentialPolicy(server, credential)
 		{ 
 		}
 
@@ -27,7 +27,7 @@ namespace proxy
 		{
 		}
 
-		virtual size_t onReceived(ProtocolContext& context)
+		virtual size_t onReceived(ProtocolContext& context, InBuffer& inBuffer)
 		{
 			///+----+------+----------+------+----------+
 			///|VER | ULEN |  UNAME   | PLEN |  PASSWD  |
@@ -41,45 +41,38 @@ namespace proxy
 			///PASSWD  口令，注意是明文传输的
 			///
 
-			IOBuffer _buffer = IOBuffer;
+			size_t totalLength = inBuffer.size();
+			if (3 > totalLength )
+				return 0;
 
+			int8_t version = inBuffer.readInt8();
+			size_t len = inBuffer.readInt8(); 
+			
+			// 两个字节是密码的最小字节数
+			if ( (len +2) > totalLength)
+				return 0;
 
-			if (3 > _buffer.GetLength() )
-				return;
+			std::string name(len, ' ');
+			inBuffer.readBlob((char*)name.c_str(), len);
+			len = inBuffer.readInt8();
+			std::string password(len, ' ');
+			inBuffer.readBlob((char*)password.c_str(), len);
 
-			int len = (int)_buffer[1] + 2;
+			if (inBuffer.fail())
+				return 0;
 
-			if (len > _buffer.GetLength())
-				return;
-
-			len += (int)_buffer[ len];
-
-			if (len + 1 > _buffer.GetLength())
-				return;
-
-			int version = (int)_buffer.ReadByte();
-			int ulen = (int)_buffer.ReadByte();
-			string name = Encoding.UTF8.GetString(_buffer.ReadBytes(ulen));
-			int plen = (int)_buffer.ReadByte();
-			string password = Encoding.UTF8.GetString(_buffer.ReadBytes(plen));
-
-			if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(password))
+			if (name.empty() || password.empty())
 			{
-				sendReply(context, AuthenticationStatus.Error);
-				//throw new RuntimeError("{0}不正确，不能为空!", string.IsNullOrEmpty(name) ? "用户名" : "密码");
+				sendReply(context, AuthenticationStatus::Error);
 			}
 			else
 			{
-				sendReply(context, AuthenticationStatus.Success);
+				sendReply(context, AuthenticationStatus::Success);
 			}
+			return 3 + name.size() + password.size();
 		}
 
-		virtual void sendReply(ProtocolContext context, AuthenticationStatus status)
-		{
-			sendReply(context, (int)status);
-		}
-
-		virtual void sendReply(ProtocolContext context, int status)
+		virtual void sendReply(ProtocolContext& context, int status)
 		{
 			///+----+--------+
 			///|VER | STATUS |
@@ -87,13 +80,51 @@ namespace proxy
 			///| 1  |   1    |
 			///+----+--------+
 
-			byte[] buffer = new byte[2];
-			buffer[0] = 5;
-			buffer[1] = (byte)status;
-
-			context.Transport.Write(buffer);
+			OutBuffer out(&context.transport());
+			out.writeInt8(5);
+			out.writeInt8(status);
 			_complete = true;
 		}
+	};
+
+	class BaseCredentialPolicyFactory : public ICredentialPolicyFactory
+	{
+	public:
+
+		BaseCredentialPolicyFactory(Proxy* server
+			, int authenticationType
+			, const tstring& name
+			, const tstring& description)
+			: server_(server)
+		{
+			credential_.AuthenticationType = authenticationType;
+			credential_.Name = name;
+			credential_.Description = description;
+		}
+
+		BaseCredentialPolicyFactory(Proxy* server, const config::Credential& credential)
+			: server_(server)
+			, credential_(credential)
+		{
+		}
+
+		virtual ~BaseCredentialPolicyFactory()
+		{
+		}
+
+		virtual int authenticationType() const
+		{
+			return credential_.AuthenticationType;
+		}
+
+		virtual ICredentialPolicy* make()
+		{
+			return new BaseCredentialPolicy(server_, credential_);
+		}
+
+	private:
+		Proxy* server_;
+		config::Credential credential_;
 	};
 }
 

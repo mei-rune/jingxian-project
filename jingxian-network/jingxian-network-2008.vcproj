@@ -281,6 +281,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\jingxian\networks\TCPConnector.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\TCPConnector.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\jingxian\networks\TCPContext.h"
 				>
 			</File>
@@ -402,6 +410,10 @@
 			</File>
 			<File
 				RelativePath=".\src\jingxian\protocol\EchoProtocol.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\protocol\NullProtocol.h"
 				>
 			</File>
 			<Filter
@@ -679,6 +691,10 @@
 		</File>
 		<File
 			RelativePath=".\src\jingxian\config.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\jingxian\Connector.h"
 			>
 		</File>
 		<File

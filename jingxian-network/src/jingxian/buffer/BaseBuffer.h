@@ -22,7 +22,7 @@ class BaseBuffer : public IBUFFER
 public:
 
 	BaseBuffer()
-		: exceptionStyle_(ExceptionStyle::THROW)
+		: exceptionStyle_(ExceptionStyle::NOTHROW)
 		, errno_(ERROR_SUCCESS)
 	{
 		errno_ = ERROR_SUCCESS;

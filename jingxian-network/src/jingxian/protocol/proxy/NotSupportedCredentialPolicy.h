@@ -1,6 +1,6 @@
 
-#ifndef _NullCredentialPolicy_H_
-#define _NullCredentialPolicy_H_
+#ifndef _NotSupportedCredentialPolicy_H_
+#define _NotSupportedCredentialPolicy_H_
 
 #include "jingxian/config.h"
 
@@ -23,12 +23,12 @@ namespace proxy
 		{
 		}
 
-		virtual int authenticationType()
+		virtual int authenticationType() const
 		{
 			return -1;
 		}
 
-		virtual  size_t onReceived(ProtocolContext& context)
+		virtual  size_t onReceived(ProtocolContext& context, InBuffer& inBuffer)
 		{
 			ThrowException1(RuntimeException, _T( "不支持的授权!" ));
 		}
@@ -42,4 +42,4 @@ namespace proxy
 
 _jingxian_end
 
-#endif // _NullCredentialPolicy_H_
+#endif // _NotSupportedCredentialPolicy_H_
