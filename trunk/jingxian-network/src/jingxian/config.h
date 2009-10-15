@@ -32,64 +32,25 @@
 typedef unsigned char u_char;
 #endif // _u_char_
 
-#ifndef _u_int16_t_
-#define _u_int16_t_
-typedef unsigned short u_int16_t;
-#endif // _u_int16_t_
-
-#ifndef _n_short_
-#define _n_short_
-typedef short n_short;
-#endif // n_short
-
-#ifndef _n_time_
-#define _n_time_
-typedef unsigned long n_time;
-#endif //_n_time_
-
-#ifndef _u_long_
-#define _u_long_
-typedef unsigned long u_long;
-#endif // _u_long_
-
-#ifndef _u_int_
-#define _u_int_
-typedef unsigned int  u_int;
-#endif // _u_int_
-
-#ifndef _u_char_t_
-#define _u_char_t_
-typedef unsigned char u_char_t;
-#endif //_u_char_t_
-
-#ifndef _n_short_t_
-#define _n_short_t_
-typedef short n_short_t;
-#endif // n_short_t
-
-#ifndef _u_int_t_
-#define _u_int_t_
-typedef unsigned int  u_int_t;
-#endif // u_int_t
 
 #ifndef _u_int8_t_
 #define _u_int8_t_
-typedef unsigned char u_int8_t;
+typedef unsigned char uint8_t;
 #endif // _u_int16_t_
 
 #ifndef _u_int16_t_
 #define _u_int16_t_
-typedef unsigned short u_int16_t;
+typedef unsigned short uint16_t;
 #endif // _u_int16_t_
 
 #ifndef _u_int32_t_
 #define _u_int32_t_
-typedef unsigned int u_int32_t;
+typedef unsigned int uint32_t;
 #endif // _u_int16_t_
 
 #ifndef _u_int64_t_
 #define _u_int64_t_
-typedef unsigned __int64 u_int64_t;
+typedef unsigned __int64 uint64_t;
 #endif // _u_int16_t_
 
 #ifndef __GNUG__

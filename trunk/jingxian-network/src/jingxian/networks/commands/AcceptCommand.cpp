@@ -42,10 +42,10 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 {
 	if (!success)
 	{
-		ErrorCode err(0 == success, error, _T("接受器 '") 
-			+ listenAddr_
-			+ _T("' 获取连接请求失败 - ")
-			+ lastError(error));
+		ErrorCode err(0 == success, error, concat<tstring>(_T("接受器 '") 
+			, listenAddr_
+			, _T("' 获取连接请求失败 - ")
+			, lastError(error)));
 		onError_(err, context_);
 		return;
 	}

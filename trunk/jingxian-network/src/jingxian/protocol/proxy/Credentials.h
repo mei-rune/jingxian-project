@@ -22,7 +22,7 @@ namespace proxy
 	public:
 		virtual ~ICredentialPolicyFactory() {}
 
-		virtual int authenticationType() = 0;
+		virtual int authenticationType() const = 0;
 
 		virtual ICredentialPolicy* make() = 0;
 	};

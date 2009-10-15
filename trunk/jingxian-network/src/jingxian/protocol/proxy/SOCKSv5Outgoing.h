@@ -25,7 +25,11 @@ namespace proxy
 
 		void initialize(SOCKSv5Protocol* socks);
 
-		void write(const std::vector<io_mem_buf>& bufs);
+		void write(const std::vector<io_mem_buf>& buffers);
+
+		void disconnection();
+
+		bool isActive() const;
 
 		virtual size_t onReceived(ProtocolContext& context);
 

@@ -397,6 +397,57 @@ namespace networking
 			RemoteSockaddr,
 			RemoteSockaddrLength);
 	}
+
+	
+  bool stringToAddress(const tchar* host
+	  , struct sockaddr* addr
+	  , int* len)
+	{
+		memset(addr, 0, *len);
+		addr->sa_family = AF_INET;
+		tstring endpoint = host;
+		tstring::size_type index = endpoint.find(_T("://"));
+		if(tstring::npos != index)
+		{
+			tstring prefix = endpoint.substr(0, index);
+			if(0 == string_traits<tstring::value_type>::stricmp( prefix.c_str(), _T("tcp")))
+			{
+				addr->sa_family = AF_INET;
+			}
+			else if(0 == string_traits<tstring::value_type>::stricmp( prefix.c_str(), _T("tcp6"))
+				|| 0 == string_traits<tstring::value_type>::stricmp( prefix.c_str(), _T("tcpv6")))
+			{
+				addr->sa_family = AF_INET6;
+			}
+			else
+			{
+				return false;
+			}
+			endpoint = endpoint.substr(index + 3);
+		}
+
+		if(SOCKET_ERROR == ::WSAStringToAddress((LPTSTR)endpoint.c_str(), addr->sa_family, 0, addr, len))
+		{
+			return false;
+		}
+		return true;
+	}
+
+  bool addressToString(struct sockaddr* addr
+	  , int len
+	  , tstring& host)
+    {
+	  host = (addr->sa_family == AF_INET6)?_T("tcp6://"):_T("tcp://");
+	  size_t prefix = host.size();
+	  host.resize(256);
+	  DWORD addressLength = host.size() - prefix;
+
+	  if(SOCKET_ERROR == ::WSAAddressToString(addr, len, NULL,(LPTSTR)host.c_str() + prefix, &addressLength))
+		  return false;
+
+	  host.resize( addressLength + prefix);
+	  return true;
+	}
 }
 
 _jingxian_end

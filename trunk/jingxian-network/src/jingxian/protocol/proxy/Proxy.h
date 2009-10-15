@@ -10,11 +10,16 @@
 
 // Include files
 # include <list>
+# include "jingxian/AbstractServer.h"
+# include "jingxian/networks/IOCPServer.h"
 # include "jingxian/protocol/proxy/ICredentialPolicy.h"
 # include "jingxian/protocol/proxy/Credentials.h"
+# include "jingxian/protocol/proxy/BaseCredentialPolicy.h"
+# include "jingxian/protocol/proxy/NullCredentialPolicy.h"
 # include "jingxian/protocol/proxy/config/Configuration.h"
-# include "jingxian/networks/IOCPServer.h"
 # include "jingxian/protocol/proxy/SOCKSv5Protocol.h"
+
+
 
 _jingxian_begin
 
@@ -99,6 +104,11 @@ namespace proxy
 			//_blockingIPs = ParseIPSeg(config.BlockingIPs );
 
 			acceptor_.accept(this, &Proxy::onComplete, &Proxy::onError, &core);
+
+
+			_credentials.policies().push_back(new NullCredentialPolicyFactory(this));
+			_credentials.policies().push_back(new BaseCredentialPolicyFactory(this, AuthenticationType::BASE, _T("BASE"), _T("")));
+			_credentials.policies().push_back(new BaseCredentialPolicyFactory(this, AuthenticationType::GSSAPI, _T("GSSAPI"), _T("")));
 		}
 
 		void onComplete(ITransport* transport, IOCPServer* core)
@@ -142,6 +152,11 @@ namespace proxy
 		//    }
 		//    return false;
 		//}
+
+		proxy::Credentials&  credentials()
+		{
+			return _credentials;
+		}
 
 	private:
 		proxy::Credentials _credentials;

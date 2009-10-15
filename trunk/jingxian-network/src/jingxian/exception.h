@@ -214,7 +214,7 @@ public:                                                     \
 #define OutOfRangeError         _T("超出范围")
 #define LockError               _T("锁出错")
 #define CtrlCHandlerError       _T("设置Ctrl+C出错")
-#define NetworkError            _T("网络错误")
+#define NetError                _T("网络错误")
 #define InvalidPointerError     _T("无效指针")
 #define LengthError             _T("无效长度")
 #define EOFError                _T("已经到结尾了")

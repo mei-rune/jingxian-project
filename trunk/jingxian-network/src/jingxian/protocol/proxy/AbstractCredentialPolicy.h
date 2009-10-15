@@ -11,12 +11,13 @@
 // Include files
 # include "jingxian/protocol/proxy/ICredentialPolicy.h"
 # include "jingxian/protocol/proxy/config/Credential.h"
-# include "jingxian/protocol/proxy/Proxy.h"
 
 _jingxian_begin
 
 namespace proxy
 {
+	class Proxy;
+
 	class AbstractCredentialPolicy : public ICredentialPolicy
 	{
 	public:
@@ -27,13 +28,19 @@ namespace proxy
 		{
 		}
 
+		AbstractCredentialPolicy(Proxy* server)
+			: _server(server)
+			, _complete(false)
+		{
+		}
+
 		virtual ~AbstractCredentialPolicy()
 		{
 		}
 
-		virtual int authenticationType()
+		virtual int authenticationType() const
 		{
-			return _credential.authenticationType();
+			return _credential.AuthenticationType;
 		}
 
 		virtual bool isComplete()

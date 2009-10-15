@@ -62,16 +62,12 @@ public:
 	 */
     virtual size_t onReceived(ProtocolContext& context)
 	{
-		OutBuffer out;
+		OutBuffer out(&context.transport());
 		for(std::vector<io_mem_buf>::const_iterator it = context.inMemory().begin()
 			; it != context.inMemory().end(); ++ it )
 			out.writeBlob( it->buf, it->len);
 
-		std::vector<buffer_chain_t*>& tmp = out.dataBuffer();
-		context.transport().writeBatch(&tmp[0], tmp.size());
-		out.releaseBuffer();
-
-		return context.inBytes();
+		return out.size();
 	}
 private:
 	NOCOPY(EchoProtocol);

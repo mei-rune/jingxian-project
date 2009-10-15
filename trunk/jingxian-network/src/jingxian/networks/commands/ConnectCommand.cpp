@@ -1,142 +1,132 @@
 
 # include "pro_config.h"
 # include "jingxian/networks/commands/ConnectCommand.h"
+# include "jingxian/networks/ConnectedSocket.h"
 
 
 _jingxian_begin
-//
-//
-//ConnectCommand:: ConnectCommand(ILog logger
-//								, Connector connector
-//								, BuildProtocol<T> buildProtocol
-//								, OnConnectError<T> throwError
-//								, T context
-//								, ByteBuffer byteBuffer)
-//								: base(null)
-//{
-//	_logger = logger;
-//	_socket = null;
-//	_connector = connector;
-//	_buildProtocol = buildProtocol;
-//	_throwError = throwError;
-//	_context = context;
-//	_byteBuffer = byteBuffer;
-//	if (null != _byteBuffer)
-//		PinObject(_byteBuffer.Array);
-//}
-//
-//void ConnectCommand::Connect()
-//{
-//
-//	_core = _connector.Core.GetNextCore();
-//	if (null == _socket)
-//	{
-//		_socket = _core.CreateSocket(_connector.AddressFamily
-//			, _connector.SocketType, _connector.ProtocolType);
-//	}
-//	if (!_core.Bind(_socket))
-//	{
-//		throw new SocketException();
-//	}
-//
-//	int bytesTransferred;
-//	if (null != _byteBuffer && 0 < _byteBuffer.Count)
-//	{
-//		IntPtr bytePointer = Marshal.UnsafeAddrOfPinnedArrayElement(
-//			_byteBuffer.Array, _byteBuffer.Begin);
-//		if (_socket.ConnectEx(_connector.ConnectTo, bytePointer, _byteBuffer.Count, out bytesTransferred, this.NativeOverlapped, _core))
-//			return;
-//	}
-//	else
-//	{
-//		if (_socket.ConnectEx(_connector.ConnectTo, IntPtr.Zero, 0, out bytesTransferred, this.NativeOverlapped, _core))
-//			return;
-//	}
-//	if ((int)SocketError.IOPending == Marshal.GetLastWin32Error())
-//		return;
-//
-//	throw new SocketException();
-//}
-//
-//void ConnectCommand::Complete(int bytes_transferred, bool success, int error, object context)
-//{
-//	if (!success)
-//	{
-//		try
-//		{
-//			_core.ReleaseSocket(_socket, false );
-//			_socket = null;
-//		}
-//		catch { }
-//		_connector.OnError(_throwError, _context, new ConnectError(_connector.ConnectTo, new SocketException(error)));
-//		return;
-//	}
-//
-//	Exception exception = null;
-//	try
-//	{
-//		if (null != _byteBuffer && 0 < bytes_transferred)
-//			_byteBuffer.Begin += bytes_transferred;
-//
-//
-//		_logger.InfoFormat("连接到[{0}]成功，开始初始化!", _connector.ConnectTo);
-//		_socket.SetRemote(_connector.ConnectTo, null);
-//		_socket.SetSockOpt(SocketOptionLevel.Socket
-//			, SocketOptionName.UpdateConnectContext
-//			, _socket.Handle);
-//
-//
-//		ConnectedSocket connectedSocket = new ConnectedSocket(_core, _socket, new ProtocolContext(null, _connector.Config));
-//		_socket = null;
-//
-//		try
-//		{
-//			IProtocol protocol = _buildProtocol(connectedSocket, _context);
-//			_core.InitializeConnection(connectedSocket, protocol);
-//
-//			//FIXME: 将在连接时没有发送完的数据，再发送（不能放在）
-//			///if (null != _byteBuffer && 0 < _byteBuffer.Count)
-//			///    connectedSocket.Write(_byteBuffer);
-//
-//			_logger.InfoFormat("连接到[{0}]成功，初始化成功!", _connector.ConnectTo);
-//			return;
-//		}
-//		catch (Exception)
-//		{
-//			_socket = connectedSocket.ReleaseSocket();
-//		}
-//	}
-//	catch (Exception e)
-//	{
-//		exception = new InitializeError(_connector.ConnectTo,
-//			string.Format("初始化连接到[{0}]通道，发生错误！", _connector.ConnectTo), e);
-//	}
-//	try
-//	{
-//		_core.ReleaseSocket(_socket, false);
-//		_socket = null;
-//	}
-//	catch { }
-//
-//	_connector.OnError(_throwError, _context,exception);
-//
-//}
-//
-//public override void ConnectCommand::internalDispose()
-//{
-//	base.internalDispose();
-//
-//	if (null == _socket)
-//		return;
-//
-//	try
-//	{
-//		_core.ReleaseSocket(_socket, false);
-//	}
-//	catch
-//	{ }
-//	_socket = null;
-//}
 
+
+ConnectCommand::ConnectCommand(IOCPServer* core
+							   , const tchar* host
+							   , OnBuildConnectionComplete onComplete
+							   , OnBuildConnectionError onError
+							   , void* context)
+: core_(core)
+, host_(host)
+, onComplete_(onComplete)
+, onError_(onError)
+, context_(context)
+, socket_(INVALID_SOCKET) //WSASocket(AF_INET,SOCK_STREAM,IPPROTO_TCP,0,0,WSA_FLAG_OVERLAPPED))
+{
+}
+
+ConnectCommand::~ConnectCommand()
+{
+	if( INVALID_SOCKET == socket_ )
+	{
+		closesocket(socket_);
+		socket_ = INVALID_SOCKET;
+	}
+}
+
+
+bool ConnectCommand::execute()
+{
+	struct sockaddr addr;
+	int len = sizeof(addr);
+
+	if(! networking::stringToAddress((LPTSTR)host_.c_str(), &addr, &len))
+		return false;
+	
+	if (INVALID_SOCKET == socket_)
+		socket_ = WSASocket(addr.sa_family,SOCK_STREAM,IPPROTO_TCP,0,0,WSA_FLAG_OVERLAPPED);
+
+	SOCKADDR_IN bindAddr;
+	bindAddr.sin_family = AF_INET;
+	bindAddr.sin_port = 0; // htons(0);
+	bindAddr.sin_addr.s_addr = ADDR_ANY; //htonl(ADDR_ANY);
+	
+	// NOTICE: 超级奇怪必须绑定一下, MS 说的
+	if(SOCKET_ERROR == ::bind(socket_,(struct sockaddr*) &bindAddr, sizeof(bindAddr)))
+		return false;
+
+	if (!core_->bind((HANDLE)socket_, null_ptr))
+		return false;
+
+	//DWORD bytesTransferred = 0;
+	if ( networking::connectEx(socket_,&addr, len, null_ptr, 0,null_ptr, this))
+			return true;
+
+	if (WSA_IO_PENDING == ::WSAGetLastError())
+		return true;
+
+	return false;
+}
+
+void ConnectCommand::on_complete(size_t bytes_transferred
+								 , bool success
+								 , void *completion_key
+								 , errcode_t error)
+{
+	if (!success)
+	{
+		ErrorCode err(0 == success, error, concat<tstring>(_T("连接到 '") 
+			, host_
+			, _T("' 失败 - ")
+			, lastError(error)));
+		onError_(err, context_);
+		return;
+	}
+
+	try
+	{
+		setsockopt( socket_, 
+				  SOL_SOCKET, 
+				  SO_UPDATE_CONNECT_CONTEXT, 
+				  NULL, 
+				  0 );
+
+		struct sockaddr name;
+		int namelen = sizeof(name);
+
+		if(SOCKET_ERROR == getsockname( socket_,& name,&namelen))
+		{
+			ErrorCode err(0 == success, error, concat<tstring>(_T("连接到 '") 
+				, host_
+				, _T("' 成功,取本地地址时失败 - ")
+				, lastError(error)));
+			onError_(err, context_);
+			return;
+		}
+
+		tstring local;
+		if(!networking::addressToString(&name, namelen, local))
+		{
+			ErrorCode err(0 == success, error, concat<tstring>(_T("连接到 '") 
+				, host_
+				, _T("' 成功,转换本地地址时失败 - ")
+				, lastError(error)));
+			onError_(err, context_);
+			return;
+		}
+
+		std::auto_ptr<ConnectedSocket> connectedSocket(new ConnectedSocket(core_, socket_, local, host_));
+		socket_ = INVALID_SOCKET;
+
+		onComplete_(connectedSocket.get(), context_);
+		connectedSocket->initialize();
+		connectedSocket.release();
+		return;
+	}
+	catch (std::exception& e)
+	{
+		ErrorCode err(0 == success, error, concat<tstring>(_T("连接到 '") 
+			, host_
+			, _T("' 成功,初始化时失败 - ")
+			, toTstring(e.what())));
+		onError_(err, context_);
+	}
+}
 
 _jingxian_end
