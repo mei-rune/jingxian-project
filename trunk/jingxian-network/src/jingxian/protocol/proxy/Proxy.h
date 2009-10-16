@@ -96,7 +96,7 @@ namespace proxy
 			_toString = _T("socks 代理");
 			if(!this->initialize(addr))
 			{
-				FATAL(log(), _T("初始代理服务失败"));
+				LOG_FATAL(log(), _T("初始代理服务失败"));
 				return;
 			}
 

@@ -28,7 +28,7 @@ AcceptCommand::~AcceptCommand()
 	my_free( ptr_ );
 	ptr_ = null_ptr;
 
-	if( INVALID_SOCKET == socket_ )
+	if( INVALID_SOCKET != socket_ )
 	{
 		closesocket(socket_);
 		socket_ = INVALID_SOCKET;
@@ -75,9 +75,8 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 		&remote_addr,
 		&remote_size);
 
-	tchar buf[1024];
-	DWORD len = 1024;
-	if(SOCKET_ERROR == WSAAddressToString(remote_addr, remote_size, NULL,buf,&len))
+	tstring peer;
+	if(!networking::addressToString(remote_addr, remote_size, peer))
 	{
 		int errCode = ::WSAGetLastError();
 		ErrorCode err(false, errCode, concat<tstring,tchar*, tstring,tchar*,tstring>(_T("接受器 '") 
@@ -87,13 +86,9 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 		onError_(err, context_);
 		return;
 	}
-	buf[len] = 0;
-	tstring peer = concat<tstring>(_T("tcp://") 
-				, buf);
 
-	
-	len = 1024;
-	if(SOCKET_ERROR == WSAAddressToString(local_addr, local_size, NULL,buf,&len))
+	tstring host;
+	if(!networking::addressToString(local_addr, local_size, host))
 	{
 		int errCode = ::WSAGetLastError();
 		ErrorCode err(false, errCode, concat<tstring>(_T("接受器 '") 
@@ -103,8 +98,6 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 		onError_(err, context_);
 		return;
 	}
-	tstring host = concat<tstring>(_T("tcp://") 
-				, buf);
 
 	
 	if( SOCKET_ERROR == setsockopt(socket_, SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT,

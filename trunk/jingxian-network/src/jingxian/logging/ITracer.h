@@ -112,6 +112,21 @@ public:
 	 * @param[ in ] line 日志记录的源文件的当前行
 	 */
 	virtual void trace(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
+
+	/**
+	 * Crit 级的日志是否可以记日志
+	 * @return 可以true,不可以false
+	 */
+	virtual bool isCritEnabled() const = 0;
+
+	/**
+	 * 记录 Crit 级的日志
+	 * @param[ in ] way 流传输的方向
+	 * @param[ in ] message 日志内容
+	 * @param[ in ] file 日志记录的源文件名
+	 * @param[ in ] line 日志记录的源文件的当前行
+	 */
+	virtual void crit(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
 };
 
 namespace logging
@@ -123,7 +138,7 @@ namespace logging
 		public:
 			virtual ~ITraceFactory(){};
 
-			virtual ITracer* make( const tchar* nm, const tstring& host, const tstring& peer) = 0;
+			virtual ITracer* make( const tchar* nm, const tstring& host, const tstring& peer, const tstring& sessionId) = 0;
 		};
 	}
 }
@@ -135,12 +150,11 @@ _jingxian_end
 
 #ifndef TP_CRITICAL
 #define TP_CRITICAL(logger, way, message) { \
-	if ( logger != 0 && logger->isDebugEnabled()) {\
+	if ( logger != 0 && logger->isCritEnabled()) {\
 	LogStream oss; \
 	oss << message; \
-	logger->info(way, oss, __FILE__, __LINE__); }}
-#endif // DEBUG
-
+	logger->crit(way, oss, __FILE__, __LINE__); }}
+#endif // TP_CRITICAL
 
 #ifndef TP_DEBUG
 #define TP_DEBUG(logger, way, message) { \
@@ -148,7 +162,7 @@ _jingxian_end
 	LogStream oss; \
 	oss << message; \
 	logger->debug(way, oss, __FILE__, __LINE__); }}
-#endif // DEBUG
+#endif // LOG_DEBUG
 
 #ifndef TP_INFO
 #define TP_INFO(logger, way, message) { \
@@ -156,7 +170,7 @@ _jingxian_end
 	LogStream oss; \
 	oss << message; \
 	logger->info(way, oss, __FILE__, __LINE__); }}
-#endif // INFO
+#endif // LOG_INFO
 
 #ifndef TP_WARN
 #define TP_WARN(logger, way, message ) { \
@@ -164,7 +178,7 @@ _jingxian_end
 	LogStream oss; \
 	oss << message; \
 	logger->warn(way, oss, __FILE__, __LINE__); }}
-#endif // WARN
+#endif // LOG_WARN
 
 #ifndef TP_ERROR
 #define TP_ERROR(logger, way, message) { \
@@ -172,7 +186,7 @@ _jingxian_end
 	LogStream oss; \
 	oss << message; \
 	logger->error(way, oss, __FILE__, __LINE__); }}
-#endif // ERROR
+#endif // LOG_ERROR
 
 #ifndef TP_FATAL
 #define TP_FATAL(logger, way, message) { \
@@ -180,11 +194,11 @@ _jingxian_end
 	LogStream oss; \
 	oss << message; \
 	logger->fatal(way, oss, __FILE__, __LINE__); }}
-#endif // FATAL
+#endif // LOG_FATAL
 
 #ifndef TP_TRACE
 #define TP_TRACE(logger, way, message) { \
-	if ( logger != 0 && logger->isFatalEnabled()) {\
+	if ( logger != 0 && logger->isTraceEnabled()) {\
 	LogStream oss; \
 	oss << message; \
 	logger->trace(way, oss, __FILE__, __LINE__); }}
@@ -214,7 +228,7 @@ _jingxian_end
 
 #ifndef TP_FATAL
 #define TP_FATAL(logger, way, message)			{}
-#endif // FATAL
+#endif // LOG_FATAL
 
 #ifndef TP_TRACE
 #define TP_TRACE(logger, way, message)			{}

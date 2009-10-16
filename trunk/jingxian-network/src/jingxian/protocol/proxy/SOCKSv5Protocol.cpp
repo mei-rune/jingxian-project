@@ -125,6 +125,7 @@ size_t SOCKSv5Protocol::onHello(ProtocolContext& context, InBuffer& inBuffer)
 	outBuffer.writeInt8(version);
 	outBuffer.writeInt8(credentialPolicy_->authenticationType());
 	status_ = 1; //AUTHENTICATING;
+	LOG_TRACE( log(), _T("握手成功!"));
 	return 2 + nmethods;
 }
 
@@ -134,6 +135,7 @@ size_t SOCKSv5Protocol::onAuthenticating(ProtocolContext& context, InBuffer& inB
 	if (credentialPolicy_->isComplete())
 	{
 		status_ = 2;// COMMAND;
+		LOG_TRACE( log(), _T("登录成功!"));
 		return len;
 	}
 
@@ -201,7 +203,7 @@ size_t SOCKSv5Protocol::onCommand(ProtocolContext& context, InBuffer& inBuffer)
 			tstring err = concat<tstring>(_T("连接地址格式不正确 - "), lastError(WSAGetLastError()));
 			LOG_ERROR( log(), err);
 
-			sendReply(context, SOCKSv5Error::Error);
+			sendReply(context, SOCKSv5Error::Error, 5, addressType, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 4, 0);
 			context.transport().disconnection(err);
 			return 0;
 		}
@@ -212,8 +214,7 @@ size_t SOCKSv5Protocol::onCommand(ProtocolContext& context, InBuffer& inBuffer)
 		{
 			tstring err = concat<tstring>(_T("连接地址格式不正确 - "), lastError(WSAGetLastError()));
 			LOG_ERROR( log(), err);
-
-			sendReply(context, SOCKSv5Error::Error);
+			sendReply(context, SOCKSv5Error::Error, 5, addressType, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 16, 0);
 			context.transport().disconnection(err);
 			return 0;
 		}
@@ -221,6 +222,7 @@ size_t SOCKSv5Protocol::onCommand(ProtocolContext& context, InBuffer& inBuffer)
 	case 3:
 		{
 			int nameLen = inBuffer.readInt8();
+			bytes += 1;
 			bytes += nameLen;
 			char buf[1024];
 			inBuffer.readBlob(buf,nameLen);
@@ -230,7 +232,7 @@ size_t SOCKSv5Protocol::onCommand(ProtocolContext& context, InBuffer& inBuffer)
 		}
 		break;
 	default:
-		sendReply(context, SOCKSv5Error::NotSupportAddr);
+		sendReply(context, SOCKSv5Error::NotSupportAddr, 5, 1, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 4, 0);
 		context.transport().disconnection(concat<tstring>(_T("格式不正确，不可识别的地址类型 - addressType") , toString(), _T("!")));
 		return 0;
 	}
@@ -252,7 +254,7 @@ size_t SOCKSv5Protocol::onCommand(ProtocolContext& context, InBuffer& inBuffer)
 		}
 	case 0x02://    BIND
 		{
-			sendReply(context, SOCKSv5Error::NotSupportCommand);
+			sendReply(context, SOCKSv5Error::NotSupportCommand, 5, 1, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 4, 0);
 			context.transport().disconnection();
 
 			//listenOn( context.Reactor, new IPEndPoint(addr, port));
@@ -261,14 +263,14 @@ size_t SOCKSv5Protocol::onCommand(ProtocolContext& context, InBuffer& inBuffer)
 		}
 	case 0x03://    UDP ASSOCIATE
 		{
-			sendReply(context, SOCKSv5Error::NotSupportCommand);
+			sendReply(context, SOCKSv5Error::NotSupportCommand, 5, 1, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 4, 0);
 			context.transport().disconnection();
 			//associating(addressType == 1)?AF_INET:AF_INET6, address, addressLen, host, port);
 			return bytes;
 		}
 	default:
 		{
-			sendReply(context, SOCKSv5Error::NotSupportCommand);
+			sendReply(context, SOCKSv5Error::NotSupportCommand, 5, 1, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 4, 0);
 			context.transport().disconnection();
 			return 0;
 		}
@@ -279,6 +281,8 @@ void SOCKSv5Protocol::connectTo(ProtocolContext& context, const tstring& host)
 {
 	connectProxy_ = new connectorType(this, host,&context.core(), &SOCKSv5Protocol::onConnectComplete, &SOCKSv5Protocol::onConnectError, context);
 	connectProxy_->connectWith();
+	
+	LOG_TRACE( log(), _T("发出连接请求!"));
 }
 
   //      public IProtocol BuildProtocol(ITransport transport, SOCKSv5 context)
@@ -293,13 +297,17 @@ void SOCKSv5Protocol::onConnectComplete(ITransport* transport, ProtocolContext& 
 	{
 		static NullProtocol nullProtocol(true);
 		transport->bindProtocol(&nullProtocol);
+		LOG_TRACE( log(), _T("连接请求返回但发现状态不对!"));
 		return;
 	}
 
+	LOG_TRACE( log(), _T("连接请求返回成功!"));
+
 	transport->bindProtocol(&outgoing_);
 	transport->initialize();
+	
 
-	sendReply(context, (int)SOCKSv5Error::Success);
+	sendReply(context, (int)SOCKSv5Error::Success, 5, 1, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 4, 0);
 	context.transport().bindProtocol(&incoming_);
 	incoming_.onConnected(context);
 
@@ -308,11 +316,13 @@ void SOCKSv5Protocol::onConnectComplete(ITransport* transport, ProtocolContext& 
 
 void SOCKSv5Protocol::onConnectError(const ErrorCode&, ProtocolContext& context)
 {
+	LOG_TRACE( log(), _T("连接请求返回失败!"));
+
 	connectProxy_ = null_ptr;
 	if(3 != status_)
 		return;
 
-	sendReply(context, SOCKSv5Error::Error);
+	sendReply(context, SOCKSv5Error::Error, 5, 1, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 4, 0);
 	context.transport().disconnection();
 }
 
@@ -404,17 +414,7 @@ void SOCKSv5Protocol::onConnectError(const ErrorCode&, ProtocolContext& context)
 
   //      #endregion
 
-void SOCKSv5Protocol::sendReply(ProtocolContext& context, int reply)
-{
-	sendReply(context, reply, 5, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0",4, 0);
-}
-
-void SOCKSv5Protocol::sendReply(ProtocolContext& context, int reply, const char* addr, size_t len, int port)
-{
-	sendReply(context, reply, 5, addr, len, port);
-}
-
-void SOCKSv5Protocol::sendReply(ProtocolContext& context, int reply, int version, const char* addr, size_t len, int port)
+void SOCKSv5Protocol::sendReply(ProtocolContext& context, int reply, int version, int addressType, const char* addr, size_t len, int port)
 {
 	/// +----+-----+-------+------+----------+----------+
 	/// |VER | REP |  RSV  | ATYP | BND.ADDR | BND.PORT |
@@ -426,8 +426,25 @@ void SOCKSv5Protocol::sendReply(ProtocolContext& context, int reply, int version
 	out.writeInt8(version);
 	out.writeInt8(reply);
 	out.writeInt8(0);
+		out.writeInt8(addressType);
+	switch (addressType)
+	{
 
-	out.writeBlob(addr, len);
+	case 1:
+		out.writeBlob(addr, 4);
+		break;
+	case 4:
+		out.writeBlob(addr, 16);
+		break;
+	case 3:
+		out.writeInt8(len);
+		out.writeBlob(addr, len);
+		break;
+	default:
+		assert(false);
+	}
+
+
 	out.writeInt16(htons(port));
 }
 

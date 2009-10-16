@@ -1,7 +1,6 @@
 # include "pro_config.h"
 # include "log4cpp.h"
 
-
 _jingxian_begin
 
 
@@ -22,9 +21,19 @@ void Logger::assertLog(bool assertion, const LogStream& msg, const char* file, i
 
 }
 
+bool Logger::isCritEnabled() const
+{
+	return logger_.isCritEnabled();
+}
+
+void Logger::crit(const LogStream& message, const char* file, int line)
+{
+	logger_.crit(toNarrowString(message.str()));
+}
+
 bool Logger::isFatalEnabled() const
 {
-	return logger_.isFatalEnabled();
+	return logger_.isErrorEnabled();
 }
 
 void Logger::fatal(const LogStream& message, const char* file, int line)
@@ -74,12 +83,12 @@ void Logger::warn(const LogStream& message, const char* file, int line)
 
 bool Logger::isTraceEnabled() const
 {
-	return logger_.isPriorityEnabled(750);
+	return logger_.isDebugEnabled();
 }
 
 void Logger::trace(const LogStream& message, const char* file, int line)
 {
-	logger_.log(750, toNarrowString(message.str()));
+	logger_.debug(toNarrowString(message.str()));
 }
 
 bool Logger::isEnabledFor(const logging::LevelPtr& level) const
@@ -111,20 +120,39 @@ void Logger::clearNDC()
 }
 
 
-const tchar* TRANSPORT_MODE[] = { _T(""), _T("Receive"),_T("Send"),_T("Both") };
+const char* TRANSPORT_MODE[] = { "", "Receive", "Send", "Both" };
 
-Tracer::Tracer(const tchar* nm, const tstring& host, const tstring& peer)
-: logger_(::log4cpp::Category::getInstance(toNarrowString(nm)))
+Tracer::Tracer(const tchar* nm, const tstring& thost, const tstring& tpeer, const tstring& sessionId)
+: logger_(toNarrowString(nm), "")
 , name_(null_ptr)
 {
+	std::string host = toNarrowString(thost);
+	std::string peer = toNarrowString(tpeer);
+
 	size_t len = host.size() + peer.size() + 20;
 	name_ = (char*)my_malloc( len );
 	memset(name_, 0, len);
 	name_[0] = '[';
 	memcpy(name_ + 1, host.c_str(), host.size());
-	memcpy(name_ + 1 +  host.size(), _T(" - "), 3);
+	memcpy(name_ + 1 +  host.size(), " - ", 3);
 	memcpy(name_ + 4 +  host.size(), peer.c_str(), peer.size());
-	memcpy(name_ + 4 +  host.size() + peer.size(), _T("]"), 1);
+	memcpy(name_ + 4 +  host.size() + peer.size(), "]", 1);
+
+	logger_.setContext(name_);
+
+	host = trim_all(host, "tcp://");
+	host = trim_all(host, "tcp6://");
+	host = trim_all(host, "tcpv6://");
+
+	peer = trim_all(peer, "tcp://");
+	peer = trim_all(peer, "tcp6://");
+	peer = trim_all(peer, "tcpv6://");
+
+	host = replace_all(host, ":", "[");
+	peer = replace_all(peer, ":", "[");
+	
+	std::string name = host + "]_" + peer + "]_" + toNarrowString(sessionId);
+	logger_.addAppender(new log4cpp::FileAppender(name, name + ".txt" ));
 }
 
 Tracer::~Tracer(void)
@@ -140,8 +168,8 @@ bool Tracer::isDebugEnabled() const
 
 void Tracer::debug(transport_mode::type way, const LogStream& message, const char* file, int line)
 {
-	tstring str = message.str();
-	logger_.debug( "%s %s %s", name_, TRANSPORT_MODE[way], str.c_str(), file, line);
+	std::string str = toNarrowString(message.str());
+	logger_.debug( "%s %s", TRANSPORT_MODE[way], str.c_str(), file, line);
 }
 
 bool Tracer::isErrorEnabled() const
@@ -151,8 +179,8 @@ bool Tracer::isErrorEnabled() const
 
 void Tracer::error(transport_mode::type way, const LogStream& message, const char* file, int line)
 {
-	tstring str = message.str();
-	logger_.error( "%s %s %s", name_, TRANSPORT_MODE[way], str.c_str(), file, line);
+	std::string str = toNarrowString(message.str());
+	logger_.error( "%s %s", TRANSPORT_MODE[way], str.c_str(), file, line);
 }
 
 bool Tracer::isFatalEnabled() const
@@ -162,8 +190,8 @@ bool Tracer::isFatalEnabled() const
 
 void Tracer::fatal(transport_mode::type way, const LogStream& message, const char* file, int line)
 {
-	tstring str = message.str();
-	logger_.fatal( "%s %s %s", name_, TRANSPORT_MODE[way], str.c_str(), file, line);
+	std::string str = toNarrowString(message.str());
+	logger_.fatal( "%s %s", TRANSPORT_MODE[way], str.c_str(), file, line);
 }
 
 bool Tracer::isInfoEnabled() const
@@ -173,8 +201,8 @@ bool Tracer::isInfoEnabled() const
 
 void Tracer::info(transport_mode::type way, const LogStream& message, const char* file, int line)
 {
-	tstring str = message.str();
-	logger_.crit( "%s %s %s", name_, TRANSPORT_MODE[way], str.c_str(), file, line);
+	std::string str = toNarrowString(message.str());
+	logger_.crit( "%s %s", TRANSPORT_MODE[way], str.c_str(), file, line);
 }
 
 bool Tracer::isWarnEnabled() const
@@ -184,19 +212,56 @@ bool Tracer::isWarnEnabled() const
 
 void Tracer::warn(transport_mode::type way, const LogStream& message, const char* file, int line)
 {
-	tstring str = message.str();
-	logger_.warn( "%s %s %s", name_, TRANSPORT_MODE[way], str.c_str(), file, line);
+	std::string str = toNarrowString(message.str());
+	logger_.warn( "%s %s", TRANSPORT_MODE[way], str.c_str(), file, line);
 }
 
 bool Tracer::isTraceEnabled() const
 {
-	return logger_.isPriorityEnabled(750);
+	return logger_.isDebugEnabled();
 }
 
 void Tracer::trace(transport_mode::type way, const LogStream& message, const char* file, int line)
 {
-	tstring str = message.str();
-	logger_.log( 750, "%s %s %s", name_, TRANSPORT_MODE[way], str.c_str(), file, line);
+	std::string str = toNarrowString(message.str());
+	logger_.debug( "%s %s", TRANSPORT_MODE[way], str.c_str(), file, line);
+}
+
+bool Tracer::isCritEnabled() const
+{
+	return logger_.isCritEnabled();
+}
+
+void Tracer::crit(transport_mode::type way, const LogStream& message, const char* file, int line)
+{
+	std::string str = toNarrowString(message.str());
+	logger_.crit( "%s %s", TRANSPORT_MODE[way], str.c_str(), file, line);
+}
+
+
+
+ContextCategory::ContextCategory(const std::string& name
+								 , const std::string& context)
+								 : log4cpp::Category(name,&log4cpp::Category::getInstance(name), log4cpp::Priority::DEBUG)
+								 , context_(context)
+{
+}
+
+void ContextCategory::setContext(const std::string& context)
+{
+	context_ = context;
+}
+
+const std::string& ContextCategory::getContext() const
+{
+	return context_;
+}
+
+void ContextCategory::_logUnconditionally2(log4cpp::Priority::Value priority, 
+										   const std::string& message) throw()
+{
+	log4cpp::LoggingEvent evt(getName(), message, context_, priority);
+	callAppenders(evt);
 }
 
 }

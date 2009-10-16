@@ -11,6 +11,7 @@
 
 // Include files
 # include <Winsock2.h>
+# include <fstream>
 # include "jingxian/IProtocol.h"
 # include "jingxian/ProtocolContext.h"
 # include "jingxian/networks/connection_status.h"
@@ -98,10 +99,10 @@ public:
 	ITracer* tracer(){return tracer_;}
 
 	
-	void onWrite(size_t bytes_transferred);
-	void onRead(size_t bytes_transferred);
-	void onError(transport_mode::type mode, errcode_t error, const tstring& description);
-	void onDisconnected(errcode_t error, const tstring& description);
+	void onWrite(const ICommand& command, size_t bytes_transferred);
+	void onRead(const ICommand& command, size_t bytes_transferred);
+	void onError(const ICommand& command, transport_mode::type mode, errcode_t error, const tstring& description);
+	void onDisconnected(const ICommand& command, errcode_t error, const tstring& description);
 
 	buffer_chain_t* allocateProtocolBuffer();
 
@@ -149,25 +150,10 @@ private:
 	ITracer* tracer_;
 	tstring toString_;
 
-	//bool _writing = false;
-	//LinkedList<ByteBuffer> _writebuf = new LinkedList<ByteBuffer>();
-	//int _writeBufferedSize = 0; //_writebuf内所有byte的总和
-
-	//bool _isDisconnectingOnEmpty = false;
-	//Exception _disconnectingArg = null;
-
-
-	//bool _isShutdownOnEmpty = false;
-	//SocketShutdown _shutdownArg = SocketShutdown.Both;
-
-	//bool _read_shutdown = false;
-	//bool _write_shutdown = false;
-
-
-	//// 没有取到数据时触发timeout异常的时间间隔
-	//TimeSpan _timeout = IOCPCore.TIMEOUT_INTERVAL;
-	//// 上一次触发timeout异常的时间
-	//DateTime _triggeredTime = DateTime.Now;
+#ifdef DUMPFILE
+		std::auto_ptr<std::ofstream> os;
+		std::auto_ptr<std::ofstream> is;
+#endif
 };
 
 _jingxian_end

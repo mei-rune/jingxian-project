@@ -1,8 +1,11 @@
 
 # include "pro_config.h"
+# include "jingxian/directory.h"
 # include "jingxian/protocol/NullProtocol.h"
 # include "jingxian/networks/ConnectedSocket.h"
 # include "jingxian/networks/commands/DisconnectCommand.h"
+# include "jingxian/networks/commands/ReadCommand.h"
+# include "jingxian/networks/commands/WriteCommand.h"
 
 _jingxian_begin
 
@@ -25,7 +28,7 @@ ConnectedSocket::ConnectedSocket(IOCPServer* core
 {
 	toString_ = concat<tstring>(_T("ConnectedSocket["),host_, _T(" - "), peer_);
 
-	tracer_ = logging::makeTracer(_T("ConnectedSocket"), host_, peer_);	
+	tracer_ = logging::makeTracer(_T("ConnectedSocket"), host_, peer_, ::toString(sock));	
 	TP_CRITICAL(tracer_, transport_mode::Both, _T("创建 ConnectedSocket 对象成功"));
 	
 	context_.initialize(core, this);
@@ -35,6 +38,12 @@ ConnectedSocket::ConnectedSocket(IOCPServer* core
 
 ConnectedSocket::~ConnectedSocket( )
 {
+	if( INVALID_SOCKET != socket_)
+	{
+		::closesocket(socket_);
+		socket_ = INVALID_SOCKET;
+	}
+
 	TP_CRITICAL(tracer_, transport_mode::Both, _T("销毁 ConnectedSocket 对象成功"));
 	delete tracer_;
 	tracer_ = null_ptr;
@@ -51,6 +60,14 @@ void ConnectedSocket::initialize()
 {
 	if( isInitialize_ )
 		return;
+
+#ifdef DUMPFILE
+	os.reset( new std::ofstream(toNarrowString(simplify (combinePath(getApplicationDirectory(),concat<tstring>(_T("raw_out_"), ::toString(socket_), _T(".txt"))))).c_str()));
+
+
+	is.reset( new std::ofstream(toNarrowString(simplify (combinePath(getApplicationDirectory(),concat<tstring>(_T("raw_in_"), ::toString(socket_), _T(".txt"))))).c_str()));
+
+#endif
 
 	if(null_ptr == protocol_)
 	{
@@ -71,6 +88,7 @@ void ConnectedSocket::startReading()
 		return;
 	}
 
+	TP_TRACE(tracer_, transport_mode::Receive, _T("启动读线程!"));
 	stopReading_ = false;
 	doRead();
 }
@@ -154,6 +172,7 @@ void ConnectedSocket::doRead()
 		return;
 	}
 
+	TP_TRACE(tracer_, transport_mode::Receive, _T("发送读请求 - ") << ((int)command.get()));
 	reading_ = true;
 	command.release();
 }
@@ -191,6 +210,7 @@ void ConnectedSocket::doWrite()
 		return;
 	}
 
+	TP_TRACE(tracer_, transport_mode::Send, _T("发送写数据请求 - ") << ((int)command.get()));
 	writing_ = true;
 	command.release();
 }
@@ -203,12 +223,15 @@ void ConnectedSocket::doDisconnect(transport_mode::type mode, errcode_t error, c
 		return;
 	}
 
-	state_ = connection_status::disconnecting;
 
 	if(writing_)
 	{
 		assert( transport_mode::Send != mode);
 		disconnectReason_ = description;
+
+		if( INVALID_SOCKET != socket_ )
+			::shutdown(socket_,  SD_BOTH);
+
 		TP_TRACE(tracer_, mode, _T("准备断开连接时发现写请未返回"));
 		return;
 	}
@@ -216,6 +239,10 @@ void ConnectedSocket::doDisconnect(transport_mode::type mode, errcode_t error, c
 	{
 		assert( transport_mode::Receive != mode);
 		disconnectReason_ = description;
+				
+		if( INVALID_SOCKET != socket_ )
+			::shutdown(socket_,  SD_BOTH);
+
 		TP_TRACE(tracer_, mode, _T("准备断开连接时发现读请未返回"));
 		return;
 	}
@@ -226,12 +253,59 @@ void ConnectedSocket::doDisconnect(transport_mode::type mode, errcode_t error, c
 		TP_FATAL(tracer_, mode, _T("准备断开连接时发送连接请求失败"));
 		return;
 	}
+
+	state_ = connection_status::disconnecting;
+	TP_TRACE(tracer_, mode , _T("发送断开请求,") << description);
 	command.release();
 }
 
-void ConnectedSocket::onRead(size_t bytes_transferred)
+void ConnectedSocket::onRead(const ICommand& command, size_t bytes_transferred)
 {
+	TP_TRACE(tracer_, transport_mode::Receive, _T("读请求 '")<< (int)&command <<_T("' 成功返回!"));
+
 	reading_ = false;
+
+#ifdef DUMPFILE
+	int rawLen = bytes_transferred;
+	ReadCommand* readCmd = (ReadCommand*)&command;
+	for(std::vector<io_mem_buf>::const_iterator it = readCmd->iovec().begin()
+		; it != readCmd->iovec().end() && rawLen > 0
+		; ++ it )
+	{
+		int len = 0;
+		if( it->len > rawLen)
+		{
+			len = rawLen;
+			rawLen = 0;
+		}
+		else
+		{
+			len = it->len;
+			rawLen -= it->len;
+		}
+
+		for(int i = 0; i < len; ++ i)
+		{
+			if((unsigned)(it->buf[i] + 1) > 256)
+				(*is) << "<" << (int)it->buf[i] << ">";
+			else if( ::isalpha(it->buf[i]) )
+				(*is) << it->buf[i];
+			else  if( ::isdigit(it->buf[i]) )
+				(*is) << it->buf[i];
+			else if(_T('\r') == it->buf[i])
+				(*is) << "<\\r>";
+			else if(_T('\n') == it->buf[i])
+				(*is) << "<\\n>" << std::endl;
+			else if(_T('\t') == it->buf[i])
+				(*is) << "\t<\\t>";
+			else if(::isprint(it->buf[i]))
+				(*is) << "<" << (int)it->buf[i] << ":" << it->buf[i] << ">";
+			else
+				(*is) << "<" << (int)it->buf[i] << ">";
+		}
+		is->flush();
+	}
+#endif
 
 	if(!incoming_.increaseBytes(bytes_transferred))
 	{
@@ -287,21 +361,68 @@ void ConnectedSocket::onRead(size_t bytes_transferred)
 	doRead();
 }
 
-void ConnectedSocket::onWrite(size_t bytes_transferred)
+void ConnectedSocket::onWrite(const ICommand& command, size_t bytes_transferred)
 {
+	TP_TRACE(tracer_, transport_mode::Send, _T("写请求 '")<< (int)&command <<_T("' 成功返回!"));
+
+	
+#ifdef DUMPFILE
+	int rawLen = bytes_transferred;
+	WriteCommand* writeCmd = (WriteCommand*)&command;
+	for(std::vector<io_mem_buf>::const_iterator it = writeCmd->iovec().begin()
+		; it != writeCmd->iovec().end() && rawLen > 0
+		; ++ it )
+	{
+		int len = 0;
+		if( it->len > rawLen)
+		{
+			len = rawLen;
+			rawLen = 0;
+		}
+		else
+		{
+			len = it->len;
+			rawLen -= it->len;
+		}
+
+		for(int i = 0; i < len; ++ i)
+		{
+			if((unsigned)(it->buf[i] + 1) > 256)
+				(*os) << "<" << (int)it->buf[i] << ">";
+			else if( ::isalpha(it->buf[i]) )
+				(*os) << it->buf[i];
+			else  if( ::isdigit(it->buf[i]) )
+				(*os) << it->buf[i];
+			else if(_T('\r') == it->buf[i])
+				(*os) << "<\\r>";
+			else if(_T('\n') == it->buf[i])
+				(*os) << "<\\n>" << std::endl;
+			else if(_T('\t') == it->buf[i])
+				(*os) << "\t<\\t>";
+			else if(::isprint(it->buf[i]))
+				(*os) << "<" << (int)it->buf[i] << ":" << it->buf[i] << ">";
+			else
+				(*os) << "<" << (int)it->buf[i] << ">";
+		}
+		os->flush();
+	}
+#endif
+
 	writing_ = false;
 	outgoing_.clearBytes(bytes_transferred);
 	doWrite();
 }
 
-void ConnectedSocket::onError(transport_mode::type mode, errcode_t error, const tstring& description)
+void ConnectedSocket::onError(const ICommand& command, transport_mode::type mode, errcode_t error, const tstring& description)
 {
 	switch( mode )
 	{
 	case transport_mode::Receive:
+		TP_TRACE(tracer_, transport_mode::Receive, _T("读请求 '")<< (int)&command <<_T("' 错误返回,") << description);
 		reading_ = false;
 		break;
 	case transport_mode::Send:
+		TP_TRACE(tracer_, transport_mode::Send, _T("写请求 '")<< (int)&command <<_T("' 错误返回,") << description);
 		reading_ = false;
 		break;
 	default:
@@ -332,8 +453,11 @@ const tstring& ConnectedSocket::toString() const
 	return toString_;
 }
 
-void ConnectedSocket::onDisconnected(errcode_t error, const tstring& description)
+void ConnectedSocket::onDisconnected(const ICommand& command, errcode_t error, const tstring& description)
 {
+	TP_TRACE(tracer_, transport_mode::Both , _T("断开请求 '")<< (int)&command <<_T("' 返回!"));
+	
+	state_ = connection_status::disconnected;
 	protocol_->onDisconnected(context_,error, description);
 }
 

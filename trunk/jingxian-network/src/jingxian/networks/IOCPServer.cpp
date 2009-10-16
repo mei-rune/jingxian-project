@@ -190,11 +190,11 @@ void IOCPServer::application_specific_code (ICommand *asynch_result,
 	}
 	catch( std::exception& e )
 	{
-		FATAL( _logger , "error :" << e.what() );
+		LOG_FATAL( _logger , "error :" << e.what() );
 	}
 	catch( ... )
 	{	
-		FATAL( _logger , "unkown error!" );
+		LOG_FATAL( _logger , "unkown error!" );
 	}
 	
 	command_queue::release( asynch_result );
@@ -274,7 +274,7 @@ IAcceptor* IOCPServer::listenWith(const tchar* endPoint)
 	stdext::hash_map<tstring,IAcceptor*>::iterator acceptorIt = _acceptors.find( to_lower<tstring>( addr ));
 	if( _acceptors.end() != acceptorIt )
 	{
-		TRACE( _logger, _T("已经创建过监听器 '") << endPoint 
+		LOG_TRACE( _logger, _T("已经创建过监听器 '") << endPoint 
 			<< _T("' 了!") );
 		return null_ptr;
 	}
@@ -301,13 +301,13 @@ IAcceptor* IOCPServer::listenWith(const tchar* endPoint)
     
  //   if( acceptor->startListening() )
 	//{
-	//	TRACE( _logger, "尝试监听地址 '" << endPoint 
+	//	LOG_TRACE( _logger, "尝试监听地址 '" << endPoint 
 	//		<< "' 时发生错误‘" << lastError()
 	//		<< "’" );
 	//	return null_ptr;
  //   }
 	//
- //   TRACE( _logger, _T("尝试监听地址 '") << endPoint 
+ //   LOG_TRACE( _logger, _T("尝试监听地址 '") << endPoint 
 	//	<< _T("' 成功‘") << sa.ptr(0) 
 	//	<< _T("’") );
 	

@@ -29,7 +29,7 @@ public:
 	{
 		if(!this->initialize(_T("tcp://0.0.0.0:6543")))
 		{
-			FATAL(log(), _T("≥ı º ß∞‹"));
+			LOG_FATAL(log(), _T("≥ı º ß∞‹"));
 			return;
 		}
 		acceptor_.accept(this, &EchoServer::OnComplete, &EchoServer::OnError, &core);
@@ -93,7 +93,7 @@ TEST(string, stringOP)
 	try
 	{
 		char* p = sa[ 8 ].ptr;
-		std::cout << "ERROR split!" << std::endl;
+		std::cout << "LOG_ERROR split!" << std::endl;
 	}
 	catch( OutOfRangeException& e)
 	{
@@ -111,7 +111,7 @@ TEST(string, stringOP)
 	ASSERT_FALSE( begin_with( str1, "as1d" ) );
 
 	if( !end_with( str1, "fas" ) )
-		std::cout << "ERROR end_with!" << std::endl;
+		std::cout << "LOG_ERROR end_with!" << std::endl;
 	ASSERT_FALSE(end_with( str1, "f1as" ) );
 
 	std::string str3( "       asdkdfasdf");

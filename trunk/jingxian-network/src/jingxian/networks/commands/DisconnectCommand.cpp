@@ -20,7 +20,7 @@ void DisconnectCommand::on_complete(size_t bytes_transferred
 		, void *completion_key
 		, errcode_t error)
 {
-	connectedSocket_->onDisconnected(error, reason_);
+	connectedSocket_->onDisconnected(*this, error, reason_);
 	delete connectedSocket_;
 }
 
