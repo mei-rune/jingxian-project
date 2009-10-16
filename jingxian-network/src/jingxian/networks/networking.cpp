@@ -445,7 +445,7 @@ namespace networking
 	  if(SOCKET_ERROR == ::WSAAddressToString(addr, len, NULL,(LPTSTR)host.c_str() + prefix, &addressLength))
 		  return false;
 
-	  host.resize( addressLength + prefix);
+	  host.resize( addressLength + prefix - 1);
 	  return true;
 	}
 }

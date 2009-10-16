@@ -27,17 +27,17 @@ void ReadCommand::on_complete(size_t bytes_transferred
 	if (!success)
 	{
 		tstring err = ::concat<tstring>(_T("读数据时发生错误 - "), lastError(error));
-		transport_->onError(transport_mode::Receive, error,err);
+		transport_->onError(*this, transport_mode::Receive, error,err);
 		return;
 	}
 	else if (0 == bytes_transferred)
 	{
-		transport_->onError(transport_mode::Receive, error, _T("对方主动关闭!"));
+		transport_->onError(*this, transport_mode::Receive, error, _T("对方主动关闭!"));
 		return;
 	}
 	else
 	{
-		transport_->onRead(bytes_transferred);
+		transport_->onRead(*this, bytes_transferred);
 	}
 }
 
@@ -45,6 +45,9 @@ bool ReadCommand::execute()
 {
 	DWORD bytesTransferred;
 	DWORD flags =0;
+
+	assert(iovec_.size() > 0);
+	assert(iovec_[0].len > 0);
 
 	if (SOCKET_ERROR != ::WSARecv(transport_->handle()
 		,  &(iovec_[0])

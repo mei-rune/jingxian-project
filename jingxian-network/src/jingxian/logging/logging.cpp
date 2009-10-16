@@ -12,17 +12,17 @@ namespace logging
 	spi::ITraceFactory* tracefactory_ = null_ptr;
 	spi::ILogFactory* logFactory_ = null_ptr;
 
-	ITracer* makeTracer( const tchar* nm, const tstring& host, const tstring& peer)
+	ITracer* makeTracer( const tchar* nm, const tstring& host, const tstring& peer, const tstring& sessionId)
 	{
 		if(null_ptr == tracefactory_)
-			return new log4cppAdaptor::Tracer(nm, host, peer);
+			return new log4cppAdaptor::Tracer(nm, host, peer, sessionId);
 
-		return tracefactory_->make(nm, host, peer);
+		return tracefactory_->make(nm, host, peer, sessionId);
 	}
 
-	ITracer* makeTracer( const tstring& nm, const tstring& host, const tstring& peer)
+	ITracer* makeTracer( const tstring& nm, const tstring& host, const tstring& peer, const tstring& sessionId)
 	{
-		return makeTracer(nm.c_str(), host, peer);
+		return makeTracer(nm.c_str(), host, peer, sessionId);
 	}
 
 	spi::ITraceFactory* setTraceFactory(spi::ITraceFactory* factory)

@@ -23,7 +23,7 @@ ConnectCommand::ConnectCommand(IOCPServer* core
 
 ConnectCommand::~ConnectCommand()
 {
-	if( INVALID_SOCKET == socket_ )
+	if(INVALID_SOCKET != socket_)
 	{
 		closesocket(socket_);
 		socket_ = INVALID_SOCKET;

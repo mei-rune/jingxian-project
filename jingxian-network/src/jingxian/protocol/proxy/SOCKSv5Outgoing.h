@@ -9,6 +9,7 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
+# include <fstream>
 # include "jingxian/protocol/BaseProtocol.h"
 # include "jingxian/buffer/OutBuffer.h"
 
@@ -39,6 +40,10 @@ namespace proxy
 	private:
 		SOCKSv5Protocol* socks_;
 		ITransport* transport_;
+#ifdef DUMPFILE
+		std::auto_ptr<std::ofstream> os;
+		std::auto_ptr<std::ofstream> is;
+#endif
 	};
 
 }

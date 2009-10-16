@@ -18,8 +18,10 @@
 # include "log4cpp/Portability.hh"
 # include "log4cpp/Category.hh"
 # include "log4cpp/Appender.hh"
-# include "log4cpp/NTEventLogAppender.hh"
 # include "log4cpp/Priority.hh"
+# include "log4cpp/FileAppender.hh"
+# include "log4cpp/RollingFileAppender.hh"
+# include "log4cpp/NTEventLogAppender.hh"
 
 _jingxian_begin
 
@@ -33,6 +35,10 @@ namespace log4cppAdaptor
 		virtual ~Logger(void);
 
 		virtual void assertLog(bool assertion, const LogStream& msg, const char* file=0, int line=-1) ;
+
+		virtual bool isCritEnabled() const ;
+
+		virtual void crit(const LogStream& message, const char* file=0, int line=-1) ;
 
 		virtual bool isFatalEnabled() const ;
 
@@ -75,12 +81,33 @@ namespace log4cppAdaptor
 		log4cpp::Category& logger_;
 	};
 
+	class ContextCategory : public log4cpp::Category
+	{
+	public:
+		ContextCategory(const std::string& name,
+                                               const std::string& context);
+
+		void setContext(const std::string& context);
+		
+		const std::string& getContext() const;
+      
+	protected:
+		virtual void _logUnconditionally2(log4cpp::Priority::Value priority, 
+                                          const std::string& message) throw();
+	private:
+         std::string context_;
+    };
+
 	class Tracer : public ITracer
 	{
 	public:
-		Tracer( const tchar* nm, const tstring& host, const tstring& peer);
+		Tracer( const tchar* nm, const tstring& thost, const tstring& tpeer, const tstring& sessionId);
 
 		virtual ~Tracer(void);
+
+		virtual bool isCritEnabled() const;
+
+		virtual void crit(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
 
 		virtual bool isDebugEnabled() const;
 
@@ -107,7 +134,7 @@ namespace log4cppAdaptor
 		virtual void trace(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
 
 	private:
-		log4cpp::Category& logger_;
+		ContextCategory logger_;
 		char* name_;
 	};
 }

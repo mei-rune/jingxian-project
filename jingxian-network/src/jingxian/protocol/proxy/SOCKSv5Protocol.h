@@ -83,13 +83,7 @@ namespace proxy
 		void onConnectComplete(ITransport* transport, ProtocolContext& context);
 		void onConnectError(const ErrorCode&, ProtocolContext& context);
 
-		//void OnBindSuccess(SOCKSv5Incoming incoming);
-		//void OnBindTimeout( IAcceptor acceptor);
-		//void OnBindError(Exception e);
-		//void Associating(IPEndPoint endPoint);
-		void sendReply(ProtocolContext& context, int reply);
-		void sendReply(ProtocolContext& context, int reply, const char* addr, size_t len, int port);
-		void sendReply(ProtocolContext& context, int reply, int version, const char* addr, size_t len, int port);
+		void sendReply(ProtocolContext& context, int reply, int version, int addressType, const char* addr, size_t len, int port);
 	private:
 		Proxy* server_;
 		int status_;

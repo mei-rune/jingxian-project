@@ -44,8 +44,11 @@ bool TCPAcceptor::isListening() const
 
 void TCPAcceptor::stopListening()
 {
-	closesocket(socket_);
-	socket_ = INVALID_SOCKET;
+	if(INVALID_SOCKET != socket_)
+	{
+		closesocket(socket_);
+		socket_ = INVALID_SOCKET;
+	}
 	status_ = connection_status::disconnected;
 }
 
@@ -155,7 +158,7 @@ bool TCPAcceptor::startListening()
 
 	status_ = connection_status::listening;
 
-	INFO( logger_, _T("启动监听地址 '") << endpoint_ 
+	LOG_INFO( logger_, _T("启动监听地址 '") << endpoint_ 
 		<< _T("' 成功!") );
 	toString_ = _T("TCPAcceptor[ socket=") + ::toString((int)socket_) + _T(",address=") + endpoint_ + _T("]");
 

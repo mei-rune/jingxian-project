@@ -3,6 +3,7 @@
 # include "jingxian/protocol/proxy/SOCKSv5Outgoing.h"
 # include "jingxian/protocol/proxy/SOCKSv5Protocol.h"
 # include "jingxian/buffer/OutBuffer.h"
+# include "jingxian/directory.h"
 
 _jingxian_begin
 
@@ -26,7 +27,13 @@ void SOCKSv5Outgoing::write(const std::vector<io_mem_buf>& buffers)
 	for(std::vector<io_mem_buf>::const_iterator it = buffers.begin()
 		; it != buffers.end()
 		; ++ it )
+	{
 	out.writeBlob(it->buf, it->len);
+#ifdef DUMPFILE
+		*os << std::string( it->buf, it->len );
+		os->flush();
+#endif
+	}
 }
 
 void SOCKSv5Outgoing::disconnection()
@@ -44,6 +51,16 @@ bool SOCKSv5Outgoing::isActive() const
 
 size_t SOCKSv5Outgoing::onReceived(ProtocolContext& context)
 {
+#ifdef DUMPFILE
+	for(std::vector<io_mem_buf>::const_iterator it = context.inMemory().begin()
+		; it != context.inMemory().end()
+		; ++ it )
+	{
+		*is << std::string( it->buf, it->len );
+		is->flush();
+	}
+#endif
+
 	socks_->writeIncoming(context.inMemory());
 	return context.inBytes();
 }
@@ -52,6 +69,15 @@ void SOCKSv5Outgoing::onConnected(ProtocolContext& context)
 {
 	BaseProtocol::onConnected(context);
 	transport_ = &(context.transport());
+
+#ifdef DUMPFILE
+	static int id = 0;
+	os.reset( new std::ofstream(toNarrowString(simplify (combinePath(getApplicationDirectory(),concat<tstring>(_T("outgoing_os_"), ::toString(++id), _T(".txt"))))).c_str()));
+	*os <<  toNarrowString(context.transport().toString()) << std::endl;
+
+	is.reset( new std::ofstream(toNarrowString(simplify (combinePath(getApplicationDirectory(),concat<tstring>(_T("outgoing_is_"), ::toString(id), _T(".txt"))))).c_str()));
+	*is <<  toNarrowString(context.transport().toString()) << std::endl;
+#endif
 }
 
 void SOCKSv5Outgoing::onDisconnected(ProtocolContext& context, errcode_t errCode, const tstring& reason)

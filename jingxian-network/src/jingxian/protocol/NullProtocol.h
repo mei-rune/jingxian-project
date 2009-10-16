@@ -29,7 +29,7 @@ public:
 
     virtual void onDisconnected(ProtocolContext& context, errcode_t errCode, const tstring& reason)
 	{
-		INFO(log(), _T("NullProtocol 新连接到来 - ") << context.transport().peer());
+		LOG_INFO(log(), _T("NullProtocol 新连接到来 - ") << context.transport().peer());
 
 		if(unBind_)
 			context.transport().bindProtocol(null_ptr);

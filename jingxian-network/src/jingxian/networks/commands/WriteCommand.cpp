@@ -25,17 +25,17 @@ void WriteCommand::on_complete(size_t bytes_transferred,
 	if (!success)
 	{
 		tstring err = ::concat<tstring>(_T("写数据时发生错误 - "), lastError(error));
-		transport_->onError(transport_mode::Send, error, err);
+		transport_->onError(*this, transport_mode::Send, error, err);
 		return;
 	}
 	else if (0 == bytes_transferred)
 	{
-		transport_->onError(transport_mode::Send, error, _T("对方主动关闭!"));
+		transport_->onError(*this, transport_mode::Send, error, _T("对方主动关闭!"));
 		return;
 	}
 	else
 	{
-		transport_->onWrite(bytes_transferred);
+		transport_->onWrite(*this, bytes_transferred);
 	}
 }
 

@@ -17,7 +17,7 @@ _jingxian_begin
 // So we just use the compiler-version (and assumes that the PSDK is 
 // the one which was installed by the VS-IDE)
 
-// INFO: If you want, you can use the RtlCaptureContext if you only target XP and later...
+// LOG_INFO: If you want, you can use the RtlCaptureContext if you only target XP and later...
 //       But I currently use it in x64/IA64 environments...
 //#if defined(_M_IX86) && (_WIN32_WINNT <= 0x0500) && (_MSC_VER < 1400)
 
@@ -1222,7 +1222,7 @@ void StackTracer::OnCallstackEntry(StackFrameType eType, StackFrame &entry)
 void StackTracer::OnDbgHelpErr(LPCSTR szFuncName, DWORD gle, DWORD64 addr)
 {
   CHAR buffer[STACKWALK_MAX_NAMELEN];
-  _snprintf_s(buffer, STACKWALK_MAX_NAMELEN, "ERROR: %s, GetLastError: %d (Address: %p)\n", szFuncName, gle, (LPVOID) addr);
+  _snprintf_s(buffer, STACKWALK_MAX_NAMELEN, "LOG_ERROR: %s, GetLastError: %d (Address: %p)\n", szFuncName, gle, (LPVOID) addr);
   OnOutput(buffer);
 }
 
