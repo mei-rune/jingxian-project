@@ -11,12 +11,14 @@
 #ifdef JINGXIAN_MT
 
 // Include files
+# ifdef CPP_TR1
 # ifdef HAS_BOOST
 # include "boost/tr1/memory.h"
 # include "boost/tr1/type_traits.h"
 # else
 # include <tr1/memory>
 # include <tr1/type_traits.h>
+# endif
 # endif
 
 _jingxian_begin
@@ -27,11 +29,13 @@ R _cast( T t)
 	return t;
 }
 
+#ifdef CPP_TR1
 template< typename R>
 R _cast( std::tr1::shared_ptr< typename std::tr1::remove_pointer<R>::type > t)
 {
 	return t.get();
 }
+#endif
 
 template<typename F>
 class thread_closure_0
@@ -187,5 +191,7 @@ private:
 };
 
 _jingxian_end
+
+#endif //JINGXIAN_MT
 
 #endif // THREAD_CLOSURE_H

@@ -136,6 +136,7 @@ namespace log4cppAdaptor
 	private:
 		ContextCategory logger_;
 		char* name_;
+		std::string appender;
 	};
 }
 

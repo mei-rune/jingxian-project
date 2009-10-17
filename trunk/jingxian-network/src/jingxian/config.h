@@ -211,4 +211,6 @@ typedef DWORD errcode_t;
 #define my_strdup _strdup
 #define my_wcsdup _wcsdup
 
+#define JINGXIAN_MT   1
+
 #endif // _config_h_
