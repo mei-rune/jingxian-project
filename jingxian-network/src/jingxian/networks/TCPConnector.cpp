@@ -21,8 +21,6 @@ TCPConnector::~TCPConnector()
 	logger_ = null_ptr;
 }
 
-
-
 void TCPConnector::connect(const tchar* endPoint
                        , OnBuildConnectionComplete onComplete
                        , OnBuildConnectionError onError
@@ -34,9 +32,8 @@ void TCPConnector::connect(const tchar* endPoint
 		int code = WSAGetLastError();
 		tstring descr = concat<tstring>(_T("连接到地址 '")
 			, endPoint 
-			, _T("' 时发生错误 - '")
-			, lastError(code)
-			, _T("'" ));
+			, _T("' 时发生错误 - ")
+			, lastError(code));
 		LOG_ERROR(logger_, descr);
 
 		ErrorCode err(false, code, descr);

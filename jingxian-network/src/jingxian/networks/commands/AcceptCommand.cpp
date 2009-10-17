@@ -76,7 +76,7 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 		&remote_size);
 
 	tstring peer;
-	if(!networking::addressToString(remote_addr, remote_size, peer))
+	if(!networking::addressToString(remote_addr, remote_size, _T("tcp"), peer))
 	{
 		int errCode = ::WSAGetLastError();
 		ErrorCode err(false, errCode, concat<tstring,tchar*, tstring,tchar*,tstring>(_T("接受器 '") 
@@ -88,7 +88,7 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 	}
 
 	tstring host;
-	if(!networking::addressToString(local_addr, local_size, host))
+	if(!networking::addressToString(local_addr, local_size, _T("tcp"), host))
 	{
 		int errCode = ::WSAGetLastError();
 		ErrorCode err(false, errCode, concat<tstring>(_T("接受器 '") 

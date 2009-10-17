@@ -138,13 +138,30 @@ namespace networking
           LPSOCKADDR* RemoteSockaddr,
           LPINT RemoteSockaddrLength);
 
+  /**
+   *  从 <schema>://<addr>:<port> 格式中取出 addr，其中 schema 与 port 是
+   *  可选的
+   */
+  tstring fetchAddr(const tchar* host);
 
+  /**
+   *  从 <schema>://<addr>:<port> 格式中取出 port，其中 schema 与 port 是
+   *  可选的
+   */
+  short fetchPort(const tchar* host);
+
+  /**
+   * 从 <schema>://<addr>:<port> 格式中取出 addr 和 port 转换成 sockaddr，其
+   * 中 schema 与 port 是可选的,其中 schema 中最后一个字符是 '6' 时表示采用
+   * IPv6格式.
+   */
   bool stringToAddress(const tchar* host
 	  , struct sockaddr* addr
 	  , int* len);
 
   bool addressToString(struct sockaddr* name
 	  , int len
+	  , const tchar* schema
 	  , tstring& host);
 }
 

@@ -152,13 +152,17 @@ Tracer::Tracer(const tchar* nm, const tstring& thost, const tstring& tpeer, cons
 	peer = replace_all(peer, ":", "[");
 	
 	std::string name = host + "]_" + peer + "]_" + toNarrowString(sessionId);
-	logger_.addAppender(new log4cpp::FileAppender(name, name + ".txt" ));
+	appender = name + ".txt" ;
+	logger_.addAppender(new log4cpp::FileAppender(name, appender));
 }
 
 Tracer::~Tracer(void)
 {
 	::my_free(name_);
 	name_ = null_ptr;
+
+	logger_.removeAllAppenders();
+	DeleteFileA(appender.c_str());
 }
 
 bool Tracer::isDebugEnabled() const

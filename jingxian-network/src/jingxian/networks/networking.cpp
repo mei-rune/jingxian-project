@@ -405,39 +405,55 @@ namespace networking
 	{
 		memset(addr, 0, *len);
 		addr->sa_family = AF_INET;
-		tstring endpoint = host;
-		tstring::size_type index = endpoint.find(_T("://"));
-		if(tstring::npos != index)
+
+		const tchar* begin = string_traits<tchar>::strstr(host, _T("://"));
+		if(null_ptr != begin)
 		{
-			tstring prefix = endpoint.substr(0, index);
-			if(0 == string_traits<tstring::value_type>::stricmp( prefix.c_str(), _T("tcp")))
-			{
-				addr->sa_family = AF_INET;
-			}
-			else if(0 == string_traits<tstring::value_type>::stricmp( prefix.c_str(), _T("tcp6"))
-				|| 0 == string_traits<tstring::value_type>::stricmp( prefix.c_str(), _T("tcpv6")))
-			{
+			if(begin != host && _T('6') == *(begin-1))
 				addr->sa_family = AF_INET6;
-			}
-			else
-			{
-				return false;
-			}
-			endpoint = endpoint.substr(index + 3);
+
+			begin +=3;
+		}
+		else
+		{
+			begin = host;
 		}
 
-		if(SOCKET_ERROR == ::WSAStringToAddress((LPTSTR)endpoint.c_str(), addr->sa_family, 0, addr, len))
-		{
-			return false;
-		}
-		return true;
-	}
+		return (SOCKET_ERROR != ::WSAStringToAddress((LPTSTR)begin, addr->sa_family, 0, addr, len));
+  }  
+
+  tstring fetchAddr(const tchar* host)
+  {
+	  const tchar* begin = string_traits<tchar>::strstr(host, _T("://"));
+	  if(null_ptr == begin)
+		  begin = host;
+	  else
+		  begin += 3;
+
+	  const tchar* end = string_traits<tchar>::strchr(begin, _T(':'));
+	  if(null_ptr == end)
+		  return begin;
+
+	  return tstring(begin, end);
+  }
+
+  
+  short fetchPort(const tchar* host)
+  {
+	  const tchar* end = string_traits<tchar>::strrchr(host, _T(':'));
+	  if(null_ptr == end)
+		  return 0;
+	  return (short) string_traits<tchar>::atoi(++end);
+  }
 
   bool addressToString(struct sockaddr* addr
 	  , int len
+	  , const tchar* schema
 	  , tstring& host)
-    {
-	  host = (addr->sa_family == AF_INET6)?_T("tcp6://"):_T("tcp://");
+  {
+	  host = (null_ptr == schema)?_T("tcp"):schema;
+	  host += (addr->sa_family == AF_INET6)?_T("6://"):_T("://");
+
 	  size_t prefix = host.size();
 	  host.resize(256);
 	  DWORD addressLength = host.size() - prefix;
@@ -447,7 +463,7 @@ namespace networking
 
 	  host.resize( addressLength + prefix - 1);
 	  return true;
-	}
+  }
 }
 
 _jingxian_end

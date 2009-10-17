@@ -2,6 +2,7 @@
 # include "pro_config.h"
 # include "jingxian/networks/commands/ConnectCommand.h"
 # include "jingxian/networks/ConnectedSocket.h"
+# include "jingxian/threading/thread.h"
 
 
 _jingxian_begin
@@ -31,14 +32,128 @@ ConnectCommand::~ConnectCommand()
 }
 
 
+void GetName(const tstring& name, short port, ConnectCommand* command)
+{
+	std::string host = toNarrowString(name);
+	struct hostent* ent = gethostbyname(host.c_str());
+	if(null_ptr == ent)
+		command->onErrorByDnsQuery(name, port);
+	else
+		command->onCompleteByDnsQuery(name, port, ent); 
+}
+
+void ConnectCommand::onErrorByDnsQuery(const tstring& name, short port)
+{
+	int error = WSAGetLastError();
+	ErrorCode err(false, error, concat<tstring>(_T("解析主机名 '") 
+		, name
+		, _T(":")
+		, ::toString(port)
+		, _T("' 失败 - ")
+		, lastError(error)));
+	onError_(err, context_);
+
+	delete this;
+}
+
+class ConnectTask : public IRunnable
+{
+public:
+	ConnectTask(ConnectCommand* cmd)
+		: command(cmd)
+		, len(sizeof(struct sockaddr_in))
+	{
+		memset(&addr, 0, len);
+	}
+
+	virtual ~ConnectTask()
+	{
+	}
+
+	virtual void run()
+	{
+		command->onRun(name, port, *(struct sockaddr*)&addr, len);
+	}
+
+	ConnectCommand* command;
+	tstring name;
+	short port;
+	struct sockaddr_in addr;
+	int len;
+};
+
+void ConnectCommand::onCompleteByDnsQuery(const tstring& name,short port, struct hostent* ent)
+{
+	std::auto_ptr<ConnectTask> runnable(new ConnectTask(this));
+
+	runnable->name = name;
+	runnable->port = port;
+
+	runnable->addr.sin_family = AF_INET;
+	runnable->addr.sin_addr.s_addr = *(ULONG*)ent->h_addr_list[0];
+	runnable->addr.sin_port = htons(port);
+
+	//Note   All I/O initiated by a given thread is canceled when that thread 
+	//exits. For overlapped sockets, pending asynchronous operations can fail
+	//if the thread is closed before the operations complete. See ExitThread 
+	//for more information.
+
+	if(this->core_->send(runnable.get()))
+	{
+		runnable.release();
+		return;
+	}
+
+	int error = WSAGetLastError();
+	ErrorCode err(false, error, concat<tstring>(_T("投递一个 dns 完成任务 '") 
+		, name
+		, _T(":")
+		, ::toString(port)
+		, _T("' 时发生错误 - ")
+		, lastError(error)));
+	onError_(err, context_);
+
+	delete this;
+}
+
+
+void ConnectCommand::onRun(tstring& name, short port, struct sockaddr& addr, int len)
+{
+	if(execute(addr, len))
+		return;
+
+	int error = WSAGetLastError();
+	ErrorCode err(false, error, concat<tstring>(_T("连接到地址 '") 
+		, name
+		, _T(":")
+		, ::toString(port)
+		, _T("' 时发生错误 - ")
+		, lastError(error)));
+	onError_(err, context_);
+
+	delete this;
+}
+
+void ConnectCommand::dnsQuery(const tstring& name)
+{
+	create_thread(&GetName, name, networking::fetchPort(host_.c_str()), this);
+}
+
 bool ConnectCommand::execute()
 {
 	struct sockaddr addr;
 	int len = sizeof(addr);
 
 	if(! networking::stringToAddress((LPTSTR)host_.c_str(), &addr, &len))
-		return false;
-	
+	{
+		dnsQuery(networking::fetchAddr(host_.c_str()));
+		return true;
+	}
+	return execute(addr, len);
+}
+
+bool ConnectCommand::execute(struct sockaddr& addr, int len)
+{
 	if (INVALID_SOCKET == socket_)
 		socket_ = WSASocket(addr.sa_family,SOCK_STREAM,IPPROTO_TCP,0,0,WSA_FLAG_OVERLAPPED);
 
@@ -101,7 +216,7 @@ void ConnectCommand::on_complete(size_t bytes_transferred
 		}
 
 		tstring local;
-		if(!networking::addressToString(&name, namelen, local))
+		if(!networking::addressToString(&name, namelen, _T("tcp"), local))
 		{
 			ErrorCode err(0 == success, error, concat<tstring>(_T("连接到 '") 
 				, host_

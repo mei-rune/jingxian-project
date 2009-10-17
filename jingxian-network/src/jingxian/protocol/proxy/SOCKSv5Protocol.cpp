@@ -151,7 +151,7 @@ bool readNetAddress(InBuffer& inBuffer, tstring& host, int af, size_t len)
 	inBuffer.readBlob(&(((sockaddr_in*)&addr)->sin_addr), len);
 	((sockaddr_in*)&addr)->sin_port = inBuffer.readInt16();
 
-	return networking::addressToString(&addr, sizeof(addr), host);
+	return networking::addressToString(&addr, sizeof(addr), _T("tcp"), host);
 }
 
 size_t SOCKSv5Protocol::onCommand(ProtocolContext& context, InBuffer& inBuffer)
