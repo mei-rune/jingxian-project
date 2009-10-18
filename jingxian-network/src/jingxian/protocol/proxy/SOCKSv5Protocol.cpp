@@ -1,5 +1,11 @@
 
 # include "pro_config.h"
+# include <fcntl.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <io.h>
+# include <stdio.h>
+# include "jingxian/directory.h"
 # include "jingxian/protocol/NullProtocol.h"
 # include "jingxian/protocol/proxy/SOCKSv5Protocol.h"
 # include "jingxian/protocol/proxy/Proxy.h"
@@ -18,10 +24,24 @@ SOCKSv5Protocol:: SOCKSv5Protocol(Proxy* server)
 {
 	outgoing_.initialize(this);
 	incoming_.initialize(this);
+
+#ifdef DEBUG_TRACE
+	sessionPath_ = combinePath(combinePath(server_->basePath(), _T("session")), ::toString((int)this) + _T(".txt"));
+	sessionId_ = _tfopen( sessionPath_.c_str(),_T("w+"));
+#endif
 }
 
 SOCKSv5Protocol::~SOCKSv5Protocol()
 {
+#ifdef DEBUG_TRACE
+	if(null_ptr != sessionId_)
+	{
+		::fclose(sessionId_);
+		sessionId_ = null_ptr;
+	}
+	::remove(sessionPath_);
+#endif
+
 	if(null_ptr != connectProxy_)
 		connectProxy_->shutdown();
 }
@@ -38,6 +58,12 @@ void SOCKSv5Protocol::writeOutgoing(const std::vector<io_mem_buf>& buffers)
 
 void SOCKSv5Protocol::onConnected(ProtocolContext& context)
 {
+#ifdef DEBUG_TRACE
+	_fputts(context.transport().toString().c_str(), sessionId_);
+	_fputts(_T("\r\n"), sessionId_);
+	::fflush(sessionId_);
+#endif
+
 	BaseProtocol::onConnected(context);
 	status_ = 0;
 }
@@ -292,6 +318,12 @@ void SOCKSv5Protocol::connectTo(ProtocolContext& context, const tstring& host)
 
 void SOCKSv5Protocol::onConnectComplete(ITransport* transport, ProtocolContext& context)
 {
+#ifdef DEBUG_TRACE
+	_fputts(transport->toString().c_str(), sessionId_);
+	_fputts(_T("\r\n"), sessionId_);
+	::fflush(sessionId_);
+#endif
+
 	connectProxy_ = null_ptr;
 	if(3 != status_)
 	{

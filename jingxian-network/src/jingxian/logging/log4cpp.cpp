@@ -1,5 +1,6 @@
 # include "pro_config.h"
 # include "log4cpp.h"
+# include "jingxian/directory.h"
 
 _jingxian_begin
 
@@ -152,7 +153,15 @@ Tracer::Tracer(const tchar* nm, const tstring& thost, const tstring& tpeer, cons
 	peer = replace_all(peer, ":", "[");
 	
 	std::string name = host + "]_" + peer + "]_" + toNarrowString(sessionId);
-	appender = name + ".txt" ;
+	tstring dir = simplify(combinePath(getApplicationDirectory(), _T("log")));
+	if(!existDirectory(dir))
+		createDirectory(dir);
+
+	dir = combinePath(dir, _T("connection"));
+	if(!existDirectory(dir))
+		createDirectory(dir);
+
+	appender = toNarrowString(combinePath(dir,toTstring(name) + _T(".txt")));
 	logger_.addAppender(new log4cpp::FileAppender(name, appender));
 }
 
