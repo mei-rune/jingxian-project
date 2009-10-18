@@ -258,6 +258,7 @@ ContextCategory::ContextCategory(const std::string& name
 								 : log4cpp::Category(name,&log4cpp::Category::getInstance(name), log4cpp::Priority::DEBUG)
 								 , context_(context)
 {
+	this->setPriority(this->getParent()->getPriority());
 }
 
 void ContextCategory::setContext(const std::string& context)
