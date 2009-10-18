@@ -10,6 +10,7 @@
 
 // Include files
 # include <list>
+# include "jingxian/directory.h"
 # include "jingxian/AbstractServer.h"
 # include "jingxian/networks/IOCPServer.h"
 # include "jingxian/protocol/proxy/ICredentialPolicy.h"
@@ -103,12 +104,23 @@ namespace proxy
 			//_allowedIPs = ParseIPSeg( config.AllowedIPs );
 			//_blockingIPs = ParseIPSeg(config.BlockingIPs );
 
-			acceptor_.accept(this, &Proxy::onComplete, &Proxy::onError, &core);
 
+			path_ = simplify(combinePath(getApplicationDirectory(), _T("log")));
+			if(!existDirectory(path_))
+				createDirectory(path_);
+
+			path_ = combinePath(path_, _T("proxy"));
+			if(!existDirectory(path_))
+				createDirectory(path_);
+
+			if(!existDirectory(combinePath(path_, _T("session"))))
+				createDirectory(combinePath(path_, _T("session")));
 
 			_credentials.policies().push_back(new NullCredentialPolicyFactory(this));
 			_credentials.policies().push_back(new BaseCredentialPolicyFactory(this, AuthenticationType::BASE, _T("BASE"), _T("")));
 			_credentials.policies().push_back(new BaseCredentialPolicyFactory(this, AuthenticationType::GSSAPI, _T("GSSAPI"), _T("")));
+
+			acceptor_.accept(this, &Proxy::onComplete, &Proxy::onError, &core);
 		}
 
 		void onComplete(ITransport* transport, IOCPServer* core)
@@ -153,6 +165,11 @@ namespace proxy
 		//    return false;
 		//}
 
+		const tstring& basePath() const
+		{
+			return path_;
+		}
+
 		proxy::Credentials&  credentials()
 		{
 			return _credentials;
@@ -160,6 +177,7 @@ namespace proxy
 
 	private:
 		proxy::Credentials _credentials;
+		tstring path_;
 	};
 }
 

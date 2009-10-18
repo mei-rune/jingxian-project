@@ -163,7 +163,7 @@ inline bool isRoot(const tstring& pa)
 /**
  * 判它是不是目录
  */
-inline bool isDirectory(const tstring& pa)
+inline bool existDirectory(const tstring& pa)
 {
 #ifdef  _UNICODE
 	struct _stat buf;
@@ -172,11 +172,27 @@ inline bool isDirectory(const tstring& pa)
 	struct stat buf;
 	if(stat(pa.c_str(), &buf) == -1)
 #endif
-	{
-		ThrowException1( RuntimeException, _T("不能stat `") + pa + _T("':\n") + lastError() );
-	}
+		return false;
 
-	return (S_ISDIR(buf.st_mode)) != 0 ;
+	return S_ISDIR(buf.st_mode) != 0 ;
+}
+
+
+/**
+ * 判它是不是目录
+ */
+inline bool existFile(const tstring& pa)
+{
+#ifdef  _UNICODE
+	struct _stat buf;
+	if(_wstat(pa.c_str(), &buf) == -1)
+#else
+	struct stat buf;
+	if(stat(pa.c_str(), &buf) == -1)
+#endif
+		return false;
+
+	return S_ISREG(buf.st_mode) != 0 ;
 }
 
 /**
@@ -336,17 +352,14 @@ inline std::list<tstring> readDirectory(const tstring& pa)
 /**
  * 重命名文件名或目录名
  */
-inline void rename(const tstring& fromPa, const tstring& toPa)
+inline bool renameFile(const tstring& fromPa, const tstring& toPa)
 {
 	const tstring fromPath = simplify(fromPa);
 	const tstring toPath = simplify(toPa);
 
 	::_tremove(toPath.c_str()); // We ignore errors, as the file we are renaming to might not exist.
 
-	if(::_trename(fromPath.c_str(), toPath.c_str()) == -1)
-	{
-		ThrowException1( RuntimeException,  _T("不能将文件 `") + fromPath + _T("' 重命名为  `") + toPath + _T("': ") + lastError() );
-	}
+	return -1 != ::_trename(fromPath.c_str(), toPath.c_str());
 }
 
 /**

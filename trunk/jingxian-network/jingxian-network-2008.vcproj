@@ -43,7 +43,7 @@
 				AdditionalOptions="/DTEST"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(LOG4CPP_ROOT)\include&quot;;&quot;$(ProjectDir)src\&quot;;."
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DEBUG_TRACE"
 				GeneratePreprocessedFile="0"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

@@ -93,6 +93,11 @@ namespace proxy
 		
 		SOCKSv5Outgoing outgoing_;
 		SOCKSv5Incoming incoming_;
+
+#ifdef DEBUG_TRACE
+		tstring sessionPath_;
+		FILE* sessionId_;
+#endif
 	};
 }
 
