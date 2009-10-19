@@ -1,0 +1,7 @@
+1.incomingBuffer与outingBuffer两个类实现太复杂,也不直观
+2.ConnectCommand 两个类实现太复杂,也不直观,可以考虑用状态机模式来简化
+3.ConnectCommand 类在连接时只用了 DNS 的第一个连接,可以改成依次尝试
+4.SOCKSv5Protocol 类的实现太复杂,也不直观,可以考虑用状态机模式来简化
+5.proxy还不支持读配置
+6.不支持以配置的方式载入服务
+7.不支持多进程并发..
