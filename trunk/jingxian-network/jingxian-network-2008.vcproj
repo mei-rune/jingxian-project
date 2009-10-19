@@ -686,6 +686,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\jingxian\changelog.txt"
+			>
+		</File>
+		<File
 			RelativePath=".\src\jingxian\communicator.h"
 			>
 		</File>
@@ -779,6 +783,10 @@
 		</File>
 		<File
 			RelativePath=".\src\jingxian\ReadMe.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\src\jingxian\roadmap.txt"
 			>
 		</File>
 	</Files>
