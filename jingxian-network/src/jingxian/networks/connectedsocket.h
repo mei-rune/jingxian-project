@@ -143,6 +143,8 @@ private:
 	bool writing_;
 	OutgoingBuffer outgoing_;
 
+	/// 已申请断开,为真后不能再发出读和写请求了.
+	bool shutdowning_;
 	/// 保存被停止的原因
 	tstring disconnectReason_;
 

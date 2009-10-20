@@ -24,6 +24,7 @@ ConnectedSocket::ConnectedSocket(IOCPServer* core
 , stopReading_(false)
 , reading_(false)
 , writing_(false)
+, shutdowning_(false)
 , tracer_(0)
 {
 	toString_ = concat<tstring>(_T("ConnectedSocket["),host_, _T(" - "), peer_, _T(" - "), ::toString(sock), _T("]"));
@@ -146,7 +147,7 @@ void ConnectedSocket::doRead()
 		return;
 	}
 
-	if( connection_status::connected != state_)
+	if(shutdowning_)
 	{
 		tstring err = concat<tstring>(_T("尝试读数据时连接已断开 - "), disconnectReason_);
 		TP_CRITICAL(tracer_, transport_mode::Receive, err);
@@ -185,7 +186,7 @@ void ConnectedSocket::doWrite()
 		return;
 	}
 
-	if( connection_status::connected != state_)
+	if(shutdowning_)
 	{
 		tstring err = concat<tstring>(_T("尝试写数据时连接已断开 - "), disconnectReason_);
 		TP_CRITICAL(tracer_, transport_mode::Send, err);
@@ -223,23 +224,25 @@ void ConnectedSocket::doDisconnect(transport_mode::type mode, errcode_t error, c
 		return;
 	}
 
-
 	if(writing_)
 	{
 		assert( transport_mode::Send != mode);
+		shutdowning_ = true;
 		disconnectReason_ = description;
 
 		if( INVALID_SOCKET != socket_ )
 			::shutdown(socket_,  SD_BOTH);
 
-		TP_TRACE(tracer_, mode, _T("准备断开连接时发现写请未返回"));
+		TP_TRACE(tracer_, mode,_T("准备断开连接时发现写请未返回"));
 		return;
 	}
+
 	if(reading_)
 	{
 		assert( transport_mode::Receive != mode);
+		shutdowning_ = true;
 		disconnectReason_ = description;
-				
+
 		if( INVALID_SOCKET != socket_ )
 			::shutdown(socket_,  SD_BOTH);
 
@@ -247,7 +250,7 @@ void ConnectedSocket::doDisconnect(transport_mode::type mode, errcode_t error, c
 		return;
 	}
 
-	std::auto_ptr<ICommand> command(new DisconnectCommand(this, description));
+	std::auto_ptr<ICommand> command(new DisconnectCommand(this, (WSAESHUTDOWN == error && disconnectReason_.empty())?disconnectReason_:description));
 	if(!command->execute())
 	{
 		TP_FATAL(tracer_, mode, _T("准备断开连接时发送连接请求失败"));
