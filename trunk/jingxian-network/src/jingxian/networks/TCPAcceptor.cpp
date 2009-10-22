@@ -83,46 +83,16 @@ bool TCPAcceptor::startListening()
 			<< _T("'" ));
 		return false;
 	}
-	struct sockaddr addr;
-	addr.sa_family = AF_INET;
-
-	tstring endpoint = endpoint_;
-	tstring::size_type index = endpoint.find(_T("://"));
-	if(tstring::npos != index)
-	{
-		tstring prefix = endpoint.substr(0, index);
-		if(0 == string_traits<tstring::value_type>::stricmp( prefix.c_str(), _T("tcp")))
-		{
-			addr.sa_family = AF_INET;
-		}
-		else if(0 == string_traits<tstring::value_type>::stricmp( prefix.c_str(), _T("tcp6"))
-			  || 0 == string_traits<tstring::value_type>::stricmp( prefix.c_str(), _T("tcpv6")))
-		{
-			addr.sa_family = AF_INET6;
-		}
-		else
-		{
-			LOG_ERROR( logger_, _T("监听地址 '") << endpoint_ 
-				<< _T("' 格式不正确 - 不可识别的协议类型"));
-		}
-		endpoint = endpoint.substr(index + 3);
-	}
-
-	int len = sizeof(addr);
-	if(SOCKET_ERROR == ::WSAStringToAddress((LPTSTR)endpoint.c_str(), addr.sa_family, 0, &addr, &len))
+	SOCKADDR_STORAGE  addr;
+	int len = sizeof(SOCKADDR_STORAGE);
+	if(!networking::stringToAddress(endpoint_.c_str(), (struct sockaddr*)&addr, &len))
 	{
 		LOG_ERROR( logger_, _T("监听地址 '") << endpoint_ 
 			<< _T("' 格式不正确 - ") << lastError(WSAGetLastError()));
 		return false;
 	}
 
-	//struct sockaddr addr;
-	//addr.sa_family = AF_INET;
-	//((sockaddr_in*)&addr)->sin_addr.s_addr = inet_addr(toNarrowString( endpoint.substr(0, index)).c_str());
-	//((sockaddr_in*)&addr)->sin_port = htons(atoi(endpoint.substr(index+1).c_str()));
-
-
-	if(INVALID_SOCKET == (socket_ = socket(addr.sa_family , SOCK_STREAM, IPPROTO_TCP)))
+	if(INVALID_SOCKET == (socket_ = socket(addr.ss_family, SOCK_STREAM, IPPROTO_TCP)))
 	{
 		LOG_ERROR( logger_, _T("启动监听地址 '") << endpoint_ 
 			<< _T("' 时发生错误 - 创建 socket失败 - '") << lastError()
@@ -131,7 +101,7 @@ bool TCPAcceptor::startListening()
 	}
 
 //#pragma warning(disable: 4267)
-	if (SOCKET_ERROR == ::bind(socket_,&addr, len))
+	if (SOCKET_ERROR == ::bind(socket_, (struct sockaddr*)&addr, len))
 //#pragma warning(default: 4267)
 	{
 		LOG_ERROR( logger_, _T("启动监听地址 '") << endpoint_ 
@@ -157,6 +127,7 @@ bool TCPAcceptor::startListening()
 	}
 
 	status_ = connection_status::listening;
+	family_ = addr.ss_family;
 
 	LOG_INFO( logger_, _T("启动监听地址 '") << endpoint_ 
 		<< _T("' 成功!") );

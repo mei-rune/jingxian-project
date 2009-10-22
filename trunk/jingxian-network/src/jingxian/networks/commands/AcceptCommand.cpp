@@ -16,9 +16,9 @@ AcceptCommand::AcceptCommand(TCPAcceptor* acceptor
 , context_(context)
 , listener_(acceptor->handle())
 , listenAddr_(acceptor->bindPoint())
-, socket_(WSASocket(AF_INET,SOCK_STREAM,IPPROTO_TCP,0,0,WSA_FLAG_OVERLAPPED))
-, ptr_((char*)my_malloc(sizeof (sockaddr_in)*2 + sizeof (sockaddr)*2 + 1000))
-, len_(sizeof (sockaddr_in)*2 + sizeof (sockaddr)*2 + 1000)
+, socket_(WSASocket(acceptor->family(),SOCK_STREAM,IPPROTO_TCP,0,0,WSA_FLAG_OVERLAPPED))
+, ptr_((char*)my_malloc(sizeof (SOCKADDR_STORAGE)*2 + sizeof (SOCKADDR_STORAGE)*2 + 1000))
+, len_(sizeof (SOCKADDR_STORAGE)*2 + sizeof (SOCKADDR_STORAGE)*2 + 1000)
 {
 	memset( ptr_, 0, len_);
 }
@@ -68,8 +68,8 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 	/// 用 GetAcceptExSockaddrs 的函数指针就没有问题.
 	networking::getAcceptExSockaddrs(ptr_,
 		0,
-		sizeof (sockaddr_in) + sizeof (sockaddr),
-		sizeof (sockaddr_in) + sizeof (sockaddr),
+		sizeof (SOCKADDR_STORAGE) + sizeof (SOCKADDR_STORAGE),
+		sizeof (SOCKADDR_STORAGE) + sizeof (SOCKADDR_STORAGE),
 		&local_addr,
 		&local_size,
 		&remote_addr,
@@ -139,8 +139,8 @@ bool AcceptCommand::execute()
 		, ptr_
 		, 0 //必须为0,否则会有大量的连接处于accept中，因为客户端只
 		    //建立连接，没有发送数据。
-		, sizeof (sockaddr_in) + sizeof (sockaddr)
-		, sizeof (sockaddr_in) + sizeof (sockaddr)
+		, sizeof (SOCKADDR_STORAGE) + sizeof (SOCKADDR_STORAGE)
+		, sizeof (SOCKADDR_STORAGE) + sizeof (SOCKADDR_STORAGE)
 		, &bytesTransferred
 		, this ))
 		return true;
