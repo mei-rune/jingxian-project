@@ -113,8 +113,6 @@ struct IPHostEntry
 typedef void (*ResolveComplete)(const tstring& name, const IPHostEntry& hostEntry, void* context);
 typedef void (*ResolveError)(const tstring& name, errcode_t err, void* context);
 
-class IReactorCore;
-
 class IDNSResolver
 {
 public:
