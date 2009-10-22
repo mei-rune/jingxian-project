@@ -5,3 +5,4 @@
 5.proxy还不支持读配置
 6.不支持以配置的方式载入服务
 7.不支持多进程并发..
+8.ThreadDNSResolver 中有一处 bug (请搜索 NOTICE 将会有说明)

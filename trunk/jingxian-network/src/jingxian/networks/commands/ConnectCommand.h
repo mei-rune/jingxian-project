@@ -32,11 +32,14 @@ public:
 
 	virtual bool execute();
 
-	bool execute(struct sockaddr& addr, int len);
+	bool execute(struct sockaddr* addr, int len);
 
-	void onErrorByDnsQuery(const tstring& name, short port);
-	void onCompleteByDnsQuery(const tstring& name,short port, struct hostent* ent);
-	void onRun(tstring& name, short port, struct sockaddr& addr, int len);
+	void onResolveComplete(const tstring& name, const IPHostEntry& hostEntry);
+	void onResolveError(const tstring& name, errcode_t err);
+
+	//void onErrorByDnsQuery(const tstring& name, short port);
+	//void onCompleteByDnsQuery(const tstring& name,short port, struct hostent* ent);
+	//void onRun(tstring& name, short port, struct sockaddr& addr, int len);
 
 private:
 	NOCOPY(ConnectCommand);

@@ -426,7 +426,7 @@ void ConnectedSocket::onError(const ICommand& command, transport_mode::type mode
 		break;
 	case transport_mode::Send:
 		TP_TRACE(tracer_, transport_mode::Send, _T("–¥«Î«Û '")<< (int)&command <<_T("' ¥ÌŒÛ∑µªÿ,") << description);
-		reading_ = false;
+		writing_ = false;
 		break;
 	default:
 		assert(false);

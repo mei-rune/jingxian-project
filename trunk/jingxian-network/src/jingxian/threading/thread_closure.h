@@ -115,7 +115,7 @@ class thread_closure_2
 {
 public:
 
-	thread_closure_2( const F& f, const P1& x1, const P2& x2, const tchar* nm = 0)
+	thread_closure_2( const F& f, P1 x1, P2 x2, const tchar* nm = 0)
 		: _function( f )
 		, _name( (0 == nm) ? _T("") : nm )
 		, arg1( x1 )
@@ -154,7 +154,7 @@ class thread_closure_3
 {
 public:
 
-	thread_closure_3( const F& f, const P1& x1, const P2& x2, const P3& x3, const tchar* nm = 0)
+	thread_closure_3( const F& f, P1 x1, P2 x2, P3 x3, const tchar* nm = 0)
 		: _function( f )
 		, _name( (0 == nm) ? _T("") : nm )
 		, arg1( x1 )
@@ -188,6 +188,141 @@ private:
 	P1 arg1;
 	P2 arg2;
 	P3 arg3;
+};
+
+template<typename F, typename P1, typename P2, typename P3, typename P4>
+class thread_closure_4
+{
+public:
+
+	thread_closure_4( const F& f, P1 x1, P2 x2, P3 x3, P4 x4, const tchar* nm = 0)
+		: _function( f )
+		, _name( (0 == nm) ? _T("") : nm )
+		, arg1( x1 )
+		, arg2( x2 )
+		, arg3( x3 )
+		, arg4( x4 )
+	{
+	}
+
+	static void start_routine( void* c )
+	{
+		thread_closure_4 *self = static_cast<thread_closure_4*>(c);
+		try
+		{
+			self->_function( self->arg1, self->arg2, self->arg3, self->arg4);
+		}
+		catch ( ... )
+		{
+			delete self;
+			throw;
+		}
+		delete self;
+	}
+
+	const tstring& name() const
+	{
+		return _name;
+	}
+private:
+	F _function;
+	tstring _name;
+	P1 arg1;
+	P2 arg2;
+	P3 arg3;
+	P4 arg4;
+};
+
+template<typename F, typename P1, typename P2, typename P3, typename P4, typename P5>
+class thread_closure_5
+{
+public:
+
+	thread_closure_5( const F& f, P1 x1, P2 x2, P3 x3, P4 x4, P5 x5, const tchar* nm = 0)
+		: _function( f )
+		, _name( (0 == nm) ? _T("") : nm )
+		, arg1( x1 )
+		, arg2( x2 )
+		, arg3( x3 )
+		, arg4( x4 )
+		, arg5( x5 )
+	{
+	}
+
+	static void start_routine( void* c )
+	{
+		thread_closure_5 *self = static_cast<thread_closure_5*>(c);
+		try
+		{
+			self->_function( self->arg1, self->arg2, self->arg3, self->arg4, self->arg5);
+		}
+		catch ( ... )
+		{
+			delete self;
+			throw;
+		}
+		delete self;
+	}
+
+	const tstring& name() const
+	{
+		return _name;
+	}
+private:
+	F _function;
+	tstring _name;
+	P1 arg1;
+	P2 arg2;
+	P3 arg3;
+	P4 arg4;
+	P5 arg5;
+};
+
+template<typename F, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6>
+class thread_closure_6
+{
+public:
+
+	thread_closure_6( const F& f, P1 x1, P2 x2, P3 x3, P4 x4, P5 x5, P6 x6, const tchar* nm = 0)
+		: _function( f )
+		, _name( (0 == nm) ? _T("") : nm )
+		, arg1( x1 )
+		, arg2( x2 )
+		, arg3( x3 )
+		, arg4( x4 )
+		, arg5( x5 )
+		, arg6( x6 )
+	{
+	}
+
+	static void start_routine( void* c )
+	{
+		thread_closure_6 *self = static_cast<thread_closure_6*>(c);
+		try
+		{
+			self->_function( self->arg1, self->arg2, self->arg3, self->arg4, self->arg5, self->arg6);
+		}
+		catch ( ... )
+		{
+			delete self;
+			throw;
+		}
+		delete self;
+	}
+
+	const tstring& name() const
+	{
+		return _name;
+	}
+private:
+	F _function;
+	tstring _name;
+	P1 arg1;
+	P2 arg2;
+	P3 arg3;
+	P4 arg4;
+	P5 arg5;
+	P6 arg6;
 };
 
 _jingxian_end

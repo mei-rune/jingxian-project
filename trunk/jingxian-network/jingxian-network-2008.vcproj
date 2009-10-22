@@ -292,6 +292,14 @@
 				RelativePath=".\src\jingxian\networks\TCPContext.h"
 				>
 			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\ThreadDNSResolver.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\ThreadDNSResolver.h"
+				>
+			</File>
 			<Filter
 				Name="commands"
 				>

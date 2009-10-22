@@ -16,6 +16,7 @@
 # include "jingxian/IConnectionBuilder.h"
 # include "jingxian/IAcceptor.h"
 # include "jingxian/ProtocolContext.h"
+# include "jingxian/IDNSResolver.h"
 
 _jingxian_begin
 
@@ -61,6 +62,11 @@ public:
 	 * 将句柄绑定到本端口
 	 */
 	virtual bool bind(HANDLE systemHandler, void* completion_key) = 0;
+
+	/**
+	 * 取得 dns 解析接口
+	 */
+	virtual IDNSResolver& resolver() = 0;
 };
 
 _jingxian_end
