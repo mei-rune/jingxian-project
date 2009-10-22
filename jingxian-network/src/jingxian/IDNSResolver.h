@@ -110,8 +110,8 @@ struct IPHostEntry
 	tstring HostName;
 };
 
-typedef void (*ResolveComplete)(const tstring& name, const IPHostEntry& hostEntry, void* context);
-typedef void (*ResolveError)(const tstring& name, errcode_t err, void* context);
+typedef void (*ResolveComplete)(const tstring& name, const tstring& port, const IPHostEntry& hostEntry, void* context);
+typedef void (*ResolveError)(const tstring& name, const tstring& port, errcode_t err, void* context);
 
 class IDNSResolver
 {
@@ -122,7 +122,8 @@ public:
 	/**
 	 * 开始异步请求关于指定 DNS 主机名的 IPHostEntry 信息。
 	 */
-	virtual void ResolveHostByName(const tstring& name
+	virtual void ResolveHostByName(const tchar* name
+		, const tchar* port
 		, void* context
 		, ResolveComplete callback
 		, ResolveError onError

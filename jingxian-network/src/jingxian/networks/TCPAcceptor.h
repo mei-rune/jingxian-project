@@ -77,9 +77,11 @@ private:
 	SOCKET handle() { return socket_; }
 	IOCPServer* nextCore(){ return core_; }
 	ILogger* logger(){ return logger_; }
+	int family() { return family_; }
 
 	IOCPServer* core_;
 	SOCKET socket_;
+	int family_;
 	tstring endpoint_;
 	connection_status::type status_;
 	ILogger* logger_;

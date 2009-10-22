@@ -438,12 +438,12 @@ namespace networking
   }
 
   
-  short fetchPort(const tchar* host)
+  const tchar* fetchPort(const tchar* host)
   {
 	  const tchar* end = string_traits<tchar>::strrchr(host, _T(':'));
 	  if(null_ptr == end)
 		  return 0;
-	  return (short) string_traits<tchar>::atoi(++end);
+	  return ++end;
   }
 
   bool addressToString(struct sockaddr* addr

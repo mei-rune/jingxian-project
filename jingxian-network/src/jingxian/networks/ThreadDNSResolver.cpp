@@ -24,9 +24,10 @@ void ThreadDNSResolver::initialize(IReactorCore* core)
 class ResolveErrorTask : public IRunnable
 {
 public:
-	ResolveErrorTask(void* context, const tstring& name, int result, ResolveError onError)
+	ResolveErrorTask(void* context, const tstring& name, const tstring& port, int result, ResolveError onError)
 		: context_(context)
 		, name_(name)
+		, port_(port)
 		, result_(result)
 		, onError_(onError)
 	{
@@ -38,11 +39,12 @@ public:
 
 	virtual void run()
 	{
-		onError_(name_, result_, context_);
+		onError_(name_, port_, result_, context_);
 	}
 private:
 	void* context_;
 	tstring name_;
+	tstring port_;
 	int result_;
 	ResolveError onError_;
 };
@@ -50,9 +52,10 @@ private:
 class ResolveCompleteTask : public IRunnable
 {
 public:
-	ResolveCompleteTask(void* context, const tstring& name, ResolveComplete onComplete)
+	ResolveCompleteTask(void* context, const tstring& name, const tstring& port, ResolveComplete onComplete)
 		: context_(context)
 		, name_(name)
+		, port_(port)
 		, onComplete_(onComplete)
 	{
 	}
@@ -63,7 +66,7 @@ public:
 
 	virtual void run()
 	{
-		onComplete_(name_, hostEntry_, context_);
+		onComplete_(name_, port_, hostEntry_, context_);
 	}
 	
 	IPHostEntry& entry()
@@ -73,13 +76,15 @@ public:
 private:
 	void* context_;
 	tstring name_;
+	tstring port_;
 	IPHostEntry hostEntry_;
 	ResolveComplete onComplete_;
 };
 
 void dnsQuery(const tstring& name
+	    , const tstring& port
 		, void* context
-		, IReactorCore* port
+		, IReactorCore* core
 		, ResolveComplete onComplete
 		, ResolveError onError)
 {
@@ -87,22 +92,22 @@ void dnsQuery(const tstring& name
 
 #ifdef  _UNICODE
 	PADDRINFOW res = NULL;
-	int result = GetAddrInfoW(name.c_str(), NULL, NULL, &res);
+	int result = GetAddrInfoW(name.c_str(), port.c_str(), NULL, &res);
 #else
 	struct addrinfo* res = NULL;
-	int result = getaddrinfo(host.c_str(), NULL, NULL, &res);
+	int result = getaddrinfo(host.c_str(), port.c_str(), NULL, &res);
 #endif
 	if(0 != result)
 	{
-		std::auto_ptr<ResolveErrorTask> ptr(new ResolveErrorTask(context, name, result, onError));
-		if(port->send(ptr.get()))
+		std::auto_ptr<ResolveErrorTask> ptr(new ResolveErrorTask(context, name, port, result, onError));
+		if(core->send(ptr.get()))
 			ptr.release();
 		else
 			assert(false);
 		return ;
 	}
 
-	std::auto_ptr<ResolveCompleteTask> ptr(new ResolveCompleteTask(context, name, onComplete));
+	std::auto_ptr<ResolveCompleteTask> ptr(new ResolveCompleteTask(context, name, port, onComplete));
 	ptr->entry().HostName = name;
 
 #ifdef  _UNICODE
@@ -130,19 +135,20 @@ void dnsQuery(const tstring& name
 #else
 	freeaddrinfo(res);
 #endif
-	if(port->send(ptr.get()))
+	if(core->send(ptr.get()))
 		ptr.release();
 	else
 		assert(false);
 }
 
-void ThreadDNSResolver::ResolveHostByName(const tstring& name
+void ThreadDNSResolver::ResolveHostByName(const tchar* name
+		, const tchar* port
 		, void* context
 		, ResolveComplete callback
 		, ResolveError onError
 		, int timeout)
 {
-	create_thread(&dnsQuery, name, context, core_, callback, onError);
+	create_thread(&dnsQuery, tstring(name), tstring(port), context, core_, callback, onError);
 }
 
 _jingxian_end

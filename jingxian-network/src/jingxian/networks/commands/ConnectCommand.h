@@ -32,19 +32,14 @@ public:
 
 	virtual bool execute();
 
-	bool execute(struct sockaddr* addr, int len);
-
-	void onResolveComplete(const tstring& name, const IPHostEntry& hostEntry);
-	void onResolveError(const tstring& name, errcode_t err);
-
-	//void onErrorByDnsQuery(const tstring& name, short port);
-	//void onCompleteByDnsQuery(const tstring& name,short port, struct hostent* ent);
-	//void onRun(tstring& name, short port, struct sockaddr& addr, int len);
+	void onResolveComplete(const tstring& name, const tstring& port, const IPHostEntry& hostEntry);
+	void onResolveError(const tstring& name, const tstring& port, errcode_t err);
 
 private:
 	NOCOPY(ConnectCommand);
 
-	void dnsQuery(const tstring& name);
+	void dnsQuery(const tchar* name, const tchar* port);
+	bool execute(const struct sockaddr* addr, int len);
 	
 	IOCPServer* core_;
 	OnBuildConnectionComplete onComplete_;

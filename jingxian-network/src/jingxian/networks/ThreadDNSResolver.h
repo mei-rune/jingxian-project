@@ -11,6 +11,7 @@
 // Include files
 # include "jingxian/string/string.h"
 # include "jingxian/IDNSResolver.h"
+# include "jingxian/IReactorCore.h"
 
 _jingxian_begin
 
@@ -24,7 +25,8 @@ public:
 
 	virtual ~ThreadDNSResolver(void);
 
-	virtual void ResolveHostByName(const tstring& name
+	virtual void ResolveHostByName(const tchar* name
+		, const tchar* port
 		, void* context
 		, ResolveComplete callback
 		, ResolveError onError

@@ -148,7 +148,7 @@ namespace networking
    *  从 <schema>://<addr>:<port> 格式中取出 port，其中 schema 与 port 是
    *  可选的
    */
-  short fetchPort(const tchar* host);
+  const tchar* fetchPort(const tchar* host);
 
   /**
    * 从 <schema>://<addr>:<port> 格式中取出 addr 和 port 转换成 sockaddr，其
