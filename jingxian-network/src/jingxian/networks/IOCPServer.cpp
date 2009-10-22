@@ -1,5 +1,7 @@
 ﻿
 # include "pro_config.h"
+# include "jingxian/exception.h"
+# include "jingxian/directory.h"
 # include "jingxian/networks/IOCPServer.h"
 # include "jingxian/networks/TCPAcceptor.h"
 # include "jingxian/networks/TCPConnector.h"
@@ -9,16 +11,22 @@
 _jingxian_begin
 
 IOCPServer::IOCPServer(void)
-	: completion_port_( null_ptr )
-	, _timeout( 5*1000 )
-	, _isRunning( false )
-	, _logger( null_ptr )
-	, toString_( _T("IOCPServer") )
+: completion_port_( null_ptr )
+, _timeout( 5*1000 )
+, _isRunning( false )
+, _logger( null_ptr )
+, toString_( _T("IOCPServer") )
 {
 	_logger = logging::makeLogger(_T("IOCPServer"));
 	resolver_.initialize(this);
 	_acceptorFactories[_T("tcp")] = new TCPAcceptorFactory( this );
 	_connectionBuilders[_T("tcp")] = new TCPConnector( this );
+
+	path_ = simplify(getApplicationDirectory());
+
+	tstring logPath = simplify(combinePath(path_, _T("log")));
+	if(!existDirectory(logPath))
+		createDirectory(logPath);
 }
 
 IOCPServer::~IOCPServer(void)
@@ -347,6 +355,11 @@ void IOCPServer::interrupt()
 IDNSResolver& IOCPServer::resolver()
 {
 	return resolver_;
+}
+
+const tstring& IOCPServer::basePath() const
+{
+	return path_;
 }
 
 void IOCPServer::onIdle()

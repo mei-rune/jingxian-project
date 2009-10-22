@@ -84,6 +84,8 @@ namespace proxy
 		void onConnectError(const ErrorCode&, ProtocolContext& context);
 
 		void sendReply(ProtocolContext& context, int reply, int version, int addressType, const char* addr, size_t len, int port);
+
+		Proxy* internalCore();
 	private:
 		Proxy* server_;
 		int status_;

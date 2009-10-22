@@ -6,19 +6,22 @@
 
 _jingxian_begin
 
-AcceptCommand::AcceptCommand(TCPAcceptor* acceptor
+AcceptCommand::AcceptCommand(IOCPServer* core
+						    , int family
+							, SOCKET listenHandle
+							, const tstring& listenAddr
 							, OnBuildConnectionComplete onComplete
                             , OnBuildConnectionError onError
                             , void* context)
-: core_(acceptor->nextCore())
+: core_(core)
 , onComplete_(onComplete)
 , onError_(onError)
 , context_(context)
-, listener_(acceptor->handle())
-, listenAddr_(acceptor->bindPoint())
-, socket_(WSASocket(acceptor->family(),SOCK_STREAM,IPPROTO_TCP,0,0,WSA_FLAG_OVERLAPPED))
-, ptr_((char*)my_malloc(sizeof (SOCKADDR_STORAGE)*2 + sizeof (SOCKADDR_STORAGE)*2 + 1000))
-, len_(sizeof (SOCKADDR_STORAGE)*2 + sizeof (SOCKADDR_STORAGE)*2 + 1000)
+, listener_(listenHandle)
+, listenAddr_(listenAddr)
+, socket_(WSASocket(family,SOCK_STREAM,IPPROTO_TCP,0,0,WSA_FLAG_OVERLAPPED))
+, ptr_((char*)my_malloc(sizeof (SOCKADDR_STORAGE)*2 + sizeof (SOCKADDR_STORAGE)*2 + 100))
+, len_(sizeof (SOCKADDR_STORAGE)*2 + sizeof (SOCKADDR_STORAGE)*2 + 100)
 {
 	memset( ptr_, 0, len_);
 }

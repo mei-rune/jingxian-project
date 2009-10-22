@@ -93,6 +93,7 @@ namespace proxy
 	public:
 		Proxy(IOCPServer& core, const tstring& addr)
 			: AbstractServer( &core )
+			, errorCount_(0)
 		{
 			_toString = _T("socks 代理");
 			if(!this->initialize(addr))
@@ -105,7 +106,7 @@ namespace proxy
 			//_blockingIPs = ParseIPSeg(config.BlockingIPs );
 
 
-			path_ = simplify(combinePath(getApplicationDirectory(), _T("log")));
+			path_ = combinePath(core.basePath(), _T("log"));
 			if(!existDirectory(path_))
 				createDirectory(path_);
 
@@ -129,12 +130,20 @@ namespace proxy
 			transport->bindProtocol(protocol.get());
 			protocol.release();
 
+			errorCount_ = 0;
 			acceptor_.accept(this, &Proxy::onComplete, &Proxy::onError, core);
 		}
 
 		void onError(const ErrorCode& err, IOCPServer* core)
 		{
+			++ errorCount_;
 			acceptor_.accept(this, &Proxy::onComplete, &Proxy::onError, core);
+			if( errorCount_ > 20 )
+			{
+				LOG_FATAL(log(), _T("尝试接收请失败超过 '") << errorCount_ << _T("' 次,退出服务"));
+				reactor_->interrupt();
+				return;
+			}
 		}
 
 		//bool IsBlockingIP(const tstring& ip)
@@ -178,6 +187,7 @@ namespace proxy
 	private:
 		proxy::Credentials _credentials;
 		tstring path_;
+		int errorCount_;
 	};
 }
 

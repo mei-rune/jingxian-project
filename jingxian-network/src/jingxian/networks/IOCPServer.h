@@ -84,6 +84,11 @@ public:
 	virtual void onExeception(int errCode, const tstring& description);
 
 	/**
+	 * 程序运行的基本路径
+	 */
+	const tstring& basePath() const;
+
+	/**
 	* 取得地址的描述
 	*/
 	virtual const tstring& toString() const;
@@ -128,6 +133,8 @@ private:
 	ThreadDNSResolver resolver_;
 	
 	ILogger* _logger;
+
+	tstring path_;
 
 	tstring toString_;
 };

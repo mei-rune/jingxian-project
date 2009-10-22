@@ -446,6 +446,11 @@ void SOCKSv5Protocol::onConnectError(const ErrorCode&, ProtocolContext& context)
 
   //      #endregion
 
+Proxy* SOCKSv5Protocol::internalCore()
+{
+	return server_;
+}
+
 void SOCKSv5Protocol::sendReply(ProtocolContext& context, int reply, int version, int addressType, const char* addr, size_t len, int port)
 {
 	/// +----+-----+-------+------+----------+----------+

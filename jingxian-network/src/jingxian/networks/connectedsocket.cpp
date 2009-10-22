@@ -63,10 +63,14 @@ void ConnectedSocket::initialize()
 		return;
 
 #ifdef DUMPFILE
-	os.reset( new std::ofstream(toNarrowString(simplify (combinePath(getApplicationDirectory(),concat<tstring>(_T("raw_out_"), ::toString(socket_), _T(".txt"))))).c_str()));
+	tstring logPath = combinePath(core_->basePath(), _T("log"));
+	if(!existDirectory(logPath))
+	createDirectory(logPath);
+
+	os.reset( new std::ofstream(toNarrowString(simplify (combinePath(logPath,concat<tstring>(_T("raw_out_"), ::toString(socket_), _T(".txt"))))).c_str()));
 
 
-	is.reset( new std::ofstream(toNarrowString(simplify (combinePath(getApplicationDirectory(),concat<tstring>(_T("raw_in_"), ::toString(socket_), _T(".txt"))))).c_str()));
+	is.reset( new std::ofstream(toNarrowString(simplify (combinePath(logPath,concat<tstring>(_T("raw_in_"), ::toString(socket_), _T(".txt"))))).c_str()));
 
 #endif
 

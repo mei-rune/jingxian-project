@@ -17,7 +17,10 @@ _jingxian_begin
 class AcceptCommand : public ICommand
 {
 public:
-	AcceptCommand(TCPAcceptor* acceptor
+	AcceptCommand(IOCPServer* core
+						    , int family
+							, SOCKET listenHandle
+							, const tstring& listenAddr
 							, OnBuildConnectionComplete onComplete
                             , OnBuildConnectionError onError
                             , void* context);

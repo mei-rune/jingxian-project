@@ -86,15 +86,15 @@ void ConnectCommand::dnsQuery(const tchar* name, const tchar* port)
 
 bool ConnectCommand::execute()
 {
-	struct sockaddr addr;
+	SOCKADDR_STORAGE addr;
 	int len = sizeof(addr);
 
-	if(! networking::stringToAddress((LPTSTR)host_.c_str(), &addr, &len))
+	if(! networking::stringToAddress((LPTSTR)host_.c_str(), (struct sockaddr*)&addr, &len))
 	{
 		dnsQuery(networking::fetchAddr(host_.c_str()).c_str(),networking::fetchPort(host_.c_str()) );
 		return true;
 	}
-	return execute(&addr, len);
+	return execute((struct sockaddr*)&addr, len);
 }
 
 bool ConnectCommand::execute(const struct sockaddr* addr, int len)
