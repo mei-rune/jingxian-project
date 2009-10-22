@@ -16,6 +16,7 @@
 # include "jingxian/networks/commands/ICommand.h"
 # include "jingxian/networks/connection_status.h"
 # include "jingxian/networks/networking.h"
+# include "jingxian/networks/ThreadDNSResolver.h"
 
 _jingxian_begin
 
@@ -66,6 +67,11 @@ public:
 	 * @implements bind
 	 */
 	virtual bool bind(HANDLE systemHandler, void* completion_key);
+
+	/**
+	 * @implements resolver
+	 */
+	virtual IDNSResolver& resolver();
 	
 	/**
 	 *  空闲时执行的回调函数，子类可以继承本函数 
@@ -118,6 +124,8 @@ private:
 	stdext::hash_map<tstring, IAcceptorFactory* > _acceptorFactories;
 	
 	stdext::hash_map<tstring, IAcceptor* > _acceptors;
+
+	ThreadDNSResolver resolver_;
 	
 	ILogger* _logger;
 

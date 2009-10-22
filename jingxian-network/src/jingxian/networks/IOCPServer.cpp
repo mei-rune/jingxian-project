@@ -16,6 +16,7 @@ IOCPServer::IOCPServer(void)
 	, toString_( _T("IOCPServer") )
 {
 	_logger = logging::makeLogger(_T("IOCPServer"));
+	resolver_.initialize(this);
 	_acceptorFactories[_T("tcp")] = new TCPAcceptorFactory( this );
 	_connectionBuilders[_T("tcp")] = new TCPConnector( this );
 }
@@ -340,6 +341,12 @@ void IOCPServer::runForever()
 void IOCPServer::interrupt()
 {
 	_isRunning = false;
+}
+
+
+IDNSResolver& IOCPServer::resolver()
+{
+	return resolver_;
 }
 
 void IOCPServer::onIdle()
