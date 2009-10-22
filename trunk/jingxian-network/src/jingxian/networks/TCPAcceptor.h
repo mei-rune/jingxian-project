@@ -74,10 +74,10 @@ private:
 
 	friend class AcceptCommand;
 
-	SOCKET handle() { return socket_; }
-	IOCPServer* nextCore(){ return core_; }
-	ILogger* logger(){ return logger_; }
-	int family() { return family_; }
+	//SOCKET handle() { return socket_; }
+	//IOCPServer* nextCore(){ return core_; }
+	//ILogger* logger(){ return logger_; }
+	//int family() { return family_; }
 
 	IOCPServer* core_;
 	SOCKET socket_;

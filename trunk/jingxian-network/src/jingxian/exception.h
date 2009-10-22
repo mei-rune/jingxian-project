@@ -1,6 +1,6 @@
 
-#ifndef _Exception_H_
-#define _Exception_H_
+#ifndef _MY_Exception_H_
+#define _MY_Exception_H_
 
 #include "jingxian/config.h"
 
@@ -10,7 +10,7 @@
 
 // Include files
 #include <stdexcept>
-#include "jingxian/string/string.h"
+#include "jingxian/string/os_string.h"
 #include "jingxian/lastError.h"
 #include "jingxian/utilities/StackTracer.h"
 
@@ -278,4 +278,4 @@ MakeException( NotImplementedException, NotImplementedError );
 
 _jingxian_end
 
-#endif //_Exception_H_
+#endif //_MY_Exception_H_

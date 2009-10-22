@@ -67,14 +67,14 @@ public:
     stringData<charT>& operator[]( size_t p )
     {
         if( p >= size_ )
-            ThrowException( OutOfRangeException );
+            ThrowException(OutOfRangeException);
         return ptrArray_[ p ];
     }
 
     const stringData<charT>& operator[]( size_t p ) const
     {
         if( p >= size_ )
-            ThrowException( OutOfRangeException );
+            ThrowException(OutOfRangeException);
         return ptrArray_[ p ];
     }
 

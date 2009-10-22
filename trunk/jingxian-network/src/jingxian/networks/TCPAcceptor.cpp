@@ -56,7 +56,7 @@ void TCPAcceptor::accept(OnBuildConnectionComplete onComplete
                             , OnBuildConnectionError onError
                             , void* context)
 {
-	std::auto_ptr< ICommand> command(new AcceptCommand(this, onComplete, onError, context));
+	std::auto_ptr< ICommand> command(new AcceptCommand(this->core_, family_, socket_, endpoint_, onComplete, onError, context));
 	if(! command->execute() )
 	{
 		int code = WSAGetLastError();

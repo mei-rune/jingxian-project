@@ -2,6 +2,7 @@
 # include "pro_config.h"
 # include "jingxian/protocol/proxy/SOCKSv5Outgoing.h"
 # include "jingxian/protocol/proxy/SOCKSv5Protocol.h"
+# include "jingxian/protocol/proxy/Proxy.h"
 # include "jingxian/buffer/OutBuffer.h"
 # include "jingxian/directory.h"
 
@@ -72,10 +73,10 @@ void SOCKSv5Outgoing::onConnected(ProtocolContext& context)
 
 #ifdef DUMPFILE
 	static int id = 0;
-	os.reset( new std::ofstream(toNarrowString(simplify (combinePath(getApplicationDirectory(),concat<tstring>(_T("outgoing_os_"), ::toString(++id), _T(".txt"))))).c_str()));
+	os.reset( new std::ofstream(toNarrowString(simplify (combinePath(combinePath(socks_->internalCore()->basePath(), _T("session")),concat<tstring>(_T("outgoing_os_"), ::toString(++id), _T(".txt"))))).c_str()));
 	*os <<  toNarrowString(context.transport().toString()) << std::endl;
 
-	is.reset( new std::ofstream(toNarrowString(simplify (combinePath(getApplicationDirectory(),concat<tstring>(_T("outgoing_is_"), ::toString(id), _T(".txt"))))).c_str()));
+	is.reset( new std::ofstream(toNarrowString(simplify (combinePath(combinePath(socks_->internalCore()->basePath(), _T("session")),concat<tstring>(_T("outgoing_is_"), ::toString(id), _T(".txt"))))).c_str()));
 	*is <<  toNarrowString(context.transport().toString()) << std::endl;
 #endif
 }
