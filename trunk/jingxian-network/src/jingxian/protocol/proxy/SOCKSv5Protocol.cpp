@@ -463,10 +463,10 @@ void SOCKSv5Protocol::sendReply(ProtocolContext& context, int reply, int version
 	out.writeInt8(version);
 	out.writeInt8(reply);
 	out.writeInt8(0);
-		out.writeInt8(addressType);
+	out.writeInt8(addressType);
+
 	switch (addressType)
 	{
-
 	case 1:
 		out.writeBlob(addr, 4);
 		break;
