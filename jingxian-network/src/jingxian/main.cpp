@@ -272,7 +272,7 @@ BOOL WINAPI handlerRoutine( DWORD ctrlType )
 	return FALSE;
 }
 
-int main(int argc, char* argv[])
+int main(int argc, tchar* argv[])
 {
 	int tmpFlag = _CrtSetDbgFlag( _CRTDBG_REPORT_FLAG );
 	tmpFlag |= _CRTDBG_LEAK_CHECK_DF;
@@ -308,6 +308,9 @@ int main(int argc, char* argv[])
 	//ntService.start(argc, argv);
 
 	SetConsoleCtrlHandler(&handlerRoutine, TRUE);
+
+	if(!handler.OnInit(argc, argv) )
+		return -1;
 
 	handler.run();
 
