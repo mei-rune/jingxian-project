@@ -16,8 +16,6 @@ namespace jingxian.core.runtime
 
         void Release(object instance);
 
-        IKernelBuilder CreateBuilder();
-
         bool Disconnect(string id);
 
         void Start();

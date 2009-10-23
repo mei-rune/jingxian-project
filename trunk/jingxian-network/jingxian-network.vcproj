@@ -64,9 +64,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib Mswsock.lib gtestd.lib log4cppD.lib"
+				AdditionalDependencies="Ws2_32.lib Mswsock.lib gtestd.lib libLog4CPPd.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(LOG4CPP_ROOT)\msvc\Debug&quot;;&quot;$(GOOGLETEST_ROOT)\msvc\Debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(LOG4CPP_ROOT)\msvc\Debug\VS2005&quot;;&quot;$(GOOGLETEST_ROOT)\msvc\Debug&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -236,24 +236,6 @@
 			<File
 				RelativePath=".\src\jingxian\logging\Tracer.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\jingxian\logging\Tracer.h"
@@ -264,11 +246,11 @@
 			Name="networks"
 			>
 			<File
-				RelativePath=".\src\jingxian\networks\ConnectedSocket.cpp"
+				RelativePath=".\src\jingxian\networks\connectedsocket.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\networks\ConnectedSocket.h"
+				RelativePath=".\src\jingxian\networks\connectedsocket.h"
 				>
 			</File>
 			<File
@@ -278,24 +260,6 @@
 			<File
 				RelativePath=".\src\jingxian\networks\IOCPServer.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\jingxian\networks\IOCPServer.h"
@@ -318,7 +282,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\jingxian\networks\TCPConnector.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\TCPConnector.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\jingxian\networks\TCPContext.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\ThreadDNSResolver.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\ThreadDNSResolver.h"
 				>
 			</File>
 			<Filter
@@ -389,26 +369,42 @@
 				Name="buffer"
 				>
 				<File
-					RelativePath=".\src\jingxian\networks\IncomingBuffer.cpp"
+					RelativePath=".\src\jingxian\networks\buffer\buffer-internal.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\src\jingxian\networks\IncomingBuffer.h"
+					RelativePath=".\src\jingxian\networks\buffer\buffer-internal.h"
 					>
 				</File>
 				<File
-					RelativePath=".\src\jingxian\networks\OutgoingBuffer.cpp"
+					RelativePath=".\src\jingxian\networks\buffer\FileBufferHandler.h"
 					>
 				</File>
 				<File
-					RelativePath=".\src\jingxian\networks\OutgoingBuffer.h"
+					RelativePath=".\src\jingxian\networks\buffer\IncomingBuffer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\buffer\IncomingBuffer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\buffer\MemoryBufferHandler.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\buffer\OutgoingBuffer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\buffer\OutgoingBuffer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\buffer\PacketBufferHandler.h"
 					>
 				</File>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="commons"
-			>
 		</Filter>
 		<Filter
 			Name="protocol"
@@ -422,6 +418,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\jingxian\protocol\EchoServer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\jingxian\protocol\NullProtocol.h"
 				>
 			</File>
@@ -431,129 +431,62 @@
 				<File
 					RelativePath=".\src\jingxian\protocol\proxy\AbstractCredentialPolicy.h"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\jingxian\protocol\proxy\BaseCredentialPolicy.h"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-						/>
-					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\protocol\proxy\Credentials.cpp"
+					>
 				</File>
 				<File
 					RelativePath=".\src\jingxian\protocol\proxy\Credentials.h"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\jingxian\protocol\proxy\ICredentialPolicy.h"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\jingxian\protocol\proxy\NotSupportedCredentialPolicy.h"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\jingxian\protocol\proxy\NullCredentialPolicy.h"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\src\jingxian\protocol\proxy\Packet.cs"
+					RelativePath=".\src\jingxian\protocol\proxy\Packet.h"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\jingxian\protocol\proxy\Proxy.h"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-						/>
-					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\protocol\proxy\SOCKSv5Incoming.cpp"
+					>
 				</File>
 				<File
 					RelativePath=".\src\jingxian\protocol\proxy\SOCKSv5Incoming.h"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-						/>
-					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\protocol\proxy\SOCKSv5Outgoing.cpp"
+					>
 				</File>
 				<File
 					RelativePath=".\src\jingxian\protocol\proxy\SOCKSv5Outgoing.h"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-						/>
-					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\protocol\proxy\SOCKSv5Protocol.cpp"
+					>
 				</File>
 				<File
 					RelativePath=".\src\jingxian\protocol\proxy\SOCKSv5Protocol.h"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<Filter
 					Name="doc"
@@ -593,24 +526,10 @@
 					<File
 						RelativePath=".\src\jingxian\protocol\proxy\config\Configuration.h"
 						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							>
-							<Tool
-								Name="VCCustomBuildTool"
-							/>
-						</FileConfiguration>
 					</File>
 					<File
 						RelativePath=".\src\jingxian\protocol\proxy\config\Credential.h"
 						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							>
-							<Tool
-								Name="VCCustomBuildTool"
-							/>
-						</FileConfiguration>
 					</File>
 				</Filter>
 			</Filter>
@@ -619,63 +538,67 @@
 			Name="string"
 			>
 			<File
-				RelativePath=".\src\jingxian\string\case_functions.hpp"
+				RelativePath=".\src\jingxian\string\case_functions.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\ctype_traits.hpp"
+				RelativePath=".\src\jingxian\string\concat_functions.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\os_string.hpp"
+				RelativePath=".\src\jingxian\string\ctype_traits.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\replace_functions.hpp"
+				RelativePath=".\src\jingxian\string\os_string.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\split_functions.hpp"
+				RelativePath=".\src\jingxian\string\replace_functions.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\string.hpp"
+				RelativePath=".\src\jingxian\string\split_functions.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\string_append_iterator.hpp"
+				RelativePath=".\src\jingxian\string\string.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\string_token_iterator.hpp"
+				RelativePath=".\src\jingxian\string\string_append_iterator.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\string_traits.hpp"
+				RelativePath=".\src\jingxian\string\string_token_iterator.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\stringArray.hpp"
+				RelativePath=".\src\jingxian\string\string_traits.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\StringOps.hpp"
+				RelativePath=".\src\jingxian\string\stringArray.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\stringPtr.hpp"
+				RelativePath=".\src\jingxian\string\stringOps.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\toString.hpp"
+				RelativePath=".\src\jingxian\string\stringPtr.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\trim_functions.hpp"
+				RelativePath=".\src\jingxian\string\toString.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\string\with_functions.hpp"
+				RelativePath=".\src\jingxian\string\trim_functions.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\string\with_functions.h"
 				>
 			</File>
 		</Filter>
@@ -747,37 +670,65 @@
 			Name="Buffer"
 			>
 			<File
-				RelativePath=".\src\jingxian\Buffer\BaseBuffer.h"
+				RelativePath=".\src\jingxian\buffer\BaseBuffer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\Buffer\Buffer.h"
+				RelativePath=".\src\jingxian\buffer\buffer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\Buffer\IBuffer.h"
+				RelativePath=".\src\jingxian\buffer\IBuffer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\Buffer\InBuffer.cpp"
+				RelativePath=".\src\jingxian\buffer\IInBuffer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\Buffer\InBuffer.h"
+				RelativePath=".\src\jingxian\buffer\InBuffer.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\Buffer\OutBuffer.cpp"
+				RelativePath=".\src\jingxian\buffer\InBuffer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\jingxian\Buffer\OutBuffer.h"
+				RelativePath=".\src\jingxian\buffer\IOutBuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\buffer\OutBuffer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\buffer\OutBuffer.h"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="util"
+			Name="utilities"
 			>
+			<File
+				RelativePath=".\src\jingxian\utilities\NTManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\utilities\NTManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\utilities\NTService.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\utilities\StackTracer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\utilities\StackTracer.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\src\jingxian\AbstractServer.h"
@@ -789,6 +740,10 @@
 		</File>
 		<File
 			RelativePath=".\src\jingxian\config.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\jingxian\Connector.h"
 			>
 		</File>
 		<File
@@ -804,7 +759,7 @@
 			>
 		</File>
 		<File
-			RelativePath=".\src\jingxian\exception.hpp"
+			RelativePath=".\src\jingxian\exception.h"
 			>
 		</File>
 		<File
@@ -852,24 +807,8 @@
 			>
 		</File>
 		<File
-			RelativePath=".\src\jingxian\Link.h"
+			RelativePath=".\src\jingxian\linklist.h"
 			>
-		</File>
-		<File
-			RelativePath=".\src\jingxian\List.h"
-			>
-		</File>
-		<File
-			RelativePath=".\src\jingxian\log4cpp.config"
-			>
-			<FileConfiguration
-				Name="Debug|Win32"
-				ExcludedFromBuild="true"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-				/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\src\jingxian\pro.h"
@@ -877,10 +816,6 @@
 		</File>
 		<File
 			RelativePath=".\src\jingxian\ProtocolContext.h"
-			>
-		</File>
-		<File
-			RelativePath=".\src\jingxian\variant.hpp"
 			>
 		</File>
 	</Files>

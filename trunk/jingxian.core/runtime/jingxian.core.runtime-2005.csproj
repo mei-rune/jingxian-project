@@ -121,7 +121,7 @@
     <Compile Include="Attribute\OptionalDependencyAttribute.cs" />
     <Compile Include="Exception\PlatformConfigurationException.cs" />
     <Compile Include="Exception\RuntimeException.cs" />
-    <Compile Include="MicroKernel.cs" />
+    <Compile Include="IoC\MicroKernel.cs" />
     <Compile Include="PredefinedService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\EnforceResources.Designer.cs">
@@ -185,10 +185,10 @@
     <Compile Include="Logging\StdFactory.cs" />
     <Compile Include="Logging\SystemTraceLogger.cs" />
     <Compile Include="Logging\SystemTraceLoggerFactory.cs" />
-    <Compile Include="IProperties.cs" />
+    <Compile Include="utilities\IProperties.cs" />
     <Compile Include="utilities\IDisposer.cs" />
     <Compile Include="utilities\ObjectCache.cs" />
-    <Compile Include="ObjectMapper.cs" />
+    <Compile Include="utilities\ObjectMapper.cs" />
     <Compile Include="utilities\Utils.cs" />
     <Compile Include="utilities\VersionInfo.cs" />
     <Compile Include="utilities\XmlUtils.cs" />
@@ -250,6 +250,11 @@
     <EmbeddedResource Include="Schemas\xml.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schemas\ServiceConfiguration.xsx">
+      <DependentUpon>ServiceConfiguration.xsd</DependentUpon>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

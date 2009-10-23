@@ -45,11 +45,10 @@ namespace jingxian.core.runtime.simpl
 
         }
 
-        public IKernelBuilder CreateBuilder()
-        {
-            throw new NotImplementedException();
-        }
-
+        //public IKernelBuilder CreateBuilder()
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         #endregion
 

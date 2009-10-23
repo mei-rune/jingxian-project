@@ -19,22 +19,19 @@ class HostAddress
 {
 public:
 	HostAddress()
-		: addr_(null_ptr)
-		, addrlen_(0)
+		: addrlen_(0)
 	{
 	}
 
 	HostAddress(const struct sockaddr* addr
 		, size_t addrlen)
-		: addr_((struct sockaddr*)my_malloc(addrlen))
-		, addrlen_(addrlen)
+		: addrlen_(0)
 	{
-		memcpy(addr_, addr, addrlen);
+		copyFrom(addr, addrlen);
 	}
 
 	HostAddress(const HostAddress& addr)
-		: addr_(null_ptr)
-		, addrlen_(0)
+		: addrlen_(0)
 	{
 		copyFrom(addr);
 	}
@@ -47,12 +44,6 @@ public:
 
 	~HostAddress()
 	{
-		if(null_ptr == addr_)
-			return;
-
-		my_free(addr_);
-		addr_ = null_ptr;
-		addrlen_ = 0;
 	}
 
 	void copyFrom(const struct sockaddr* addr
@@ -64,14 +55,8 @@ public:
 			return;
 		}
 
-		if(addrlen > addrlen_)
-		{
-			if(null_ptr != addr_)
-				my_free(addr_);
-			addr_ = (struct sockaddr*)my_malloc(addrlen);
-		}
-
-		memcpy(addr_, addr, addrlen);
+		assert(addrlen <= sizeof(SOCKADDR_STORAGE));
+		memcpy(&addr_, addr, addrlen);
 		addrlen_ = addrlen;
 	}
 
@@ -82,12 +67,12 @@ public:
 
 	struct sockaddr* ptr()
 	{
-		return addr_;
+		return (struct sockaddr*)&addr_;
 	}
 
 	const struct sockaddr* ptr() const
 	{
-		return addr_;
+		return (const struct sockaddr*)&addr_;
 	}
 
 	size_t len() const
@@ -96,7 +81,7 @@ public:
 	}
 
 private:
-	struct sockaddr* addr_;
+	SOCKADDR_STORAGE addr_;
 	size_t addrlen_;
 };
 

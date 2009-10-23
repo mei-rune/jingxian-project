@@ -201,7 +201,7 @@ namespace jingxian.core.runtime.simpl
 		#region IExtensionBuilder Members
 
 
-		public T BuildTransient<T>(IExtension extension)
+		public T Build<T>(IExtension extension)
 		{
 			T implementation = (T)_objectBuilderService.BuildTransient(extension.Implementation);
 

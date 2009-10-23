@@ -17,7 +17,6 @@ namespace jingxian.core.runtime
 		public const string XmlElementName = "component";
 		private string _implementation;
 		private string _interface;
-        private int _proposedLevel;
 
 		public ComponentConfiguration()
 			: base()
@@ -41,21 +40,10 @@ namespace jingxian.core.runtime
 			set { _implementation = value; }
         }
 
-        public int ProposedLevel
-        {
-            get { return _proposedLevel; }
-            set { _proposedLevel = value; }
-        }
-
 		protected override void ReadXmlAttributes(XmlReader reader)
 		{
 			base.ReadXmlAttributes(reader);
             Interface = XmlUtils.ReadRequiredAttributeString(reader, "interface");
-            string level = XmlUtils.ReadOptionalAttributeString(reader, "proposedLevel");
-            int proposedLevel;
-            if (!string.IsNullOrEmpty(level)
-                && int.TryParse(level, out proposedLevel))
-                _proposedLevel = proposedLevel;
 
 			Implementation = XmlUtils.ReadRequiredAttributeString(reader, RuntimeConstants.XmlImplementationAttributeName);
 		}
@@ -64,7 +52,6 @@ namespace jingxian.core.runtime
 		{
 			base.WriteXmlAttributes(writer);
             XmlUtils.WriteRequiredAttributeString(writer, "interface", Interface);
-            XmlUtils.WriteRequiredAttributeString(writer, "proposedLevel", ProposedLevel.ToString());
 			XmlUtils.WriteRequiredAttributeString(writer, RuntimeConstants.XmlImplementationAttributeName, Implementation);
 		}
 
