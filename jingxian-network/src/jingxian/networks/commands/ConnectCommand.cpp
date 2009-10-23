@@ -1,5 +1,6 @@
 
 # include "pro_config.h"
+# include <Winsock2.h>
 # include <Ws2tcpip.h>
 # include "jingxian/networks/commands/ConnectCommand.h"
 # include "jingxian/networks/ConnectedSocket.h"

@@ -7,6 +7,9 @@
 #include "jingxian/networks/IOCPServer.h"
 #include "jingxian/protocol/EchoProtocol.h"
 #include "jingxian/protocol/Proxy/Proxy.h"
+#include "jingxian/protocol/EchoServer.h"
+#include "jingxian/utilities/NTService.h"
+
 
 
 # ifdef _GOOGLETEST_
@@ -21,40 +24,127 @@
 
 _jingxian_begin
 
-class EchoServer : public AbstractServer
+
+class Handler
 {
 public:
-	EchoServer(IOCPServer& core)
-		: AbstractServer( &core )
+
+	/**
+	* 服务运行
+	*/
+	virtual void run()
 	{
-		if(!this->initialize(_T("tcp://0.0.0.0:6543")))
-		{
-			LOG_FATAL(log(), _T("初始失败"));
-			return;
-		}
-		acceptor_.accept(this, &EchoServer::OnComplete, &EchoServer::OnError, &core);
+		_jingxian proxy::Proxy proxy(server, _T("TCP://0.0.0.0:6544"));
+		_jingxian EchoServer echo(server);
+
+		server.runForever();
 	}
 
-
-	void OnComplete(ITransport* transport, IOCPServer* core)
+	/**
+	* 初始化,它将在run之前调用。
+	* @param[ in ] dwArgc 参数数组大小
+	* @param[ in ] lpszArgv 参数数组
+	* @return 成功返回true, 失败返回false
+	* @remarks 注意，不可以发生异常。如果想指定退出代码，请用SetLastError
+	* 或者SetLastErrorEx ，因为调用者会用GetLastError取得退出代码。
+	*/
+	bool OnInit( DWORD dwArgc, LPTSTR* lpszArgv )
 	{
-		transport->bindProtocol(&protocol_);
-		transport->initialize();
-
-		acceptor_.accept(this, &EchoServer::OnComplete, &EchoServer::OnError, core);
+		return server.initialize(1);
 	}
 
-	void OnError(const ErrorCode& err, IOCPServer* core)
+	/**
+	* 接收到一个服务将停止的通知
+	* @remarks 注意，不可以发生异常。
+	*/
+	void OnStop()
 	{
-		acceptor_.accept(this, &EchoServer::OnComplete, &EchoServer::OnError, core);
+		server.interrupt();
 	}
-	virtual const tstring& toString() const
+
+	/**
+	* 接收到一个询问服务状态的通知
+	* @remarks 注意，不可以发生异常。
+	*/
+	void OnInterrogate()
 	{
-		return protocol_.toString();
 	}
+
+	/**
+	* 接收到一个服务暂停的通知
+	* @remarks 注意，不可以发生异常。
+	*/
+	void OnPause()
+	{
+	}
+
+	/**
+	* 接收到一个服务恢复的通知
+	* @remarks 注意，不可以发生异常。
+	*/
+	void OnContinue()
+	{
+	}
+
+	/**
+	* 接收到一个系统将关闭的通知
+	* @remarks 注意，不可以发生异常。
+	*/
+	void OnShutdown()
+	{
+	}
+
+	/**
+	* 接收到一个新的网络组件被绑定的通知
+	* @remarks 注意，不可以发生异常。
+	*/
+	void OnNetBindAdd()
+	{
+	}
+
+	/**
+	* 接收到一个网络组件绑定被启用的通知
+	* @remarks 注意，不可以发生异常。
+	*/
+	void OnNetBindEnable()
+	{
+	}
+
+	/**
+	* 接收到一个网络组件绑定被禁用的通知
+	* @remarks 注意，不可以发生异常。
+	*/
+	void OnNetBindDisable()
+	{
+	}
+
+	/**
+	* 接收到一个网络组件绑定被删除的通知
+	* @remarks 注意，不可以发生异常。
+	*/
+	void OnNetBindRemove()
+	{
+	}
+
+	/**
+	* 接收到一个删除的通知
+	* @remarks 注意，不可以发生异常。
+	*/
+	void OnParamChange()
+	{
+	}
+
+	/**
+	* 接收到一个用户定义的通知
+	* @param dwOpcode 用户定义的通知
+	* @remarks 注意，不可以发生异常。
+	*/
+	void OnControl(DWORD dwOpcode)
+	{
+	}
+
 private:
-
-	EchoProtocol protocol_;
+	_jingxian IOCPServer server;
 };
 
 void testStackTracer3()
@@ -80,7 +170,7 @@ TEST(string, stringOP)
 	StringArray<char, detail::StringOp<char> > sa1 = split<std::string, detail::StringOp<char> >( std::string("ad,adf,ff,d,,.d.f"),",." );
 
 	StringArray<char > sa2 = split( "ad,adf,ff,d,,.d.f",",." );
-	
+
 	StringArray<char> sa3 = split(std::string( "ad,adf,ff,d,,.d.f" ),",." );
 	ASSERT_FALSE( sa.size() != 6);
 	ASSERT_FALSE(    0 != strcmp( "ad", sa.ptr( 0 ) )
@@ -105,7 +195,7 @@ TEST(string, stringOP)
 	std::string str2( "as" );
 
 	ASSERT_TRUE( begin_with( str1, "asd" ) );
-	
+
 	ASSERT_FALSE( begin_with( str2, "asd" ) );
 
 	ASSERT_FALSE( begin_with( str1, "as1d" ) );
@@ -124,13 +214,13 @@ TEST(string, stringOP)
 
 	ASSERT_FALSE( trim_all( str5 ) != "asdkdfasdf" );
 
-	
+
 	std::string str6( "asdkdfasdf");
 	std::string str7( "asdkdfasdf");
 	std::string str8( "asdkdfasdf");
-	
+
 	ASSERT_FALSE( trim_left( str6, "af" ) != "sdkdfasdf" );
-	
+
 	ASSERT_FALSE( trim_right( str7, "af" ) != "asdkdfasd" );
 
 	ASSERT_FALSE( trim_all( str8, "af" ) != "sdkdfasd" );
@@ -140,7 +230,7 @@ TEST(string, stringOP)
 	std::string str11( "asdkdfasdf");
 
 	ASSERT_FALSE( replace_all( str9, "a", "c" ) != "csdkdfcsdf" );
-	
+
 	ASSERT_FALSE( replace_all( str10, "a", "cc" ) != "ccsdddkdfccsdf" );
 
 	ASSERT_FALSE( replace_all( str11, "a", "aaa" ) != "aaasdkdfaaasdf" );
@@ -154,25 +244,29 @@ TEST(string, stringOP)
 
 	try
 	{
-	testStackTracer1();
+		testStackTracer1();
 	}
 	catch(Exception& e)
 	{
+#ifdef  _UNICODE
 		std::wcerr << e << std::endl;
+#else
+		std::cerr << e << std::endl;
+#endif
 	}
 }
 #endif
 
 _jingxian_end
 
-_jingxian IOCPServer* server_;
+_jingxian Handler* server_;
 
 BOOL WINAPI handlerRoutine( DWORD ctrlType )
 {
 	switch(ctrlType)
 	{
 	case CTRL_C_EVENT:
-		server_->interrupt();
+		server_->OnStop();
 		return TRUE;
 	}
 	return FALSE;
@@ -180,52 +274,42 @@ BOOL WINAPI handlerRoutine( DWORD ctrlType )
 
 int main(int argc, char* argv[])
 {
-	// Get current flag
-int tmpFlag = _CrtSetDbgFlag( _CRTDBG_REPORT_FLAG );
-
-// Turn on leak-checking bit.
-tmpFlag |= _CRTDBG_LEAK_CHECK_DF;
-
-// Turn off CRT block checking bit.
-tmpFlag &= ~_CRTDBG_CHECK_CRT_DF;
-
-// Set flag to the new value.
-_CrtSetDbgFlag( tmpFlag );
+	int tmpFlag = _CrtSetDbgFlag( _CRTDBG_REPORT_FLAG );
+	tmpFlag |= _CRTDBG_LEAK_CHECK_DF;
+	tmpFlag &= ~_CRTDBG_CHECK_CRT_DF;
+	_CrtSetDbgFlag( tmpFlag );
 
 
-_jingxian networking::initializeScket();
+	_jingxian networking::initializeScket();
 
-	
+
 	try
-    {
+	{
 		log4cpp::PropertyConfigurator::configure(toNarrowString(::simplify (::combinePath(getApplicationDirectory(), _T("log4cpp.config")))));
-    }
-    catch (const log4cpp::ConfigureFailure& e)
-    {
-        log4cpp::Category::getRoot().warn(e.what());
-    }
+	}
+	catch (const log4cpp::ConfigureFailure& e)
+	{
+		log4cpp::Category::getRoot().warn(e.what());
+	}
 	catch (const std::exception& e)
-    {
+	{
 		std::cerr << e.what() << std::endl;
-    }
+	}
 
-	
 # ifdef _GOOGLETEST_
-    testing::InitGoogleTest(&argc, argv);
-    RUN_ALL_TESTS();
+	testing::InitGoogleTest(&argc, argv);
+	RUN_ALL_TESTS();
 #endif
 
-	_jingxian IOCPServer server;
+	Handler handler;
+	server_ = &handler;
 
-	if( !server.initialize(1) )
-		return -1;
+	//NTService<Handler> ntService(_T("jingxian-service"),&handler);
+	//ntService.start(argc, argv);
 
-	_jingxian proxy::Proxy proxy(server, _T("TCP://0.0.0.0:6544"));
-	_jingxian EchoServer echo(server);
-
-	server_ = &server;
 	SetConsoleCtrlHandler(&handlerRoutine, TRUE);
-	server.runForever();
+
+	handler.run();
 
 	_jingxian networking::shutdownSocket();
 	return 0;

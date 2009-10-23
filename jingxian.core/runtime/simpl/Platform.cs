@@ -30,7 +30,7 @@ namespace jingxian.core.runtime.simpl
                 throw new PlatformConfigurationException(msg);
             }
 
-            return launchableExtension.BuildTransient<IApplicationLaunchable>();
+            return launchableExtension.Build<IApplicationLaunchable>();
         }
 
         public static int Launch(IApplicationContext context, ICommandLineArguments arguments)
@@ -69,32 +69,32 @@ namespace jingxian.core.runtime.simpl
 
                     using (IDisposable scope = containerAdapter.Lock())
                     {
-                        foreach (IExtension extension in registry.GetExtensions(Constants.Points.Components))
-                        {
-                            ComponentConfiguration component = extension.GetConfiguration<ComponentConfiguration>();
-                            components.Add(component);
+                        //foreach (IExtension extension in registry.GetExtensions(Constants.Points.Components))
+                        //{
+                        //    ComponentConfiguration component = extension.GetConfiguration<ComponentConfiguration>();
+                        //    components.Add(component);
 
-                            containerAdapter.Connect(component.Id
-                                , builder.GetType(component.Interface)
-                                , builder.GetType(component.Implementation) );
-                        }
+                        //    containerAdapter.Connect(component.Id
+                        //        , builder.GetType(component.Interface)
+                        //        , builder.GetType(component.Implementation) );
+                        //}
 
-                        components.Sort(delegate(ComponentConfiguration a, ComponentConfiguration b)
-                        {
-                            return a.ProposedLevel - b.ProposedLevel;
-                        });
+                        //components.Sort(delegate(ComponentConfiguration a, ComponentConfiguration b)
+                        //{
+                        //    return a.ProposedLevel - b.ProposedLevel;
+                        //});
 
-                        List<object> componentInstances = new List<object>();
+                        //List<object> componentInstances = new List<object>();
 
-                        foreach (ComponentConfiguration component in components)
-                        {
-                            componentInstances.Add( containerAdapter.GetService(component.Id) );
-                        }
+                        //foreach (ComponentConfiguration component in components)
+                        //{
+                        //    componentInstances.Add( containerAdapter.GetService(component.Id) );
+                        //}
 
-                        foreach( object instance in componentInstances )
-                        {
-                            Utils.Start( instance );
-                        }
+                        //foreach( object instance in componentInstances )
+                        //{
+                        //    Utils.Start( instance );
+                        //}
                     }
 
 

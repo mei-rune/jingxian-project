@@ -13,7 +13,6 @@ namespace jingxian.core.runtime.simpl
 
 		public Extension(IExtensionConfiguration cfg, IExtensionBuilder builder)
 		{
-
 			_configElement = cfg;
 			_builder = builder;
 		}
@@ -68,16 +67,16 @@ namespace jingxian.core.runtime.simpl
             get { return !string.IsNullOrEmpty(Implementation); }
         }
 
-        public T BuildTransient<T>()
+        public T Build<T>()
         {
-            return _builder.BuildTransient<T>(this);
+            return _builder.Build<T>(this);
         }
 
-        public CFG GetConfiguration<CFG>()
-            where CFG : IXmlSerializable, new()
-        {
-            return _builder.BuildConfigurationFromXml<CFG>(this);
-        }
+        //public CFG GetConfiguration<CFG>()
+        //    where CFG : IXmlSerializable, new()
+        //{
+        //    return _builder.BuildConfigurationFromXml<CFG>(this);
+        //}
 
         public override string ToString()
         {

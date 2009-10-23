@@ -1,5 +1,6 @@
 
 # include "pro_config.h"
+# include <Winsock2.h>
 # include <Ws2tcpip.h>
 # include "jingxian/networks/ThreadDNSResolver.h"
 # include "jingxian/IReactorCore.h"
@@ -95,7 +96,7 @@ void dnsQuery(const tstring& name
 	int result = GetAddrInfoW(name.c_str(), port.c_str(), NULL, &res);
 #else
 	struct addrinfo* res = NULL;
-	int result = getaddrinfo(host.c_str(), port.c_str(), NULL, &res);
+	int result = getaddrinfo(name.c_str(), port.c_str(), NULL, &res);
 #endif
 	if(0 != result)
 	{

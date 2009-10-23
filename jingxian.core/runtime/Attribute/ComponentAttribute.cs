@@ -15,7 +15,6 @@ namespace jingxian.core.runtime
     {
         private readonly Type _InterfaceType;
 		private string _configuration;
-        private int _proposedLevel = int.MaxValue;
 
 		public ComponentAttribute(Type interfaceType, Type implementation, string id, string bundleId)
 			: base(id, bundleId, Constants.Points.Components, implementation)
@@ -27,12 +26,6 @@ namespace jingxian.core.runtime
 		{
             get { return _InterfaceType; }
         }
-
-        public int ProposedLevel
-        {
-            get { return _proposedLevel; }
-        }
-
 
 		public override string Configuration
 		{
@@ -53,23 +46,11 @@ namespace jingxian.core.runtime
 		[SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
 		public string GetConfigurationXml()
 		{
-            if (int.MaxValue == ProposedLevel)
-            {
                 return string.Format(CultureInfo.InvariantCulture,
                     "<component interface='{0}' implementation='{1}' id='{2}' />",
                     Utils.GetImplementationName(InterfaceType),
                     Utils.GetImplementationName(Implementation),
                     Id);
-            }
-            else
-            {
-                return string.Format(CultureInfo.InvariantCulture,
-                    "<component interface='{0}' implementation='{1}' id='{2}' proposedLevel='{3}' />",
-                    Utils.GetImplementationName(InterfaceType),
-                    Utils.GetImplementationName(Implementation),
-                    Id,
-                    ProposedLevel );
-            }
 		}
 	}
 }
