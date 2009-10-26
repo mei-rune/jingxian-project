@@ -154,7 +154,7 @@ namespace jingxian.core.runtime.simpl
                 Enforce.ArgumentNotNull(classType, "classType");
 
                 bool newInstance;
-                return _kernelAdapter.createInstance(classType, out newInstance);
+                return _kernelAdapter.createInstance(classType,null, out newInstance);
             }
 
             public object BuildTransient(string classType)
@@ -162,7 +162,7 @@ namespace jingxian.core.runtime.simpl
                 Enforce.ArgumentNotNullOrEmpty(classType, "classType");
 
                 bool newInstance;
-                return _kernelAdapter.createInstance(GetType(classType), out newInstance);
+                return _kernelAdapter.createInstance(GetType(classType), null, out newInstance);
             }
 
             #endregion

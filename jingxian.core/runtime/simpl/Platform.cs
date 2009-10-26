@@ -49,7 +49,6 @@ namespace jingxian.core.runtime.simpl
                 using (KernelAdapter containerAdapter = new KernelAdapter())
                 {
                     containerAdapter.Connect(typeof(IApplicationContext), context);
-
                     containerAdapter.Connect(RuntimeConstants.AssemblyLoaderServiceId
                         , typeof(IAssemblyLoaderService)
                         , typeof(AssemblyLoaderService));
@@ -59,51 +58,40 @@ namespace jingxian.core.runtime.simpl
                     containerAdapter.Connect(RuntimeConstants.ExtensionRegistryId
                         , typeof(IExtensionRegistry)
                         , typeof(ExtensionRegistry));
-
                     containerAdapter.Start();
-
 
                     IExtensionRegistry registry = containerAdapter.Get<IExtensionRegistry>();
                     IObjectBuilder builder = containerAdapter.Get<IObjectBuilder>();
-                    List<ComponentConfiguration> components = new List<ComponentConfiguration>();
 
                     using (IDisposable scope = containerAdapter.Lock())
                     {
-                        //foreach (IExtension extension in registry.GetExtensions(Constants.Points.Components))
-                        //{
-                        //    ComponentConfiguration component = extension.GetConfiguration<ComponentConfiguration>();
-                        //    components.Add(component);
+                        IExtension[] extensions = registry.GetExtensions(Constants.Points.Services);
+                        foreach (IExtension extension in extensions)
+                        {
 
-                        //    containerAdapter.Connect(component.Id
-                        //        , builder.GetType(component.Interface)
-                        //        , builder.GetType(component.Implementation) );
-                        //}
+                                containerAdapter.Connect(extension.Id
+                                    , getServiceTypes(builder, extension)
+                                    , builder.GetType(extension.Implementation));
+              
+                        }
 
-                        //components.Sort(delegate(ComponentConfiguration a, ComponentConfiguration b)
-                        //{
-                        //    return a.ProposedLevel - b.ProposedLevel;
-                        //});
+                        List<object> services = new List<object>();
+                        foreach (IExtension extension in extensions)
+                        {
+                            services.Add(containerAdapter.GetService(extension.Id));
+                        }
 
-                        //List<object> componentInstances = new List<object>();
-
-                        //foreach (ComponentConfiguration component in components)
-                        //{
-                        //    componentInstances.Add( containerAdapter.GetService(component.Id) );
-                        //}
-
-                        //foreach( object instance in componentInstances )
-                        //{
-                        //    Utils.Start( instance );
-                        //}
+                        foreach (object instance in services)
+                        {
+                            MicroKernel.Start(instance, containerAdapter);
+                        }
                     }
-
 
                     IApplicationLaunchable launchable = BuildApplicationLaunchable(context, registry );
                     exitCode = launchable.Launch(context);
 
                     containerAdapter.Stop();
                 }
-
             }
             finally
             {
@@ -115,6 +103,21 @@ namespace jingxian.core.runtime.simpl
         }
 
 
+        static Type[] getServiceTypes(IObjectBuilder builder, IExtension extension)
+        {
+            ServiceAttribute[] interfaces = builder.GetType(extension.Implementation)
+                                         .GetCustomAttributes(typeof(ServiceAttribute), true) as ServiceAttribute[];
+            if (null != interfaces && 0 < interfaces.Length)
+            {
+                Type[] interfaceTypes = new Type[interfaces.Length];
+                for (int i = 0; i < interfaceTypes.Length; ++i)
+                {
+                    interfaceTypes[i] = interfaces[i].ServiceInterface;
+                }
+                return interfaceTypes;
+            }
+            return new Type[] { };
+        }
         static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             _logger.ErrorFormat("发生未抓住的异常  '{0}' .", e.ExceptionObject.GetType());

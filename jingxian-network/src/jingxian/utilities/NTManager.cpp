@@ -21,8 +21,11 @@ NTManager::~NTManager()
 	logger_ = null_ptr;
 }
 
-int NTManager::installService(const tstring& name, const tstring& display, const tstring& executable,
-								   const std::vector<tstring>& args)
+int NTManager::installService(const tstring& name
+								, const tstring& display
+								, const tstring& description
+								, const tstring& executable
+								, const std::vector<tstring>& args)
 {
 	tstring disp, exec;
 
@@ -104,14 +107,25 @@ int NTManager::installService(const tstring& name, const tstring& display, const
 
     if(hService == NULL)
     {
-        LOG_ERROR(logger_, _T("安装服务 '") << name <<_T("' 失败 - 不能创服务实例 - ") << ::lastError(GetLastError()));
+        LOG_ERROR(logger_, _T("安装服务 '") << name <<_T("' 失败,不能创服务实例 - ") << ::lastError(GetLastError()));
         CloseServiceHandle(hSCM);
         return -1;
     }
 
+	if(!description.empty())
+	{
+		SERVICE_DESCRIPTION descr;
+		descr.lpDescription = (tchar*)description.c_str();
+		if(!ChangeServiceConfig2(hService,SERVICE_CONFIG_DESCRIPTION,&descr))
+		{
+			LOG_WARN(logger_, _T("安装服务 '") << name <<_T("' 时,添加描述失败 - ") << ::lastError(GetLastError()));
+		}
+	}
+
     CloseServiceHandle(hSCM);
     CloseServiceHandle(hService);
 
+    LOG_DEBUG(logger_, _T("安装服务 '") << name <<_T("' 成功"));
     return 0;
 }
 
@@ -138,6 +152,10 @@ int NTManager::uninstallService(const tstring& name)
     {
         LOG_ERROR(logger_, _T("卸载服务 '") << name <<_T("' 失败,不能删除服务 - ") << ::lastError(GetLastError()));
     }
+	else
+	{
+		LOG_DEBUG(logger_, _T("卸载服务 '") << name <<_T("' 成功"));
+	}
 
     CloseServiceHandle(hSCM);
     CloseServiceHandle(hService);
@@ -195,15 +213,12 @@ int NTManager::startService(const tstring& name, const std::vector<tstring>& arg
         return -1;
     }
 
-	LOG_TRACE( logger_, _T("服务正在启动中...") );
+	LOG_TRACE( logger_, _T("服务正在启动中,请稍等...") );
 
-	//
-	// 
-	//
 	SERVICE_STATUS status;
-	if(!waitForServiceState(hService, SERVICE_START_PENDING, status))
+	if(!waitForServiceState(hService, SERVICE_RUNNING, status))
 	{
-		LOG_ERROR(logger_, _T("启动服务 '") << name <<_T(", 失败, 检测服务状态发生错误 - ") << ::lastError(GetLastError()));
+		LOG_ERROR(logger_, _T("启动服务 '") << name <<_T("' 失败, 检测服务状态发生错误 - ") << ::lastError(GetLastError()));
 		CloseServiceHandle(hService);
 		CloseServiceHandle(hSCM);
 		return -1;
@@ -214,11 +229,11 @@ int NTManager::startService(const tstring& name, const std::vector<tstring>& arg
 
 	if(status.dwCurrentState == SERVICE_RUNNING)
 	{
-		LOG_CRITICAL( logger_, _T("启动服务 '") << name <<_T(", 成功, 服务运行中..."));
+		LOG_CRITICAL( logger_, _T("启动服务 '") << name <<_T("' 成功, 服务运行中."));
 	}
 	else
 	{
-		showServiceStatus( _T( "服务器启动发生错误。"), status);
+		showServiceStatus( _T( "服务器启动发生错误"), status);
 		return -1;
 	}
 
@@ -253,14 +268,22 @@ int NTManager::stopService(const tstring& name)
         return -1;
     }
 
-    LOG_TRACE( logger_, _T("服务停止中..."));
+    LOG_TRACE( logger_, _T("服务停止中,请稍等..."));
 
-    //
-    // 等待服务停止或发生一个错误
-    //
-    if(!waitForServiceState(hService, SERVICE_STOP_PENDING, status))
+    ////
+    //// 等待服务停止或发生一个错误
+    ////
+    //if(!waitForServiceState(hService, SERVICE_STOP_PENDING, status))
+    //{
+    //    LOG_ERROR(logger_, _T("停止服务 '") << name <<_T("' 失败,检测服务状态发生错误 - ") << lastError(GetLastError()));
+    //    CloseServiceHandle(hService);
+    //    CloseServiceHandle(hSCM);
+    //    return -1;
+    //}
+
+	if(!waitForServiceState(hService, SERVICE_STOPPED, status))
     {
-		LOG_ERROR(logger_, _T("停止服务 '") << name <<_T("' 失败,检测服务状态发生错误 - ") << lastError(GetLastError()));
+        LOG_ERROR(logger_, _T("停止服务 '") << name <<_T("' 失败,检测服务状态发生错误 - ") << lastError(GetLastError()));
         CloseServiceHandle(hService);
         CloseServiceHandle(hSCM);
         return -1;
@@ -275,7 +298,7 @@ int NTManager::stopService(const tstring& name)
     }
     else
     {
-		showServiceStatus(_T( "服务器停止发生错误。"), status);
+		showServiceStatus(_T( "服务器停止发生错误"), status);
 		return -1;
     }
 
@@ -294,28 +317,18 @@ bool NTManager::waitForServiceState(SC_HANDLE hService, DWORD pendingState, SERV
     //
     DWORD startTickCount = GetTickCount();
     DWORD oldCheckPoint = status.dwCheckPoint;
+	int tries = 60;
 
     //
     // 轮询服务状态
     //
-    while(status.dwCurrentState == pendingState)
+    while(status.dwCurrentState != pendingState)
     {
         //
         // 计算等待时间( 1秒 到 10秒)
         //
-
-        DWORD waitTime = status.dwWaitHint / 10;
-
-        if(waitTime < 1000)
-        {
-            waitTime = 1000;
-        }
-        else if(waitTime > 10000)
-        {
-            waitTime = 10000;
-        }
-
-        Sleep(waitTime);
+		status.dwWaitHint = 1000;
+        Sleep(1000);
 
         //
         // 再检测服务状态
@@ -332,17 +345,12 @@ bool NTManager::waitForServiceState(SC_HANDLE hService, DWORD pendingState, SERV
             //
             startTickCount = GetTickCount();
             oldCheckPoint = status.dwCheckPoint;
+			tries = 60;
         }
-        else
-        {
-            if(GetTickCount() - startTickCount > status.dwWaitHint)
-            {
-                //
-                // 超过等待进间
-                //
-                break;
-            }
-        }
+        else if( --tries < 0)
+		{
+			break;
+		}
     }
 
     return true;

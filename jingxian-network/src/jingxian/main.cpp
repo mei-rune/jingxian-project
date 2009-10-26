@@ -8,7 +8,7 @@
 #include "jingxian/protocol/EchoProtocol.h"
 #include "jingxian/protocol/Proxy/Proxy.h"
 #include "jingxian/protocol/EchoServer.h"
-#include "jingxian/utilities/NTService.h"
+#include "jingxian/utilities/BaseApplication.h"
 
 
 
@@ -25,19 +25,47 @@
 _jingxian_begin
 
 
-class Handler
+class Application : public BaseApplication
 {
 public:
+	Application()
+		: BaseApplication(_T("jingxian-daemon"))
+	{
+		_jingxian networking::initializeScket();
+		try
+		{
+			log4cpp::PropertyConfigurator::configure(toNarrowString(::simplify (::combinePath(getApplicationDirectory(), _T("log4cpp.config")))));
+		}
+		catch (const log4cpp::ConfigureFailure& e)
+		{
+			log4cpp::Category::getRoot().warn(e.what());
+		}
+		catch (const std::exception& e)
+		{
+			std::cerr << e.what() << std::endl;
+		}
+	}
+
+	virtual ~Application()
+	{
+		_jingxian networking::shutdownSocket();
+	}
 
 	/**
 	* 服务运行
 	*/
-	virtual void run()
+	virtual int run(const std::vector<tstring>& args)
 	{
+		if(!server.initialize(1))
+		{
+			return -1;
+		}
+
 		_jingxian proxy::Proxy proxy(server, _T("TCP://0.0.0.0:6544"));
 		_jingxian EchoServer echo(server);
 
 		server.runForever();
+		return 0;
 	}
 
 	/**
@@ -48,7 +76,7 @@ public:
 	* @remarks 注意，不可以发生异常。如果想指定退出代码，请用SetLastError
 	* 或者SetLastErrorEx ，因为调用者会用GetLastError取得退出代码。
 	*/
-	bool OnInit( DWORD dwArgc, LPTSTR* lpszArgv )
+	bool onInitialize(const std::vector<tstring>& args)
 	{
 		return server.initialize(1);
 	}
@@ -57,92 +85,10 @@ public:
 	* 接收到一个服务将停止的通知
 	* @remarks 注意，不可以发生异常。
 	*/
-	void OnStop()
+	void onStop()
 	{
 		server.interrupt();
 	}
-
-	/**
-	* 接收到一个询问服务状态的通知
-	* @remarks 注意，不可以发生异常。
-	*/
-	void OnInterrogate()
-	{
-	}
-
-	/**
-	* 接收到一个服务暂停的通知
-	* @remarks 注意，不可以发生异常。
-	*/
-	void OnPause()
-	{
-	}
-
-	/**
-	* 接收到一个服务恢复的通知
-	* @remarks 注意，不可以发生异常。
-	*/
-	void OnContinue()
-	{
-	}
-
-	/**
-	* 接收到一个系统将关闭的通知
-	* @remarks 注意，不可以发生异常。
-	*/
-	void OnShutdown()
-	{
-	}
-
-	/**
-	* 接收到一个新的网络组件被绑定的通知
-	* @remarks 注意，不可以发生异常。
-	*/
-	void OnNetBindAdd()
-	{
-	}
-
-	/**
-	* 接收到一个网络组件绑定被启用的通知
-	* @remarks 注意，不可以发生异常。
-	*/
-	void OnNetBindEnable()
-	{
-	}
-
-	/**
-	* 接收到一个网络组件绑定被禁用的通知
-	* @remarks 注意，不可以发生异常。
-	*/
-	void OnNetBindDisable()
-	{
-	}
-
-	/**
-	* 接收到一个网络组件绑定被删除的通知
-	* @remarks 注意，不可以发生异常。
-	*/
-	void OnNetBindRemove()
-	{
-	}
-
-	/**
-	* 接收到一个删除的通知
-	* @remarks 注意，不可以发生异常。
-	*/
-	void OnParamChange()
-	{
-	}
-
-	/**
-	* 接收到一个用户定义的通知
-	* @param dwOpcode 用户定义的通知
-	* @remarks 注意，不可以发生异常。
-	*/
-	void OnControl(DWORD dwOpcode)
-	{
-	}
-
 private:
 	_jingxian IOCPServer server;
 };
@@ -259,20 +205,20 @@ TEST(string, stringOP)
 
 _jingxian_end
 
-_jingxian Handler* server_;
+_jingxian Application* server_;
 
 BOOL WINAPI handlerRoutine( DWORD ctrlType )
 {
 	switch(ctrlType)
 	{
 	case CTRL_C_EVENT:
-		server_->OnStop();
+		server_->onStop();
 		return TRUE;
 	}
 	return FALSE;
 }
 
-int main(int argc, tchar* argv[])
+int _tmain(int argc, tchar* argv[])
 {
 	int tmpFlag = _CrtSetDbgFlag( _CRTDBG_REPORT_FLAG );
 	tmpFlag |= _CRTDBG_LEAK_CHECK_DF;
@@ -280,41 +226,17 @@ int main(int argc, tchar* argv[])
 	_CrtSetDbgFlag( tmpFlag );
 
 
-	_jingxian networking::initializeScket();
 
-
-	try
-	{
-		log4cpp::PropertyConfigurator::configure(toNarrowString(::simplify (::combinePath(getApplicationDirectory(), _T("log4cpp.config")))));
-	}
-	catch (const log4cpp::ConfigureFailure& e)
-	{
-		log4cpp::Category::getRoot().warn(e.what());
-	}
-	catch (const std::exception& e)
-	{
-		std::cerr << e.what() << std::endl;
-	}
 
 # ifdef _GOOGLETEST_
 	testing::InitGoogleTest(&argc, argv);
 	RUN_ALL_TESTS();
 #endif
 
-	Handler handler;
-	server_ = &handler;
-
-	//NTService<Handler> ntService(_T("jingxian-service"),&handler);
-	//ntService.start(argc, argv);
+	server_ = new Application();
 
 	SetConsoleCtrlHandler(&handlerRoutine, TRUE);
 
-	if(!handler.OnInit(argc, argv) )
-		return -1;
-
-	handler.run();
-
-	_jingxian networking::shutdownSocket();
-	return 0;
+	return BaseApplication::main(server_, argc, argv);
 }
 

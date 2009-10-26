@@ -20,12 +20,14 @@ typedef std::wostream tostream;
 typedef std::wstringstream tstringstream;
 typedef std::wstringstream LogStream;
 typedef wchar_t tchar;
+#define tcout std::wcout
 #else
 typedef std::string tstring;
 typedef std::ostream tostream;
 typedef std::stringstream tstringstream;
 typedef std::stringstream LogStream;
 typedef char_t tchar;
+#define tcout std::cout
 #endif
 
 _jingxian_begin

@@ -3,6 +3,11 @@ using System.Xml.Serialization;
 
 namespace jingxian.core.runtime
 {
+    public interface ICreationContext
+    {
+        IKernel Kernel { get;  }
+    }
+
 
 	/// <summary>
 	/// 扩展接口
@@ -44,7 +49,7 @@ namespace jingxian.core.runtime
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-		T Build<T>();
+		T Build<T>(ICreationContext context);
 
         /// <summary>
         /// 是不是有配置

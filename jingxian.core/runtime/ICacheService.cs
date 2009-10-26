@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 
 namespace jingxian.core.runtime
 {
+#if CACHE
 	public interface ICacheService
 	{
         string CachePath { get; }
@@ -17,4 +18,5 @@ namespace jingxian.core.runtime
 
 		void Delete(string key);
 	}
+#endif
 }
