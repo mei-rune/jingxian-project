@@ -8,7 +8,11 @@ namespace jingxian.core.testSupport
 
     [Service( "BBB", typeof(IServiceProvider) )]
     [Component(typeof(IServiceProvider), typeof(ServerTester), "BBB", "jingxian.core.testSupport")]
-    public class ServerTester : IService 
+    [Extension("BBBB"
+    , "jingxian.core.testSupport"
+    , Constants.Points.Services
+   , typeof(ServerTester))]
+    public class ServerTester
     {
         #region IService ≥…‘±
 

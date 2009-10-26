@@ -238,6 +238,62 @@ inline tstring getDirectoryName(const tstring& pa)
 	}
 }
 
+/**
+ * 取得文件路径中的扩展名
+ */
+inline tstring getExtension (const tstring& pa)
+{
+	const tstring path = simplify(pa);
+
+	tstring::size_type dotPos = path.rfind(_T('.'));
+	tstring::size_type slashPos = path.rfind(_T('/'));
+
+	if(dotPos == tstring::npos || slashPos != tstring::npos && slashPos > dotPos)
+	{
+		return tstring();
+	}
+	else
+	{
+		return path.substr(dotPos + 1);
+	}
+}
+
+/**
+ * 取得文件路径中的文件名
+ */
+inline tstring getFileName(const tstring& pa)
+{
+	const tstring path = simplify(pa);
+
+	tstring::size_type slashPos = path.rfind(_T('/'));
+
+	if(slashPos == tstring::npos)
+	{
+		return path;
+	}
+	else
+	{
+		return path.substr( slashPos + 1 );
+	}
+}
+
+/**
+ * 取得文件路径中的文件名(不带扩展名)
+ */
+inline tstring getFileNameWithoutExtension(const tstring& pa)
+{
+	tstring path = getFileName(pa);
+	tstring::size_type dotPos = path.rfind(_T('.'));
+
+	if(dotPos == tstring::npos )
+	{
+		return path;
+	}
+	else
+	{
+		return path.substr( 0, dotPos);
+	}
+}
 
 namespace detail
 {
@@ -498,63 +554,6 @@ inline void createDirectoryRecursive(const tstring& pa)
 inline tstring combinePath(const tstring& path1,const tstring& path2)
 {
 	return simplify(path1 + _T("/") + path2 );
-}
-
-/**
- * 取得文件路径中的扩展名
- */
-inline tstring getExtension (const tstring& pa)
-{
-	const tstring path = simplify(pa);
-
-	tstring::size_type dotPos = path.rfind(_T('.'));
-	tstring::size_type slashPos = path.rfind(_T('/'));
-
-	if(dotPos == tstring::npos || slashPos != tstring::npos && slashPos > dotPos)
-	{
-		return tstring();
-	}
-	else
-	{
-		return path.substr(dotPos + 1);
-	}
-}
-
-/**
- * 取得文件路径中的文件名
- */
-inline tstring getFileName(const tstring& pa)
-{
-	const tstring path = simplify(pa);
-
-	tstring::size_type slashPos = path.rfind(_T('/'));
-
-	if(slashPos == tstring::npos)
-	{
-		return path;
-	}
-	else
-	{
-		return path.substr( slashPos + 1 );
-	}
-}
-
-/**
- * 取得文件路径中的文件名(不带扩展名)
- */
-inline tstring getFileNameWithoutExtension(const tstring& pa)
-{
-	tstring path = getFileName(pa);
-	tstring::size_type dotPos = path.rfind(_T('.'));
-
-	if(dotPos == tstring::npos )
-	{
-		return path;
-	}
-	else
-	{
-		return path.substr( 0, dotPos);
-	}
 }
 
 _jingxian_end

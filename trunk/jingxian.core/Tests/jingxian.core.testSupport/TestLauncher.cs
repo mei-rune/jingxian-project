@@ -31,7 +31,7 @@ namespace jingxian.core.testSupport
                     continue;
 
                 Console.WriteLine( "创建对象 - {0}" , extension.Id );
-                ITester tester = extension.BuildTransient<ITester>();
+                ITester tester = extension.Build<ITester>();
                 tester.Test();
             }
 

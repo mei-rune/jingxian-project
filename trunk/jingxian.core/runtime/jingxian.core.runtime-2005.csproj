@@ -42,6 +42,7 @@
     <Compile Include="Exception\AssemblyUnavailableException.cs" />
     <Compile Include="BundleState.cs" />
     <Compile Include="Attribute\ComponentAttribute.cs" />
+    <Compile Include="simpl\DiContainer.cs" />
     <Compile Include="simpl\KernelAdapter.cs" />
     <Compile Include="IoC\Parameters\ConstantParameter.cs" />
     <Compile Include="IoC\Descriptor.cs" />
@@ -252,8 +253,20 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Schemas\Bundle.xsx">
+      <DependentUpon>Bundle.xsd</DependentUpon>
+    </None>
+    <None Include="Schemas\Category.xsx">
+      <DependentUpon>Category.xsd</DependentUpon>
+    </None>
+    <None Include="Schemas\ComponentConfiguration.xsx">
+      <DependentUpon>ComponentConfiguration.xsd</DependentUpon>
+    </None>
     <None Include="Schemas\ServiceConfiguration.xsx">
       <DependentUpon>ServiceConfiguration.xsd</DependentUpon>
+    </None>
+    <None Include="Schemas\XmlExpressions.xsx">
+      <DependentUpon>XmlExpressions.xsd</DependentUpon>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

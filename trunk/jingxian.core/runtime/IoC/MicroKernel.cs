@@ -5,6 +5,12 @@ using System.Reflection;
 
 namespace jingxian.core.runtime
 {
+//#if !DOTNET35
+//    public delegate TResult Func<TResult>();
+//    public delegate TResult Func<T, TResult>(T arg);
+//#endif
+
+
     public class ServiceKey
     {
         internal string stringKey;
@@ -23,18 +29,51 @@ namespace jingxian.core.runtime
 
     public class MicroKernel : IServiceProvider, IDisposable
     {
+        public interface IParameter
+        {
+            bool TryGetProvider(ParameterInfo pi, out Func<object> valueProvider);
+        }
+
+        protected class AutoWireParameter : IParameter
+        {
+            protected MicroKernel _kernal;
+            public AutoWireParameter(MicroKernel kernal)
+            {
+                _kernal = kernal;
+            }
+
+            public bool TryGetProvider(ParameterInfo pi, out Func<object> valueProvider)
+            {
+                object val = _kernal.GetService(pi.Name);
+                if (null != val)
+                {
+                    valueProvider = delegate() { return val; };
+                    return true;
+                }
+                val = _kernal.GetService(pi.ParameterType);
+                if (null != val)
+                {
+                    valueProvider = delegate() { return val; };
+                    return true;
+                }
+                valueProvider = null;
+                return false;
+            }
+        }
+
         protected Dictionary<string, object> _componentsById = new Dictionary<string, object>();
         protected Dictionary<Type, object> _componentsByType = new Dictionary<Type, object>();
 
         protected IServiceProvider _parent;
         protected MethodInfo _getMethodInfo;
-
+        IParameter[] _internalParameters;
 
 
         protected bool _isStarted = false;
 
         public MicroKernel()
         {
+            _internalParameters = new IParameter[] { new AutoWireParameter(this) };
             _componentsById["kernel"]= this;
             _componentsByType[typeof(MicroKernel)] = this;
 
@@ -93,9 +132,9 @@ namespace jingxian.core.runtime
             bool newInstance = false;
 
             if (null == instance)
-                instance = createInstance(implementor, out newInstance);
+                instance = createInstance(implementor, _internalParameters, out newInstance);
             else
-                instance = createInstance(instance, out newInstance);
+                instance = createInstance(instance, _internalParameters, out newInstance);
 
             for (int i = 0; i < serviceTypes.Length; ++i)
             {
@@ -133,9 +172,9 @@ namespace jingxian.core.runtime
             bool newInstance = false;
             
             if (null == instance)
-                instance = createInstance(implementor, out newInstance);
+                instance = createInstance(implementor, _internalParameters, out newInstance);
             else
-                instance = createInstance(instance, out newInstance);
+                instance = createInstance(instance, _internalParameters, out newInstance);
 
             _componentsById[serviceId] = instance;
             Start(instance, this);
@@ -156,7 +195,10 @@ namespace jingxian.core.runtime
             Enforce.ArgumentNotNullOrEmpty(serviceId, "serviceId");
             Enforce.ArgumentNotNull(serviceTypes, "serviceTypes");
             if (0 == serviceTypes.Length)
-                throw new ArgumentNullException("serviceTypes");
+            {
+                _componentsById[serviceId] = instance;
+                return;
+            }
 
             _componentsById[serviceId] = serviceTypes[0];
             innerConnect(serviceTypes, instance, null);
@@ -167,7 +209,10 @@ namespace jingxian.core.runtime
             Enforce.ArgumentNotNullOrEmpty(serviceId, "serviceId");
             Enforce.ArgumentNotNull(serviceTypes, "serviceTypes");
             if (0 == serviceTypes.Length)
-                throw new ArgumentNullException("serviceTypes");
+            {
+                _componentsById[serviceId] = classType;
+                return;
+            }
 
             _componentsById[serviceId] = serviceTypes[0];
             innerConnect(serviceTypes, null, classType);
@@ -253,7 +298,7 @@ namespace jingxian.core.runtime
             if (_componentsById.TryGetValue(serviceId, out instance))
             {
                 bool newInstance = false;
-                instance = createInstance(instance, out newInstance);
+                instance = createInstance(instance, _internalParameters, out newInstance);
                 if (newInstance)
                     _componentsById[serviceId] = instance;
 
@@ -273,7 +318,7 @@ namespace jingxian.core.runtime
             if (_componentsByType.TryGetValue(serviceType, out instance))
             {
                 bool newInstance = false;
-                instance = createInstance(instance, out newInstance);
+                instance = createInstance(instance, _internalParameters, out newInstance);
                 if( newInstance )
                     _componentsByType[serviceType] = instance;
                 return instance;
@@ -283,7 +328,7 @@ namespace jingxian.core.runtime
             return _parent.GetService(serviceType);
         }
 
-        protected virtual object createInstance(Type implementor, out bool newInstance)
+        protected virtual object createInstance(Type implementor, IParameter[] parameters, out bool newInstance)
         {
             if (implementor.IsInterface)
             {
@@ -293,25 +338,25 @@ namespace jingxian.core.runtime
             }
 
             newInstance = true;
-            object instance = invokeConstructors(implementor);
-            invokeSetters(instance);
+            object instance = invokeConstructors(implementor, parameters??_internalParameters);
+            invokeSetters(instance, parameters ?? _internalParameters);
             return instance;
         }
 
         public object Create(Type implementor)
-        {            
-            object instance = invokeConstructors(implementor);
-            invokeSetters(instance);
+        {
+            object instance = invokeConstructors(implementor, _internalParameters);
+            invokeSetters(instance, _internalParameters);
             return instance;
         }
 
         public object Create(object instance)
         {
-            invokeSetters(instance);
+            invokeSetters(instance, _internalParameters);
             return instance;
         }
 
-        protected virtual object createInstance(object instance, out bool newInstance)
+        protected virtual object createInstance(object instance, IParameter[] parameters, out bool newInstance)
         {
             Type implementor = instance as Type;
             if (null == implementor)
@@ -320,56 +365,78 @@ namespace jingxian.core.runtime
                 return instance;
             }
 
-            return createInstance(implementor, out newInstance);
+            return createInstance(implementor, parameters, out newInstance);
         }
 
-        protected object invokeConstructors(Type implementor)
+        public static Func<object> GetProvider(IParameter[] parameters, ParameterInfo parameterInfo)
+        {
+            Func<object> func = null;
+            foreach (IParameter parameter in parameters)
+            {
+                if (parameter.TryGetProvider(parameterInfo, out func))
+                    return func;
+            }
+            return null;
+        }
+
+        public static object invokeConstructors(Type implementor, IParameter[] parameters)
         {
             ConstructorInfo[] constructors = implementor.GetConstructors();
 
-            List<KeyValuePair<ConstructorInfo, object[]>> ciList = new List<KeyValuePair<ConstructorInfo, object[]>>();
+            List<KeyValuePair<ConstructorInfo, Func<object>[]>> ciList = new List<KeyValuePair<ConstructorInfo, Func<object>[]>>();
 
+            /// 遍历所有的构造函数,判断它们的参数是不是满足,如果满足就添加到ciList列表中
             foreach (ConstructorInfo constructor in constructors)
             {
                 ParameterInfo[] constructorParameters = constructor.GetParameters();
 
                 if (constructorParameters.Length == 0)
                 {
-                    ciList.Add(new KeyValuePair<ConstructorInfo, object[]>(constructor, new object[0]));
+                    ciList.Add(new KeyValuePair<ConstructorInfo, Func<object>[]>(constructor, new Func<object>[0]));
                     continue;
                 }
 
                 bool hasNull = false;
-                object[] parameters = new object[constructorParameters.Length];
+                Func<object>[] providers = new Func<object>[constructorParameters.Length];
 
                 for (int i = 0; i < constructorParameters.Length; i++)
                 {
-                    parameters[i] = GetService(constructorParameters[i].Name);
-                    if (null == parameters[i])
-                        parameters[i] = GetService(constructorParameters[i].ParameterType);
-                    if (null == parameters[i])
+                    providers[i] = GetProvider(parameters, constructorParameters[i]);
+
+                    if (null == providers[i])
+                    {
                         hasNull = true;
+                        break;
+                    }
                 }
 
                 if (!hasNull)
-                    ciList.Add(new KeyValuePair<ConstructorInfo, object[]>(constructor, parameters));
+                    ciList.Add(new KeyValuePair<ConstructorInfo, Func<object>[]>(constructor, providers));
             }
 
 
-            if(0 == ciList.Count)
+            if (0 == ciList.Count)
                 throw new RuntimeException(string.Concat("创建对象 '", implementor, "' 失败,没有适合的构造器!"));
 
-            KeyValuePair<ConstructorInfo, object[]>? selectedCI = null;
-            foreach (KeyValuePair<ConstructorInfo, object[]> kp in ciList)
+            /// 选择一个参数最多的构造函数
+            KeyValuePair<ConstructorInfo, Func<object>[]>? selectedCI = null;
+            foreach (KeyValuePair<ConstructorInfo, Func<object>[]> kp in ciList)
             {
                 if (null == selectedCI || selectedCI.Value.Value.Length < kp.Value.Length)
                     selectedCI = kp;
             }
 
-            return selectedCI.Value.Key.Invoke(selectedCI.Value.Value);
+            /// 取得所有的参数
+            object[] args = new object[selectedCI.Value.Value.Length];
+            for (int i = 0; i < args.Length; ++i)
+            {
+                args[i] = selectedCI.Value.Value[i]();
+            }
+
+            return selectedCI.Value.Key.Invoke(args);
         }
 
-        protected void invokeSetters(object instance)
+        public static void invokeSetters(object instance, IParameter[] parameters)
         {
             Enforce.ArgumentNotNull(instance, "instance");
 
@@ -384,12 +451,9 @@ namespace jingxian.core.runtime
 
                 try
                 {
-                    object val = GetService(name);
-                    if(null == val)
-                        val = GetService(propertyType);
-
-                    if (null != val)
-                        propertyInfo.SetValue(instance, val, null);
+                    Func<object> provider = GetProvider(parameters, propertyInfo.GetSetMethod().GetParameters()[0]);
+                    if (null != provider)
+                        propertyInfo.SetValue(instance, provider(), null);
                 }
                 catch (Exception exception)
                 {
@@ -418,7 +482,6 @@ namespace jingxian.core.runtime
             {
                 GetService(key);
             }
-
 
             List<object> instances = new List<object>();
             foreach (object instance in _componentsById.Values)

@@ -8,7 +8,7 @@ namespace jingxian.core.runtime
 
 #if !DOTNET35
     public delegate TResult Func<TResult>();
-    public delegate TResult Func<T, TResult>( T arg);
+    public delegate TResult Func<T, TResult>(T arg);
 #endif
 
     public interface IParameter

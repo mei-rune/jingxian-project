@@ -29,6 +29,8 @@ namespace jingxian.core.runtime
 
 			public const string CommandLineArguments = "jingxian.core.runtime.commandLineArguments";
 
+            public const string DiContainer = "jingxian.core.runtime.diContainer";
+
 		}
 	}
 }

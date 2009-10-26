@@ -681,6 +681,26 @@
 			Name="utilities"
 			>
 			<File
+				RelativePath=".\src\jingxian\utilities\BaseApplication.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\utilities\BaseApplication.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\utilities\NTManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\utilities\NTManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\utilities\NTService.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\jingxian\utilities\StackTracer.cpp"
 				>
 			</File>

@@ -31,8 +31,11 @@ public:
 	 * @param[ in ] args Win32 服务的参数
 	 * @return 成功返回0,否则返回非0
      */
-	int installService( const tstring& name, const tstring& display, 
-		const tstring& executable,const std::vector<tstring>& args);
+	int installService(const tstring& name
+		, const tstring& display
+		, const tstring& description
+		, const tstring& executable
+		, const std::vector<tstring>& args);
 
     /**
      * 卸载一个 Win32 服务

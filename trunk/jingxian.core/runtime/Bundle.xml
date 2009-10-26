@@ -28,6 +28,10 @@
 		 id="jingxian.core.runtime.xmlSchemas"
 		 name="XML Schemas" />
 
+  <extensionPoint
+   id="jingxian.core.runtime.diContainer"
+   name="Di Container" />
+
 	<!--EXTENSIONS-->
 	<extension
 		id="jingxian.core.runtime.schemas.serviceConfiguration"
