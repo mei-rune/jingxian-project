@@ -230,12 +230,22 @@
       <LastGenOutput>Messages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Schemas\ArbitraryConfiguration.xsd" />
-    <EmbeddedResource Include="Schemas\Bundle.xsd" />
-    <EmbeddedResource Include="Schemas\Category.xsd" />
+    <EmbeddedResource Include="Schemas\Bundle.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schemas\Category.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Schemas\CommandLineArgumentConfiguration.xsd" />
-    <EmbeddedResource Include="Schemas\ComponentConfiguration.xsd" />
-    <EmbeddedResource Include="Schemas\ServiceConfiguration.xsd" />
-    <EmbeddedResource Include="Schemas\XmlExpressions.xsd" />
+    <EmbeddedResource Include="Schemas\ComponentConfiguration.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schemas\ServiceConfiguration.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schemas\XmlExpressions.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Bundle.xml" />

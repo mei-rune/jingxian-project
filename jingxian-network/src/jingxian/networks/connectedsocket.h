@@ -13,6 +13,7 @@
 # include <Winsock2.h>
 # include <fstream>
 # include "jingxian/IProtocol.h"
+# include "jingxian/ISession.h"
 # include "jingxian/ProtocolContext.h"
 # include "jingxian/networks/connection_status.h"
 # include "jingxian/logging/logging.h"
@@ -27,7 +28,7 @@ _jingxian_begin
  * On开头的函数在用户直接调用的方法中不可以使用。
  * 给用户调用的方法为ITransport接口中的方法
  */
-class ConnectedSocket : public ITransport
+class ConnectedSocket : public ITransport//, public ISession
 {
 public:
 
@@ -88,6 +89,22 @@ public:
 	 * @implements timeout
 	 */
     virtual time_t timeout() const;
+
+	///**
+	// * @implements transport
+	// */
+	//virtual ITransport* transport()
+	//{
+	//	return this;
+	//}
+
+	///**
+	// * @implements protocol
+	// */
+	//virtual IProtocol*  protocol()
+	//{
+	//	return protocol_;
+	//}
 
 	/**
 	 * @implements toString

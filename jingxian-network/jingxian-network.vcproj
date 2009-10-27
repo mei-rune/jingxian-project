@@ -802,6 +802,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\jingxian\ISession.h"
+			>
+		</File>
+		<File
 			RelativePath=".\src\jingxian\ITransport.h"
 			>
 		</File>
