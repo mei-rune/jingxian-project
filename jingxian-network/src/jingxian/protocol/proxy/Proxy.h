@@ -11,7 +11,6 @@
 // Include files
 # include <list>
 # include "jingxian/directory.h"
-# include "jingxian/AbstractServer.h"
 # include "jingxian/networks/IOCPServer.h"
 # include "jingxian/protocol/proxy/ICredentialPolicy.h"
 # include "jingxian/protocol/proxy/Credentials.h"
@@ -88,25 +87,13 @@ namespace proxy
 		int _position;
 	};
 
-	class Proxy  : public AbstractServer
+	class Proxy  : public IProtocolFactory
 	{
 	public:
-		Proxy(IOCPServer& core, const tstring& addr)
-			: AbstractServer( &core )
-			, errorCount_(0)
+		Proxy(const tstring& basePath)
+			:toString_(_T("socks 代理"))
 		{
-			_toString = _T("socks 代理");
-			if(!this->initialize(addr))
-			{
-				LOG_FATAL(log(), _T("初始代理服务失败"));
-				return;
-			}
-
-			//_allowedIPs = ParseIPSeg( config.AllowedIPs );
-			//_blockingIPs = ParseIPSeg(config.BlockingIPs );
-
-
-			path_ = combinePath(core.basePath(), _T("log"));
+			path_ = combinePath(basePath, _T("log"));
 			if(!existDirectory(path_))
 				createDirectory(path_);
 
@@ -117,39 +104,14 @@ namespace proxy
 			if(!existDirectory(combinePath(path_, _T("session"))))
 				createDirectory(combinePath(path_, _T("session")));
 
-			_credentials.policies().push_back(new NullCredentialPolicyFactory(this));
-			_credentials.policies().push_back(new BaseCredentialPolicyFactory(this, AuthenticationType::BASE, _T("BASE"), _T("")));
-			_credentials.policies().push_back(new BaseCredentialPolicyFactory(this, AuthenticationType::GSSAPI, _T("GSSAPI"), _T("")));
-
-			acceptor_.accept(this, &Proxy::onComplete, &Proxy::onError, &core);
+			credentials_.policies().push_back(new NullCredentialPolicyFactory(this));
+			credentials_.policies().push_back(new BaseCredentialPolicyFactory(this, AuthenticationType::BASE, _T("BASE"), _T("")));
+			credentials_.policies().push_back(new BaseCredentialPolicyFactory(this, AuthenticationType::GSSAPI, _T("GSSAPI"), _T("")));
 		}
 
-		void onComplete(ITransport* transport, IOCPServer* core)
+		virtual IProtocol* createProtocol(ITransport* transport, IReactorCore* core)
 		{
-			if(!core->isRunning())
-				return;
-
-			std::auto_ptr<SOCKSv5Protocol> protocol(new SOCKSv5Protocol(this));
-			transport->bindProtocol(protocol.get());
-			protocol.release();
-
-			errorCount_ = 0;
-			acceptor_.accept(this, &Proxy::onComplete, &Proxy::onError, core);
-		}
-
-		void onError(const ErrorCode& err, IOCPServer* core)
-		{
-			if(!core->isRunning())
-				return;
-
-			++ errorCount_;
-			acceptor_.accept(this, &Proxy::onComplete, &Proxy::onError, core);
-			if( errorCount_ > 20 )
-			{
-				LOG_FATAL(log(), _T("尝试接收请失败超过 '") << errorCount_ << _T("' 次,退出服务"));
-				reactor_->interrupt();
-				return;
-			}
+			return new SOCKSv5Protocol(this);
 		}
 
 		//bool IsBlockingIP(const tstring& ip)
@@ -187,13 +149,18 @@ namespace proxy
 
 		proxy::Credentials&  credentials()
 		{
-			return _credentials;
+			return credentials_;
+		}
+
+		const tstring& toString() const
+		{
+			return toString_;
 		}
 
 	private:
-		proxy::Credentials _credentials;
+		tstring toString_;
+		proxy::Credentials credentials_;
 		tstring path_;
-		int errorCount_;
 	};
 }
 

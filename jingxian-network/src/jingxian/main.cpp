@@ -2,12 +2,11 @@
 
 #include "pro_config.h"
 #include <iostream>
-#include "jingxian/AbstractServer.h"
 #include "jingxian/directory.h"
 #include "jingxian/networks/IOCPServer.h"
 #include "jingxian/protocol/EchoProtocol.h"
 #include "jingxian/protocol/Proxy/Proxy.h"
-#include "jingxian/protocol/EchoServer.h"
+#include "jingxian/protocol/EchoProtocolFactory.h"
 #include "jingxian/utilities/BaseApplication.h"
 
 
@@ -61,9 +60,8 @@ public:
 			return -1;
 		}
 
-		_jingxian proxy::Proxy proxy(server, _T("TCP://0.0.0.0:6544"));
-		_jingxian EchoServer echo(server);
-
+		server.listenWith(_T("tcp://0.0.0.0:6544"), new _jingxian proxy::Proxy(server.basePath()));
+		server.listenWith(_T("tcp://0.0.0.0:6543"), new _jingxian EchoProtocolFactory());
 		server.runForever();
 		return 0;
 	}

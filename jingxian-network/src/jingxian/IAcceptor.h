@@ -25,6 +25,11 @@ public:
     virtual  time_t timeout () const = 0;
 
 	/**
+	 * 初始化
+	 */
+	virtual bool initialize() = 0;
+
+	/**
 	 * 监听的地址
 	 */
     virtual const tstring& bindPoint() const = 0;
@@ -140,6 +145,9 @@ public:
 
     virtual  time_t timeout () const
 	{
+		if(isNull())
+			ThrowException(NullException);
+
 		return acceptor_->timeout();
 	}
 
@@ -148,6 +156,9 @@ public:
 	 */
     virtual const tstring& bindPoint() const
 	{
+		if(isNull())
+			ThrowException(NullException);
+
 		return acceptor_->bindPoint();
 	}
 
@@ -156,6 +167,9 @@ public:
 	 */
 	virtual bool isListening() const
 	{
+		if(isNull())
+			ThrowException(NullException);
+
 		return acceptor_->isListening();
 	}
 
@@ -167,6 +181,9 @@ public:
                             , F2 onError
                             , T context)
 	{
+		if(isNull())
+			ThrowException(NullException);
+
 		typedef closure<F1,F2,T> closure_type;
 		acceptor_->accept(closure_type::OnComplete
 			, closure_type::OnError
@@ -182,6 +199,9 @@ public:
                 , F2 onError
                 , T context)
 	{
+		if(isNull())
+			ThrowException(NullException);
+
 		typedef closure_0<C,F1,F2,T> closure_type;
 		acceptor_->accept(closure_type::OnComplete
 			, closure_type::OnError
@@ -196,12 +216,10 @@ public:
                             , OnBuildConnectionError onError
                             , void* context)
 	{
-		acceptor_->accept(onComplete, onError, context);
-	}
+		if(isNull())
+			ThrowException(NullException);
 
-	virtual void close()
-	{
-		reset(null_ptr);
+		acceptor_->accept(onComplete, onError, context);
 	}
 
 	bool isNull() const
@@ -209,11 +227,29 @@ public:
 		return null_ptr == acceptor_;
 	}
 
+	bool initialize()
+	{
+		if(isNull())
+			ThrowException(NullException);
+		return acceptor_->initialize();
+	}
+
+	void close()
+	{
+		if(isNull())
+			ThrowException(NullException);
+
+		acceptor_->close();
+	}
+
 	/**
 	* 取得地址的描述
 	*/
 	virtual const tstring& toString() const
 	{
+		if(isNull())
+			ThrowException(NullException);
+
 		return acceptor_->toString();
 	}
 private:

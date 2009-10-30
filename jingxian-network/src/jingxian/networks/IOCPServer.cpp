@@ -30,13 +30,6 @@ IOCPServer::IOCPServer(void)
 
 IOCPServer::~IOCPServer(void)
 {
-	for( stdext::hash_map<tstring, IAcceptor* >::iterator it = acceptors_.begin()
-		; it != acceptors_.end()
-		; ++ it)
-	{
-		delete (it->second);
-	}
-
 	for( stdext::hash_map<tstring, IAcceptorFactory* >::iterator it = acceptorFactories_.begin()
 		; it != acceptorFactories_.end()
 		; ++ it)
@@ -52,6 +45,12 @@ IOCPServer::~IOCPServer(void)
 	}
 
 	close();
+
+	for(stdext::hash_map<tstring, ListenPort*>::iterator it=listenPorts_.begin()
+		; it != listenPorts_.end(); ++it)
+	{
+		delete (it->second);
+	}
 	
 	delete logger_;
 	logger_ = null_ptr;
@@ -72,18 +71,40 @@ bool IOCPServer::initialize ( size_t number_of_threads )
 	return  !is_null(completion_port_);
 }
 
+bool IOCPServer::isPending()
+{
+	for(stdext::hash_map<tstring, ListenPort*>::iterator it=listenPorts_.begin()
+		; it != listenPorts_.end(); ++it)
+	{
+		if(it->second->isPending())
+			return true;
+	}
+	return false;
+}
+
+void IOCPServer::wait(time_t seconds)
+{
+	time_t old = time(NULL);
+
+	while((time(NULL) - old) < 3*60)
+	{
+		if( sessions_.empty() // 没有连接了
+			&& !isPending()) // 没有未完成的请求了
+			break;
+
+		if(-1 == handle_events(1000))
+			break;
+	}
+}
+
 void IOCPServer::close (void)
 {
+	interrupt();
+
 	if (is_null(completion_port_ ))
 		return ;
 
-	time_t old = time(NULL);
-
-	while((time(NULL) - old) < 3*60
-		&& !sessions_.empty())
-	{
-		handle_events(1000);
-	}
+	wait(3*60);
 
 	::CloseHandle( completion_port_);
 	completion_port_ = null_ptr;
@@ -257,16 +278,16 @@ void IOCPServer::connectWith(const tchar* endPoint
     it->second->connect( endPoint, onComplete, onError, context );
 }
 
-IAcceptor* IOCPServer::listenWith(const tchar* endPoint)
+bool IOCPServer::listenWith( const tchar* endPoint, IProtocolFactory* protocolFactory) 
 {
 	// NOTICE: 用字符串地址直接查找是不好的，转换成 IEndpoint 对象进行比较才更准确
 	tstring addr = endPoint;
-	stdext::hash_map<tstring,IAcceptor*>::iterator acceptorIt = acceptors_.find( to_lower<tstring>( addr ));
-	if( acceptors_.end() != acceptorIt )
+	stdext::hash_map<tstring,ListenPort*>::iterator acceptorIt = listenPorts_.find( to_lower<tstring>( addr ));
+	if( listenPorts_.end() != acceptorIt )
 	{
 		LOG_TRACE( logger_, _T("已经创建过监听器 '") << endPoint 
 			<< _T("' 了!") );
-		return null_ptr;
+		return false;
 	}
 	
 	StringArray<tchar> sa = split_with_string( endPoint, _T("://") );
@@ -274,7 +295,7 @@ IAcceptor* IOCPServer::listenWith(const tchar* endPoint)
 	{
 		LOG_ERROR( logger_, _T("尝试监听地址 '") << endPoint 
 			<< _T("' 时发生错误 - 地址格式不正确!") );
-		 return null_ptr;
+		 return false;
 	}
 
     stdext::hash_map<tstring, IAcceptorFactory*>::iterator it =
@@ -284,26 +305,12 @@ IAcceptor* IOCPServer::listenWith(const tchar* endPoint)
 		LOG_ERROR( logger_, _T("尝试监听地址 '") << endPoint 
 			<< _T("' 时发生错误 - 不能识别的协议‘") << sa.ptr(0) 
 			<< _T("’") );
-	     return null_ptr;
+	     return false;
 	}
-	     
-	std::auto_ptr<IAcceptor> acceptor(it->second->createAcceptor(endPoint));
-    
- //   if( acceptor->startListening() )
-	//{
-	//	LOG_TRACE( logger_, "尝试监听地址 '" << endPoint 
-	//		<< "' 时发生错误‘" << lastError()
-	//		<< "’" );
-	//	return null_ptr;
- //   }
-	//
- //   LOG_TRACE( logger_, _T("尝试监听地址 '") << endPoint 
-	//	<< _T("' 成功‘") << sa.ptr(0) 
-	//	<< _T("’") );
-	
-    acceptors_[ endPoint ] = acceptor.get();
-    
-    return acceptor.release();
+	    
+    listenPorts_[endPoint] = new ListenPort(this, protocolFactory
+						, it->second->createAcceptor(sa.ptr(1)));
+    return false;
 }
 	
 bool IOCPServer::send( IRunnable* runnable )
@@ -320,16 +327,43 @@ bool IOCPServer::send( IRunnable* runnable )
 void IOCPServer::runForever()
 {
 	isRunning_ = true;
+
+	std::list<ListenPort*> instances;
+	for(stdext::hash_map<tstring, ListenPort*>::iterator it=listenPorts_.begin()
+		;it != listenPorts_.end(); )
+	{
+		stdext::hash_map<tstring, ListenPort* >::iterator current =  it++;
+		if(!current->second->start())
+		{
+			isRunning_ = false;
+			break;
+		}
+		instances.push_back(current->second);
+	}
+
+	if(!isRunning_)
+	{
+		/// 启动服务失败,将已启动成功的停止
+		for(std::list<ListenPort*>::iterator it=instances.begin()
+			;it != instances.end(); ++it)
+		{
+			(*it)->stop();
+		}
+		return;
+	}
+
 	while( isRunning_ )
 	{
 		if( 1 ==  handle_events(5*1000) )
 			onIdle();
 	}
-}
 
-void IOCPServer::interrupt()
-{
-	isRunning_ = false;
+	for(stdext::hash_map<tstring, ListenPort*>::iterator it=listenPorts_.begin()
+		; it != listenPorts_.end(); )
+	{
+		stdext::hash_map<tstring, ListenPort* >::iterator current =  it++;
+		current->second->stop();
+	}
 
 	tstring reason = _T("系统停止");
 	for(SessionList::iterator it = sessions_.begin()
@@ -339,12 +373,12 @@ void IOCPServer::interrupt()
 		(*current)->transport()->disconnection(reason);
 	}
 
-	for(stdext::hash_map<tstring, IAcceptor* >::iterator it = acceptors_.begin()
-		; it != acceptors_.end(); )
-	{
-		stdext::hash_map<tstring, IAcceptor* >::iterator current =  it++;
-		current->second->close();
-	}
+	wait(3*60);
+}
+
+void IOCPServer::interrupt()
+{
+	isRunning_ = false;
 }
 
 bool IOCPServer::isRunning() const
@@ -375,19 +409,6 @@ SessionList::iterator IOCPServer::addSession(ISession* session)
 void IOCPServer::removeSession(SessionList::iterator& it)
 {
 	sessions_.erase(it);
-}
-
-void IOCPServer::removeListen(IAcceptor* acceptor)
-{	
-	for(stdext::hash_map<tstring, IAcceptor* >::iterator it = acceptors_.begin()
-		; it != acceptors_.end(); ++ it)
-	{
-		if(acceptor == it->second)
-		{
-			acceptors_.erase(it);
-			break;
-		}
-	}
 }
 
 void IOCPServer::onExeception(int errCode, const tstring& description)
