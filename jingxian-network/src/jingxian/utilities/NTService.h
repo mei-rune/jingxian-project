@@ -176,7 +176,6 @@ private:
 		DWORD oldState = _status.dwCurrentState;
 		_status.dwCurrentState = dwState;
 		if( ::SetServiceStatus(_serviceStatus, &_status) )
-
 			return true;
 
 		LOG_WARN( _logger , _T( "更改服务器 ")<< _name << _T(" 状态(") << oldState << _T("," )<< dwState << _T( ")失败 - ") << lastError() << _T("!"));
@@ -220,10 +219,11 @@ private:
 		LOG_CRITICAL( _logger,_T( "服务 ")<< _name << _T(" 运行中...") );
 		_svr->run(arguments);
 		// 通知NT服务管理器自已已关闭
-		set_status(SERVICE_STOPPED);
 		LOG_CRITICAL( _logger,_T( "服务 ")<< _name << _T(" 退出.") );
-		
 		_isRunning = false;
+
+		// 注意在设置 SERVICE_STOPPED 状态之后不能运行任何代码
+		set_status(SERVICE_STOPPED);
 	}
 
 	DWORD OnControl(DWORD dwOpcode
