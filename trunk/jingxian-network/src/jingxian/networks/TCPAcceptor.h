@@ -59,6 +59,13 @@ public:
     virtual void accept(OnBuildConnectionComplete buildProtocol
                             , OnBuildConnectionError onConnectError
                             , void* context);
+
+	
+	/**
+	 * @implements initialize
+	 */
+	virtual bool initialize();
+
     /**
 	 * @implements close
 	 */

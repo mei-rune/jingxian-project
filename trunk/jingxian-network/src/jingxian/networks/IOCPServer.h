@@ -18,6 +18,7 @@
 # include "jingxian/networks/connection_status.h"
 # include "jingxian/networks/networking.h"
 # include "jingxian/networks/ThreadDNSResolver.h"
+# include "jingxian/networks/ListenPort.H"
 
 _jingxian_begin
 
@@ -49,7 +50,7 @@ public:
 	/**
 	 * @implements listenWith
 	 */
-    virtual IAcceptor* listenWith(const tchar* endPoint);
+    virtual bool listenWith(const tchar* endPoint, IProtocolFactory* protocolFactory);
 
 	
 	/**
@@ -111,11 +112,6 @@ public:
 	void removeSession(SessionList::iterator& it);
 
 	/**
-	 * 删除 Acceptor
-	 */
-	void removeListen(IAcceptor* acceptor);
-
-	/**
 	* 取得地址的描述
 	*/
 	virtual const tstring& toString() const;
@@ -139,6 +135,16 @@ private:
 	 */
 	int handle_events (uint32_t milli_seconds);
 
+	/**
+	 * 等侍未返回的 IO 请求
+	 */
+	void wait(time_t seconds);
+
+	/**
+	 * 判断是不是有未返回的 IO 请求
+	 */
+	bool isPending();
+
 	void application_specific_code (ICommand *asynch_result,
 		size_t bytes_transferred,
 		const void *completion_key,
@@ -155,7 +161,7 @@ private:
 	/// Acceptor创建工厂
 	stdext::hash_map<tstring, IAcceptorFactory* > acceptorFactories_;
 	/// 正在监听的Acceptor
-	stdext::hash_map<tstring, IAcceptor* > acceptors_;
+	stdext::hash_map<tstring, ListenPort*> listenPorts_;
 	/// dns 解析类
 	ThreadDNSResolver resolver_;
 	/// 保存所有的 connection

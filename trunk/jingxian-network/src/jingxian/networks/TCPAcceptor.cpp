@@ -24,7 +24,6 @@ TCPAcceptor::~TCPAcceptor()
 	
 	assert( connection_status::disconnected == status_ );
 
-	core_->removeListen(this);
 	delete logger_;
 	logger_ = null_ptr;
 }
@@ -148,9 +147,20 @@ bool TCPAcceptor::startListening()
 
 	LOG_INFO( logger_, _T("启动监听地址 '") << endpoint_ 
 		<< _T("' 成功!") );
-	toString_ = _T("TCPAcceptor[ socket=") + ::toString((int)socket_) + _T(",address=") + endpoint_ + _T("]");
+
+	toString_ = concat<tstring>(_T("TCPAcceptor[ socket=")
+		, ::toString((int)socket_)
+		, _T(",address=")
+		, endpoint_
+		, _T("]"));
 
 	return true;
+}
+
+
+bool TCPAcceptor::initialize()
+{
+	return startListening();
 }
 
 void TCPAcceptor::close()
@@ -178,10 +188,12 @@ IAcceptor* TCPAcceptorFactory::createAcceptor(const tchar* endPoint)
 	if(is_null(endPoint))
 		return null_ptr;
 
-	std::auto_ptr<TCPAcceptor> acceptor(new TCPAcceptor(core_, endPoint));
-	if( acceptor->startListening())
-		return acceptor.release();
-	return null_ptr;
+	return new TCPAcceptor(core_, endPoint);
+
+	//std::auto_ptr<TCPAcceptor> acceptor(new TCPAcceptor(core_, endPoint));
+	//if( acceptor->startListening())
+	//	return acceptor.release();
+	//return null_ptr;
 }
 
 const tstring& TCPAcceptorFactory::toString() const

@@ -46,7 +46,7 @@ public:
 	 * @return 成功进返回创建的对象，失败时返回 NULL
 	 * @remarks 不要尝试删除返回的对象，该对象已被 IReactorCore 持有。
 	 */
-    virtual IAcceptor* listenWith( const tchar* endPoint ) = 0;
+    virtual bool listenWith(const tchar* endPoint, IProtocolFactory* protocolFactory) = 0;
 	
 	/**
 	 * 开始运行直到调用Interrupt才返回

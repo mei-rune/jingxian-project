@@ -577,7 +577,7 @@ struct string_traits<wchar_t>
 		return ::my_wcsdup( strSource );
 	}
 
-	inline static void free( char_type *strSource )
+	inline static void free(char_type *strSource)
 	{
 		return ::my_free( strSource );
 	}

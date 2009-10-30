@@ -265,6 +265,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\jingxian\networks\ListenPort.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\ListenPort.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\jingxian\networks\networking.cpp"
 				>
 			</File>
@@ -418,6 +426,10 @@
 			</File>
 			<File
 				RelativePath=".\src\jingxian\protocol\EchoProtocol.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\protocol\EchoProtocolFactory.h"
 				>
 			</File>
 			<File
@@ -709,10 +721,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\src\jingxian\AbstractServer.h"
-			>
-		</File>
 		<File
 			RelativePath=".\src\jingxian\changelog.txt"
 			>

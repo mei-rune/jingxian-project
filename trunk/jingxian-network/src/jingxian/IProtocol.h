@@ -16,6 +16,8 @@
 _jingxian_begin
 
 class ProtocolContext;
+class ITransport;
+class IReactorCore;
 
 class IProtocol
 {
@@ -76,7 +78,7 @@ public:
 	/**
 	 * 创建 IProtocol 对象
 	 */
-	virtual IProtocol* createProtocol() = 0;
+	virtual IProtocol* createProtocol(ITransport* transport, IReactorCore* core) = 0;
 
 	/**
 	* 取得地址的描述
