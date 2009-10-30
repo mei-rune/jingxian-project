@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(LOG4CPP_ROOT)\include&quot;;&quot;$(GOOGLETEST_ROOT)\include&quot;;&quot;$(ProjectDir)src\&quot;;."
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DUMPFILE;DEBUG_TRACE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				GeneratePreprocessedFile="0"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -746,6 +746,10 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath=".\src\jingxian\changelog.txt"
+			>
+		</File>
+		<File
 			RelativePath=".\src\jingxian\communicator.h"
 			>
 		</File>
@@ -831,6 +835,10 @@
 		</File>
 		<File
 			RelativePath=".\src\jingxian\ProtocolContext.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\jingxian\roadmap.txt"
 			>
 		</File>
 	</Files>

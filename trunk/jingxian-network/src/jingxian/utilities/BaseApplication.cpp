@@ -183,11 +183,7 @@ int BaseApplication::main(BaseApplication* app, int argc, tchar** args)
 			arguments.push_back(args[i]);
 		}
 
-		std::auto_ptr<NTService<BaseApplication>> ntService(new NTService<BaseApplication>(app->name(), appPtr.release()));
-		if(!ntService->start())
-			return -1;
-		ntService.release();
-		return -1;
+		return NTService<BaseApplication>::main(app->name(), appPtr.release());
 	}
 	else if(0 == string_traits<tchar>::stricmp(_T("--help"), args[1]))
 	{
