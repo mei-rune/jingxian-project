@@ -25,6 +25,7 @@ ConnectedSocket::ConnectedSocket(IOCPServer* core
 , reading_(false)
 , writing_(false)
 , shutdowning_(false)
+, isPosition_(false)
 , tracer_(0)
 {
 	toString_ = concat<tstring>(_T("ConnectedSocket["),host_, _T(" - "), peer_, _T(" - "), ::toString(sock), _T("]"));
@@ -43,6 +44,12 @@ ConnectedSocket::~ConnectedSocket( )
 	{
 		::closesocket(socket_);
 		socket_ = INVALID_SOCKET;
+	}
+
+	if(isPosition_)
+	{
+		core_->removeSession(sessionPosition_);
+		isPosition_ = false;
 	}
 
 	TP_CRITICAL(tracer_, transport_mode::Both, _T("销毁 ConnectedSocket 对象成功"));
@@ -65,7 +72,7 @@ void ConnectedSocket::initialize()
 #ifdef DUMPFILE
 	tstring logPath = combinePath(core_->basePath(), _T("log"));
 	if(!existDirectory(logPath))
-	createDirectory(logPath);
+		createDirectory(logPath);
 
 	os.reset( new std::ofstream(toNarrowString(simplify (combinePath(logPath,concat<tstring>(_T("raw_out_"), ::toString(socket_), _T(".txt"))))).c_str()));
 
@@ -83,6 +90,12 @@ void ConnectedSocket::initialize()
 	protocol_->onConnected( context_ );
 	isInitialize_ = true;
 	startReading();
+
+	if(!isPosition_)
+	{
+		sessionPosition_ = core_->addSession( this );
+		isPosition_ = true;
+	}
 }
 
 void ConnectedSocket::startReading()

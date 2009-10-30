@@ -24,8 +24,8 @@ public:
 	}
 
 	/**
-	 * 析构函数
-	 */
+	* 析构函数
+	*/
 	~linklist()
 	{
 		while(null_ptr != head_)
@@ -41,7 +41,7 @@ public:
 	{
 		return head_;
 	}
-	
+
 	const T* head() const
 	{
 		return head_;
@@ -58,8 +58,8 @@ public:
 	}
 
 	/**
-	 * 向尾部添加一个空闲的内存块
-	 */
+	* 向尾部添加一个空闲的内存块
+	*/
 	void push(T* newbuf)
 	{
 		newbuf->_next = NULL;
@@ -72,8 +72,8 @@ public:
 	}
 
 	/**
-	 * 向头部取一个内存块
-	 */
+	* 向头部取一个内存块
+	*/
 	T* pop()
 	{
 		T* current = head_;
@@ -92,24 +92,24 @@ public:
 	}
 
 	/**
-	 * 用于遍历buf,
-	 */
+	* 用于遍历buf,
+	*/
 	T* next(T* current)
 	{
 		return is_null(current)?head_:current->_next;
 	}
 
 	/**
-	 * 用于遍历buf,v
-	 */
+	* 用于遍历buf,v
+	*/
 	const T* next(const T* current) const
 	{
 		return is_null(current)?head_:current->_next;
 	}
 
 	/**
-	 * 是否为空
-	 */
+	* 是否为空
+	*/
 	bool empty() const
 	{
 		return is_null(head_);
@@ -127,6 +127,8 @@ protected:
 private:
 	NOCOPY(linklist);
 };
+
+
 
 _jingxian_end
 
