@@ -99,6 +99,46 @@ template<typename SERVER>
 class NTService
 {
 public:
+
+	~NTService()
+	{
+		LOG_TRACE( _logger ,_T("NTService::~NTService()") );
+		_pThis = NULL;
+	}
+
+	static int main(const tstring& name, SERVER* svr)
+	{
+		NTService ntService(name, svr);
+		SERVICE_TABLE_ENTRY st[] = {
+			{ (tchar*)name.c_str(), ServiceMain},
+			{NULL, NULL}
+		};
+
+		if (!::StartServiceCtrlDispatcher(st) )
+		{
+			LOG_ERROR(ntService._logger, _T("启动服务 ")<< name << _T(" 失败 - ") << lastError() << _T("!"));
+			return -1;
+		}
+		return 0;
+	}
+
+private:
+
+	static void WINAPI ServiceMain(DWORD dwArgc, LPTSTR* lpszArgv)
+	{
+		_pThis->run(dwArgc, lpszArgv);
+	}
+
+	static DWORD WINAPI HandlerEx(
+		DWORD dwControl,
+		DWORD dwEventType,
+		LPVOID lpEventData,
+		LPVOID lpContext)
+	{
+		NTService* pThis = (NTService*)lpContext;
+		return _pThis->OnControl(dwControl, dwEventType, lpEventData);
+	}
+
 	NTService(const tstring& name, SERVER* svr)
 		: _name( name )
 		, _svr( svr )
@@ -130,50 +170,6 @@ public:
 
 		LOG_TRACE( _logger ,_T("NTService::NTService()") );
 	}
-
-	~NTService()
-	{
-		LOG_TRACE( _logger ,_T("NTService::~NTService()") );
-		_pThis = NULL;
-	}
-
-	bool start()
-	{
-		SERVICE_TABLE_ENTRY st[] = {
-			{ (tchar*)_name.c_str(), ServiceMain},
-			{NULL, NULL}
-		};
-
-		if ( ::StartServiceCtrlDispatcher(st) )
-		{
-			LOG_CRITICAL(_logger ,_T("启动服务 ")<< _name << _T(" 成功!"));
-			return true;
-		}
-		else
-		{
-			LOG_ERROR(_logger ,_T("启动服务 ")<< _name << _T(" 失败 - ") << lastError() << _T("!"));
-			return false;
-		}
-	}
-
-	static void WINAPI ServiceMain(DWORD dwArgc, LPTSTR* lpszArgv)
-	{
-		_pThis->run(dwArgc, lpszArgv);
-		delete _pThis;
-		_pThis = NULL;
-	}
-
-	static DWORD WINAPI HandlerEx(
-		DWORD dwControl,
-		DWORD dwEventType,
-		LPVOID lpEventData,
-		LPVOID lpContext)
-	{
-		NTService* pThis = (NTService*)lpContext;
-		return _pThis->OnControl(dwControl, dwEventType, lpEventData);
-	}
-
-private:
 
 	bool set_status(DWORD dwState)
 	{
