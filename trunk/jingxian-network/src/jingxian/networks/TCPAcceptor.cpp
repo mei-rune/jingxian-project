@@ -21,8 +21,10 @@ TCPAcceptor::TCPAcceptor(IOCPServer* core, const tchar* endpoint)
 TCPAcceptor::~TCPAcceptor()
 {
 	stopListening();
+	
 	assert( connection_status::disconnected == status_ );
 
+	core_->removeListen(this);
 	delete logger_;
 	logger_ = null_ptr;
 }
@@ -56,15 +58,30 @@ void TCPAcceptor::accept(OnBuildConnectionComplete onComplete
                             , OnBuildConnectionError onError
                             , void* context)
 {
+	if(!core_->isRunning())
+	{
+		tstring descr = concat<tstring>(_T("启动监听地址 '")
+									  , endpoint_ 
+									  , _T("' 时发生错误 - '系统已停止'"));
+
+		LOG_ERROR( logger_,descr);
+
+		ErrorCode err(false, 0, descr);
+		onError(err, context);
+		return ;
+	}
+
 	std::auto_ptr< ICommand> command(new AcceptCommand(this->core_, family_, socket_, endpoint_, onComplete, onError, context));
 	if(! command->execute() )
 	{
 		int code = WSAGetLastError();
-		tstring descr = _T("启动监听地址 '") + endpoint_ 
-			+ _T("' 时发生错误 - '") + lastError(code)
-			+ _T("'" );
+		tstring descr = concat<tstring>(_T("启动监听地址 '")
+			, endpoint_ 
+			, _T("' 时发生错误 - '")
+			, lastError(code)
+			, _T("'" ));
 
-		LOG_ERROR( logger_,descr );
+		LOG_ERROR( logger_,descr);
 
 		ErrorCode err(false, code, descr);
 		onError(err, context);

@@ -12,15 +12,14 @@ _jingxian_begin
 
 IOCPServer::IOCPServer(void)
 : completion_port_( null_ptr )
-, _timeout( 5*1000 )
-, _isRunning( false )
-, _logger( null_ptr )
+, isRunning_( false )
+, logger_( null_ptr )
 , toString_( _T("IOCPServer") )
 {
-	_logger = logging::makeLogger(_T("IOCPServer"));
+	logger_ = logging::makeLogger(_T("IOCPServer"));
 	resolver_.initialize(this);
-	_acceptorFactories[_T("tcp")] = new TCPAcceptorFactory( this );
-	_connectionBuilders[_T("tcp")] = new TCPConnector( this );
+	acceptorFactories_[_T("tcp")] = new TCPAcceptorFactory( this );
+	connectionBuilders_[_T("tcp")] = new TCPConnector( this );
 
 	path_ = simplify(getApplicationDirectory());
 
@@ -31,22 +30,22 @@ IOCPServer::IOCPServer(void)
 
 IOCPServer::~IOCPServer(void)
 {
-	for( stdext::hash_map<tstring, IAcceptor* >::iterator it = _acceptors.begin()
-		; it != _acceptors.end()
+	for( stdext::hash_map<tstring, IAcceptor* >::iterator it = acceptors_.begin()
+		; it != acceptors_.end()
 		; ++ it)
 	{
 		delete (it->second);
 	}
 
-	for( stdext::hash_map<tstring, IAcceptorFactory* >::iterator it = _acceptorFactories.begin()
-		; it != _acceptorFactories.end()
+	for( stdext::hash_map<tstring, IAcceptorFactory* >::iterator it = acceptorFactories_.begin()
+		; it != acceptorFactories_.end()
 		; ++ it)
 	{
 		delete (it->second);
 	}
 
-	for( stdext::hash_map<tstring, IConnectionBuilder* >::iterator it = _connectionBuilders.begin()
-		; it != _connectionBuilders.end()
+	for( stdext::hash_map<tstring, IConnectionBuilder* >::iterator it = connectionBuilders_.begin()
+		; it != connectionBuilders_.end()
 		; ++ it)
 	{
 		delete (it->second);
@@ -54,8 +53,8 @@ IOCPServer::~IOCPServer(void)
 
 	close();
 	
-	delete _logger;
-	_logger = null_ptr;
+	delete logger_;
+	logger_ = null_ptr;
 }
 
 
@@ -78,30 +77,12 @@ void IOCPServer::close (void)
 	if (is_null(completion_port_ ))
 		return ;
 
-	for (;;)
+	time_t old = time(NULL);
+
+	while((time(NULL) - old) < 3*60
+		&& !sessions_.empty())
 	{
-		OVERLAPPED *overlapped = 0;
-		u_long bytes_transferred = 0;
-#if defined (JINGXIAN_WIN64)
-		ULONG_PTR completion_key = 0;
-#else
-		ULONG completion_key = 0;
-#endif /* JINGXIAN_WIN64 */
-
-		BOOL res = ::GetQueuedCompletionStatus
-			(completion_port_,
-			&bytes_transferred,
-			&completion_key,
-			&overlapped,
-			0);  // poll
-
-		if ( is_null(overlapped) || FALSE == res )
-			break;
-
-		ICommand *asynch_result =
-			(ICommand *) overlapped;
-
-		command_queue::release( asynch_result );
+		handle_events(1000);
 	}
 
 	::CloseHandle( completion_port_);
@@ -199,11 +180,11 @@ void IOCPServer::application_specific_code (ICommand *asynch_result,
 	}
 	catch( std::exception& e )
 	{
-		LOG_FATAL( _logger , "error :" << e.what() );
+		LOG_FATAL( logger_ , "error :" << e.what() );
 	}
 	catch( ... )
 	{	
-		LOG_FATAL( _logger , "unkown error!" );
+		LOG_FATAL( logger_ , "unkown error!" );
 	}
 	
 	command_queue::release( asynch_result );
@@ -247,7 +228,7 @@ void IOCPServer::connectWith(const tchar* endPoint
 	StringArray<tchar> sa = split_with_string( endPoint, _T("://") );
 	if( 2 != sa.size() )
 	{
-		LOG_ERROR( _logger, _T("尝试连接到 '") << endPoint
+		LOG_ERROR( logger_, _T("尝试连接到 '") << endPoint
 			<< _T("' 时发生错误 - 地址格式不正确"));
 		
 		ErrorCode error( _T("地址格式不正确!") );
@@ -256,10 +237,10 @@ void IOCPServer::connectWith(const tchar* endPoint
 	}
 	
     stdext::hash_map<tstring, IConnectionBuilder*>::iterator it = 
-                                         _connectionBuilders.find( to_lower<tstring>( sa.ptr( 0 ) ));
-    if( it == _connectionBuilders.end() )
+                                         connectionBuilders_.find( to_lower<tstring>( sa.ptr( 0 ) ));
+    if( it == connectionBuilders_.end() )
 	{
-		LOG_ERROR( _logger, _T("尝试连接到 '") << endPoint 
+		LOG_ERROR( logger_, _T("尝试连接到 '") << endPoint 
 			<< _T("' 时发生错误 - 不能识别的协议‘") << sa.ptr(0) 
 			<< _T("’") );
 		
@@ -280,10 +261,10 @@ IAcceptor* IOCPServer::listenWith(const tchar* endPoint)
 {
 	// NOTICE: 用字符串地址直接查找是不好的，转换成 IEndpoint 对象进行比较才更准确
 	tstring addr = endPoint;
-	stdext::hash_map<tstring,IAcceptor*>::iterator acceptorIt = _acceptors.find( to_lower<tstring>( addr ));
-	if( _acceptors.end() != acceptorIt )
+	stdext::hash_map<tstring,IAcceptor*>::iterator acceptorIt = acceptors_.find( to_lower<tstring>( addr ));
+	if( acceptors_.end() != acceptorIt )
 	{
-		LOG_TRACE( _logger, _T("已经创建过监听器 '") << endPoint 
+		LOG_TRACE( logger_, _T("已经创建过监听器 '") << endPoint 
 			<< _T("' 了!") );
 		return null_ptr;
 	}
@@ -291,16 +272,16 @@ IAcceptor* IOCPServer::listenWith(const tchar* endPoint)
 	StringArray<tchar> sa = split_with_string( endPoint, _T("://") );
 	if( 2 != sa.size() )
 	{
-		LOG_ERROR( _logger, _T("尝试监听地址 '") << endPoint 
+		LOG_ERROR( logger_, _T("尝试监听地址 '") << endPoint 
 			<< _T("' 时发生错误 - 地址格式不正确!") );
 		 return null_ptr;
 	}
 
     stdext::hash_map<tstring, IAcceptorFactory*>::iterator it =
-                                      _acceptorFactories.find(to_lower<tstring>(sa.ptr( 0 )));
-    if( it == _acceptorFactories.end() )
+                                      acceptorFactories_.find(to_lower<tstring>(sa.ptr( 0 )));
+    if( it == acceptorFactories_.end() )
 	{
-		LOG_ERROR( _logger, _T("尝试监听地址 '") << endPoint 
+		LOG_ERROR( logger_, _T("尝试监听地址 '") << endPoint 
 			<< _T("' 时发生错误 - 不能识别的协议‘") << sa.ptr(0) 
 			<< _T("’") );
 	     return null_ptr;
@@ -310,17 +291,17 @@ IAcceptor* IOCPServer::listenWith(const tchar* endPoint)
     
  //   if( acceptor->startListening() )
 	//{
-	//	LOG_TRACE( _logger, "尝试监听地址 '" << endPoint 
+	//	LOG_TRACE( logger_, "尝试监听地址 '" << endPoint 
 	//		<< "' 时发生错误‘" << lastError()
 	//		<< "’" );
 	//	return null_ptr;
  //   }
 	//
- //   LOG_TRACE( _logger, _T("尝试监听地址 '") << endPoint 
+ //   LOG_TRACE( logger_, _T("尝试监听地址 '") << endPoint 
 	//	<< _T("' 成功‘") << sa.ptr(0) 
 	//	<< _T("’") );
 	
-    _acceptors[ endPoint ] = acceptor.get();
+    acceptors_[ endPoint ] = acceptor.get();
     
     return acceptor.release();
 }
@@ -338,19 +319,38 @@ bool IOCPServer::send( IRunnable* runnable )
 	
 void IOCPServer::runForever()
 {
-	_isRunning = true;
-	while( _isRunning )
+	isRunning_ = true;
+	while( isRunning_ )
 	{
-		if( 1 ==  handle_events(_timeout) )
+		if( 1 ==  handle_events(5*1000) )
 			onIdle();
 	}
 }
-	
+
 void IOCPServer::interrupt()
 {
-	_isRunning = false;
+	isRunning_ = false;
+
+	tstring reason = _T("系统停止");
+	for(SessionList::iterator it = sessions_.begin()
+		; it != sessions_.end();)
+	{
+		SessionList::iterator current =  it++;
+		(*current)->transport()->disconnection(reason);
+	}
+
+	for(stdext::hash_map<tstring, IAcceptor* >::iterator it = acceptors_.begin()
+		; it != acceptors_.end(); )
+	{
+		stdext::hash_map<tstring, IAcceptor* >::iterator current =  it++;
+		current->second->close();
+	}
 }
 
+bool IOCPServer::isRunning() const
+{
+	return isRunning_;
+}
 
 IDNSResolver& IOCPServer::resolver()
 {
@@ -367,9 +367,32 @@ void IOCPServer::onIdle()
 	
 }
 
+SessionList::iterator IOCPServer::addSession(ISession* session)
+{
+	return sessions_.insert(sessions_.end(), session);
+}
+	
+void IOCPServer::removeSession(SessionList::iterator& it)
+{
+	sessions_.erase(it);
+}
+
+void IOCPServer::removeListen(IAcceptor* acceptor)
+{	
+	for(stdext::hash_map<tstring, IAcceptor* >::iterator it = acceptors_.begin()
+		; it != acceptors_.end(); ++ it)
+	{
+		if(acceptor == it->second)
+		{
+			acceptors_.erase(it);
+			break;
+		}
+	}
+}
+
 void IOCPServer::onExeception(int errCode, const tstring& description)
 {
-	LOG_ERROR( _logger, _T("发生错误 - '") << errCode << _T("' ") 
+	LOG_ERROR( logger_, _T("发生错误 - '") << errCode << _T("' ") 
 			<< description );
 }
 	

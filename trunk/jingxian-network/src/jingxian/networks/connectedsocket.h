@@ -28,7 +28,7 @@ _jingxian_begin
  * On开头的函数在用户直接调用的方法中不可以使用。
  * 给用户调用的方法为ITransport接口中的方法
  */
-class ConnectedSocket : public ITransport//, public ISession
+class ConnectedSocket : public ITransport, public ISession
 {
 public:
 
@@ -90,21 +90,21 @@ public:
 	 */
     virtual time_t timeout() const;
 
-	///**
-	// * @implements transport
-	// */
-	//virtual ITransport* transport()
-	//{
-	//	return this;
-	//}
+	/**
+	 * @implements transport
+	 */
+	virtual ITransport* transport()
+	{
+		return this;
+	}
 
-	///**
-	// * @implements protocol
-	// */
-	//virtual IProtocol*  protocol()
-	//{
-	//	return protocol_;
-	//}
+	/**
+	 * @implements protocol
+	 */
+	virtual IProtocol*  protocol()
+	{
+		return protocol_;
+	}
 
 	/**
 	 * @implements toString
@@ -164,6 +164,11 @@ private:
 	bool shutdowning_;
 	/// 保存被停止的原因
 	tstring disconnectReason_;
+
+	///是不添加到core的sessions容器中
+	bool isPosition_;
+	///core的sessions容器中的位置
+	SessionList::iterator sessionPosition_;
 
 	/// 日志对象
 	ITracer* tracer_;

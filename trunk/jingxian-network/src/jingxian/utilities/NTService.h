@@ -159,6 +159,8 @@ public:
 	static void WINAPI ServiceMain(DWORD dwArgc, LPTSTR* lpszArgv)
 	{
 		_pThis->run(dwArgc, lpszArgv);
+		delete _pThis;
+		_pThis = NULL;
 	}
 
 	static DWORD WINAPI HandlerEx(

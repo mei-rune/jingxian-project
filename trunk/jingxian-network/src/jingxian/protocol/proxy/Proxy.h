@@ -126,6 +126,9 @@ namespace proxy
 
 		void onComplete(ITransport* transport, IOCPServer* core)
 		{
+			if(!core->isRunning())
+				return;
+
 			std::auto_ptr<SOCKSv5Protocol> protocol(new SOCKSv5Protocol(this));
 			transport->bindProtocol(protocol.get());
 			protocol.release();
@@ -136,6 +139,9 @@ namespace proxy
 
 		void onError(const ErrorCode& err, IOCPServer* core)
 		{
+			if(!core->isRunning())
+				return;
+
 			++ errorCount_;
 			acceptor_.accept(this, &Proxy::onComplete, &Proxy::onError, core);
 			if( errorCount_ > 20 )

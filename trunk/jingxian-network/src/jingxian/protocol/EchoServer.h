@@ -37,6 +37,9 @@ public:
 
 	void OnComplete(ITransport* transport, IOCPServer* core)
 	{
+		if(!core->isRunning())
+			return;
+
 		transport->bindProtocol(&protocol_);
 		transport->initialize();
 
@@ -45,6 +48,9 @@ public:
 
 	void OnError(const ErrorCode& err, IOCPServer* core)
 	{
+		if(!core->isRunning())
+			return;
+
 		acceptor_.accept(this, &EchoServer::OnComplete, &EchoServer::OnError, core);
 	}
 	virtual const tstring& toString() const

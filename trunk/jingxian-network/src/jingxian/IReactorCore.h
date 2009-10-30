@@ -59,6 +59,11 @@ public:
 	virtual void interrupt() = 0;
 
 	/**
+	 * 是不是在运行中
+	 */
+	virtual bool isRunning() const = 0;
+
+	/**
 	 * 将句柄绑定到本端口
 	 */
 	virtual bool bind(HANDLE systemHandler, void* completion_key) = 0;

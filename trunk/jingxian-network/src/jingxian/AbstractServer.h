@@ -41,6 +41,8 @@ public:
 			delete logger_;
 			logger_ = null_ptr;
 		}
+
+		acceptor_.close();
 	}
 
 	
