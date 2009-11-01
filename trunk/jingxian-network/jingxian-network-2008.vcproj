@@ -181,7 +181,19 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\src\jingxian\Application.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\Application.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\jingxian\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\Test.cpp"
 				>
 			</File>
 		</Filter>
@@ -693,19 +705,7 @@
 			Name="utilities"
 			>
 			<File
-				RelativePath=".\src\jingxian\utilities\BaseApplication.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\utilities\BaseApplication.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\utilities\NTManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\utilities\NTManager.h"
+				RelativePath=".\src\jingxian\utilities\NTService.cpp"
 				>
 			</File>
 			<File
