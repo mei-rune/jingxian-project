@@ -28,7 +28,8 @@ BOOL WINAPI handlerRoutine( DWORD ctrlType )
 	case CTRL_BREAK_EVENT:
 	case CTRL_CLOSE_EVENT:
 	case CTRL_SHUTDOWN_EVENT:
-		instance_->interrupt();
+		if(NULL != instance_)
+			instance_->interrupt();
 		return TRUE;
 	}
 	return FALSE;
@@ -187,7 +188,9 @@ int Application::main(int argc, tchar** args)
 		Application app(name, description);
 		instance_ = &app;
 		SetConsoleCtrlHandler(handlerRoutine, TRUE);
-		return app.onRun(arguments);
+		int result = app.onRun(arguments);
+		instance_ = NULL;
+		return result;
 	}
 
 	usage(argc, args);
