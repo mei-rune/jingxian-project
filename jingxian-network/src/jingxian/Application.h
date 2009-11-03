@@ -29,7 +29,7 @@ public:
 	/**
 	 * NT 服务名
 	 */
-	virtual const tstring& name() const = 0;
+	virtual const tstring& name() const;
 
 	/**
 	* 服务运行

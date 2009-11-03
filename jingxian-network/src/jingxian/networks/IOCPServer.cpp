@@ -16,7 +16,8 @@ IOCPServer::IOCPServer(void)
 , logger_( null_ptr )
 , toString_( _T("IOCPServer") )
 {
-	logger_ = logging::makeLogger(_T("IOCPServer"));
+	logger_ = logging::makeLogger(_T("jingxian.system"));
+
 	resolver_.initialize(this);
 	acceptorFactories_[_T("tcp")] = new TCPAcceptorFactory( this );
 	connectionBuilders_[_T("tcp")] = new TCPConnector( this );
@@ -326,6 +327,8 @@ bool IOCPServer::send( IRunnable* runnable )
 	
 void IOCPServer::runForever()
 {
+	LOG_CRITICAL(logger_, _T( "服务开始运行!"));
+	
 	isRunning_ = true;
 
 	std::list<ListenPort*> instances;
@@ -336,6 +339,8 @@ void IOCPServer::runForever()
 		if(!current->second->start())
 		{
 			isRunning_ = false;
+			
+			LOG_CRITICAL(logger_, _T("启动 '") << current->first <<_T( "' 组件失败!"));
 			break;
 		}
 		instances.push_back(current->second);
@@ -349,6 +354,8 @@ void IOCPServer::runForever()
 		{
 			(*it)->stop();
 		}
+			
+		LOG_CRITICAL(logger_, _T("服务启动失败,退出!"));
 		return;
 	}
 
@@ -357,6 +364,8 @@ void IOCPServer::runForever()
 		if( 1 ==  handle_events(5*1000) )
 			onIdle();
 	}
+
+	LOG_CRITICAL(logger_, _T("服务停止,开始清理工作!"));
 
 	for(stdext::hash_map<tstring, ListenPort*>::iterator it=listenPorts_.begin()
 		; it != listenPorts_.end(); )
@@ -374,10 +383,13 @@ void IOCPServer::runForever()
 	}
 
 	wait(3*60);
+
+	LOG_CRITICAL(logger_, _T("清理工作完成,退出服务!"));
 }
 
 void IOCPServer::interrupt()
 {
+	LOG_CRITICAL(logger_, _T( "服务收到停止请求!"));
 	isRunning_ = false;
 }
 

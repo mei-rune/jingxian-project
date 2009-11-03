@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(LOG4CPP_ROOT)\include&quot;;&quot;$(GOOGLETEST_ROOT)\include&quot;;&quot;$(ProjectDir)src\&quot;;."
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DEBUG_TRACE"
 				GeneratePreprocessedFile="0"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -181,6 +181,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\src\jingxian\Application.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\jingxian\main.cpp"
 				>
 			</File>
@@ -190,6 +194,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\src\jingxian\Application.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="资源文件"
@@ -717,19 +725,7 @@
 			Name="utilities"
 			>
 			<File
-				RelativePath=".\src\jingxian\utilities\BaseApplication.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\utilities\BaseApplication.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\utilities\NTManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\utilities\NTManager.h"
+				RelativePath=".\src\jingxian\utilities\NTService.cpp"
 				>
 			</File>
 			<File

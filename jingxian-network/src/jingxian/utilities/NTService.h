@@ -14,41 +14,6 @@
 
 _jingxian_begin
 
-#ifndef NT_LOG_TRACE
-#define NT_LOG_TRACE(message) { \
-	LogStream oss; \
-	oss << message; \
-	logTrace(oss, __FILE__, __LINE__); }
-#endif // NT_LOG_TRACE
-
-#ifndef NT_LOG_WARN
-#define NT_LOG_WARN(message) { \
-	LogStream oss; \
-	oss << message; \
-	logWarn( oss, __FILE__, __LINE__); }
-#endif // NT_LOG_WARN
-
-#ifndef NT_LOG_ERROR
-#define NT_LOG_ERROR(message) { \
-	LogStream oss; \
-	oss << message; \
-	logError( oss, __FILE__, __LINE__); }
-#endif // NT_LOG_ERROR
-
-#ifndef NT_LOG_FATAL
-#define NT_LOG_FATAL(message) { \
-	LogStream oss; \
-	oss << message; \
-	logFatal(oss, __FILE__, __LINE__);}
-#endif // NT_LOG_FATAL
-
-#ifndef NT_LOG_CRITICAL
-#define NT_LOG_CRITICAL(message) { \
-	LogStream oss; \
-	oss << message; \
-	logCritical(oss, __FILE__, __LINE__); }
-#endif // NT_LOG_CRITICAL
-
 class IInstance
 {
 public:
@@ -104,14 +69,15 @@ int installService(const tstring& name
 	, const tstring& display
 	, const tstring& description
 	, const tstring& executable
-	, const std::vector<tstring>& args);
+	, const std::vector<tstring>& args
+	, tostream& out);
 
 /**
  * 卸载一个 Win32 服务
  * @param[ in ] name Win32 服务的名称
  * @return 成功返回0,否则返回非0
  */
-int uninstallService(const tstring& name );
+int uninstallService(const tstring& name, tostream& out);
 
 /**
  * 启动一个 Win32 服务
@@ -119,14 +85,14 @@ int uninstallService(const tstring& name );
  * @param[ in ] args Win32 服务的参数
  * @return 成功返回0,否则返回非0
  */
-int startService(const tstring& name, const std::vector<tstring>& args);
+int startService(const tstring& name, const std::vector<tstring>& args, tostream& out);
 
 /**
  * 停止一个 Win32 服务
  * @param[ in ] name Win32 服务的名称
  * @return 成功返回0,否则返回非0
  */
-int stopService(const tstring& name);
+int stopService(const tstring& name, tostream& out);
 
 _jingxian_end
 
