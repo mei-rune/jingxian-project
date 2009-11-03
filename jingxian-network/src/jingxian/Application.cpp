@@ -90,9 +90,9 @@ int Application::main(int argc, tchar** args)
 		
 		std::vector<tstring> arguments;
 		arguments.push_back(_T("--service"));
-		arguments.push_back(_T("--serviceName=") + name);
+		arguments.push_back(_T("--service:name=") + name);
 		if(!description.empty())
-			arguments.push_back(_T("--serviceDescription=") + description);
+			arguments.push_back(_T("--service:description=") + description);
 
 		for(int i= 6; i < argc; ++ i)
 		{
@@ -165,13 +165,13 @@ int Application::main(int argc, tchar** args)
 	std::vector<tstring> arguments;
 	for(int i = 2; i < argc; ++ i)
 	{
-		if(0 == string_traits<tchar>::strnicmp(args[i],_T("--serviceName="),14))
+		if(0 == string_traits<tchar>::strnicmp(args[i],_T("--service:name="),15))
 		{
-			name = (args[i]+14);
+			name = (args[i]+15);
 		}
-		else if(0 == string_traits<tchar>::strnicmp(args[i],_T("--serviceDescription="),21))
+		else if(0 == string_traits<tchar>::strnicmp(args[i],_T("--service:description="),22))
 		{
-			description = (args[i]+21);
+			description = (args[i]+22);
 		}
 		else
 		{
