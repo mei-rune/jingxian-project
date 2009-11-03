@@ -39,39 +39,45 @@ public:
         return fSrcLine;
     }
 
-    void setPosition(const char* const file, size_t line)
+    void setPosition(const char* const file
+		, size_t line)
     {
         fSrcFile = file;
         fSrcLine = line;
     }
 
     Exception()
-        : std::runtime_error( "<未知异常>" )
-        , fSrcFile( 0 )
-        , fSrcLine( 0 )
+        : std::runtime_error("<未知异常>")
+        , fSrcFile(0)
+        , fSrcLine(0)
     {
 		initStackTrace(3);
     }
 
-    Exception( const tstring& message )
-        : std::runtime_error( toNarrowString(message) )
-        , fSrcFile( 0 )
-        , fSrcLine( 0 )
+    Exception(const tstring& message)
+        : std::runtime_error( toNarrowString(message))
+        , fSrcFile(0)
+        , fSrcLine(0)
     {
 		initStackTrace(3);
     }
 
-    Exception(const char* const srcFile, size_t srcLine , const tstring& message )
-        : std::runtime_error( toNarrowString(message) )
-        , fSrcFile( srcFile )
+    Exception(const char* const srcFile
+		, size_t srcLine 
+		, const tstring& message )
+        : std::runtime_error(toNarrowString(message))
+        , fSrcFile(srcFile)
         , fSrcLine(srcLine)
     {
 		initStackTrace(3);
     }
 
-    Exception(const char* const srcFile, size_t srcLine , const tstring& message , const Exception& e )
-        : std::runtime_error(  toNarrowString(message) + "," + e.what() )
-        , fSrcFile( srcFile )
+    Exception(const char* const srcFile
+		, size_t srcLine
+		, const tstring& message
+		, const Exception& e)
+        : std::runtime_error(toNarrowString(message) + "," + e.what())
+        , fSrcFile(srcFile)
         , fSrcLine(srcLine)
     {
 		initStackTrace(3);

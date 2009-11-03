@@ -204,7 +204,8 @@ Application::Application(const tstring& name, const tstring& descr)
 	networking::initializeScket();
 	try
 	{
-		log4cpp::PropertyConfigurator::configure(toNarrowString(::simplify (::combinePath(getApplicationDirectory(), _T("log4cpp.config")))));
+		tstring nm = combinePath(getApplicationDirectory(), _T("log4cpp.config"));
+		log4cpp::PropertyConfigurator::configure(toNarrowString(nm));
 	}
 	catch (const log4cpp::ConfigureFailure& e)
 	{
@@ -229,9 +230,7 @@ const tstring& Application::name() const
 int Application::onRun(const std::vector<tstring>& args)
 {
 	if(!core_.initialize(1))
-	{
 		return -1;
-	}
 
 	core_.listenWith(_T("tcp://0.0.0.0:6544"), new proxy::Proxy(core_.basePath()));
 	core_.listenWith(_T("tcp://0.0.0.0:6543"), new EchoProtocolFactory());

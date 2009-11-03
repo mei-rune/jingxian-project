@@ -25,7 +25,11 @@ void ThreadDNSResolver::initialize(IReactorCore* core)
 class ResolveErrorTask : public IRunnable
 {
 public:
-	ResolveErrorTask(void* context, const tstring& name, const tstring& port, int result, ResolveError onError)
+	ResolveErrorTask(void* context
+		, const tstring& name
+		, const tstring& port
+		, int result
+		, ResolveError onError)
 		: context_(context)
 		, name_(name)
 		, port_(port)
@@ -53,7 +57,10 @@ private:
 class ResolveCompleteTask : public IRunnable
 {
 public:
-	ResolveCompleteTask(void* context, const tstring& name, const tstring& port, ResolveComplete onComplete)
+	ResolveCompleteTask(void* context
+		, const tstring& name
+		, const tstring& port
+		, ResolveComplete onComplete)
 		: context_(context)
 		, name_(name)
 		, port_(port)
@@ -149,7 +156,13 @@ void ThreadDNSResolver::ResolveHostByName(const tchar* name
 		, ResolveError onError
 		, int timeout)
 {
-	create_thread(&dnsQuery, tstring(name), tstring(port), context, core_, callback, onError);
+	create_thread(&dnsQuery
+		, tstring(name)
+		, tstring(port)
+		, context
+		, core_
+		, callback
+		, onError);
 }
 
 _jingxian_end
