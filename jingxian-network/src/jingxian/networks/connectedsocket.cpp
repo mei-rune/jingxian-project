@@ -28,10 +28,20 @@ ConnectedSocket::ConnectedSocket(IOCPServer* core
 , isPosition_(false)
 , tracer_(0)
 {
-	toString_ = concat<tstring>(_T("ConnectedSocket["),host_, _T(" - "), peer_, _T(" - "), ::toString(sock), _T("]"));
+	toString_ = concat<tstring>(_T("ConnectedSocket[")
+								, host_
+								, _T(" - ")
+								, peer_
+								, _T(" - ")
+								, ::toString(sock)
+								, _T("]"));
 
-	tracer_ = logging::makeTracer(_T("jingxian.connection.tcpConnection"), host_, peer_, ::toString(sock));
-	TP_CRITICAL(tracer_, transport_mode::Both, _T("创建 ConnectedSocket 对象成功"));
+	tracer_ = logging::makeTracer(_T("jingxian.connection.tcpConnection")
+		, host_
+		, peer_
+		, ::toString(sock));
+	TP_CRITICAL(tracer_, transport_mode::Both
+		, _T("创建 ConnectedSocket 对象成功"));
 	
 	context_.initialize(core, this);
 	incoming_.initialize(this);
@@ -52,7 +62,8 @@ ConnectedSocket::~ConnectedSocket( )
 		isPosition_ = false;
 	}
 
-	TP_CRITICAL(tracer_, transport_mode::Both, _T("销毁 ConnectedSocket 对象成功"));
+	TP_CRITICAL(tracer_, transport_mode::Both
+		, _T("销毁 ConnectedSocket 对象成功"));
 	delete tracer_;
 	tracer_ = null_ptr;
 }
@@ -102,11 +113,13 @@ void ConnectedSocket::startReading()
 {
 	if( connection_status::connected != state_)
 	{
-		TP_TRACE(tracer_, transport_mode::Receive, _T("尝试读数据时连接已断开"));
+		TP_TRACE(tracer_, transport_mode::Receive
+			, _T("尝试读数据时连接已断开"));
 		return;
 	}
 
-	TP_TRACE(tracer_, transport_mode::Receive, _T("启动读线程!"));
+	TP_TRACE(tracer_, transport_mode::Receive
+		, _T("启动读线程!"));
 	stopReading_ = false;
 	doRead();
 }
@@ -154,19 +167,22 @@ void ConnectedSocket::doRead()
 {
 	if(reading_)
 	{
-		TP_TRACE(tracer_, transport_mode::Receive, _T("尝试读数据时发现正在读取中"));
+		TP_TRACE(tracer_, transport_mode::Receive
+			, _T("尝试读数据时发现正在读取中"));
 		return;
 	}
 
 	if( stopReading_)
 	{
-		TP_CRITICAL(tracer_, transport_mode::Receive, _T("尝试读数据时发现用户主动停止读数据"));
+		TP_CRITICAL(tracer_, transport_mode::Receive
+			, _T("尝试读数据时发现用户主动停止读数据"));
 		return;
 	}
 
 	if(shutdowning_)
 	{
-		tstring err = concat<tstring>(_T("尝试读数据时连接已断开 - "), disconnectReason_);
+		tstring err = concat<tstring>(_T("尝试读数据时连接已断开 - ")
+									, disconnectReason_);
 		TP_CRITICAL(tracer_, transport_mode::Receive, err);
 		doDisconnect(transport_mode::Receive, 0, err);
 		return;
@@ -184,13 +200,15 @@ void ConnectedSocket::doRead()
 	if(!command->execute())
 	{
 		DWORD errCode = ::WSAGetLastError();
-		tstring err = ::concat<tstring>(_T("尝试读数据时发送读请求失败 - "),lastError(errCode));
+		tstring err = ::concat<tstring>(_T("尝试读数据时发送读请求失败 - ")
+										,lastError(errCode));
 		TP_CRITICAL(tracer_, transport_mode::Receive, err);
 		doDisconnect(transport_mode::Receive, errCode, err);
 		return;
 	}
 
-	TP_TRACE(tracer_, transport_mode::Receive, _T("发送读请求 - ") << ((int)command.get()));
+	TP_TRACE(tracer_, transport_mode::Receive, _T("发送读请求 - ")
+											<< ((int)command.get()));
 	reading_ = true;
 	command.release();
 }
@@ -199,13 +217,15 @@ void ConnectedSocket::doWrite()
 {
 	if(writing_)
 	{
-		TP_TRACE(tracer_, transport_mode::Send, _T("尝试写数据时发现正在发送中"));
+		TP_TRACE(tracer_, transport_mode::Send
+				, _T("尝试写数据时发现正在发送中"));
 		return;
 	}
 
 	if(shutdowning_)
 	{
-		tstring err = concat<tstring>(_T("尝试写数据时连接已断开 - "), disconnectReason_);
+		tstring err = concat<tstring>(_T("尝试写数据时连接已断开 - ")
+									, disconnectReason_);
 		TP_CRITICAL(tracer_, transport_mode::Send, err);
 		doDisconnect(transport_mode::Send, 0, err);
 		return;
@@ -222,18 +242,22 @@ void ConnectedSocket::doWrite()
 	if(!command->execute())
 	{
 		DWORD errCode = ::WSAGetLastError();
-		tstring err = ::concat<tstring>(_T("尝试写数据时发送写请求失败 - "),lastError(errCode));
+		tstring err = ::concat<tstring>(_T("尝试写数据时发送写请求失败 - ")
+										,lastError(errCode));
 		TP_CRITICAL(tracer_, transport_mode::Receive, err);
 		doDisconnect(transport_mode::Send, errCode, err);
 		return;
 	}
 
-	TP_TRACE(tracer_, transport_mode::Send, _T("发送写数据请求 - ") << ((int)command.get()));
+	TP_TRACE(tracer_, transport_mode::Send, _T("发送写数据请求 - ")
+											<< ((int)command.get()));
 	writing_ = true;
 	command.release();
 }
 
-void ConnectedSocket::doDisconnect(transport_mode::type mode, errcode_t error, const tstring& description)
+void ConnectedSocket::doDisconnect(transport_mode::type mode
+								   , errcode_t error
+								   , const tstring& description)
 {	
 	if( connection_status::connected != state_)
 	{
@@ -267,7 +291,8 @@ void ConnectedSocket::doDisconnect(transport_mode::type mode, errcode_t error, c
 		return;
 	}
 
-	std::auto_ptr<ICommand> command(new DisconnectCommand(this, (WSAESHUTDOWN == error && disconnectReason_.empty())?disconnectReason_:description));
+	std::auto_ptr<ICommand> command(new DisconnectCommand(this
+		, (WSAESHUTDOWN == error && disconnectReason_.empty())?disconnectReason_:description));
 	if(!command->execute())
 	{
 		TP_FATAL(tracer_, mode, _T("准备断开连接时发送连接请求失败"));
@@ -433,16 +458,25 @@ void ConnectedSocket::onWrite(const ICommand& command, size_t bytes_transferred)
 	doWrite();
 }
 
-void ConnectedSocket::onError(const ICommand& command, transport_mode::type mode, errcode_t error, const tstring& description)
+void ConnectedSocket::onError(const ICommand& command
+							  , transport_mode::type mode
+							  , errcode_t error
+							  , const tstring& description)
 {
 	switch( mode )
 	{
 	case transport_mode::Receive:
-		TP_TRACE(tracer_, transport_mode::Receive, _T("读请求 '")<< (int)&command <<_T("' 错误返回,") << description);
+		TP_TRACE(tracer_, transport_mode::Receive, _T("读请求 '")
+												<< (int)&command
+												<<_T("' 错误返回,")
+			<< description);
 		reading_ = false;
 		break;
 	case transport_mode::Send:
-		TP_TRACE(tracer_, transport_mode::Send, _T("写请求 '")<< (int)&command <<_T("' 错误返回,") << description);
+		TP_TRACE(tracer_, transport_mode::Send, _T("写请求 '")
+												<< (int)&command
+												<< _T("' 错误返回,")
+												<< description);
 		writing_ = false;
 		break;
 	default:
@@ -473,9 +507,13 @@ const tstring& ConnectedSocket::toString() const
 	return toString_;
 }
 
-void ConnectedSocket::onDisconnected(const ICommand& command, errcode_t error, const tstring& description)
+void ConnectedSocket::onDisconnected(const ICommand& command
+									 , errcode_t error
+									 , const tstring& description)
 {
-	TP_TRACE(tracer_, transport_mode::Both , _T("断开请求 '")<< (int)&command <<_T("' 返回!"));
+	TP_TRACE(tracer_, transport_mode::Both , _T("断开请求 '")
+											<< (int)&command
+											<<_T("' 返回!"));
 	
 	state_ = connection_status::disconnected;
 	protocol_->onDisconnected(context_,error, description);
