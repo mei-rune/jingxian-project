@@ -3,11 +3,14 @@
 # include <windows.h>
 # include <winsvc.h>
 # include "jingxian/lastError.h"
+# include "jingxian/logging/logging.h"
 # include "jingxian/utilities/NTService.h"
 
 _jingxian_begin
 
 #define SERVICE_NAME_SIZE       1024
+
+static  ILogger*                serviceLogger = NULL;
 static  IInstance*              serviceInstance;
 static	SERVICE_STATUS		    serviceStatus;
 static	SERVICE_STATUS_HANDLE	serviceHandle;
@@ -16,6 +19,7 @@ static  SERVICE_TABLE_ENTRY     serviceTable[] = {
 		{ NULL, NULL },
 		{ NULL, NULL } 
 		};
+
 
 /**
  * 服务控制函数
@@ -36,13 +40,13 @@ static DWORD WINAPI serviceCtrlHandler(DWORD dwControl,
 	switch(dwControl)
 	{
 		case SERVICE_CONTROL_STOP:
-		case SERVICE_CONTROL_SHUTDOWN:			
-			NT_LOG_CRITICAL(serviceName << _T( "  服务收到停止请求!"));
+		case SERVICE_CONTROL_SHUTDOWN:
+			//LOG_CRITICAL(serviceLogger, serviceName << _T( "  服务收到停止请求!"));
 
 			serviceStatus.dwCurrentState	= SERVICE_STOP_PENDING;
 			serviceStatus.dwWaitHint	= 4000;
 			if(!SetServiceStatus(serviceHandle,&serviceStatus))
-				NT_LOG_WARN(serviceName 
+				LOG_WARN(serviceLogger, serviceName 
 					<< _T( "  服务设置 'SERVICE_STOP_PENDING' 状态失败 - ")
 					<< lastError(GetLastError()));
 
@@ -63,7 +67,7 @@ static VOID WINAPI serviceEntry(DWORD argc,LPTSTR *argv)
 	serviceHandle = RegisterServiceCtrlHandlerEx(serviceName, serviceCtrlHandler, NULL);
 	if(0 == serviceHandle)
 	{
-		NT_LOG_FATAL(serviceName << _T( "  服务注册控制回调失败 - ") << lastError(GetLastError()));
+		LOG_FATAL(serviceLogger, serviceName << _T( "  服务注册控制回调失败 - ") << lastError(GetLastError()));
 		return;
 	}
 		
@@ -78,7 +82,7 @@ static VOID WINAPI serviceEntry(DWORD argc,LPTSTR *argv)
 
 	if(!SetServiceStatus(serviceHandle, &serviceStatus))
 	{
-		NT_LOG_WARN(serviceName 
+		LOG_WARN(serviceLogger, serviceName 
 			<< _T( "  服务设置 'SERVICE_START_PENDING' 状态失败 - ")
 			<< lastError(GetLastError()));
 	}
@@ -88,7 +92,7 @@ static VOID WINAPI serviceEntry(DWORD argc,LPTSTR *argv)
 	serviceStatus.dwWaitHint	= 0;
 	if(!SetServiceStatus(serviceHandle, &serviceStatus))
 	{
-		NT_LOG_WARN(serviceName 
+		LOG_WARN(serviceLogger, serviceName 
 			<< _T( "  服务设置 'SERVICE_RUNNING' 状态失败 - ")
 			<< lastError(GetLastError()));
 	}
@@ -100,16 +104,16 @@ static VOID WINAPI serviceEntry(DWORD argc,LPTSTR *argv)
 	}
 	
 
-	NT_LOG_CRITICAL( serviceName << _T( "  服务启动成功，正在运行中......"));
+	//LOG_CRITICAL(serviceLogger,  serviceName << _T( "  服务启动成功，正在运行中......"));
 	serviceInstance->onRun(arguments);
-	NT_LOG_CRITICAL( serviceName << _T( "  服务退出，运行结束!"));
+	//LOG_CRITICAL(serviceLogger,  serviceName << _T( "  服务退出，运行结束!"));
 
 	serviceStatus.dwCurrentState	= SERVICE_STOPPED;
 	serviceStatus.dwWin32ExitCode	= 0;
 	serviceStatus.dwCheckPoint	= 0; 
 	serviceStatus.dwWaitHint	= 0;
 	if(!SetServiceStatus(serviceHandle, &serviceStatus))
-		NT_LOG_FATAL(serviceName << _T( "  服务设置 'SERVICE_STOPPED' 状态失败 - ") << lastError(GetLastError()));
+		LOG_FATAL(serviceLogger, serviceName << _T( "  服务设置 'SERVICE_STOPPED' 状态失败 - ") << lastError(GetLastError()));
 }
 
 
@@ -118,18 +122,27 @@ static VOID WINAPI serviceEntry(DWORD argc,LPTSTR *argv)
  */
 int serviceMain(IInstance* instance)
 {
+	int result = -1;
+	if(NULL == serviceLogger)
+		serviceLogger = logging::makeLogger(_T("jingxian.system"));
+
 	if(0 != _tcscpy_s(serviceName, SERVICE_NAME_SIZE, instance->name().c_str()))
 	{
-		NT_LOG_WARN(_T("启动服务时发生错误, 服务名 '") << instance->name() << _T( "' 太长。"));
+		LOG_WARN(serviceLogger, _T("启动服务时发生错误, 服务名 '") << instance->name() << _T( "' 太长。"));
 		SetLastError(ERROR_INVALID_NAME);
-		return -1;
+		
+		result = -1;
+		goto end;
 	}
 
 	serviceTable[0].lpServiceName = serviceName;
 	serviceTable[0].lpServiceProc = serviceEntry;
 	serviceInstance = instance;
 	if (StartServiceCtrlDispatcher(serviceTable))
-		return 0;
+	{
+		result = 0;
+		goto end;
+	}
 
 	//if(ERROR_FAILED_SERVICE_CONTROLLER_CONNECT == GetLastError())
 	//{
@@ -139,10 +152,16 @@ int serviceMain(IInstance* instance)
 	//		arguments.push_back(argv[i]);
 	//	}
 	//	instance->onRun(arguments);
-	//	return 0;
+	//  
+	//	result = 0;
+	//  goto end;
 	//}
 
-	return -1;
+end:
+	if(NULL != serviceLogger)
+		delete serviceLogger;
+	serviceLogger = NULL;
+	return result;
 }
 
 bool  waitForServiceState(SC_HANDLE hService, DWORD pendingState, SERVICE_STATUS& status)
@@ -182,54 +201,55 @@ bool  waitForServiceState(SC_HANDLE hService, DWORD pendingState, SERVICE_STATUS
 	return true;
 }
 
-void  showServiceStatus(const tstring& msg, SERVICE_STATUS& status)
+void  showServiceStatus(const tstring& msg, SERVICE_STATUS& status, tostream& out)
 {
-	tstring state;
+	out << _T("CRIT ") <<  msg << _T( ",")
+		<< _T("  当前状态: " );
+
 	switch(status.dwCurrentState)
 	{
 	case SERVICE_STOPPED:
-		state = _T( "已停止");
+		out << _T( "已停止");
 		break;
 	case SERVICE_START_PENDING:
-		state = _T( "启动中");
+		out << _T( "启动中");
 		break;
 	case SERVICE_STOP_PENDING:
-		state = _T( "停止中");
+		out << _T( "停止中");
 		break;
 	case SERVICE_RUNNING:
-		state = _T( "运行中");
+		out << _T( "运行中");
 		break;
 	case SERVICE_CONTINUE_PENDING:
-		state = _T( "恢复中");
+		out << _T( "恢复中");
 		break;
 	case SERVICE_PAUSE_PENDING:
-		state = _T( "暂停中");
+		out << _T( "暂停中");
 		break;
 	case SERVICE_PAUSED:
-		state = _T( "已暂停");
+		out << _T( "已暂停");
 		break;
 	default:
-		state = _T("未知");
+		out << _T("未知");
 		break;
 	}
-
-	NT_LOG_CRITICAL(msg << _T( ",")
-		<< _T("  当前状态: " ) << state << _T( ",")
+	out << _T( ",")
 		<< _T("  退出代码: " ) << status.dwWin32ExitCode << _T( ",")
 		<< _T("  服务退出代码: " ) << status.dwServiceSpecificExitCode << _T( ",")
 		<< _T("  检测点: " ) << status.dwCheckPoint << _T( ",")
-		<< _T("  等待次数据: " ) << status.dwWaitHint );
+		<< _T("  等待次数据: " ) << status.dwWaitHint << std::endl;
 }
 
 int  installService(const tstring& name
 								, const tstring& display
 								, const tstring& description
 								, const tstring& executable
-								, const std::vector<tstring>& args)
+								, const std::vector<tstring>& args
+								, tostream& out)
 {
 	if(name.size()>=254)
 	{
-		NT_LOG_ERROR(_T("安装服务 '") << name <<_T("' 失败 - 服务名太长!") );
+		out << _T("安装服务 '") << name <<_T("' 失败 - 服务名太长!") << std::endl;
 		return -1;
 	}
 
@@ -246,7 +266,7 @@ int  installService(const tstring& name
         tchar buf[_MAX_PATH];
         if(GetModuleFileName(NULL, buf, _MAX_PATH) == 0)
         {
-            NT_LOG_ERROR(_T("安装服务 '") << name <<_T("' 失败 - 没有执行文件名!") );
+			out << _T("ERROR 安装服务 '") << name <<_T("' 失败 - 没有执行文件名!") << std::endl;
             return -1;
         }
         exec = buf;
@@ -285,7 +305,7 @@ int  installService(const tstring& name
     SC_HANDLE hSCM = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
     if(hSCM == NULL)
     {
-		NT_LOG_ERROR(_T("安装服务 '") << name <<_T("' 失败,不能打开 SCM - ") << ::lastError(GetLastError()));
+		out << _T("ERROR 安装服务 '") << name <<_T("' 失败,不能打开 SCM - ") << ::lastError(GetLastError()) << std::endl;
         return -1;
     }
     SC_HANDLE hService = CreateService(
@@ -305,7 +325,7 @@ int  installService(const tstring& name
 
     if(hService == NULL)
     {
-        NT_LOG_ERROR(_T("安装服务 '") << name <<_T("' 失败,不能创服务实例 - ") << ::lastError(GetLastError()));
+        out << _T("ERROR 安装服务 '") << name <<_T("' 失败,不能创服务实例 - ") << ::lastError(GetLastError()) << std::endl;
         CloseServiceHandle(hSCM);
         return -1;
     }
@@ -316,30 +336,30 @@ int  installService(const tstring& name
 		descr.lpDescription = (tchar*)description.c_str();
 		if(!ChangeServiceConfig2(hService,SERVICE_CONFIG_DESCRIPTION,&descr))
 		{
-			NT_LOG_WARN(_T("安装服务 '") << name <<_T("' 时,添加描述失败 - ") << ::lastError(GetLastError()));
+			out << _T("WARN 安装服务 '") << name <<_T("' 时,添加描述失败 - ") << ::lastError(GetLastError()) << std::endl;
 		}
 	}
 
     CloseServiceHandle(hSCM);
     CloseServiceHandle(hService);
 
-    NT_LOG_CRITICAL(_T("安装服务 '") << name <<_T("' 成功"));
+    out << _T("CRIT 安装服务 '") << name <<_T("' 成功") << std::endl;
     return 0;
 }
 
-int  uninstallService(const tstring& name)
+int  uninstallService(const tstring& name, tostream& out)
 {
     SC_HANDLE hSCM = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
     if(hSCM == NULL)
     {
-        NT_LOG_ERROR(_T("卸载服务 '") << name <<_T("' 失败,不能打开 SCM - ") << ::lastError(GetLastError()));
+		out << _T("ERROR 卸载服务 '") << name <<_T("' 失败,不能打开 SCM - ") << ::lastError(GetLastError()) << std::endl;
         return -1;
     }
 
     SC_HANDLE hService = OpenService(hSCM, name.c_str(), SC_MANAGER_ALL_ACCESS);
     if(hService == NULL)
     {
-        NT_LOG_ERROR(_T("卸载服务 '") << name <<_T("' 失败,不能打开服务 - ") << ::lastError(GetLastError()));
+		out << _T("ERROR 卸载服务 '") << name <<_T("' 失败,不能打开服务 - ") << ::lastError(GetLastError()) << std::endl;
         CloseServiceHandle(hSCM);
         return -1;
     }
@@ -348,11 +368,11 @@ int  uninstallService(const tstring& name)
 
     if(!b)
     {
-        NT_LOG_ERROR(_T("卸载服务 '") << name <<_T("' 失败,不能删除服务 - ") << ::lastError(GetLastError()));
+		out << _T("ERROR 卸载服务 '") << name <<_T("' 失败,不能删除服务 - ") << ::lastError(GetLastError()) << std::endl;
     }
 	else
 	{
-		NT_LOG_CRITICAL(_T("卸载服务 '") << name <<_T("' 成功"));
+		out << _T("CRIT 卸载服务 '") << name <<_T("' 成功") << std::endl;
 	}
 
     CloseServiceHandle(hSCM);
@@ -361,19 +381,19 @@ int  uninstallService(const tstring& name)
 	return ( b?0:-1);
 }
 
-int  startService(const tstring& name, const std::vector<tstring>& args)
+int  startService(const tstring& name, const std::vector<tstring>& args, tostream& out)
 {
     SC_HANDLE hSCM = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
     if(hSCM == NULL)
     {
-        NT_LOG_ERROR(_T("启动服务 '") << name <<_T("' 失败,不能打开 SCM - ") << ::lastError(GetLastError()));
+		out << _T("ERROR 启动服务 '") << name <<_T("' 失败,不能打开 SCM - ") << ::lastError(GetLastError()) << std::endl;
         return -1;
     }
 
     SC_HANDLE hService = OpenService(hSCM, name.c_str(), SC_MANAGER_ALL_ACCESS);
     if(hService == NULL)
     {
-        NT_LOG_ERROR(_T("启动服务 '") << name <<_T("' 失败,不能打开服务 - ") << ::lastError(GetLastError()));
+		out << _T("ERROR 启动服务 '") << name <<_T("' 失败,不能打开服务 - ") << ::lastError(GetLastError()) << std::endl;
         CloseServiceHandle(hSCM);
         return -1;
     }
@@ -399,18 +419,18 @@ int  startService(const tstring& name, const std::vector<tstring>& args)
 
     if(!b)
     {
-        NT_LOG_ERROR(_T("启动服务 '") << name <<_T("' 失败 - ") << ::lastError(GetLastError()));
+        out << _T("ERROR 启动服务 '") << name <<_T("' 失败 - ") << ::lastError(GetLastError()) << std::endl;
         CloseServiceHandle(hService);
         CloseServiceHandle(hSCM);
         return -1;
     }
 
-	NT_LOG_TRACE(_T("服务正在启动中,请稍等...") );
+	out << _T("TRACE 服务正在启动中,请稍等...") << std::endl;
 
 	SERVICE_STATUS status;
 	if(!waitForServiceState(hService, SERVICE_RUNNING, status))
 	{
-		NT_LOG_ERROR(_T("启动服务 '") << name <<_T("' 失败, 检测服务状态发生错误 - ") << ::lastError(GetLastError()));
+		out << _T("ERROR 启动服务 '") << name <<_T("' 失败, 检测服务状态发生错误 - ") << ::lastError(GetLastError()) << std::endl;
 		CloseServiceHandle(hService);
 		CloseServiceHandle(hSCM);
 		return -1;
@@ -421,30 +441,30 @@ int  startService(const tstring& name, const std::vector<tstring>& args)
 
 	if(status.dwCurrentState == SERVICE_RUNNING)
 	{
-		NT_LOG_CRITICAL(_T("启动服务 '") << name <<_T("' 成功, 服务运行中."));
+		out << _T("CRIT 启动服务 '") << name <<_T("' 成功, 服务运行中.") << std::endl;
 	}
 	else
 	{
-		showServiceStatus(_T( "服务器启动发生错误"), status);
+		showServiceStatus(_T( "服务器启动发生错误"), status, out);
 		return -1;
 	}
 
 	return 0;
 }
 
-int  stopService(const tstring& name)
+int  stopService(const tstring& name, tostream& out)
 {
     SC_HANDLE hSCM = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
     if(hSCM == NULL)
     {
-		NT_LOG_ERROR(_T("停止服务 '") << name <<_T("' 失败, 不能打开 SCM - ") << lastError(GetLastError()));
+		out << _T("ERROR 停止服务 '") << name <<_T("' 失败, 不能打开 SCM - ") << lastError(GetLastError()) << std::endl;
         return -1;
     }
 
     SC_HANDLE hService = OpenService(hSCM, name.c_str(), SC_MANAGER_ALL_ACCESS);
     if(hService == NULL)
     {
-		NT_LOG_ERROR(_T("停止服务 '") << name <<_T("' 失败, 不能打开服务 - ") << lastError(GetLastError()));
+		out << _T("ERROR 停止服务 '") << name <<_T("' 失败, 不能打开服务 - ") << lastError(GetLastError()) << std::endl;
         CloseServiceHandle(hSCM);
         return -1;
     }
@@ -454,20 +474,20 @@ int  stopService(const tstring& name)
 
     if(!b)
     {
-		NT_LOG_ERROR(_T("停止服务 '") << name <<_T("' 失败 - ") << lastError(GetLastError()));
+		out << _T("ERROR 停止服务 '") << name <<_T("' 失败 - ") << lastError(GetLastError()) << std::endl;
         CloseServiceHandle(hSCM);
         CloseServiceHandle(hService);
         return -1;
     }
 
-    NT_LOG_TRACE(_T("服务停止中,请稍等..."));
+    out << _T("TRACE 服务停止中,请稍等...") << std::endl;
 
     ////
     //// 等待服务停止或发生一个错误
     ////
     //if(!waitForServiceState(hService, SERVICE_STOP_PENDING, status))
     //{
-    //    LOG_ERROR(logger_, _T("停止服务 '") << name <<_T("' 失败,检测服务状态发生错误 - ") << lastError(GetLastError()));
+    //    LOG_ERROR(logger_, _T("停止服务 '") << name <<_T("' 失败,检测服务状态发生错误 - ") << lastError(GetLastError()) << std::endl;
     //    CloseServiceHandle(hService);
     //    CloseServiceHandle(hSCM);
     //    return -1;
@@ -475,7 +495,7 @@ int  stopService(const tstring& name)
 
 	if(!waitForServiceState(hService, SERVICE_STOPPED, status))
     {
-        NT_LOG_ERROR(_T("停止服务 '") << name <<_T("' 失败,检测服务状态发生错误 - ") << lastError(GetLastError()));
+        out << _T("ERROR 停止服务 '") << name <<_T("' 失败,检测服务状态发生错误 - ") << lastError(GetLastError()) << std::endl;
         CloseServiceHandle(hService);
         CloseServiceHandle(hSCM);
         return -1;
@@ -486,11 +506,11 @@ int  stopService(const tstring& name)
 
     if(status.dwCurrentState == SERVICE_STOPPED)
     {
-		NT_LOG_CRITICAL(_T("停止服务 '") << name <<_T("' 成功."));
+		out << _T("CRIT 停止服务 '") << name <<_T("' 成功.") << std::endl;
     }
     else
     {
-		showServiceStatus(_T( "服务器停止发生错误"), status);
+		showServiceStatus(_T( "服务器停止发生错误"), status, out);
 		return -1;
     }
 

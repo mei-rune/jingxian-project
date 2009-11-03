@@ -15,7 +15,7 @@ TCPAcceptor::TCPAcceptor(IOCPServer* core, const tchar* endpoint)
 , toString_(_T("TCPAcceptor"))
 {
 	toString_ = _T("TCPAcceptor[address=") + endpoint_ + _T("]");
-	logger_ = logging::makeLogger(_T("TCPAcceptor"));
+	logger_ = logging::makeLogger(_T("jingxian.acceptor.tcpAcceptor"));
 }
 
 TCPAcceptor::~TCPAcceptor()

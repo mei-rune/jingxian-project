@@ -12,7 +12,7 @@ TCPConnector::TCPConnector(IOCPServer* core)
 , toString_(_T("TCPConnector"))
 {
 	toString_ = _T("TCPConnector");
-	logger_ = logging::makeLogger(_T("TCPConnector"));
+	logger_ = logging::makeLogger(_T("jingxian.acceptor.tcpConnector"));
 }
 
 TCPConnector::~TCPConnector()

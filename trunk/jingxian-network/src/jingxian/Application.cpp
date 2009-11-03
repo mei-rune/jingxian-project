@@ -13,9 +13,12 @@
 # include "log4cpp/Category.hh"
 # include "log4cpp/Appender.hh"
 # include "log4cpp/NTEventLogAppender.hh"
+# include "log4cpp/NTEventLogAppender.hh"
 # include "log4cpp/Priority.hh"
 
 _jingxian_begin
+
+static IInstance* instance_ = NULL;
 
 BOOL WINAPI handlerRoutine( DWORD ctrlType )
 {
@@ -64,13 +67,19 @@ int Application::main(int argc, tchar** args)
 		usage(argc, args);
 		return -1;
 	}
+	
+	if(0 == string_traits<tchar>::stricmp(_T("--help"), args[1]))
+	{
+		usage(argc, args);
+		return 0;
+	}
 
 	if(0 == string_traits<tchar>::stricmp(_T("--install"), args[1]))
 	{
 		if(argc < 3)
 		{
-			NT_LOG_ERROR(_T("安装服务失败 - 参数不正确,正确使用方法为:"));
-			NT_LOG_ERROR(_T("\t ") << args[0] <<_T(" --install Win32服务名 [Win32服务的显示名] [Win32服务的描述信息] [Win32服务的执行程序名称] [Win32服务的参数1] [Win32服务的参数2] ..."));
+			tcout << _T("安装服务失败 - 参数不正确,正确使用方法为:") << std::endl;
+			tcout << _T("\t ") << args[0] <<_T(" --install Win32服务名 [Win32服务的显示名] [Win32服务的描述信息] [Win32服务的执行程序名称] [Win32服务的参数1] [Win32服务的参数2] ...") << std::endl;
 			return -1;
 		}
 		tstring name(args[2]);
@@ -79,7 +88,11 @@ int Application::main(int argc, tchar** args)
 		tstring executable((argc>5)?args[5]:_T(""));
 		
 		std::vector<tstring> arguments;
-		arguments.insert(arguments.begin(), _T("--service"));
+		arguments.push_back(_T("--service"));
+		arguments.push_back(_T("--serviceName=") + name);
+		if(!description.empty())
+			arguments.push_back(_T("--serviceDescription=") + description);
+
 		for(int i= 6; i < argc; ++ i)
 		{
 			if(0 != string_traits<tchar>::stricmp(_T("--service"),args[i]))
@@ -90,25 +103,28 @@ int Application::main(int argc, tchar** args)
 			, display
 			, description
 			, executable
-			, arguments);
+			, arguments
+			, tcout);
 	}
-	else if(0 == string_traits<tchar>::stricmp(_T("--uninstall"), args[1]))
+	
+	if(0 == string_traits<tchar>::stricmp(_T("--uninstall"), args[1]))
 	{
 		if(argc != 3)
 		{
-			NT_LOG_ERROR(_T("卸载服务失败 - 参数不正确,正确使用方法为:"));
-			NT_LOG_ERROR(_T("\t ") << args[0] <<_T(" --uninstall Win32服务名"));
+			tcout << _T("卸载服务失败 - 参数不正确,正确使用方法为:") << std::endl;
+			tcout << _T("\t ") << args[0] <<_T(" --uninstall Win32服务名") << std::endl;
 			return -1;
 		}
 
-		return uninstallService(args[2]);
+		return uninstallService(args[2], tcout);
 	}
-	else if(0 == string_traits<tchar>::stricmp(_T("--start"), args[1]))
+	
+	if(0 == string_traits<tchar>::stricmp(_T("--start"), args[1]))
 	{
 		if(argc < 3)
 		{
-			NT_LOG_ERROR(_T("启动服务失败 - 参数不正确,正确使用方法为:"));
-			NT_LOG_ERROR(_T("\t ") << args[0] <<_T(" --start Win32服务名 [Win32服务的参数1] [Win32服务的参数2] ..."));
+			tcout << _T("启动服务失败 - 参数不正确,正确使用方法为:") << std::endl;
+			tcout << _T("\t ") << args[0] <<_T(" --start Win32服务名 [Win32服务的参数1] [Win32服务的参数2] ...") << std::endl;
 			return -1;
 		}
 		std::vector<tstring> arguments;
@@ -117,56 +133,61 @@ int Application::main(int argc, tchar** args)
 			arguments.push_back(args[i]);
 		}
 
-		return startService(args[2], arguments);
+		return startService(args[2], arguments, tcout);
 	}
-	else if(0 == string_traits<tchar>::stricmp(_T("--stop"), args[1]))
+	
+	if(0 == string_traits<tchar>::stricmp(_T("--stop"), args[1]))
 	{
 		if(argc != 3)
 		{
-			NT_LOG_ERROR(_T("停止服务失败 - 参数不正确,正确使用方法为:"));
-			NT_LOG_ERROR(_T("\t ") << args[0] <<_T(" --stop Win32服务名"));
+			tcout << _T("停止服务失败 - 参数不正确,正确使用方法为:") << std::endl;
+			tcout << _T("\t ") << args[0] <<_T(" --stop Win32服务名") << std::endl;
 			return -1;
 		}
 
-		return stopService(args[2]);
+		return stopService(args[2], tcout);
 	}
-	else if(0 == string_traits<tchar>::stricmp(_T("--console"), args[1]))
+	
+	int runStyle = 0;
+	if(0 == string_traits<tchar>::stricmp(_T("--console"), args[1]))
 	{
-		if(argc < 2)
-		{
-			NT_LOG_ERROR(_T("启动服务失败 - 参数不正确,正确使用方法为:"));
-			NT_LOG_ERROR(_T("\t ") << args[0] <<_T(" --console [Win32服务的参数1] [Win32服务的参数2] ..."));
-			return -1;
-		}
-		std::vector<tstring> arguments;
-		for(int i = 2; i < argc; ++ i)
-		{
-			arguments.push_back(args[i]);
-		}
-
-		return app->run(arguments);
+		runStyle = 1;
 	}
 	else if(0 == string_traits<tchar>::stricmp(_T("--service"), args[1]))
 	{
-		if(argc < 2)
-		{
-			NT_LOG_ERROR(_T("启动服务失败 - 参数不正确,正确使用方法为:"));
-			NT_LOG_ERROR(_T("\t ") << args[0] <<_T(" --service [Win32服务的参数1] [Win32服务的参数2] ..."));
-			return -1;
-		}
+		runStyle = 2;
+	}
 
-		std::vector<tstring> arguments;
-		for(int i = 2; i < argc; ++ i)
+
+	tstring name = _T("jingxian-daemon");
+	tstring description = _T("jingxian 后台服务程序");
+	std::vector<tstring> arguments;
+	for(int i = 2; i < argc; ++ i)
+	{
+		if(0 == string_traits<tchar>::strnicmp(args[i],_T("--serviceName="),14))
+		{
+			name = (args[i]+14);
+		}
+		else if(0 == string_traits<tchar>::strnicmp(args[i],_T("--serviceDescription="),21))
+		{
+			description = (args[i]+21);
+		}
+		else
 		{
 			arguments.push_back(args[i]);
 		}
-
-		return NTService<BaseApplication>::main(app->name(), appPtr.release());
 	}
-	else if(0 == string_traits<tchar>::stricmp(_T("--help"), args[1]))
+
+	if(2 == runStyle)
 	{
-		usage(argc, args);
-		return 0;
+		return serviceMain(new Application(name, description));
+	}
+	else if(1 == runStyle)
+	{
+		Application app(name, description);
+		instance_ = &app;
+		SetConsoleCtrlHandler(handlerRoutine, TRUE);
+		return app.onRun(arguments);
 	}
 
 	usage(argc, args);
@@ -197,23 +218,37 @@ Application::~Application()
 	networking::shutdownSocket();
 }
 
+const tstring& Application::name() const
+{
+	return name_;
+}
 
-int Application::run(const std::vector<tstring>& args)
+int Application::onRun(const std::vector<tstring>& args)
 {
 	if(!core_.initialize(1))
 	{
 		return -1;
 	}
 
-	core_.listenWith(_T("tcp://0.0.0.0:6544"), new proxy::Proxy(server.basePath()));
+	core_.listenWith(_T("tcp://0.0.0.0:6544"), new proxy::Proxy(core_.basePath()));
 	core_.listenWith(_T("tcp://0.0.0.0:6543"), new EchoProtocolFactory());
 	core_.runForever();
 	return 0;
 }
 
+void Application::onControl(DWORD dwEventType
+					, LPVOID lpEventData)
+{
+}
+
 void Application::interrupt()
 {
 	core_.interrupt();
+}
+
+const tstring& Application::toString() const
+{
+	return toString_;
 }
 
 _jingxian_end

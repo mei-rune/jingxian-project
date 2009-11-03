@@ -4,8 +4,6 @@
 #include <iostream>
 #include "jingxian/Application.h"
 
-
-
 int _tmain(int argc, tchar* argv[])
 {
 	int tmpFlag = _CrtSetDbgFlag( _CRTDBG_REPORT_FLAG );
