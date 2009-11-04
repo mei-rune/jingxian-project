@@ -7,7 +7,7 @@ _jingxian_begin
 
 void command_queue::release( ICommand* cmd )
 {
-	delete cmd;
+    delete cmd;
 }
 
 _jingxian_end

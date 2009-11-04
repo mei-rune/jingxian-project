@@ -16,29 +16,32 @@ class ICommand : public OVERLAPPED
 {
 public:
 
-	ICommand( )
-		: handle_( INVALID_HANDLE_VALUE )
-	{
-		Internal =  0;
-		InternalHigh =  0;
-		Offset =  0;
-		OffsetHigh =  0;
-		hEvent = 0;
-	}
+    ICommand( )
+            : handle_( INVALID_HANDLE_VALUE )
+    {
+        Internal =  0;
+        InternalHigh =  0;
+        Offset =  0;
+        OffsetHigh =  0;
+        hEvent = 0;
+    }
 
-	virtual ~ICommand(void){}
+    virtual ~ICommand(void) {}
 
-	HANDLE handle() const { return handle_; }
+    HANDLE handle() const
+    {
+        return handle_;
+    }
 
-	virtual bool execute() = 0;
+    virtual bool execute() = 0;
 
-	virtual void on_complete (size_t bytes_transferred,
-                         bool success,
-                         void *completion_key,
-                         errcode_t error = 0) = 0;
+    virtual void on_complete (size_t bytes_transferred,
+                              bool success,
+                              void *completion_key,
+                              errcode_t error = 0) = 0;
 
 protected:
-	HANDLE handle_;
+    HANDLE handle_;
 };
 
 _jingxian_end

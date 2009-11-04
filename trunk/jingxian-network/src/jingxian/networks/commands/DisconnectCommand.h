@@ -18,23 +18,23 @@ class DisconnectCommand : public ICommand
 {
 public:
 
-	DisconnectCommand(ConnectedSocket* connectedSocket, tstring reason);
+    DisconnectCommand(ConnectedSocket* connectedSocket, tstring reason);
 
-	virtual ~DisconnectCommand();
+    virtual ~DisconnectCommand();
 
-	virtual void on_complete(size_t bytes_transferred
-		, bool success
-		, void *completion_key
-		, errcode_t error);
+    virtual void on_complete(size_t bytes_transferred
+                             , bool success
+                             , void *completion_key
+                             , errcode_t error);
 
-	virtual bool execute();
+    virtual bool execute();
 
 private:
 
-	NOCOPY(DisconnectCommand);
+    NOCOPY(DisconnectCommand);
 
-	ConnectedSocket* connectedSocket_;
-	tstring reason_;
+    ConnectedSocket* connectedSocket_;
+    tstring reason_;
 };
 
 _jingxian_end

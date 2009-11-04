@@ -14,66 +14,66 @@
 _jingxian_begin
 
 
-// 
+//
 // ERROR_HANDLE_EOF
 template<typename IBUFFER>
 class BaseBuffer : public IBUFFER
 {
 public:
 
-	BaseBuffer()
-		: exceptionStyle_(ExceptionStyle::NOTHROW)
-		, errno_(ERROR_SUCCESS)
-	{
-		errno_ = ERROR_SUCCESS;
-	}
+    BaseBuffer()
+            : exceptionStyle_(ExceptionStyle::NOTHROW)
+            , errno_(ERROR_SUCCESS)
+    {
+        errno_ = ERROR_SUCCESS;
+    }
 
-	virtual ~BaseBuffer( )
-	{
-	}
+    virtual ~BaseBuffer( )
+    {
+    }
 
-	virtual void exceptions(ExceptionStyle::type exceptionStyle)
-	{
-		exceptionStyle_ = exceptionStyle;
-	}
+    virtual void exceptions(ExceptionStyle::type exceptionStyle)
+    {
+        exceptionStyle_ = exceptionStyle;
+    }
 
-	virtual ExceptionStyle::type exceptions() const
-	{
-		return exceptionStyle_;
-	}
+    virtual ExceptionStyle::type exceptions() const
+    {
+        return exceptionStyle_;
+    }
 
-	virtual bool fail() const
-	{
-		return ERROR_SUCCESS != errno_;
-	}
+    virtual bool fail() const
+    {
+        return ERROR_SUCCESS != errno_;
+    }
 
-	virtual errcode_t error() const
-	{
-		return errno_;
-	}
+    virtual errcode_t error() const
+    {
+        return errno_;
+    }
 
-	void error(errcode_t err)
-	{
-		if( ERROR_SUCCESS == errno_)
-			errno_ = err;
+    void error(errcode_t err)
+    {
+        if ( ERROR_SUCCESS == errno_)
+            errno_ = err;
 
-		if(ExceptionStyle::THROW == exceptionStyle_)
-			ThrowException1(Exception, get_last_error(err));
-	}
+        if (ExceptionStyle::THROW == exceptionStyle_)
+            ThrowException1(Exception, get_last_error(err));
+    }
 
-	virtual void clearError()
-	{
-		errno_ = ERROR_SUCCESS;
-	}
+    virtual void clearError()
+    {
+        errno_ = ERROR_SUCCESS;
+    }
 
 protected:
-	NOCOPY(BaseBuffer);
+    NOCOPY(BaseBuffer);
 
-	// 发性错误时的处理方式
-	ExceptionStyle::type exceptionStyle_;
+    // 发性错误时的处理方式
+    ExceptionStyle::type exceptionStyle_;
 
-	// 当前是否处于错误中
-	errcode_t errno_;
+    // 当前是否处于错误中
+    errcode_t errno_;
 };
 
 _jingxian_end

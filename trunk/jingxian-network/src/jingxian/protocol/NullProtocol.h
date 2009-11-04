@@ -16,28 +16,28 @@ _jingxian_begin
 class NullProtocol : public BaseProtocol
 {
 public:
-	NullProtocol(bool unBind)
-		: unBind_(unBind)
-	{
-		toString_ = _T("NullProtocol");
-	}
+    NullProtocol(bool unBind)
+            : unBind_(unBind)
+    {
+        toString_ = _T("NullProtocol");
+    }
 
     virtual void onConnected(ProtocolContext& context)
-	{
-		context.transport().disconnection();
-	}
+    {
+        context.transport().disconnection();
+    }
 
     virtual void onDisconnected(ProtocolContext& context, errcode_t errCode, const tstring& reason)
-	{
-		LOG_INFO(log(), _T("NullProtocol 新连接到来 - ") << context.transport().peer());
+    {
+        LOG_INFO(log(), _T("NullProtocol 新连接到来 - ") << context.transport().peer());
 
-		if(unBind_)
-			context.transport().bindProtocol(null_ptr);
-	}
+        if (unBind_)
+            context.transport().bindProtocol(null_ptr);
+    }
 
 private:
-	NOCOPY(NullProtocol);
-	bool unBind_;
+    NOCOPY(NullProtocol);
+    bool unBind_;
 };
 
 _jingxian_end

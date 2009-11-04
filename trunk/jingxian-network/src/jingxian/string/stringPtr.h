@@ -17,81 +17,81 @@ template< typename charT , typename OP = detail::StringOp<charT> >
 class StringPtr
 {
 public:
-	StringPtr(charT * ptr = 0, size_t len = -1) _THROW0()
-		: _ptr(ptr)
-		, _length( (-1 == len)?string_traits< charT>::strlen( ptr): len )
-	{
-	}
+    StringPtr(charT * ptr = 0, size_t len = -1) _THROW0()
+            : _ptr(ptr)
+            , _length( (-1 == len)?string_traits< charT>::strlen( ptr): len )
+    {
+    }
 
-	StringPtr(StringPtr& right) _THROW0()
-		: _ptr( 0 )
-		, _length( 0 )
-	{
-		_length = right.size();
-		_ptr = right.release();
-	}
+    StringPtr(StringPtr& right) _THROW0()
+            : _ptr( 0 )
+            , _length( 0 )
+    {
+        _length = right.size();
+        _ptr = right.release();
+    }
 
-	template< typename STRING >
-	explicit StringPtr(const STRING& right) _THROW0()
-		: _ptr( 0 )
-		, _length( 0 )
-	{
-		if( !right.empty() )
-		{
-			_ptr = OP::dup( right.c_str() );
-			_length = right.size();
-		}
-	}
+    template< typename STRING >
+    explicit StringPtr(const STRING& right) _THROW0()
+            : _ptr( 0 )
+            , _length( 0 )
+    {
+        if ( !right.empty() )
+        {
+            _ptr = OP::dup( right.c_str() );
+            _length = right.size();
+        }
+    }
 
-	StringPtr& operator=(StringPtr& right) _THROW0()
-	{
-		size_t l = right.size();
-		reset(right.release(), l );
-		return (*this);
-	}
+    StringPtr& operator=(StringPtr& right) _THROW0()
+    {
+        size_t l = right.size();
+        reset(right.release(), l );
+        return (*this);
+    }
 
-	~StringPtr()
-	{
-		reset();
-	}
+    ~StringPtr()
+    {
+        reset();
+    }
 
-	charT *get() const _THROW0()
-	{
-		return (_ptr);
-	}
+    charT *get() const _THROW0()
+    {
+        return (_ptr);
+    }
 
-	charT *c_str() const _THROW0()
-	{
-		return (_ptr);
-	}
+    charT *c_str() const _THROW0()
+    {
+        return (_ptr);
+    }
 
-	size_t size() const
-	{
-		return _length;
-	}
+    size_t size() const
+    {
+        return _length;
+    }
 
-	charT *release() _THROW0()
-	{
-		charT *_Tmp = _ptr;
-		_ptr = 0;
-		//_length = 0;
-		return (_Tmp);
-	}
+    charT *release() _THROW0()
+    {
+        charT *_Tmp = _ptr;
+        _ptr = 0;
+        //_length = 0;
+        return (_Tmp);
+    }
 
-	void reset(charT* ptr = 0, size_t l = -1)
-	{
-		if (ptr != _ptr)
-		{
-			OP::free( _ptr );
-			_length = 0;
-		}
-		_ptr = ptr;
-		_length = (-1 == l)?string_traits<charT>::strlen( _ptr ): l ;
-	}
+    void reset(charT* ptr = 0, size_t l = -1)
+    {
+        if (ptr != _ptr)
+        {
+            OP::free( _ptr );
+            _length = 0;
+        }
+        _ptr = ptr;
+        _length = (-1 == l)?string_traits<charT>::strlen( _ptr ): l ;
+    }
 
 private:
-	charT *_ptr;
-	size_t _length;
+    charT *_ptr;
+    size_t _length;
 };
 
 _jingxian_end

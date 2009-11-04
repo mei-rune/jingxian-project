@@ -24,22 +24,22 @@ class ConnectedSocket;
 class OutgoingBuffer
 {
 public:
-	OutgoingBuffer();
+    OutgoingBuffer();
 
-	~OutgoingBuffer();
+    ~OutgoingBuffer();
 
-	void initialize(ConnectedSocket* connectedSocket);
+    void initialize(ConnectedSocket* connectedSocket);
 
-	void send(buffer_chain_t* buf);
+    void send(buffer_chain_t* buf);
 
-	ICommand* makeCommand();
+    ICommand* makeCommand();
 
-	bool clearBytes(size_t len);
+    bool clearBytes(size_t len);
 
 private:
-	NOCOPY(OutgoingBuffer);
-	ConnectedSocket* connectedSocket_;
-	linklist<buffer_chain_t> buffer_;
+    NOCOPY(OutgoingBuffer);
+    ConnectedSocket* connectedSocket_;
+    linklist<buffer_chain_t> buffer_;
 };
 
 

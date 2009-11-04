@@ -14,133 +14,133 @@
 
 _jingxian_begin
 
-class ITracer 
+class ITracer
 {
 public:
-	/**
-	 * virtual tracer destructor
-	 */
-	virtual ~ITracer(){};
+    /**
+     * virtual tracer destructor
+     */
+    virtual ~ITracer() {};
 
-	/**
-	 * debug级的日志是否可以记日志
-	 * @return 可以true,不可以false
-	 */
-	virtual bool isDebugEnabled() const = 0;
+    /**
+     * debug级的日志是否可以记日志
+     * @return 可以true,不可以false
+     */
+    virtual bool isDebugEnabled() const = 0;
 
-	/**
-	 * 记录debug级的日志
-	 * @param[ in ] way 流传输的方向
-	 * @param[ in ] message 日志内容
-	 * @param[ in ] file 日志记录的源文件名
-	 * @param[ in ] line 日志记录的源文件的当前行
-	 */
-	virtual void debug(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
-	
-	/**
-	 * error级的日志是否可以记日志
-	 * @return 可以true,不可以false
-	 */
-	virtual bool isErrorEnabled() const = 0;
+    /**
+     * 记录debug级的日志
+     * @param[ in ] way 流传输的方向
+     * @param[ in ] message 日志内容
+     * @param[ in ] file 日志记录的源文件名
+     * @param[ in ] line 日志记录的源文件的当前行
+     */
+    virtual void debug(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
 
-	/**
-	 * 记录error级的日志
-	 * @param[ in ] way 流传输的方向
-	 * @param[ in ] message 日志内容
-	 * @param[ in ] file 日志记录的源文件名
-	 * @param[ in ] line 日志记录的源文件的当前行
-	 */
+    /**
+     * error级的日志是否可以记日志
+     * @return 可以true,不可以false
+     */
+    virtual bool isErrorEnabled() const = 0;
+
+    /**
+     * 记录error级的日志
+     * @param[ in ] way 流传输的方向
+     * @param[ in ] message 日志内容
+     * @param[ in ] file 日志记录的源文件名
+     * @param[ in ] line 日志记录的源文件的当前行
+     */
     virtual void error(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
-	
-	/**
-	 * fatal级的日志是否可以记日志
-	 * @return 可以true,不可以false
-	 */
-	virtual bool isFatalEnabled() const = 0;
 
-	/**
-	 * 记录fatal级的日志
-	 * @param[ in ] way 流传输的方向
-	 * @param[ in ] message 日志内容
-	 * @param[ in ] file 日志记录的源文件名
-	 * @param[ in ] line 日志记录的源文件的当前行
-	 */
+    /**
+     * fatal级的日志是否可以记日志
+     * @return 可以true,不可以false
+     */
+    virtual bool isFatalEnabled() const = 0;
+
+    /**
+     * 记录fatal级的日志
+     * @param[ in ] way 流传输的方向
+     * @param[ in ] message 日志内容
+     * @param[ in ] file 日志记录的源文件名
+     * @param[ in ] line 日志记录的源文件的当前行
+     */
     virtual void fatal(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
 
-	/**
-	 * info级的日志是否可以记日志
-	 * @return 可以true,不可以false
-	 */
-	virtual bool isInfoEnabled() const = 0;
+    /**
+     * info级的日志是否可以记日志
+     * @return 可以true,不可以false
+     */
+    virtual bool isInfoEnabled() const = 0;
 
-	/**
-	 * 记录info级的日志
-	 * @param[ in ] way 流传输的方向
-	 * @param[ in ] message 日志内容
-	 * @param[ in ] file 日志记录的源文件名
-	 * @param[ in ] line 日志记录的源文件的当前行
-	 */
+    /**
+     * 记录info级的日志
+     * @param[ in ] way 流传输的方向
+     * @param[ in ] message 日志内容
+     * @param[ in ] file 日志记录的源文件名
+     * @param[ in ] line 日志记录的源文件的当前行
+     */
     virtual void info(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
-	
-	/**
-	 * warn级的日志是否可以记日志
-	 * @return 可以true,不可以false
-	 */
-	virtual bool isWarnEnabled() const = 0;
 
-	/**
-	 * 记录warn级的日志
-	 * @param[ in ] way 流传输的方向
-	 * @param[ in ] message 日志内容
-	 * @param[ in ] file 日志记录的源文件名
-	 * @param[ in ] line 日志记录的源文件的当前行
-	 */
+    /**
+     * warn级的日志是否可以记日志
+     * @return 可以true,不可以false
+     */
+    virtual bool isWarnEnabled() const = 0;
+
+    /**
+     * 记录warn级的日志
+     * @param[ in ] way 流传输的方向
+     * @param[ in ] message 日志内容
+     * @param[ in ] file 日志记录的源文件名
+     * @param[ in ] line 日志记录的源文件的当前行
+     */
     virtual void warn(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
 
-	
-	/**
-	 * Trace级的日志是否可以记日志
-	 * @return 可以true,不可以false
-	 */
-	virtual bool isTraceEnabled() const = 0;
 
-	/**
-	 * 记录trace级的日志
-	 * @param[ in ] way 流传输的方向
-	 * @param[ in ] message 日志内容
-	 * @param[ in ] file 日志记录的源文件名
-	 * @param[ in ] line 日志记录的源文件的当前行
-	 */
-	virtual void trace(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
+    /**
+     * Trace级的日志是否可以记日志
+     * @return 可以true,不可以false
+     */
+    virtual bool isTraceEnabled() const = 0;
 
-	/**
-	 * Crit 级的日志是否可以记日志
-	 * @return 可以true,不可以false
-	 */
-	virtual bool isCritEnabled() const = 0;
+    /**
+     * 记录trace级的日志
+     * @param[ in ] way 流传输的方向
+     * @param[ in ] message 日志内容
+     * @param[ in ] file 日志记录的源文件名
+     * @param[ in ] line 日志记录的源文件的当前行
+     */
+    virtual void trace(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
 
-	/**
-	 * 记录 Crit 级的日志
-	 * @param[ in ] way 流传输的方向
-	 * @param[ in ] message 日志内容
-	 * @param[ in ] file 日志记录的源文件名
-	 * @param[ in ] line 日志记录的源文件的当前行
-	 */
-	virtual void crit(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
+    /**
+     * Crit 级的日志是否可以记日志
+     * @return 可以true,不可以false
+     */
+    virtual bool isCritEnabled() const = 0;
+
+    /**
+     * 记录 Crit 级的日志
+     * @param[ in ] way 流传输的方向
+     * @param[ in ] message 日志内容
+     * @param[ in ] file 日志记录的源文件名
+     * @param[ in ] line 日志记录的源文件的当前行
+     */
+    virtual void crit(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
 };
 
 namespace logging
 {
-	namespace spi
-	{
-		class ITraceFactory
-		{
-		public:
-			virtual ~ITraceFactory(){};
+namespace spi
+{
+class ITraceFactory
+{
+public:
+    virtual ~ITraceFactory() {};
 
-			virtual ITracer* make( const tchar* nm, const tstring& host, const tstring& peer, const tstring& sessionId) = 0;
-		};
-	}
+    virtual ITracer* make( const tchar* nm, const tstring& host, const tstring& peer, const tstring& sessionId) = 0;
+};
+}
 }
 
 _jingxian_end

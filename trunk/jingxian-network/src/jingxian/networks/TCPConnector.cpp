@@ -7,46 +7,50 @@
 _jingxian_begin
 
 TCPConnector::TCPConnector(IOCPServer* core)
-: core_(core)
-, logger_(null_ptr)
-, toString_(_T("TCPConnector"))
+        : core_(core)
+        , logger_(null_ptr)
+        , toString_(_T("TCPConnector"))
 {
-	toString_ = _T("TCPConnector");
-	logger_ = logging::makeLogger(_T("jingxian.acceptor.tcpConnector"));
+    toString_ = _T("TCPConnector");
+    logger_ = logging::makeLogger(_T("jingxian.acceptor.tcpConnector"));
 }
 
 TCPConnector::~TCPConnector()
 {
-	delete logger_;
-	logger_ = null_ptr;
+    delete logger_;
+    logger_ = null_ptr;
 }
 
 void TCPConnector::connect(const tchar* endPoint
-                       , OnBuildConnectionComplete onComplete
-                       , OnBuildConnectionError onError
-                       , void* context )
+                           , OnBuildConnectionComplete onComplete
+                           , OnBuildConnectionError onError
+                           , void* context )
 {
-	std::auto_ptr< ICommand> command(new ConnectCommand(core_, endPoint, onComplete, onError, context));
-	if(! command->execute() )
-	{
-		int code = WSAGetLastError();
-		tstring descr = concat<tstring>(_T("连接到地址 '")
-			, endPoint 
-			, _T("' 时发生错误 - ")
-			, lastError(code));
-		LOG_ERROR(logger_, descr);
+    std::auto_ptr< ICommand> command(new ConnectCommand(core_
+                                     , endPoint
+                                     , onComplete
+                                     , onError
+                                     , context));
+    if (! command->execute() )
+    {
+        int code = WSAGetLastError();
+        tstring descr = concat<tstring>(_T("连接到地址 '")
+                                        , endPoint
+                                        , _T("' 时发生错误 - ")
+                                        , lastError(code));
+        LOG_ERROR(logger_, descr);
 
-		ErrorCode err(false, code, descr);
-		onError(err, context);
-		return ;
-	}
+        ErrorCode err(false, code, descr);
+        onError(err, context);
+        return ;
+    }
 
-	command.release();
+    command.release();
 }
 
 const tstring& TCPConnector::toString() const
 {
-	return toString_;
+    return toString_;
 }
 
 _jingxian_end

@@ -15,29 +15,29 @@ _jingxian_begin
 
 namespace proxy
 {
-	class NotSupportedCredentialPolicy : public ICredentialPolicy
-	{
-	public:
+class NotSupportedCredentialPolicy : public ICredentialPolicy
+{
+public:
 
-		virtual ~NotSupportedCredentialPolicy()
-		{
-		}
+    virtual ~NotSupportedCredentialPolicy()
+    {
+    }
 
-		virtual int authenticationType() const
-		{
-			return -1;
-		}
+    virtual int authenticationType() const
+    {
+        return -1;
+    }
 
-		virtual  size_t onReceived(ProtocolContext& context, InBuffer& inBuffer)
-		{
-			ThrowException1(RuntimeException, _T( "不支持的授权!" ));
-		}
+    virtual  size_t onReceived(ProtocolContext& context, InBuffer& inBuffer)
+    {
+        ThrowException1(RuntimeException, _T( "不支持的授权!" ));
+    }
 
-		virtual  bool isComplete()
-		{
-			return true;
-		}
-	};
+    virtual  bool isComplete()
+    {
+        return true;
+    }
+};
 }
 
 _jingxian_end

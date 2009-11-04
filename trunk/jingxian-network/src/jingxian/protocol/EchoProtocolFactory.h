@@ -22,22 +22,22 @@ _jingxian_begin
 class EchoProtocolFactory : public IProtocolFactory
 {
 public:
-	EchoProtocolFactory()
-	{
-	}
+    EchoProtocolFactory()
+    {
+    }
 
-	virtual IProtocol* createProtocol(ITransport* transport, IReactorCore* core)
-	{
-		return &protocol_;
-	}
+    virtual IProtocol* createProtocol(ITransport* transport, IReactorCore* core)
+    {
+        return &protocol_;
+    }
 
-	virtual const tstring& toString() const
-	{
-		return protocol_.toString();
-	}
+    virtual const tstring& toString() const
+    {
+        return protocol_.toString();
+    }
 private:
 
-	EchoProtocol protocol_;
+    EchoProtocol protocol_;
 };
 
 _jingxian_end

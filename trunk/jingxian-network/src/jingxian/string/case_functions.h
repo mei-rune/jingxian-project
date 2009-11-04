@@ -15,25 +15,25 @@
 _jingxian_begin
 
 template<   typename S
-        ,   typename F
-        >
+,   typename F
+>
 inline S &transform_impl(S &s, F f)
 {
-	std::transform(s.begin(), s.end(), s.begin(), f);
+    std::transform(s.begin(), s.end(), s.begin(), f);
     return s;
 }
 
 template <typename S>
 inline S &transform_upper(S &s)
 {
-	typedef ctype_traits< typename S::value_type >   ctype_traits_t;
+    typedef ctype_traits< typename S::value_type >   ctype_traits_t;
     return transform_impl(s, &ctype_traits_t::to_upper);
 }
 
 template <typename S>
 inline S &transform_lower(S &s)
 {
-	typedef ctype_traits<typename S::value_type>   ctype_traits_t;
+    typedef ctype_traits<typename S::value_type>   ctype_traits_t;
     return transform_impl(s, &ctype_traits_t::to_lower);
 }
 

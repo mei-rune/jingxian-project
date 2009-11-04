@@ -18,11 +18,11 @@ _jingxian_begin
 
 enum SystemEvent
 {
-	CtrlC = 0,
-	CtrlBreak = 1,
-	CtrlClose = 2,
-	CtrlLogoff = 5,
-	CtrlShutdown = 6
+    CtrlC = 0,
+    CtrlBreak = 1,
+    CtrlClose = 2,
+    CtrlLogoff = 5,
+    CtrlShutdown = 6
 }
 
 //public interface ICommunicatingWalker
@@ -41,25 +41,25 @@ class communicator : public IConcurrentPort
 {
 public:
 
-	/**
-	 * 开始运行直到调用Interrupt才返回
-	 */
-	virtual void runForever() = 0;
+    /**
+     * 开始运行直到调用Interrupt才返回
+     */
+    virtual void runForever() = 0;
 
-	/**
-	 * 停止运行
-	 */
-	virtual void interrupt() = 0;
+    /**
+     * 停止运行
+     */
+    virtual void interrupt() = 0;
 
-	/**
-	 * 引发一个异常事件
-	 */
-	virtual void send(const Exception& e) = 0;
+    /**
+     * 引发一个异常事件
+     */
+    virtual void send(const Exception& e) = 0;
 
-	/**
-	 * 引发一个系统事件
-	 */
-	virtual void send(const SystemEvent& e) = 0;
+    /**
+     * 引发一个系统事件
+     */
+    virtual void send(const SystemEvent& e) = 0;
 };
 
 _jingxian_end

@@ -16,23 +16,23 @@
 _jingxian_begin
 
 class ThreadDNSResolver :
-	public IDNSResolver
+        public IDNSResolver
 {
 public:
-	ThreadDNSResolver();
-	
-	void initialize(IReactorCore* core);
+    ThreadDNSResolver();
 
-	virtual ~ThreadDNSResolver(void);
+    void initialize(IReactorCore* core);
 
-	virtual void ResolveHostByName(const tchar* name
-		, const tchar* port
-		, void* context
-		, ResolveComplete callback
-		, ResolveError onError
-		, int timeout);
+    virtual ~ThreadDNSResolver(void);
+
+    virtual void ResolveHostByName(const tchar* name
+                                   , const tchar* port
+                                   , void* context
+                                   , ResolveComplete callback
+                                   , ResolveError onError
+                                   , int timeout);
 private:
-	IReactorCore* core_;
+    IReactorCore* core_;
 };
 
 _jingxian_end

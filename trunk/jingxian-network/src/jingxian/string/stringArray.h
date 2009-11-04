@@ -39,7 +39,7 @@ public:
         sa.size_ = 0;
     }
 
-    
+
     StringArray& operator=( StringArray& sa )
     {
         ptrArray_ = sa.ptrArray_;
@@ -50,13 +50,13 @@ public:
 
         return *this;
     }
-  
+
     ~StringArray()
     {
-        if( is_null( ptrArray_ ) )
+        if ( is_null( ptrArray_ ) )
             return;
 
-        for( size_t i = 0; i < size_ ; i ++ )
+        for ( size_t i = 0; i < size_ ; i ++ )
         {
             OP::free( ptrArray_[ i ].ptr );
         }
@@ -66,35 +66,35 @@ public:
 
     stringData<charT>& operator[]( size_t p )
     {
-        if( p >= size_ )
+        if ( p >= size_ )
             ThrowException(OutOfRangeException);
         return ptrArray_[ p ];
     }
 
     const stringData<charT>& operator[]( size_t p ) const
     {
-        if( p >= size_ )
+        if ( p >= size_ )
             ThrowException(OutOfRangeException);
         return ptrArray_[ p ];
     }
 
     charT* ptr( size_t p )
     {
-        if( p >= size_ )
+        if ( p >= size_ )
             return NULL;
         return ptrArray_[ p ].ptr;
     }
 
     const charT* ptr( size_t p ) const
     {
-        if( p >= size_ )
+        if ( p >= size_ )
             return NULL;
         return ptrArray_[ p ].ptr;
     }
 
     size_t len( size_t p ) const
     {
-        if( p >= size_ )
+        if ( p >= size_ )
             return 0;
         return ptrArray_[ p ].len;
     }
@@ -109,7 +109,7 @@ public:
         std::swap( ptrArray_, sa.ptrArray_ );
         std::swap( size_, sa.size_ );
     }
-    
+
 private:
     stringData<charT>* ptrArray_;
     size_t size_;

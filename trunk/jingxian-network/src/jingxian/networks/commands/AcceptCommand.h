@@ -17,36 +17,36 @@ _jingxian_begin
 class AcceptCommand : public ICommand
 {
 public:
-	AcceptCommand(IOCPServer* core
-						    , int family
-							, SOCKET listenHandle
-							, const tstring& listenAddr
-							, OnBuildConnectionComplete onComplete
-                            , OnBuildConnectionError onError
-                            , void* context);
+    AcceptCommand(IOCPServer* core
+                  , int family
+                  , SOCKET listenHandle
+                  , const tstring& listenAddr
+                  , OnBuildConnectionComplete onComplete
+                  , OnBuildConnectionError onError
+                  , void* context);
 
-	virtual ~AcceptCommand();
-	
-	virtual void on_complete(size_t bytes_transferred
-		, bool success
-		, void *completion_key
-		, errcode_t error);
+    virtual ~AcceptCommand();
 
-	virtual bool execute();
+    virtual void on_complete(size_t bytes_transferred
+                             , bool success
+                             , void *completion_key
+                             , errcode_t error);
+
+    virtual bool execute();
 
 private:
-	NOCOPY(AcceptCommand);
-	
-	IOCPServer* core_;
-	OnBuildConnectionComplete onComplete_;
+    NOCOPY(AcceptCommand);
+
+    IOCPServer* core_;
+    OnBuildConnectionComplete onComplete_;
     OnBuildConnectionError onError_;
     void* context_;
 
-	SOCKET listener_;
-	tstring listenAddr_;
-	SOCKET socket_;
-	char* ptr_;
-	size_t len_;
+    SOCKET listener_;
+    tstring listenAddr_;
+    SOCKET socket_;
+    char* ptr_;
+    size_t len_;
 };
 
 _jingxian_end

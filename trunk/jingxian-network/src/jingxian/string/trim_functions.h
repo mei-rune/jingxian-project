@@ -17,25 +17,25 @@ _jingxian_begin
 template<typename S>
 inline S &trim_left_impl(S &str, typename S::value_type const *trimChars , typename S::size_type _count )
 {
-	typename S::size_type p = str.find_first_not_of( trimChars, 0 , _count );
-	if( typename S::npos == p )
-	{
-		str.clear();
-	}
-	else //if( 0 != p )
-	{
-		str.erase(  0, p );
-	}
-	return str;
+    typename S::size_type p = str.find_first_not_of( trimChars, 0 , _count );
+    if ( typename S::npos == p )
+    {
+        str.clear();
+    }
+    else //if( 0 != p )
+    {
+        str.erase(  0, p );
+    }
+    return str;
 }
 
 
 template<typename S>
 inline S &trim_left(S &str)
 {
-	typename S::value_type  s_trimChars[] =
+    typename S::value_type  s_trimChars[] =
     {
-            _T( ' ' )
+        _T( ' ' )
         ,   _T( '\n' )
         ,   _T( '\r' )
         ,   _T( '\t' )
@@ -61,21 +61,21 @@ inline S0 &trim_left(S0 &str, const S1& trimChars)
 template<typename S>
 inline S &trim_right_impl(S &str, typename S::value_type const *trimChars)
 {
-	typename S::size_type i = str.find_last_not_of (trimChars);
-	if (typename S::npos == i)
-		str.clear();
-	else
-		str.erase ( i + 1);
+    typename S::size_type i = str.find_last_not_of (trimChars);
+    if (typename S::npos == i)
+        str.clear();
+    else
+        str.erase ( i + 1);
 
-	return str;
+    return str;
 }
 
 template<typename S>
 inline S &trim_right(S &str)
 {
-	typename S::value_type  s_trimChars[] =
+    typename S::value_type  s_trimChars[] =
     {
-            _T( ' ' )
+        _T( ' ' )
         ,   _T( '\n' )
         ,   _T( '\r' )
         ,   _T( '\t' )
@@ -95,8 +95,8 @@ inline S &trim_right(S &str, typename S::value_type const *trimChars)
 }
 
 template<   typename S0
-        ,   typename S1
-        >
+,   typename S1
+>
 inline S0 &trim_right(S0 &str, S1 const &trimChars)
 {
     return trim_right_impl(str, c_str_ptr(trimChars) );
@@ -111,9 +111,9 @@ inline S &trim_all_impl(S &str, typename S::value_type const *trimChars)
 template<typename S>
 inline S &trim_all(S &str)
 {
-	typename S::value_type  s_trimChars[] =
+    typename S::value_type  s_trimChars[] =
     {
-            _T( ' ' )
+        _T( ' ' )
         ,   _T( '\n' )
         ,   _T( '\r' )
         ,   _T( '\t' )
@@ -131,8 +131,8 @@ inline S &trim_all(S &str, typename S::value_type const *trimChars)
 }
 
 template<   typename S0
-        ,   typename S1
-        >
+,   typename S1
+>
 inline S0 &trim_all(S0 &str, S1 const &trimChars)
 {
     return trim_all_impl(str, c_str_ptr(trimChars) );

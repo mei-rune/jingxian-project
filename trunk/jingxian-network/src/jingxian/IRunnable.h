@@ -19,9 +19,9 @@ _jingxian_begin
 class IRunnable
 {
 public:
-	virtual ~IRunnable() {}
+    virtual ~IRunnable() {}
 
-	virtual void run() = 0;
+    virtual void run() = 0;
 };
 
 _jingxian_end

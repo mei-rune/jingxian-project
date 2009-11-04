@@ -21,25 +21,25 @@ class IConcurrentPort
 {
 public:
 
-	virtual ~IConcurrentPort() {}
+    virtual ~IConcurrentPort() {}
 
     /**
      * 将执行方法发送到线程等待队列,稍后执行
      *
      * @param[ in ] runnable 执行方法
-	 */
+    */
     virtual bool send( IRunnable* runnable ) = 0;
 
-	/**
-	* 取得地址的描述
-	*/
-	virtual const tstring& toString() const = 0;
+    /**
+    * 取得地址的描述
+    */
+    virtual const tstring& toString() const = 0;
 };
 
 inline tostream& operator<<( tostream& target, const IConcurrentPort& concurrentPort )
 {
-	target << concurrentPort.toString();
-	return target;
+    target << concurrentPort.toString();
+    return target;
 }
 
 _jingxian_end

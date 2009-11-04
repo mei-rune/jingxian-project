@@ -16,43 +16,43 @@ _jingxian_begin
 
 namespace proxy
 {
-	class Proxy;
+class Proxy;
 
-	class AbstractCredentialPolicy : public ICredentialPolicy
-	{
-	public:
-		AbstractCredentialPolicy(Proxy* server, const config::Credential& credential)
-			: _server(server)
-			, _credential(credential)
-			, _complete(false)
-		{
-		}
+class AbstractCredentialPolicy : public ICredentialPolicy
+{
+public:
+    AbstractCredentialPolicy(Proxy* server, const config::Credential& credential)
+            : _server(server)
+            , _credential(credential)
+            , _complete(false)
+    {
+    }
 
-		AbstractCredentialPolicy(Proxy* server)
-			: _server(server)
-			, _complete(false)
-		{
-		}
+    AbstractCredentialPolicy(Proxy* server)
+            : _server(server)
+            , _complete(false)
+    {
+    }
 
-		virtual ~AbstractCredentialPolicy()
-		{
-		}
+    virtual ~AbstractCredentialPolicy()
+    {
+    }
 
-		virtual int authenticationType() const
-		{
-			return _credential.AuthenticationType;
-		}
+    virtual int authenticationType() const
+    {
+        return _credential.AuthenticationType;
+    }
 
-		virtual bool isComplete()
-		{
-			return _complete;
-		}
+    virtual bool isComplete()
+    {
+        return _complete;
+    }
 
-	protected:
-		Proxy* _server;
-		config::Credential _credential;
-		bool _complete;
-	};
+protected:
+    Proxy* _server;
+    config::Credential _credential;
+    bool _complete;
+};
 }
 
 _jingxian_end

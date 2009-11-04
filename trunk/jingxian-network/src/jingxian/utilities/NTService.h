@@ -17,38 +17,38 @@ _jingxian_begin
 class IInstance
 {
 public:
-	virtual ~IInstance(){ }
+    virtual ~IInstance() { }
 
-	/**
-	 * NT 服务名
-	 */
-	virtual const tstring& name() const = 0;
-	
-	/**
-	 * 服务运行
-	 */
-	virtual int onRun(const std::vector<tstring>& arguments) = 0;
+    /**
+     * NT 服务名
+     */
+    virtual const tstring& name() const = 0;
 
-	 /**
-	  * 接收到一个用户定义的通知
-	  * @param dwEventType 用户定义的事件类型
-	  * @param lpEventData 用户定义的事件数据
-	  * @remarks 注意，不可以发生异常。
-	  */
-     virtual void onControl(DWORD dwEventType
-					, LPVOID lpEventData) = 0;
+    /**
+     * 服务运行
+     */
+    virtual int onRun(const std::vector<tstring>& arguments) = 0;
 
-	 
-	 /**
-	  * 接收到一个服务将停止的通知
-	  * @remarks 注意，不可以发生异常。
-	  */
-     virtual void interrupt() = 0;
+    /**
+     * 接收到一个用户定义的通知
+     * @param dwEventType 用户定义的事件类型
+     * @param lpEventData 用户定义的事件数据
+     * @remarks 注意，不可以发生异常。
+     */
+    virtual void onControl(DWORD dwEventType
+                           , LPVOID lpEventData) = 0;
 
-	 /**
-	  * 服务的描述
-	  */
-	 virtual const tstring& toString() const = 0;
+
+    /**
+     * 接收到一个服务将停止的通知
+     * @remarks 注意，不可以发生异常。
+     */
+    virtual void interrupt() = 0;
+
+    /**
+     * 服务的描述
+     */
+    virtual const tstring& toString() const = 0;
 };
 
 
@@ -66,11 +66,11 @@ int serviceMain(IInstance* instance);//, DWORD argc,LPTSTR *argv);
  * @return 成功返回0,否则返回非0
  */
 int installService(const tstring& name
-	, const tstring& display
-	, const tstring& description
-	, const tstring& executable
-	, const std::vector<tstring>& args
-	, tostream& out);
+                   , const tstring& display
+                   , const tstring& description
+                   , const tstring& executable
+                   , const std::vector<tstring>& args
+                   , tostream& out);
 
 /**
  * 卸载一个 Win32 服务

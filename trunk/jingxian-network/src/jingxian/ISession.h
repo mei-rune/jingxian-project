@@ -22,9 +22,9 @@ _jingxian_begin
 class ISession
 {
 public:
-	virtual ~ISession(){}
-	virtual ITransport* transport() = 0;
-	virtual IProtocol*  protocol() = 0;
+    virtual ~ISession() {}
+    virtual ITransport* transport() = 0;
+    virtual IProtocol*  protocol() = 0;
 };
 
 _jingxian_end

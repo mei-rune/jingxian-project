@@ -20,74 +20,74 @@ class guard
 {
 public:
 
-  guard (LOCK &l, bool nothrow = true )
-	  : lock_ (&l)
-	  , owner_ ( false )
-  {
-	if( !this->lock () && !nothrow )
-		  ThrowException1( LockException , _T("进入锁失败") );
-  }
+    guard (LOCK &l, bool nothrow = true )
+            : lock_ (&l)
+            , owner_ ( false )
+    {
+        if ( !this->lock () && !nothrow )
+            ThrowException1( LockException , _T("进入锁失败") );
+    }
 
-  guard (LOCK &l, bool is_lock, bool nothrow )
-  : lock_ (&l)
-  , owner_ ( false )
-  {
-	if (is_lock && !this->lock () && !nothrow )
-			ThrowException1( LockException , _T("进入锁失败") );
-  }
+    guard (LOCK &l, bool is_lock, bool nothrow )
+            : lock_ (&l)
+            , owner_ ( false )
+    {
+        if (is_lock && !this->lock () && !nothrow )
+            ThrowException1( LockException , _T("进入锁失败") );
+    }
 
-  ~guard (void)
-  {
-    this->unlock ();
-  }
+    ~guard (void)
+    {
+        this->unlock ();
+    }
 
-  bool lock (void)
-  {
-	return this->owner_ = this->lock_->acquire ();
-  }
+    bool lock (void)
+    {
+        return this->owner_ = this->lock_->acquire ();
+    }
 
 #if(_WIN32_WINNT >= 0x0400)
-  bool try_lock (void)
-  {
-    return this->owner_ = this->lock_->tryacquire ();
-  }
+    bool try_lock (void)
+    {
+        return this->owner_ = this->lock_->tryacquire ();
+    }
 #endif // (_WIN32_WINNT >= 0x0400)
 
-  void unlock (void)
-  {
-	if ( !this->owner_ )
-		return ;
-    
-	this->owner_ = false;
-	this->lock_->release ();
-  }
+    void unlock (void)
+    {
+        if ( !this->owner_ )
+            return ;
 
-  bool locked (void) const
-  {
-	return this->owner_ ;
-  }
+        this->owner_ = false;
+        this->lock_->release ();
+    }
 
- // bool remove (void)
- // {
-	//return this->lock_->remove ();
- // }
+    bool locked (void) const
+    {
+        return this->owner_ ;
+    }
 
- // void disown (void);
- // {
-	//this->owner_ = false;
- // }
+// bool remove (void)
+// {
+    //return this->lock_->remove ();
+// }
+
+// void disown (void);
+// {
+    //this->owner_ = false;
+// }
 
 protected:
 
-  guard (LOCK *lock): lock_ (lock), owner_( false ) {}
+    guard (LOCK *lock): lock_ (lock), owner_( false ) {}
 
-  LOCK *lock_;
+    LOCK *lock_;
 
-  bool owner_;
+    bool owner_;
 
 private:
-	
-	DECLARE_NO_COPY_CLASS( guard );
+
+    DECLARE_NO_COPY_CLASS( guard );
 };
 
 _jingxian_end

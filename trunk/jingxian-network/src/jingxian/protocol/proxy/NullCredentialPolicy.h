@@ -15,56 +15,56 @@ _jingxian_begin
 
 namespace proxy
 {
-	class NullCredentialPolicy : public AbstractCredentialPolicy
-	{
-	public:
-		NullCredentialPolicy(Proxy* server, const config::Credential& credential)
-			: AbstractCredentialPolicy(server, credential)
-		{
-			_complete = true;
-		}
+class NullCredentialPolicy : public AbstractCredentialPolicy
+{
+public:
+    NullCredentialPolicy(Proxy* server, const config::Credential& credential)
+            : AbstractCredentialPolicy(server, credential)
+    {
+        _complete = true;
+    }
 
-		virtual ~NullCredentialPolicy()
-		{
-		}
+    virtual ~NullCredentialPolicy()
+    {
+    }
 
-		virtual size_t onReceived(ProtocolContext& context, InBuffer& inBuffer)
-		{
-			_complete = true;
-			return 0;
-		}
-	};
+    virtual size_t onReceived(ProtocolContext& context, InBuffer& inBuffer)
+    {
+        _complete = true;
+        return 0;
+    }
+};
 
-	class NullCredentialPolicyFactory : public ICredentialPolicyFactory
-	{
-	public:
+class NullCredentialPolicyFactory : public ICredentialPolicyFactory
+{
+public:
 
-		NullCredentialPolicyFactory(Proxy* server)
-			: server_(server)
-		{
-			credential_.AuthenticationType = AuthenticationType::NONE;
-			credential_.Name = _T("NullCredentialPolicy");
-			credential_.Description = _T("无需认证!");
-		}
+    NullCredentialPolicyFactory(Proxy* server)
+            : server_(server)
+    {
+        credential_.AuthenticationType = AuthenticationType::NONE;
+        credential_.Name = _T("NullCredentialPolicy");
+        credential_.Description = _T("无需认证!");
+    }
 
-		virtual ~NullCredentialPolicyFactory()
-		{
-		}
+    virtual ~NullCredentialPolicyFactory()
+    {
+    }
 
-		virtual int authenticationType() const
-		{
-			return credential_.AuthenticationType;
-		}
+    virtual int authenticationType() const
+    {
+        return credential_.AuthenticationType;
+    }
 
-		virtual ICredentialPolicy* make()
-		{
-			return new NullCredentialPolicy(server_, credential_);
-		}
+    virtual ICredentialPolicy* make()
+    {
+        return new NullCredentialPolicy(server_, credential_);
+    }
 
-	private:
-		config::Credential credential_;
-		Proxy* server_;
-	};
+private:
+    config::Credential credential_;
+    Proxy* server_;
+};
 
 }
 

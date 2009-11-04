@@ -21,30 +21,30 @@ class ConnectedSocket;
 class IncomingBuffer
 {
 public:
-	IncomingBuffer();
+    IncomingBuffer();
 
-	~IncomingBuffer();
-	
-	void initialize(ConnectedSocket* connectedSocket);
+    ~IncomingBuffer();
 
-	ICommand* makeCommand();
+    void initialize(ConnectedSocket* connectedSocket);
 
-	bool decreaseBytes(size_t len);
+    ICommand* makeCommand();
 
-	bool increaseBytes(size_t len);
+    bool decreaseBytes(size_t len);
 
-	const linklist<buffer_chain_t>& buffer() const;
+    bool increaseBytes(size_t len);
 
-	const buffer_chain_t* current() const;
+    const linklist<buffer_chain_t>& buffer() const;
 
-	void dataBuffer(std::vector<io_mem_buf>& buf);
+    const buffer_chain_t* current() const;
+
+    void dataBuffer(std::vector<io_mem_buf>& buf);
 
 private:
-	NOCOPY(IncomingBuffer);
+    NOCOPY(IncomingBuffer);
 
-	ConnectedSocket* connectedSocket_;
-	linklist<buffer_chain_t> dataBuffer_;
-	buffer_chain_t* current_;
+    ConnectedSocket* connectedSocket_;
+    linklist<buffer_chain_t> dataBuffer_;
+    buffer_chain_t* current_;
 };
 
 _jingxian_end

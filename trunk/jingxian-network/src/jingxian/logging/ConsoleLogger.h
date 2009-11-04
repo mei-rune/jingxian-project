@@ -26,112 +26,112 @@ class ConsoleLogger : public ILogger
 {
 public:
 
-	ConsoleLogger()
-	{
-		_levelPtr = logging::Trace;
-	}
-	
-	virtual ~ConsoleLogger()
-	{
-	}
+    ConsoleLogger()
+    {
+        _levelPtr = logging::Trace;
+    }
 
-	virtual void assertLog(bool assertion, const LogStream& message, const char* file=0, int line=-1)
-	{
-		tcout << message.str() << std::endl;
-		assert( assertion );
-	}
+    virtual ~ConsoleLogger()
+    {
+    }
 
-	virtual bool isFatalEnabled() const
-	{
-		return true;
-	}
+    virtual void assertLog(bool assertion, const LogStream& message, const char* file=0, int line=-1)
+    {
+        tcout << message.str() << std::endl;
+        assert( assertion );
+    }
 
-	virtual void fatal(const LogStream& message, const char* file=0, int line=-1)
-	{
-		tcout << message.str() << std::endl;
-	}
+    virtual bool isFatalEnabled() const
+    {
+        return true;
+    }
+
+    virtual void fatal(const LogStream& message, const char* file=0, int line=-1)
+    {
+        tcout << message.str() << std::endl;
+    }
 
 
-	virtual bool isErrorEnabled() const
-	{
-		return true;
-	}
+    virtual bool isErrorEnabled() const
+    {
+        return true;
+    }
 
-	virtual void error(const LogStream& message, const char* file=0, int line=-1)
-	{
-		tcout << message.str() << std::endl;
-	}
+    virtual void error(const LogStream& message, const char* file=0, int line=-1)
+    {
+        tcout << message.str() << std::endl;
+    }
 
-	virtual bool isInfoEnabled() const
-	{
-		return true;
-	}
+    virtual bool isInfoEnabled() const
+    {
+        return true;
+    }
 
-	virtual void info(const LogStream& message, const char* file=NULL, int line=-1)
-	{
-		tcout << message.str() << std::endl;
-	}
+    virtual void info(const LogStream& message, const char* file=NULL, int line=-1)
+    {
+        tcout << message.str() << std::endl;
+    }
 
-	virtual bool isDebugEnabled() const
-	{
-		return true;
-	}
+    virtual bool isDebugEnabled() const
+    {
+        return true;
+    }
 
-	virtual void debug(const LogStream& message, const char* file=0, int line=-1)
-	{
-		tcout << message.str() << std::endl;
-	}
+    virtual void debug(const LogStream& message, const char* file=0, int line=-1)
+    {
+        tcout << message.str() << std::endl;
+    }
 
-	virtual bool isWarnEnabled() const
-	{
-		return true;
-	}
+    virtual bool isWarnEnabled() const
+    {
+        return true;
+    }
 
-	virtual void warn(const LogStream& message, const char* file=NULL, int line=-1)
-	{
-		tcout << message.str() << std::endl;
-	}
+    virtual void warn(const LogStream& message, const char* file=NULL, int line=-1)
+    {
+        tcout << message.str() << std::endl;
+    }
 
-	virtual bool isTraceEnabled() const
-	{
-		return true;
-	}
+    virtual bool isTraceEnabled() const
+    {
+        return true;
+    }
 
-	virtual void trace(const LogStream& message, const char* file=NULL, int line=-1)
-	{
-		tcout << message.str() << std::endl;
-	}
+    virtual void trace(const LogStream& message, const char* file=NULL, int line=-1)
+    {
+        tcout << message.str() << std::endl;
+    }
 
-	virtual bool isEnabledFor(const logging::LevelPtr& level) const
-	{
-		return true;
-	}
+    virtual bool isEnabledFor(const logging::LevelPtr& level) const
+    {
+        return true;
+    }
 
-	virtual void log(const logging::LevelPtr& level, const LogStream& message,
-		const char* file=0, int line=-1)
-	{
-		tcout << message.str() << std::endl;
-	}
+    virtual void log(const logging::LevelPtr& level, const LogStream& message,
+                     const char* file=0, int line=-1)
+    {
+        tcout << message.str() << std::endl;
+    }
 
-	virtual logging::LevelPtr getLevel() const
-	{
-		return _levelPtr;
-	}
+    virtual logging::LevelPtr getLevel() const
+    {
+        return _levelPtr;
+    }
 
-	virtual void pushNDC( const tchar* str )
-	{
-	}
+    virtual void pushNDC( const tchar* str )
+    {
+    }
 
-	virtual void popNDC( )
-	{
-	}
+    virtual void popNDC( )
+    {
+    }
 
-	virtual void clearNDC()
-	{
-	}
+    virtual void clearNDC()
+    {
+    }
 
 private:
-	logging::LevelPtr _levelPtr;
+    logging::LevelPtr _levelPtr;
 };
 
 _jingxian_end

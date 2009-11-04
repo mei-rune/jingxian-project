@@ -15,15 +15,15 @@ _jingxian_begin
 
 namespace proxy
 {
-	namespace config
-	{
-		struct Configuration
-		{
-			std::vector<Credential> Credentials;
-			std::vector<tstring> AllowedIPs;
-			std::vector<tstring> BlockingIPs;
-		};
-	}
+namespace config
+{
+struct Configuration
+{
+    std::vector<Credential> Credentials;
+    std::vector<tstring> AllowedIPs;
+    std::vector<tstring> BlockingIPs;
+};
+}
 }
 
 _jingxian_end

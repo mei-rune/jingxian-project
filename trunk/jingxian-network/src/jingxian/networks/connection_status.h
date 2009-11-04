@@ -15,29 +15,29 @@ _jingxian_begin
 
 namespace connection_status
 {
-	/**
-	* 连接对象的状态
-	*/
-	enum type
-	{
-		listening,
-		connecting,
-		connected,
-		disconnecting,
-		disconnected
-	};
+/**
+* 连接对象的状态
+*/
+enum type
+{
+    listening,
+    connecting,
+    connected,
+    disconnecting,
+    disconnected
+};
 }
 
 namespace transport_mode
 {
-    enum type
-    {
-        Receive = 1,
+enum type
+{
+    Receive = 1,
 
-        Send = 2,
+    Send = 2,
 
-        Both = 3
-    };
+    Both = 3
+};
 }
 
 _jingxian_end
