@@ -18,38 +18,38 @@ _jingxian_begin
 class Tracer : public ITracer
 {
 public:
-	Tracer(ILogger* logger, const tchar* nm);
+    Tracer(ILogger* logger, const tchar* nm);
 
-	virtual ~Tracer(void);
+    virtual ~Tracer(void);
 
-	virtual bool isDebugEnabled() const;
+    virtual bool isDebugEnabled() const;
 
-	virtual void debug(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
-	
-	virtual bool isErrorEnabled() const;
+    virtual void debug(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
+
+    virtual bool isErrorEnabled() const;
 
     virtual void error(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
-	
-	virtual bool isFatalEnabled() const;
+
+    virtual bool isFatalEnabled() const;
 
     virtual void fatal(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
 
-	virtual bool isInfoEnabled() const;
+    virtual bool isInfoEnabled() const;
 
     virtual void info(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
-	
-	virtual bool isWarnEnabled() const ;
+
+    virtual bool isWarnEnabled() const ;
 
     virtual void warn(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
 
-	virtual bool isTraceEnabled() const;
+    virtual bool isTraceEnabled() const;
 
     virtual void trace(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
 
 private:
 
-	ILogger* logger_;
-	tstring name_;
+    ILogger* logger_;
+    tstring name_;
 };
 
 _jingxian_end

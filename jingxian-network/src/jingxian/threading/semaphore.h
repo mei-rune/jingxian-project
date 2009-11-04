@@ -19,55 +19,55 @@ _jingxian_begin
 class semaphore
 {
 public:
-	
-	typedef guard< semaphore > scoped_lock;
 
-	semaphore(long initialCount,long maxCount,const tchar* name=NULL)
-		: m_hSemaphore( NULL ),
-		m_delete_( true )
-	{
-		m_hSemaphore=::CreateSemaphore( NULL, initialCount,maxCount,name );
+    typedef guard< semaphore > scoped_lock;
 
-		if( NULL == m_hSemaphore )
-		{
-			if( name != 0 )
-				ThrowException1( RuntimeException, _T("创建Semaphore[") + tstring( name ) + _T("]失败"));
-			else
-				ThrowException1( RuntimeException, _T("创建Semaphore失败"));
-		}
+    semaphore(long initialCount,long maxCount,const tchar* name=NULL)
+            : m_hSemaphore( NULL ),
+            m_delete_( true )
+    {
+        m_hSemaphore=::CreateSemaphore( NULL, initialCount,maxCount,name );
 
-		if ( name && GetLastError()==ERROR_ALREADY_EXISTS)
-			m_delete_=false;
-	}
+        if ( NULL == m_hSemaphore )
+        {
+            if ( name != 0 )
+                ThrowException1( RuntimeException, _T("创建Semaphore[") + tstring( name ) + _T("]失败"));
+            else
+                ThrowException1( RuntimeException, _T("创建Semaphore失败"));
+        }
 
-	~semaphore()
-	{
-		if ( m_delete_ )
-			CloseHandle( m_hSemaphore );
-	}
+        if ( name && GetLastError()==ERROR_ALREADY_EXISTS)
+            m_delete_=false;
+    }
 
-	bool acquire( )
-	{
-		return WAIT_TIMEOUT != WaitForSingleObject( m_hSemaphore,INFINITE );
-	}
+    ~semaphore()
+    {
+        if ( m_delete_ )
+            CloseHandle( m_hSemaphore );
+    }
 
-	void release(long lAmount=1)
-	{
-		ReleaseSemaphore( m_hSemaphore,lAmount, 0 );
-	}
+    bool acquire( )
+    {
+        return WAIT_TIMEOUT != WaitForSingleObject( m_hSemaphore,INFINITE );
+    }
+
+    void release(long lAmount=1)
+    {
+        ReleaseSemaphore( m_hSemaphore,lAmount, 0 );
+    }
 
 #if(_WIN32_WINNT >= 0x0400)
-	bool tryacquire(u_long ulMSTimeout= 10000 )
-	{
-		return WAIT_TIMEOUT != WaitForSingleObject( m_hSemaphore,ulMSTimeout );
-	}
+    bool tryacquire(u_long ulMSTimeout= 10000 )
+    {
+        return WAIT_TIMEOUT != WaitForSingleObject( m_hSemaphore,ulMSTimeout );
+    }
 #endif
 
 private:
-	DECLARE_NO_COPY_CLASS( semaphore );
+    DECLARE_NO_COPY_CLASS( semaphore );
 
-	HANDLE m_hSemaphore;
-	bool m_delete_;
+    HANDLE m_hSemaphore;
+    bool m_delete_;
 };
 
 _jingxian_end

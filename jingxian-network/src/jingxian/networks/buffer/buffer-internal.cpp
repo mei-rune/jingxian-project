@@ -9,21 +9,21 @@ _jingxian_begin
 
 namespace bufferOP
 {
-	static IBufferHandler* buffer_handler_[] = 
-	{
-		 null_ptr
-		, new MemoryBufferHandler()
-		, new FileBufferHandler()
-		, new PacketBufferHandler()
-	};
+static IBufferHandler* buffer_handler_[] =
+{
+    null_ptr
+    , new MemoryBufferHandler()
+    , new FileBufferHandler()
+    , new PacketBufferHandler()
+};
 
-	
-	IBufferHandler* GetBufferHandler(int type)
-	{
-		assert( 0 < type && type < 4);
 
-		return buffer_handler_[type];
-	}
+IBufferHandler* GetBufferHandler(int type)
+{
+    assert( 0 < type && type < 4);
+
+    return buffer_handler_[type];
+}
 }
 
 _jingxian_end

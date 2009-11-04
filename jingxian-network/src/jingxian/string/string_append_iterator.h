@@ -17,23 +17,33 @@ template <class _Container>
 class string_append_iterator ITERATOR_BASE( input_iterator, tstring , ptrdiff_t )
 {
 protected:
-	_Container* container;
+    _Container* container;
 public:
-	typedef _Container          container_type;
-	typedef void                value_type;
-	typedef void                difference_type;
-	typedef void                pointer;
-	typedef void                reference;
+    typedef _Container          container_type;
+    typedef void                value_type;
+    typedef void                difference_type;
+    typedef void                pointer;
+    typedef void                reference;
 
-	explicit string_append_iterator(_Container& __x) : container(&__x) {}
-	string_append_iterator<_Container>&
-		operator=(const typename _Container::value_type& ___value) {
-			*container += ___value;
-			return *this;
-		}
-		string_append_iterator<_Container>& operator*() { return *this; }
-		string_append_iterator<_Container>& operator++() { return *this; }
-		string_append_iterator<_Container>& operator++(int) { return *this; }
+    explicit string_append_iterator(_Container& __x) : container(&__x) {}
+    string_append_iterator<_Container>&
+    operator=(const typename _Container::value_type& ___value)
+    {
+        *container += ___value;
+        return *this;
+    }
+    string_append_iterator<_Container>& operator*()
+    {
+        return *this;
+    }
+    string_append_iterator<_Container>& operator++()
+    {
+        return *this;
+    }
+    string_append_iterator<_Container>& operator++(int)
+    {
+        return *this;
+    }
 };
 
 _jingxian_end

@@ -17,7 +17,7 @@
 _jingxian_begin
 
 #ifndef _RAISE
- #define _RAISE(x)  throw (x)
+#define _RAISE(x)  throw (x)
 #endif
 
 class Exception : public std::runtime_error
@@ -40,47 +40,47 @@ public:
     }
 
     void setPosition(const char* const file
-		, size_t line)
+                     , size_t line)
     {
         fSrcFile = file;
         fSrcLine = line;
     }
 
     Exception()
-        : std::runtime_error("<未知异常>")
-        , fSrcFile(0)
-        , fSrcLine(0)
+            : std::runtime_error("<未知异常>")
+            , fSrcFile(0)
+            , fSrcLine(0)
     {
-		initStackTrace(3);
+        initStackTrace(3);
     }
 
     Exception(const tstring& message)
-        : std::runtime_error( toNarrowString(message))
-        , fSrcFile(0)
-        , fSrcLine(0)
+            : std::runtime_error( toNarrowString(message))
+            , fSrcFile(0)
+            , fSrcLine(0)
     {
-		initStackTrace(3);
+        initStackTrace(3);
     }
 
     Exception(const char* const srcFile
-		, size_t srcLine 
-		, const tstring& message )
-        : std::runtime_error(toNarrowString(message))
-        , fSrcFile(srcFile)
-        , fSrcLine(srcLine)
+              , size_t srcLine
+              , const tstring& message )
+            : std::runtime_error(toNarrowString(message))
+            , fSrcFile(srcFile)
+            , fSrcLine(srcLine)
     {
-		initStackTrace(3);
+        initStackTrace(3);
     }
 
     Exception(const char* const srcFile
-		, size_t srcLine
-		, const tstring& message
-		, const Exception& e)
-        : std::runtime_error(toNarrowString(message) + "," + e.what())
-        , fSrcFile(srcFile)
-        , fSrcLine(srcLine)
+              , size_t srcLine
+              , const tstring& message
+              , const Exception& e)
+            : std::runtime_error(toNarrowString(message) + "," + e.what())
+            , fSrcFile(srcFile)
+            , fSrcLine(srcLine)
     {
-		initStackTrace(3);
+        initStackTrace(3);
     }
 
     template< typename E >
@@ -91,67 +91,67 @@ public:
 
     void dump( tostream& target ) const
     {
-            target << _T( "[ file:" )
-            << toTstring( getFile() )
-            << _T( " line:" )
-            << ( int ) getLine()
-            << _T(" ] ")
-			<< std::endl
-			<< _stack;
+        target << _T( "[ file:" )
+        << toTstring( getFile() )
+        << _T( " line:" )
+        << ( int ) getLine()
+        << _T(" ] ")
+        << std::endl
+        << _stack;
     }
 
     virtual Exception* clone()
-	{
-		return new Exception(*this);
-	}
+    {
+        return new Exception(*this);
+    }
 
     virtual void rethrow()
-	{
-		Raise( *this );
-	}
+    {
+        Raise( *this );
+    }
 
-	virtual void print(tostream& target) const             
-	{
-		target << _T("Exception: ")
-			<< what();
-		dump( target );
+    virtual void print(tostream& target) const
+    {
+        target << _T("Exception: ")
+        << what();
+        dump( target );
 
-	}
+    }
 
- #if !_HAS_EXCEPTIONS
+#if !_HAS_EXCEPTIONS
 protected:
     virtual void _Doraise() const
-        {   // perform class-specific exception handling
+    {   // perform class-specific exception handling
         _RAISE(*this);
-        }
- #endif /* _HAS_EXCEPTIONS */
+    }
+#endif /* _HAS_EXCEPTIONS */
 
 protected :
 
-	Exception(const Exception& ex)
-		: std::runtime_error(ex)
-		, fSrcFile(ex.fSrcFile)
-		, fSrcLine(ex.fSrcLine)
-		, _stack(ex._stack)
-	{
-	}
+    Exception(const Exception& ex)
+            : std::runtime_error(ex)
+            , fSrcFile(ex.fSrcFile)
+            , fSrcLine(ex.fSrcLine)
+            , _stack(ex._stack)
+    {
+    }
 
-	void initStackTrace(int skipFrames)
-	{
-		StackTracer stackWalker( StackTracer::RetrieveLine ); 
-		stackWalker.ShowCallstack( skipFrames ); 
-		_stack = toTstring(stackWalker.GetCallStack());
-	}
+    void initStackTrace(int skipFrames)
+    {
+        StackTracer stackWalker( StackTracer::RetrieveLine );
+        stackWalker.ShowCallstack( skipFrames );
+        _stack = toTstring(stackWalker.GetCallStack());
+    }
 
     const char*     fSrcFile;
     size_t    fSrcLine;
-	tstring   _stack;
+    tstring   _stack;
 };
 
 inline tostream& operator<<( tostream& target, const Exception& err )
 {
-	err.print( target );
-	return target;
+    err.print( target );
+    return target;
 }
 
 
@@ -240,7 +240,7 @@ public:                                                     \
 #define  ERR_BAD_BUF_LEN     -1
 #define  ERR_SYS             -200 //  
 #define  ERR_ARG             -201
-#define  ERR_LEN             -202 
+#define  ERR_LEN             -202
 #define  ERR_POINT           -203
 #define  ERR_UNKOWN          -204
 #define  ERR_MAXMSGLEN       -205

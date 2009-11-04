@@ -19,79 +19,79 @@ class ITransport;
 class ProtocolContext
 {
 public:
-	ProtocolContext()
-		: core_(null_ptr)
-		, transport_(null_ptr)
-		, inMemory_(null_ptr)
-		, inBytes_(0)
-		//, outBuffer_(null_ptr)
-		//, inBuffer_(null_ptr)
-	{
-	}
+    ProtocolContext()
+            : core_(null_ptr)
+            , transport_(null_ptr)
+            , inMemory_(null_ptr)
+            , inBytes_(0)
+            //, outBuffer_(null_ptr)
+            //, inBuffer_(null_ptr)
+    {
+    }
 
-	virtual ~ProtocolContext()
-	{
-	}
+    virtual ~ProtocolContext()
+    {
+    }
 
-	void initialize(IReactorCore* core
-		, ITransport* transport)
-	{	
-		core_ = core;
-		transport_ = transport;
-	}
+    void initialize(IReactorCore* core
+                    , ITransport* transport)
+    {
+        core_ = core;
+        transport_ = transport;
+    }
 
-	IReactorCore& core()
-	{
-		if(is_null(core_))
-			ThrowException( NullException );
-		return *core_;
-	}
+    IReactorCore& core()
+    {
+        if (is_null(core_))
+            ThrowException( NullException );
+        return *core_;
+    }
 
-	ITransport& transport()
-	{
-		if(is_null(transport_))
-			ThrowException( NullException );
-		return *transport_;
-	}
+    ITransport& transport()
+    {
+        if (is_null(transport_))
+            ThrowException( NullException );
+        return *transport_;
+    }
 
-	const std::vector<io_mem_buf>& inMemory() const
-	{
-		if(is_null(inMemory_))
-			ThrowException( NullException );
-		return *inMemory_;
-	}
+    const std::vector<io_mem_buf>& inMemory() const
+    {
+        if (is_null(inMemory_))
+            ThrowException( NullException );
+        return *inMemory_;
+    }
 
-	size_t inBytes() const
-	{
-		return inBytes_;
-	}
+    size_t inBytes() const
+    {
+        return inBytes_;
+    }
 
-	//IInBuffer& inBuffer()
-	//{
-	//	if(is_null(inBuffer_))
-	//		ThrowException( NullException );
-	//	return *inBuffer_;
-	//}
-	//
-	//IOutBuffer& outBuffer()
-	//{
-	//	if(is_null(outBuffer_))
-	//		ThrowException( NullException );
-	//	return *outBuffer_;
-	//}
+    //IInBuffer& inBuffer()
+    //{
+    //	if(is_null(inBuffer_))
+    //		ThrowException( NullException );
+    //	return *inBuffer_;
+    //}
+    //
+    //IOutBuffer& outBuffer()
+    //{
+    //	if(is_null(outBuffer_))
+    //		ThrowException( NullException );
+    //	return *outBuffer_;
+    //}
 
 protected:
-	IReactorCore* core_;
-	ITransport* transport_;
-	const std::vector<io_mem_buf>* inMemory_;
-	size_t inBytes_;
-	//IOutBuffer* outBuffer_;
-	//IInBuffer* inBuffer_;
+    IReactorCore* core_;
+    ITransport* transport_;
+    const std::vector<io_mem_buf>* inMemory_;
+    size_t inBytes_;
+    //IOutBuffer* outBuffer_;
+    //IInBuffer* inBuffer_;
 
-	//InternalBuffer* internalBuffer_in_free_;
-	//InternalBuffer* internalBuffer_in_data_;
-	//InternalBuffer* internalBuffer_out_;
-	//std::vector<io_mem_buf>* inMemory_;
+    //InternalBuffer* internalBuffer_in_free_;
+    //InternalBuffer* internalBuffer_in_data_;
+    //InternalBuffer* internalBuffer_out_;
+    //std::vector<io_mem_buf>* inMemory_;
 };
 
 _jingxian_end

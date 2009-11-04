@@ -12,8 +12,8 @@
 #    define jingxian_export_c extern "C"  __declspec (dllimport)
 #  endif /* jingxian_has_dll */
 #else /* jingxian_has_dll == 1 */
-#  define jingxian_export		
-#  define jingxian_export_c	
+#  define jingxian_export
+#  define jingxian_export_c
 #endif /* jingxian_has_dll == 1 */
 
 #endif /* _jingxian_export_h */

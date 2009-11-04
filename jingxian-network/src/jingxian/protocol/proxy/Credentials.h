@@ -17,29 +17,29 @@ _jingxian_begin
 
 namespace proxy
 {
-	class ICredentialPolicyFactory
-	{
-	public:
-		virtual ~ICredentialPolicyFactory() {}
+class ICredentialPolicyFactory
+{
+public:
+    virtual ~ICredentialPolicyFactory() {}
 
-		virtual int authenticationType() const = 0;
+    virtual int authenticationType() const = 0;
 
-		virtual ICredentialPolicy* make() = 0;
-	};
+    virtual ICredentialPolicy* make() = 0;
+};
 
-	class Credentials : public ICredentials
-	{
-	public:
+class Credentials : public ICredentials
+{
+public:
 
-		virtual ~Credentials();
+    virtual ~Credentials();
 
-		virtual ICredentialPolicy* GetCredential(const std::vector<int>& authTypes);
+    virtual ICredentialPolicy* GetCredential(const std::vector<int>& authTypes);
 
-		std::list<ICredentialPolicyFactory*>& policies();
+    std::list<ICredentialPolicyFactory*>& policies();
 
-	private:
-		std::list<ICredentialPolicyFactory*> _policies;
-	};
+private:
+    std::list<ICredentialPolicyFactory*> _policies;
+};
 }
 
 _jingxian_end

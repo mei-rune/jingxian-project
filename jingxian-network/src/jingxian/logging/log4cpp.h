@@ -27,117 +27,117 @@ _jingxian_begin
 
 namespace log4cppAdaptor
 {
-	class Logger : public ILogger
-	{
-	public:
-		Logger(const tchar* nm);
+class Logger : public ILogger
+{
+public:
+    Logger(const tchar* nm);
 
-		virtual ~Logger(void);
+    virtual ~Logger(void);
 
-		virtual void assertLog(bool assertion, const LogStream& msg, const char* file=0, int line=-1) ;
+    virtual void assertLog(bool assertion, const LogStream& msg, const char* file=0, int line=-1) ;
 
-		virtual bool isCritEnabled() const ;
+    virtual bool isCritEnabled() const ;
 
-		virtual void crit(const LogStream& message, const char* file=0, int line=-1) ;
+    virtual void crit(const LogStream& message, const char* file=0, int line=-1) ;
 
-		virtual bool isFatalEnabled() const ;
+    virtual bool isFatalEnabled() const ;
 
-		virtual void fatal(const LogStream& message, const char* file=0, int line=-1) ;
+    virtual void fatal(const LogStream& message, const char* file=0, int line=-1) ;
 
-		virtual bool isErrorEnabled() const ;
+    virtual bool isErrorEnabled() const ;
 
-		virtual void error(const LogStream& message, const char* file=0, int line=-1) ;
+    virtual void error(const LogStream& message, const char* file=0, int line=-1) ;
 
-		virtual bool isInfoEnabled() const ;
+    virtual bool isInfoEnabled() const ;
 
-		virtual void info(const LogStream& message, const char* file=NULL, int line=-1) ;
+    virtual void info(const LogStream& message, const char* file=NULL, int line=-1) ;
 
-		virtual bool isDebugEnabled() const ;
+    virtual bool isDebugEnabled() const ;
 
-		virtual void debug(const LogStream& message, const char* file=0, int line=-1) ;
+    virtual void debug(const LogStream& message, const char* file=0, int line=-1) ;
 
-		virtual bool isWarnEnabled() const ;
+    virtual bool isWarnEnabled() const ;
 
-		virtual void warn(const LogStream& message, const char* file=NULL, int line=-1);
+    virtual void warn(const LogStream& message, const char* file=NULL, int line=-1);
 
-		virtual bool isTraceEnabled() const;
+    virtual bool isTraceEnabled() const;
 
-		virtual void trace(const LogStream& message, const char* file=NULL, int line=-1);
+    virtual void trace(const LogStream& message, const char* file=NULL, int line=-1);
 
-		virtual bool isEnabledFor(const logging::LevelPtr& level) const;
+    virtual bool isEnabledFor(const logging::LevelPtr& level) const;
 
-		virtual void log(const logging::LevelPtr& level, const LogStream& message,
-			const char* file=0, int line=-1);
+    virtual void log(const logging::LevelPtr& level, const LogStream& message,
+                     const char* file=0, int line=-1);
 
-		virtual logging::LevelPtr getLevel() const;
+    virtual logging::LevelPtr getLevel() const;
 
-		virtual void pushNDC( const tchar* str );
+    virtual void pushNDC( const tchar* str );
 
-		virtual void popNDC( );
+    virtual void popNDC( );
 
-		virtual void clearNDC();
+    virtual void clearNDC();
 
-	private:
-		log4cpp::Category& logger_;
-	};
+private:
+    log4cpp::Category& logger_;
+};
 
-	class ContextCategory : public log4cpp::Category
-	{
-	public:
-		ContextCategory(const std::string& name,
-                                               const std::string& context);
+class ContextCategory : public log4cpp::Category
+{
+public:
+    ContextCategory(const std::string& name,
+                    const std::string& context);
 
-		void setContext(const std::string& context);
-		
-		const std::string& getContext() const;
-      
-	protected:
-		virtual void _logUnconditionally2(log4cpp::Priority::Value priority, 
-                                          const std::string& message) throw();
-	private:
-         std::string context_;
-    };
+    void setContext(const std::string& context);
 
-	class Tracer : public ITracer
-	{
-	public:
-		Tracer( const tchar* nm, const tstring& thost, const tstring& tpeer, const tstring& sessionId);
+    const std::string& getContext() const;
 
-		virtual ~Tracer(void);
+protected:
+    virtual void _logUnconditionally2(log4cpp::Priority::Value priority,
+                                      const std::string& message) throw();
+private:
+    std::string context_;
+};
 
-		virtual bool isCritEnabled() const;
+class Tracer : public ITracer
+{
+public:
+    Tracer( const tchar* nm, const tstring& thost, const tstring& tpeer, const tstring& sessionId);
 
-		virtual void crit(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
+    virtual ~Tracer(void);
 
-		virtual bool isDebugEnabled() const;
+    virtual bool isCritEnabled() const;
 
-		virtual void debug(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
+    virtual void crit(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
 
-		virtual bool isErrorEnabled() const;
+    virtual bool isDebugEnabled() const;
 
-		virtual void error(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
+    virtual void debug(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
 
-		virtual bool isFatalEnabled() const;
+    virtual bool isErrorEnabled() const;
 
-		virtual void fatal(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
+    virtual void error(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
 
-		virtual bool isInfoEnabled() const;
+    virtual bool isFatalEnabled() const;
 
-		virtual void info(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
+    virtual void fatal(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
 
-		virtual bool isWarnEnabled() const ;
+    virtual bool isInfoEnabled() const;
 
-		virtual void warn(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
+    virtual void info(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
 
-		virtual bool isTraceEnabled() const;
+    virtual bool isWarnEnabled() const ;
 
-		virtual void trace(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
+    virtual void warn(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
 
-	private:
-		ContextCategory logger_;
-		char* name_;
-		std::string appender;
-	};
+    virtual bool isTraceEnabled() const;
+
+    virtual void trace(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
+
+private:
+    ContextCategory logger_;
+    char* name_;
+    std::string appender;
+};
 }
 
 _jingxian_end

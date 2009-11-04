@@ -17,13 +17,13 @@ _jingxian_begin
 
 namespace logging
 {
-	ILogger* makeLogger( const tstring& nm );
+ILogger* makeLogger( const tstring& nm );
 
-	spi::ILogFactory* setLogFactory(spi::ILogFactory* factory);
+spi::ILogFactory* setLogFactory(spi::ILogFactory* factory);
 
-	ITracer* makeTracer( const tstring& nm, const tstring& host, const tstring& peer, const tstring& sessionId);
+ITracer* makeTracer( const tstring& nm, const tstring& host, const tstring& peer, const tstring& sessionId);
 
-	spi::ITraceFactory* setTraceFactory(spi::ITraceFactory* factory);
+spi::ITraceFactory* setTraceFactory(spi::ITraceFactory* factory);
 }
 
 _jingxian_end

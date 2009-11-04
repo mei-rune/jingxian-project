@@ -15,15 +15,15 @@ _jingxian_begin
 
 namespace proxy
 {
-	namespace config
-	{
-		struct Credential
-		{
-			int AuthenticationType;
-			tstring Name;
-			tstring Description;
-		};
-	}
+namespace config
+{
+struct Credential
+{
+    int AuthenticationType;
+    tstring Name;
+    tstring Description;
+};
+}
 }
 
 _jingxian_end

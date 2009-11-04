@@ -20,22 +20,22 @@ class RunCommand : public ICommand
 {
 
 public:
-	RunCommand(HANDLE completion_port, IRunnable* runnable);
+    RunCommand(HANDLE completion_port, IRunnable* runnable);
 
-	virtual ~RunCommand();
+    virtual ~RunCommand();
 
-	virtual void on_complete (size_t bytes_transferred,
-                         bool success,
-                         void *completion_key,
-                         errcode_t error);
+    virtual void on_complete (size_t bytes_transferred,
+                              bool success,
+                              void *completion_key,
+                              errcode_t error);
 
-	virtual bool execute();
+    virtual bool execute();
 
 private:
-	NOCOPY(RunCommand);
+    NOCOPY(RunCommand);
 
-	HANDLE completion_port_;
-	std::auto_ptr< IRunnable> ptr_;
+    HANDLE completion_port_;
+    std::auto_ptr< IRunnable> ptr_;
 };
 
 _jingxian_end

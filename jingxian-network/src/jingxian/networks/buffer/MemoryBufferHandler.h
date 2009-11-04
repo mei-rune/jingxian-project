@@ -17,62 +17,62 @@ class MemoryBufferHandler : public IBufferHandler
 {
 public:
 
-	inline databuffer_t* cast(buffer_chain_t* chain)
-	{
-		return (databuffer_t*)chain;
-	}
+    inline databuffer_t* cast(buffer_chain_t* chain)
+    {
+        return (databuffer_t*)chain;
+    }
 
-	inline const databuffer_t* cast(const buffer_chain_t* chain)
-	{
-		return (const databuffer_t*)chain;
-	}
+    inline const databuffer_t* cast(const buffer_chain_t* chain)
+    {
+        return (const databuffer_t*)chain;
+    }
 
-	virtual bool   isMemory(const buffer_chain_t* chain)
-	{
-		return true;
-	}
+    virtual bool   isMemory(const buffer_chain_t* chain)
+    {
+        return true;
+    }
 
-	virtual char*  wd_ptr(buffer_chain_t* chain)
-	{
-		return cast(chain)->end;
-	}
-	
-	virtual void   wd_ptr(buffer_chain_t* chain, size_t len)
-	{
-		cast(chain)->end += len;
-	}
+    virtual char*  wd_ptr(buffer_chain_t* chain)
+    {
+        return cast(chain)->end;
+    }
 
-	virtual int    wd_length(const buffer_chain_t* chain)
-	{
-		const databuffer_t* data = cast(chain);
-		return (data->ptr + data->capacity) - data->end;
-	}
+    virtual void   wd_ptr(buffer_chain_t* chain, size_t len)
+    {
+        cast(chain)->end += len;
+    }
 
-	virtual char*  rd_ptr(buffer_chain_t* chain)
-	{
-		return cast(chain)->start;
-	}
+    virtual int    wd_length(const buffer_chain_t* chain)
+    {
+        const databuffer_t* data = cast(chain);
+        return (data->ptr + data->capacity) - data->end;
+    }
 
-	virtual void   rd_ptr(buffer_chain_t* chain, size_t len)
-	{
-		cast(chain)->start += len;
-	}
+    virtual char*  rd_ptr(buffer_chain_t* chain)
+    {
+        return cast(chain)->start;
+    }
 
-	virtual int    rd_length(const buffer_chain_t* chain)
-	{
-		const databuffer_t* data = cast(chain);
-		return data->end - data->start;
-	}
+    virtual void   rd_ptr(buffer_chain_t* chain, size_t len)
+    {
+        cast(chain)->start += len;
+    }
 
-	virtual ICommand* makeCommand(buffer_chain_t* chain, bool isRead)
-	{
-		ThrowException(NotImplementedException);
-	}
+    virtual int    rd_length(const buffer_chain_t* chain)
+    {
+        const databuffer_t* data = cast(chain);
+        return data->end - data->start;
+    }
 
-	virtual bool releaseCommand(buffer_chain_t* chain, ICommand* command, size_t len)
-	{
-		ThrowException(NotImplementedException);
-	}
+    virtual ICommand* makeCommand(buffer_chain_t* chain, bool isRead)
+    {
+        ThrowException(NotImplementedException);
+    }
+
+    virtual bool releaseCommand(buffer_chain_t* chain, ICommand* command, size_t len)
+    {
+        ThrowException(NotImplementedException);
+    }
 };
 
 _jingxian_end

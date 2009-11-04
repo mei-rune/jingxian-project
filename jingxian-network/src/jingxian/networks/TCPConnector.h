@@ -20,38 +20,44 @@ _jingxian_begin
 class TCPConnector : public IConnectionBuilder
 {
 public:
-	
-	TCPConnector(IOCPServer* core);
 
-	/**
-	 * @implements ~TCPConnector
-	 */
-	virtual ~TCPConnector();
+    TCPConnector(IOCPServer* core);
 
-	/**
-	 * @implements connect
-	 */
+    /**
+     * @implements ~TCPConnector
+     */
+    virtual ~TCPConnector();
+
+    /**
+     * @implements connect
+     */
     virtual void connect(const tchar* endPoint
-                       , OnBuildConnectionComplete onComplete
-                       , OnBuildConnectionError onError
-                       , void* context );
+                         , OnBuildConnectionComplete onComplete
+                         , OnBuildConnectionError onError
+                         , void* context );
 
-	/**
-	 * @implements toString
-	 */
-	virtual const tstring& toString() const;
+    /**
+     * @implements toString
+     */
+    virtual const tstring& toString() const;
 
 private:
-	NOCOPY(TCPConnector);
+    NOCOPY(TCPConnector);
 
-	friend class ConnectCommand;
+    friend class ConnectCommand;
 
-	IOCPServer* nextCore(){ return core_; }
-	ILogger* logger(){ return logger_; }
+    IOCPServer* nextCore()
+    {
+        return core_;
+    }
+    ILogger* logger()
+    {
+        return logger_;
+    }
 
-	IOCPServer* core_;
-	ILogger* logger_;
-	tstring toString_;
+    IOCPServer* core_;
+    ILogger* logger_;
+    tstring toString_;
 };
 
 _jingxian_end

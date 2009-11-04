@@ -17,36 +17,36 @@ _jingxian_begin
 class null_mutex
 {
 public:
-	
-	typedef guard< null_mutex > spcode_lock;
 
-	null_mutex()
-	{
-		
-	}
+    typedef guard< null_mutex > spcode_lock;
 
-	~null_mutex()
-	{
-		
-	}
+    null_mutex()
+    {
 
-	bool acquire()
-	{
-		return true;
-	}
-	void release()
-	{
-	}
+    }
+
+    ~null_mutex()
+    {
+
+    }
+
+    bool acquire()
+    {
+        return true;
+    }
+    void release()
+    {
+    }
 
 #if(_WIN32_WINNT >= 0x0400)
-	bool tryacquire()
-	{
-		return true;
-	}
+    bool tryacquire()
+    {
+        return true;
+    }
 #endif
 
 private:
-	DECLARE_NO_COPY_CLASS( null_mutex );
+    DECLARE_NO_COPY_CLASS( null_mutex );
 };
 
 _jingxian_end

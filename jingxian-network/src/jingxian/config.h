@@ -161,19 +161,19 @@ typedef _off_t off_t;
 template< typename T >
 inline bool is_null( T t )
 {
-	return ( NULL == t );
+    return ( NULL == t );
 }
 
 template< typename T >
 inline bool is_null( const std::auto_ptr<T>& t )
 {
-	return ( NULL == t.get() );
+    return ( NULL == t.get() );
 }
 
 template< typename T >
 inline T get_ptr( T t )
 {
-	return t;
+    return t;
 }
 
 #define JINGXIAN_BIT_ENABLED( V , F ) ( V&F )

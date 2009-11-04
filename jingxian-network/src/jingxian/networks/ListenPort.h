@@ -16,51 +16,51 @@ _jingxian_begin
 class ListenPort
 {
 public:
-	ListenPort(IReactorCore* core, IProtocolFactory* protocolFactory, IAcceptor* acceptor);
+    ListenPort(IReactorCore* core, IProtocolFactory* protocolFactory, IAcceptor* acceptor);
 
-	virtual ~ListenPort();
+    virtual ~ListenPort();
 
-	bool start();
+    bool start();
 
-	void stop();
+    void stop();
 
-	void onComplete(ITransport* transport, IReactorCore* core);
+    void onComplete(ITransport* transport, IReactorCore* core);
 
-	void onError(const ErrorCode& err, IReactorCore* core);
+    void onError(const ErrorCode& err, IReactorCore* core);
 
-	bool isPending() const;
+    bool isPending() const;
 
-	ILogger* log();
+    ILogger* log();
 
-	virtual const tstring& toString() const;
+    virtual const tstring& toString() const;
 
 private:
-	NOCOPY(ListenPort);
-	IReactorCore* reactor_;
-	IProtocolFactory* protocolFactory_;
-	Acceptor acceptor_;
-	int errorCount_;
-	bool isPending_;
-	ILogger* logger_;
-	tstring toString_;
+    NOCOPY(ListenPort);
+    IReactorCore* reactor_;
+    IProtocolFactory* protocolFactory_;
+    Acceptor acceptor_;
+    int errorCount_;
+    bool isPending_;
+    ILogger* logger_;
+    tstring toString_;
 };
 
 inline tostream& operator<<( tostream& target, const ListenPort& server )
 {
-	target << server.toString();
-	return target;
+    target << server.toString();
+    return target;
 }
 
 inline tostream& operator<<( tostream& target, const ListenPort* server )
 {
-	if( null_ptr == server)
-	{
-		target << _T("<null>");
-		return target;
-	}
+    if ( null_ptr == server)
+    {
+        target << _T("<null>");
+        return target;
+    }
 
-	target << *server;
-	return target;
+    target << *server;
+    return target;
 }
 
 _jingxian_end

@@ -15,25 +15,25 @@ _jingxian_begin
 
 namespace detail
 {
-	template< typename charT >
-	class StringOp
-	{
-	public:
-		static charT* malloc( size_t size )
-		{
-			return (charT*)::my_malloc(size);
-		}
+template< typename charT >
+class StringOp
+{
+public:
+    static charT* malloc( size_t size )
+    {
+        return (charT*)::my_malloc(size);
+    }
 
-		static charT* dup( const charT* p )
-		{
-			return string_traits< charT>::strdup(p);
-		}
+    static charT* dup( const charT* p )
+    {
+        return string_traits< charT>::strdup(p);
+    }
 
-		static void free( void* p)
-		{
-			::my_free(p);
-		}
-	};
+    static void free( void* p)
+    {
+        ::my_free(p);
+    }
+};
 };
 
 /**
@@ -41,26 +41,26 @@ namespace detail
 */
 inline bool square_pattern( const tstring& src , tstring& symbol , tstring& var )
 {
-	if( src.size() < 2 )
-		return false;
+    if ( src.size() < 2 )
+        return false;
 
-	tstring::size_type square_start = src.find( '[' );
+    tstring::size_type square_start = src.find( '[' );
 
-	if( tstring::npos == square_start )
-	{
-		symbol = src;
-		return true;
-	}
+    if ( tstring::npos == square_start )
+    {
+        symbol = src;
+        return true;
+    }
 
-	tstring::size_type square_end = src.find( ']' , square_start );
-	if( tstring::npos == square_end )
-	{
-		symbol = src.substr( 0,square_start );
-		return true;
-	}
-	symbol = src.substr( 0,square_start );
-	var = src.substr( square_start + 1, square_end - square_start - 1 );
-	return true;
+    tstring::size_type square_end = src.find( ']' , square_start );
+    if ( tstring::npos == square_end )
+    {
+        symbol = src.substr( 0,square_start );
+        return true;
+    }
+    symbol = src.substr( 0,square_start );
+    var = src.substr( square_start + 1, square_end - square_start - 1 );
+    return true;
 }
 
 ///**
@@ -81,7 +81,7 @@ inline bool square_pattern( const tstring& src , tstring& symbol , tstring& var 
 //
 //    const tchar *begin = s.c_str ();
 //
-//    
+//
 //	const tchar *end = begin + s.size ();
 //	const tchar *p = begin + offset;
 //
@@ -210,7 +210,7 @@ inline bool square_pattern( const tstring& src , tstring& symbol , tstring& var 
 //	if (items[i].find ( what ) != tstring::npos )
 //	    result.push_back (items [i]);
 //	}
-//	
+//
 //	return result;
 //}
 //

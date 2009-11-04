@@ -21,48 +21,48 @@ class Application : public IInstance
 {
 public:
 
-	virtual ~Application();
+    virtual ~Application();
 
-	
-	static int main(int argc, tchar** args);
 
-	/**
-	 * NT 服务名
-	 */
-	virtual const tstring& name() const;
+    static int main(int argc, tchar** args);
 
-	/**
-	* 服务运行
-	*/
-	virtual int onRun(const std::vector<tstring>& args);
+    /**
+     * NT 服务名
+     */
+    virtual const tstring& name() const;
 
-	 /**
-	  * 接收到一个用户定义的通知
-	  * @param dwEventType 用户定义的事件类型
-	  * @param lpEventData 用户定义的事件数据
-	  * @remarks 注意，不可以发生异常。
-	  */
-     virtual void onControl(DWORD dwEventType
-					, LPVOID lpEventData);
+    /**
+    * 服务运行
+    */
+    virtual int onRun(const std::vector<tstring>& args);
 
-	 /**
-	  * 接收到一个服务将停止的通知
-	  * @remarks 注意，不可以发生异常。
-	  */
-     virtual void interrupt();
+    /**
+     * 接收到一个用户定义的通知
+     * @param dwEventType 用户定义的事件类型
+     * @param lpEventData 用户定义的事件数据
+     * @remarks 注意，不可以发生异常。
+     */
+    virtual void onControl(DWORD dwEventType
+                           , LPVOID lpEventData);
 
-	 /**
-	  * 服务的描述
-	  */
-	 virtual const tstring& toString() const;
+    /**
+     * 接收到一个服务将停止的通知
+     * @remarks 注意，不可以发生异常。
+     */
+    virtual void interrupt();
+
+    /**
+     * 服务的描述
+     */
+    virtual const tstring& toString() const;
 
 private:
-	NOCOPY(Application);
-	Application(const tstring& name, const tstring& descr);
+    NOCOPY(Application);
+    Application(const tstring& name, const tstring& descr);
 
-	tstring name_;
-	tstring toString_;
-	IOCPServer core_;
+    tstring name_;
+    tstring toString_;
+    IOCPServer core_;
 };
 
 _jingxian_end

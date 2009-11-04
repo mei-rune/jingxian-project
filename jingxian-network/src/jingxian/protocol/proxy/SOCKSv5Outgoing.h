@@ -17,34 +17,34 @@ _jingxian_begin
 
 namespace proxy
 {
-	class SOCKSv5Protocol;
+class SOCKSv5Protocol;
 
-	class SOCKSv5Outgoing : public BaseProtocol
-	{
-	public:
-		SOCKSv5Outgoing();
+class SOCKSv5Outgoing : public BaseProtocol
+{
+public:
+    SOCKSv5Outgoing();
 
-		void initialize(SOCKSv5Protocol* socks);
+    void initialize(SOCKSv5Protocol* socks);
 
-		void write(const std::vector<io_mem_buf>& buffers);
+    void write(const std::vector<io_mem_buf>& buffers);
 
-		void disconnection();
+    void disconnection();
 
-		bool isActive() const;
+    bool isActive() const;
 
-		virtual size_t onReceived(ProtocolContext& context);
+    virtual size_t onReceived(ProtocolContext& context);
 
-		virtual void onConnected(ProtocolContext& context);
+    virtual void onConnected(ProtocolContext& context);
 
-		virtual void onDisconnected(ProtocolContext& context, errcode_t errCode, const tstring& reason);
-	private:
-		SOCKSv5Protocol* socks_;
-		ITransport* transport_;
+    virtual void onDisconnected(ProtocolContext& context, errcode_t errCode, const tstring& reason);
+private:
+    SOCKSv5Protocol* socks_;
+    ITransport* transport_;
 #ifdef DUMPFILE
-		std::auto_ptr<std::ofstream> os;
-		std::auto_ptr<std::ofstream> is;
+    std::auto_ptr<std::ofstream> os;
+    std::auto_ptr<std::ofstream> is;
 #endif
-	};
+};
 
 }
 

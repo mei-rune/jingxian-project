@@ -20,37 +20,37 @@ _jingxian_begin
 class TCPContext : public ProtocolContext
 {
 public:
-	TCPContext()
-	{
-		//inBuffer_  = &_inBuffer;
-		//outBuffer_ = &_outBuffer;
-	}
+    TCPContext()
+    {
+        //inBuffer_  = &_inBuffer;
+        //outBuffer_ = &_outBuffer;
+    }
 
-	void inMemory(const std::vector<io_mem_buf>* buffers, size_t totalLen)
-	{
-		inMemory_ = buffers;
-		if(-1 == totalLen)
-		{
-			totalLen = 0;
-			for(std::vector<io_mem_buf>::const_iterator it = buffers->begin()
-				; it != buffers->end(); ++ it )
-			{
-				totalLen += it->len;
-			}
-		}
+    void inMemory(const std::vector<io_mem_buf>* buffers, size_t totalLen)
+    {
+        inMemory_ = buffers;
+        if (-1 == totalLen)
+        {
+            totalLen = 0;
+            for (std::vector<io_mem_buf>::const_iterator it = buffers->begin()
+                    ; it != buffers->end(); ++ it )
+            {
+                totalLen += it->len;
+            }
+        }
 
-		this->inBytes_ = totalLen;			
-	}
+        this->inBytes_ = totalLen;
+    }
 
-	//InBuffer& GetInBuffer()
-	//{
-	//	return _inBuffer;
-	//}
+    //InBuffer& GetInBuffer()
+    //{
+    //	return _inBuffer;
+    //}
 
-	//OutBuffer& GetOutBuffer()
-	//{
-	//	return _outBuffer;
-	//}
+    //OutBuffer& GetOutBuffer()
+    //{
+    //	return _outBuffer;
+    //}
 
 //private:
 //	InBuffer _inBuffer;

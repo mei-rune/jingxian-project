@@ -17,24 +17,24 @@ _jingxian_begin
 class WriteCommand : public ICommand
 {
 public:
-	WriteCommand(ConnectedSocket* transport);
+    WriteCommand(ConnectedSocket* transport);
 
-	virtual ~WriteCommand();
-	
-	virtual void on_complete(size_t bytes_transferred
-		, bool success
-		, void *completion_key
-		, errcode_t error);
+    virtual ~WriteCommand();
 
-	virtual bool execute();
+    virtual void on_complete(size_t bytes_transferred
+                             , bool success
+                             , void *completion_key
+                             , errcode_t error);
 
-	std::vector<io_mem_buf>& iovec();
+    virtual bool execute();
+
+    std::vector<io_mem_buf>& iovec();
 
 private:
-	NOCOPY(WriteCommand);
+    NOCOPY(WriteCommand);
 
-	ConnectedSocket* transport_;
-	std::vector<io_mem_buf> iovec_;
+    ConnectedSocket* transport_;
+    std::vector<io_mem_buf> iovec_;
 };
 
 _jingxian_end

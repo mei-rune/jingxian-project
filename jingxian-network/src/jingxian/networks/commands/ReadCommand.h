@@ -18,24 +18,24 @@ class ReadCommand : public ICommand
 {
 public:
 
-	ReadCommand(ConnectedSocket* transport);
-	
-	virtual ~ReadCommand();
+    ReadCommand(ConnectedSocket* transport);
 
-	virtual void on_complete(size_t bytes_transferred
-		, bool success
-		, void *completion_key
-		, errcode_t error);
+    virtual ~ReadCommand();
 
-	virtual bool execute();
+    virtual void on_complete(size_t bytes_transferred
+                             , bool success
+                             , void *completion_key
+                             , errcode_t error);
 
-	std::vector<io_mem_buf>& iovec();
+    virtual bool execute();
+
+    std::vector<io_mem_buf>& iovec();
 
 private:
-	NOCOPY(ReadCommand);
+    NOCOPY(ReadCommand);
 
-	ConnectedSocket* transport_;
-	std::vector<io_mem_buf> iovec_;
+    ConnectedSocket* transport_;
+    std::vector<io_mem_buf> iovec_;
 };
 
 _jingxian_end
