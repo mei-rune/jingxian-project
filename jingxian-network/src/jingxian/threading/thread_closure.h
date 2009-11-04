@@ -23,15 +23,15 @@
 
 _jingxian_begin
 
-template< typename R,typename T>
-R _cast( T t)
+template< typename R, typename T>
+R _cast(T t)
 {
     return t;
 }
 
 #ifdef CPP_TR1
 template< typename R>
-R _cast( std::tr1::shared_ptr< typename std::tr1::remove_pointer<R>::type > t)
+R _cast(std::tr1::shared_ptr< typename std::tr1::remove_pointer<R>::type > t)
 {
     return t.get();
 }
@@ -42,20 +42,20 @@ class thread_closure_0
 {
 public:
 
-    thread_closure_0( const F& f, const tchar* nm = 0)
-            : _function( f )
-            , _name( (0 == nm) ? _T("") : nm )
+    thread_closure_0(const F& f, const tchar* nm = 0)
+            : _function(f)
+            , _name((0 == nm) ? _T("") : nm)
     {
     }
 
-    static void start_routine( void* c )
+    static void start_routine(void* c)
     {
         thread_closure_0 *self = static_cast<thread_closure_0*>(c);
         try
         {
             self->_function();
         }
-        catch ( ... )
+        catch (...)
         {
             delete self;
             throw;
@@ -78,21 +78,21 @@ class thread_closure_1
 {
 public:
 
-    thread_closure_1( const F& f, const P& x, const tchar* nm = 0)
-            : _function( f )
-            , _name( (0 == nm) ? _T("") : nm )
-            , arg1( x )
+    thread_closure_1(const F& f, const P& x, const tchar* nm = 0)
+            : _function(f)
+            , _name((0 == nm) ? _T("") : nm)
+            , arg1(x)
     {
     }
 
-    static void start_routine( void* c )
+    static void start_routine(void* c)
     {
         thread_closure_1 *self = static_cast<thread_closure_1*>(c);
         try
         {
-            self->_function( self->arg1 );
+            self->_function(self->arg1);
         }
-        catch ( ... )
+        catch (...)
         {
             delete self;
             throw;
@@ -115,22 +115,22 @@ class thread_closure_2
 {
 public:
 
-    thread_closure_2( const F& f, P1 x1, P2 x2, const tchar* nm = 0)
-            : _function( f )
-            , _name( (0 == nm) ? _T("") : nm )
-            , arg1( x1 )
-            , arg2( x2 )
+    thread_closure_2(const F& f, P1 x1, P2 x2, const tchar* nm = 0)
+            : _function(f)
+            , _name((0 == nm) ? _T("") : nm)
+            , arg1(x1)
+            , arg2(x2)
     {
     }
 
-    static void start_routine( void* c )
+    static void start_routine(void* c)
     {
         thread_closure_2 *self = static_cast<thread_closure_2*>(c);
         try
         {
-            self->_function( self->arg1, self->arg2 );
+            self->_function(self->arg1, self->arg2);
         }
-        catch ( ... )
+        catch (...)
         {
             delete self;
             throw;
@@ -154,23 +154,23 @@ class thread_closure_3
 {
 public:
 
-    thread_closure_3( const F& f, P1 x1, P2 x2, P3 x3, const tchar* nm = 0)
-            : _function( f )
-            , _name( (0 == nm) ? _T("") : nm )
-            , arg1( x1 )
-            , arg2( x2 )
-            , arg3( x3 )
+    thread_closure_3(const F& f, P1 x1, P2 x2, P3 x3, const tchar* nm = 0)
+            : _function(f)
+            , _name((0 == nm) ? _T("") : nm)
+            , arg1(x1)
+            , arg2(x2)
+            , arg3(x3)
     {
     }
 
-    static void start_routine( void* c )
+    static void start_routine(void* c)
     {
         thread_closure_3 *self = static_cast<thread_closure_3*>(c);
         try
         {
-            self->_function( self->arg1, self->arg2, self->arg3 );
+            self->_function(self->arg1, self->arg2, self->arg3);
         }
-        catch ( ... )
+        catch (...)
         {
             delete self;
             throw;
@@ -195,24 +195,24 @@ class thread_closure_4
 {
 public:
 
-    thread_closure_4( const F& f, P1 x1, P2 x2, P3 x3, P4 x4, const tchar* nm = 0)
-            : _function( f )
-            , _name( (0 == nm) ? _T("") : nm )
-            , arg1( x1 )
-            , arg2( x2 )
-            , arg3( x3 )
-            , arg4( x4 )
+    thread_closure_4(const F& f, P1 x1, P2 x2, P3 x3, P4 x4, const tchar* nm = 0)
+            : _function(f)
+            , _name((0 == nm) ? _T("") : nm)
+            , arg1(x1)
+            , arg2(x2)
+            , arg3(x3)
+            , arg4(x4)
     {
     }
 
-    static void start_routine( void* c )
+    static void start_routine(void* c)
     {
         thread_closure_4 *self = static_cast<thread_closure_4*>(c);
         try
         {
-            self->_function( self->arg1, self->arg2, self->arg3, self->arg4);
+            self->_function(self->arg1, self->arg2, self->arg3, self->arg4);
         }
-        catch ( ... )
+        catch (...)
         {
             delete self;
             throw;
@@ -238,25 +238,25 @@ class thread_closure_5
 {
 public:
 
-    thread_closure_5( const F& f, P1 x1, P2 x2, P3 x3, P4 x4, P5 x5, const tchar* nm = 0)
-            : _function( f )
-            , _name( (0 == nm) ? _T("") : nm )
-            , arg1( x1 )
-            , arg2( x2 )
-            , arg3( x3 )
-            , arg4( x4 )
-            , arg5( x5 )
+    thread_closure_5(const F& f, P1 x1, P2 x2, P3 x3, P4 x4, P5 x5, const tchar* nm = 0)
+            : _function(f)
+            , _name((0 == nm) ? _T("") : nm)
+            , arg1(x1)
+            , arg2(x2)
+            , arg3(x3)
+            , arg4(x4)
+            , arg5(x5)
     {
     }
 
-    static void start_routine( void* c )
+    static void start_routine(void* c)
     {
         thread_closure_5 *self = static_cast<thread_closure_5*>(c);
         try
         {
-            self->_function( self->arg1, self->arg2, self->arg3, self->arg4, self->arg5);
+            self->_function(self->arg1, self->arg2, self->arg3, self->arg4, self->arg5);
         }
-        catch ( ... )
+        catch (...)
         {
             delete self;
             throw;
@@ -283,26 +283,26 @@ class thread_closure_6
 {
 public:
 
-    thread_closure_6( const F& f, P1 x1, P2 x2, P3 x3, P4 x4, P5 x5, P6 x6, const tchar* nm = 0)
-            : _function( f )
-            , _name( (0 == nm) ? _T("") : nm )
-            , arg1( x1 )
-            , arg2( x2 )
-            , arg3( x3 )
-            , arg4( x4 )
-            , arg5( x5 )
-            , arg6( x6 )
+    thread_closure_6(const F& f, P1 x1, P2 x2, P3 x3, P4 x4, P5 x5, P6 x6, const tchar* nm = 0)
+            : _function(f)
+            , _name((0 == nm) ? _T("") : nm)
+            , arg1(x1)
+            , arg2(x2)
+            , arg3(x3)
+            , arg4(x4)
+            , arg5(x5)
+            , arg6(x6)
     {
     }
 
-    static void start_routine( void* c )
+    static void start_routine(void* c)
     {
         thread_closure_6 *self = static_cast<thread_closure_6*>(c);
         try
         {
-            self->_function( self->arg1, self->arg2, self->arg3, self->arg4, self->arg5, self->arg6);
+            self->_function(self->arg1, self->arg2, self->arg3, self->arg4, self->arg5, self->arg6);
         }
-        catch ( ... )
+        catch (...)
         {
             delete self;
             throw;

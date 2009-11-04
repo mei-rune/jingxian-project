@@ -18,11 +18,11 @@ _jingxian_begin
 class Connector
 {
 public:
-    template<typename F1,typename F2, typename T>
+    template<typename F1, typename F2, typename T>
     class closure
     {
     public:
-        closure( const F1& func1, const F2& func2, T context)
+        closure(const F1& func1, const F2& func2, T context)
                 : function1_(func1)
                 , function2_(func2)
                 , context_(context)
@@ -47,7 +47,7 @@ public:
         T context_;
     };
 
-    template<typename C, typename F1,typename F2, typename T>
+    template<typename C, typename F1, typename F2, typename T>
     class closure_0
     {
     public:
@@ -90,22 +90,22 @@ public:
         reset(null_ptr);
     }
 
-    void reset( IReactorCore* core)
+    void reset(IReactorCore* core)
     {
-        core_=core;
+        core_ = core;
     }
 
     /**
     * 发起一个监听请求
     */
-    template< typename F1,typename F2, typename T>
+    template< typename F1, typename F2, typename T>
     static void connectWith(IReactorCore* core
                             , const char* host
                             , F1 onComplete
                             , F2 onError
                             , T context)
     {
-        typedef closure<F1,F2,T> closure_type;
+        typedef closure<F1, F2, T> closure_type;
         core->connectWith(host
                           , closure_type::OnComplete
                           , closure_type::OnError
@@ -115,7 +115,7 @@ public:
     /**
      * 发起一个监听请求
      */
-    template<typename C, typename F1,typename F2, typename T>
+    template<typename C, typename F1, typename F2, typename T>
     static void connectWith(IReactorCore* core
                             , const char* host
                             , C c
@@ -123,7 +123,7 @@ public:
                             , F2 onError
                             , T context)
     {
-        typedef closure_0<C,F1,F2,T> closure_type;
+        typedef closure_0<C, F1, F2, T> closure_type;
         core->connectWith(host
                           , closure_type::OnComplete
                           , closure_type::OnError
@@ -134,12 +134,12 @@ public:
     /**
      * 发起一个监听请求
      */
-    template< typename F1,typename F2, typename T>
+    template< typename F1, typename F2, typename T>
     void connectWith(F1 onComplete
                      , F2 onError
                      , T context)
     {
-        typedef closure<F1,F2,T> closure_type;
+        typedef closure<F1, F2, T> closure_type;
         core_->connectWith(host_.c_str()
                            , closure_type::OnComplete
                            , closure_type::OnError
@@ -149,13 +149,13 @@ public:
     /**
      * 发起一个监听请求
      */
-    template<typename C, typename F1,typename F2, typename T>
+    template<typename C, typename F1, typename F2, typename T>
     void connectWith(C c
                      , F1 onComplete
                      , F2 onError
                      , T context)
     {
-        typedef closure_0<C,F1,F2,T> closure_type;
+        typedef closure_0<C, F1, F2, T> closure_type;
         core_->connectWith(host_.c_str()
                            , closure_type::OnComplete
                            , closure_type::OnError
@@ -202,10 +202,10 @@ class ConnectProxy
 {
 public:
 
-    typedef void (T::*ONCOMPLETE)(ITransport*, CONTEXT );
+    typedef void (T::*ONCOMPLETE)(ITransport*, CONTEXT);
     typedef void (T::*ONERROR)(const ErrorCode&, CONTEXT);
 
-    ConnectProxy(T* t, const tstring& host, IReactorCore* core, ONCOMPLETE onComplete, ONERROR onError,CONTEXT context)
+    ConnectProxy(T* t, const tstring& host, IReactorCore* core, ONCOMPLETE onComplete, ONERROR onError, CONTEXT context)
             : t_(t)
             , host_(host)
             , core_(core)

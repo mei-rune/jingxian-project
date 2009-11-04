@@ -55,7 +55,7 @@ public:
     }
 
     Exception(const tstring& message)
-            : std::runtime_error( toNarrowString(message))
+            : std::runtime_error(toNarrowString(message))
             , fSrcFile(0)
             , fSrcLine(0)
     {
@@ -64,7 +64,7 @@ public:
 
     Exception(const char* const srcFile
               , size_t srcLine
-              , const tstring& message )
+              , const tstring& message)
             : std::runtime_error(toNarrowString(message))
             , fSrcFile(srcFile)
             , fSrcLine(srcLine)
@@ -84,17 +84,17 @@ public:
     }
 
     template< typename E >
-    void Raise( E& e )
+    void Raise(E& e)
     {
         throw e;
     }
 
-    void dump( tostream& target ) const
+    void dump(tostream& target) const
     {
-        target << _T( "[ file:" )
-        << toTstring( getFile() )
-        << _T( " line:" )
-        << ( int ) getLine()
+        target << _T("[ file:")
+        << toTstring(getFile())
+        << _T(" line:")
+        << (int) getLine()
         << _T(" ] ")
         << std::endl
         << _stack;
@@ -107,14 +107,14 @@ public:
 
     virtual void rethrow()
     {
-        Raise( *this );
+        Raise(*this);
     }
 
     virtual void print(tostream& target) const
     {
         target << _T("Exception: ")
         << what();
-        dump( target );
+        dump(target);
 
     }
 
@@ -138,8 +138,8 @@ protected :
 
     void initStackTrace(int skipFrames)
     {
-        StackTracer stackWalker( StackTracer::RetrieveLine );
-        stackWalker.ShowCallstack( skipFrames );
+        StackTracer stackWalker(StackTracer::RetrieveLine);
+        stackWalker.ShowCallstack(skipFrames);
         _stack = toTstring(stackWalker.GetCallStack());
     }
 
@@ -148,9 +148,9 @@ protected :
     tstring   _stack;
 };
 
-inline tostream& operator<<( tostream& target, const Exception& err )
+inline tostream& operator<<(tostream& target, const Exception& err)
 {
-    err.print( target );
+    err.print(target);
     return target;
 }
 
@@ -207,8 +207,8 @@ public:                                                     \
     virtual void print(tostream& target) const              \
     {                                                       \
             target << MAKE_STRING( theType )                \
-			<< what();										\
-			dump( target );									\
+      << what();                    \
+      dump( target );                 \
     }                                                       \
 };
 
@@ -259,21 +259,21 @@ public:                                                     \
 
 
 // 定义异常类
-MakeException( NullException , NullError );
-MakeException( RuntimeException , RuntimeError );
-MakeException( IllegalArgumentException, IllegalArgumentError );
-MakeException( ArgumentNullException, ArgumentNullError );
-MakeException( OutOfRangeException, OutOfRangeError );
-MakeException( InvalidPointerException, InvalidPointerError );
-MakeException( LengthException, LengthError );
-MakeException( CastException, CastError );
-MakeException( EOFException , EOFError );
-MakeException( URLException, URLError );
-MakeException( NotFindException, NotFindError );
-MakeException( SystemException, SystemError );
-MakeException( LockException , LockError );
-MakeException( TimeSyntaxException , TimeSyntaxError );
-MakeException( NotImplementedException, NotImplementedError );
+MakeException(NullException , NullError);
+MakeException(RuntimeException , RuntimeError);
+MakeException(IllegalArgumentException, IllegalArgumentError);
+MakeException(ArgumentNullException, ArgumentNullError);
+MakeException(OutOfRangeException, OutOfRangeError);
+MakeException(InvalidPointerException, InvalidPointerError);
+MakeException(LengthException, LengthError);
+MakeException(CastException, CastError);
+MakeException(EOFException , EOFError);
+MakeException(URLException, URLError);
+MakeException(NotFindException, NotFindError);
+MakeException(SystemException, SystemError);
+MakeException(LockException , LockError);
+MakeException(TimeSyntaxException , TimeSyntaxError);
+MakeException(NotImplementedException, NotImplementedError);
 
 // 异常宏
 #define ThrowException( type ) throw type(__FILE__, __LINE__ )

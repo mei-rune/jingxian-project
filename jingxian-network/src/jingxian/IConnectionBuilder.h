@@ -34,7 +34,7 @@ public:
     virtual void connect(const tchar* endPoint
                          , OnBuildConnectionComplete onComplete
                          , OnBuildConnectionError onError
-                         , void* context ) = 0;
+                         , void* context) = 0;
 
     /**
      * 取得地址的描述
@@ -42,7 +42,7 @@ public:
     virtual const tstring& toString() const = 0;
 };
 
-inline tostream& operator<<( tostream& target, const IConnectionBuilder& connectionBuilder )
+inline tostream& operator<<(tostream& target, const IConnectionBuilder& connectionBuilder)
 {
     target << connectionBuilder.toString();
     return target;

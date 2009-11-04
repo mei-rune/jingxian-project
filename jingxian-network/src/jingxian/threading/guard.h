@@ -20,49 +20,49 @@ class guard
 {
 public:
 
-    guard (LOCK &l, bool nothrow = true )
-            : lock_ (&l)
-            , owner_ ( false )
+    guard(LOCK &l, bool nothrow = true)
+            : lock_(&l)
+            , owner_(false)
     {
-        if ( !this->lock () && !nothrow )
-            ThrowException1( LockException , _T("进入锁失败") );
+        if (!this->lock() && !nothrow)
+            ThrowException1(LockException , _T("进入锁失败"));
     }
 
-    guard (LOCK &l, bool is_lock, bool nothrow )
-            : lock_ (&l)
-            , owner_ ( false )
+    guard(LOCK &l, bool is_lock, bool nothrow)
+            : lock_(&l)
+            , owner_(false)
     {
-        if (is_lock && !this->lock () && !nothrow )
-            ThrowException1( LockException , _T("进入锁失败") );
+        if (is_lock && !this->lock() && !nothrow)
+            ThrowException1(LockException , _T("进入锁失败"));
     }
 
-    ~guard (void)
+    ~guard(void)
     {
-        this->unlock ();
+        this->unlock();
     }
 
-    bool lock (void)
+    bool lock(void)
     {
-        return this->owner_ = this->lock_->acquire ();
+        return this->owner_ = this->lock_->acquire();
     }
 
 #if(_WIN32_WINNT >= 0x0400)
-    bool try_lock (void)
+    bool try_lock(void)
     {
-        return this->owner_ = this->lock_->tryacquire ();
+        return this->owner_ = this->lock_->tryacquire();
     }
 #endif // (_WIN32_WINNT >= 0x0400)
 
-    void unlock (void)
+    void unlock(void)
     {
-        if ( !this->owner_ )
+        if (!this->owner_)
             return ;
 
         this->owner_ = false;
-        this->lock_->release ();
+        this->lock_->release();
     }
 
-    bool locked (void) const
+    bool locked(void) const
     {
         return this->owner_ ;
     }
@@ -79,7 +79,7 @@ public:
 
 protected:
 
-    guard (LOCK *lock): lock_ (lock), owner_( false ) {}
+    guard(LOCK *lock): lock_(lock), owner_(false) {}
 
     LOCK *lock_;
 
@@ -87,7 +87,7 @@ protected:
 
 private:
 
-    DECLARE_NO_COPY_CLASS( guard );
+    DECLARE_NO_COPY_CLASS(guard);
 };
 
 _jingxian_end

@@ -30,7 +30,7 @@ public:
 
     virtual  size_t onReceived(ProtocolContext& context, InBuffer& inBuffer)
     {
-        ThrowException1(RuntimeException, _T( "不支持的授权!" ));
+        ThrowException1(RuntimeException, _T("不支持的授权!"));
     }
 
     virtual  bool isComplete()

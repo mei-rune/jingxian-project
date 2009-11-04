@@ -14,7 +14,7 @@
 
 _jingxian_begin
 
-template<typename S,typename S1,typename S2>
+template<typename S, typename S1, typename S2>
 inline S concat(const S1& s1, const S2& s2)
 {
     S s;
@@ -23,7 +23,7 @@ inline S concat(const S1& s1, const S2& s2)
     return s;
 }
 
-template<typename S,typename S1,typename S2,typename S3>
+template<typename S, typename S1, typename S2, typename S3>
 inline S concat(const S1& s1, const S2& s2, const S3& s3)
 {
     S s;
@@ -33,7 +33,7 @@ inline S concat(const S1& s1, const S2& s2, const S3& s3)
     return s;
 }
 
-template<typename S,typename S1,typename S2,typename S3,typename S4>
+template<typename S, typename S1, typename S2, typename S3, typename S4>
 inline S concat(const S1& s1, const S2& s2, const S3& s3, const S4& s4)
 {
     S s;
@@ -44,7 +44,7 @@ inline S concat(const S1& s1, const S2& s2, const S3& s3, const S4& s4)
     return s;
 }
 
-template<typename S,typename S1,typename S2,typename S3,typename S4,typename S5>
+template<typename S, typename S1, typename S2, typename S3, typename S4, typename S5>
 inline S concat(const S1& s1, const S2& s2, const S3& s3, const S4& s4, const S5& s5)
 {
     S s;
@@ -56,7 +56,7 @@ inline S concat(const S1& s1, const S2& s2, const S3& s3, const S4& s4, const S5
     return s;
 }
 
-template<typename S,typename S1,typename S2,typename S3,typename S4,typename S5,typename S6>
+template<typename S, typename S1, typename S2, typename S3, typename S4, typename S5, typename S6>
 inline S concat(const S1& s1, const S2& s2, const S3& s3, const S4& s4, const S5& s5, const S6& s6)
 {
     S s;
@@ -69,7 +69,7 @@ inline S concat(const S1& s1, const S2& s2, const S3& s3, const S4& s4, const S5
     return s;
 }
 
-template<typename S,typename S1,typename S2,typename S3,typename S4,typename S5,typename S6,typename S7>
+template<typename S, typename S1, typename S2, typename S3, typename S4, typename S5, typename S6, typename S7>
 inline S concat(const S1& s1, const S2& s2, const S3& s3, const S4& s4, const S5& s5, const S6& s6, const S7& s7)
 {
     S s;
@@ -83,7 +83,7 @@ inline S concat(const S1& s1, const S2& s2, const S3& s3, const S4& s4, const S5
     return s;
 }
 
-template<typename S,typename S1,typename S2,typename S3,typename S4,typename S5,typename S6,typename S7,typename S8>
+template<typename S, typename S1, typename S2, typename S3, typename S4, typename S5, typename S6, typename S7, typename S8>
 inline S concat(const S1& s1, const S2& s2, const S3& s3, const S4& s4, const S5& s5, const S6& s6, const S7& s7, const S8& s8)
 {
     S s;

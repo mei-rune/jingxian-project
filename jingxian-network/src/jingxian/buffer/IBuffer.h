@@ -89,7 +89,7 @@ public:
  * 务则会记住指针的当前位置,如果回滚则会将指针移动到
  * 事务启始位置.
  */
-template<typename T,typename I>
+template<typename T, typename I>
 class TranscationScope
 {
 public:

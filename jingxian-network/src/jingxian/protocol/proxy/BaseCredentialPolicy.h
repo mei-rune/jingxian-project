@@ -18,7 +18,7 @@ namespace proxy
 class BaseCredentialPolicy : public AbstractCredentialPolicy
 {
 public:
-    BaseCredentialPolicy(Proxy* server,const config::Credential& credential)
+    BaseCredentialPolicy(Proxy* server, const config::Credential& credential)
             : AbstractCredentialPolicy(server, credential)
     {
     }
@@ -42,14 +42,14 @@ public:
         ///
 
         size_t totalLength = inBuffer.size();
-        if (3 > totalLength )
+        if (3 > totalLength)
             return 0;
 
         int8_t version = inBuffer.readInt8();
         size_t len = inBuffer.readInt8();
 
         // 两个字节是密码的最小字节数
-        if ( (len +2) > totalLength)
+        if ((len + 2) > totalLength)
             return 0;
 
         std::string name(len, ' ');

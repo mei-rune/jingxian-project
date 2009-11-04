@@ -28,7 +28,7 @@ public:
         errno_ = ERROR_SUCCESS;
     }
 
-    virtual ~BaseBuffer( )
+    virtual ~BaseBuffer()
     {
     }
 
@@ -54,7 +54,7 @@ public:
 
     void error(errcode_t err)
     {
-        if ( ERROR_SUCCESS == errno_)
+        if (ERROR_SUCCESS == errno_)
             errno_ = err;
 
         if (ExceptionStyle::THROW == exceptionStyle_)

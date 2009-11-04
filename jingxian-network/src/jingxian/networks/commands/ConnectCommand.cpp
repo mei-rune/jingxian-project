@@ -92,7 +92,7 @@ bool ConnectCommand::execute()
 
     if (! networking::stringToAddress((LPTSTR)host_.c_str(), (struct sockaddr*)&addr, &len))
     {
-        dnsQuery(networking::fetchAddr(host_.c_str()).c_str(),networking::fetchPort(host_.c_str()) );
+        dnsQuery(networking::fetchAddr(host_.c_str()).c_str(), networking::fetchPort(host_.c_str()));
         return true;
     }
     return execute((struct sockaddr*)&addr, len);
@@ -101,7 +101,7 @@ bool ConnectCommand::execute()
 bool ConnectCommand::execute(const struct sockaddr* addr, int len)
 {
     if (INVALID_SOCKET == socket_)
-        socket_ = WSASocket(addr->sa_family,SOCK_STREAM,IPPROTO_TCP,0,0,WSA_FLAG_OVERLAPPED);
+        socket_ = WSASocket(addr->sa_family, SOCK_STREAM, IPPROTO_TCP, 0, 0, WSA_FLAG_OVERLAPPED);
 
     SOCKADDR_STORAGE bindAddr;
     memset(&bindAddr, 0, sizeof(SOCKADDR_STORAGE));
@@ -110,14 +110,14 @@ bool ConnectCommand::execute(const struct sockaddr* addr, int len)
     //((struct sockaddr_in6*)&bindAddr)->sin6_addr.s_addr = ADDR_ANY; //htonl(ADDR_ANY);
 
     // NOTICE: 超级奇怪必须绑定一下, MS 说的
-    if (SOCKET_ERROR == ::bind(socket_,(struct sockaddr*)&bindAddr, sizeof(bindAddr)))
+    if (SOCKET_ERROR == ::bind(socket_, (struct sockaddr*)&bindAddr, sizeof(bindAddr)))
         return false;
 
     if (!core_->bind((HANDLE)socket_, null_ptr))
         return false;
 
     //DWORD bytesTransferred = 0;
-    if ( networking::connectEx(socket_,addr, len, null_ptr, 0,null_ptr, this))
+    if (networking::connectEx(socket_, addr, len, null_ptr, 0, null_ptr, this))
         return true;
 
     if (WSA_IO_PENDING == ::WSAGetLastError())
@@ -143,16 +143,16 @@ void ConnectCommand::on_complete(size_t bytes_transferred
 
     try
     {
-        setsockopt( socket_,
-                    SOL_SOCKET,
-                    SO_UPDATE_CONNECT_CONTEXT,
-                    NULL,
-                    0 );
+        setsockopt(socket_,
+                   SOL_SOCKET,
+                   SO_UPDATE_CONNECT_CONTEXT,
+                   NULL,
+                   0);
 
         struct sockaddr name;
         int namelen = sizeof(name);
 
-        if (SOCKET_ERROR == getsockname( socket_,& name,&namelen))
+        if (SOCKET_ERROR == getsockname(socket_, & name, &namelen))
         {
             ErrorCode err(0 == success, error, concat<tstring>(_T("连接到 '")
                           , host_

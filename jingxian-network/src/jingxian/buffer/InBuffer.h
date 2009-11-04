@@ -59,7 +59,7 @@ public:
 
     virtual size_t search(char ch) const;
     virtual size_t search(wchar_t ch) const;
-    virtual size_t search(const void* context,size_t len) const;
+    virtual size_t search(const void* context, size_t len) const;
     virtual size_t searchAny(const char* charset) const;
     virtual size_t searchAny(const wchar_t* charset) const;
 

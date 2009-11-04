@@ -14,7 +14,7 @@
 
 _jingxian_begin
 
-template<   typename S
+template <   typename S
 ,   typename F
 >
 inline S &transform_impl(S &s, F f)

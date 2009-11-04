@@ -51,7 +51,7 @@ public:
 
     virtual void setString(const tstring& key, const tchar* buf, size_t len);
 
-    virtual void dump( tostream& target ) const;
+    virtual void dump(tostream& target) const;
 
 private:
 

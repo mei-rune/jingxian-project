@@ -20,30 +20,30 @@ public:
     enum Type
     {
         PRIMITIVE
-        ,USER
-        ,STRING
-        ,SEQUENUE
-        ,DICTIONARY
+        , USER
+        , STRING
+        , SEQUENUE
+        , DICTIONARY
     };
 
     class string_guard
     {
     public:
-        string_guard( serialize_context& context )
-                : _context( 0 )
-                , _isSequence( false )
+        string_guard(serialize_context& context)
+                : _context(0)
+                , _isSequence(false)
         {
             _isSequence = context.isSequenue();
-            context.isString( true );
+            context.isString(true);
             _context = &context;
         }
 
         ~string_guard()
         {
-            if ( 0 != _context )
+            if (0 != _context)
             {
-                _context -> isString( false );
-                _context -> isSequenue( _isSequence );
+                _context -> isString(false);
+                _context -> isSequenue(_isSequence);
                 _context = 0;
             }
         }
@@ -56,21 +56,21 @@ public:
     class dictinary_guard
     {
     public:
-        dictinary_guard( serialize_context& context )
-                : _context( 0 )
-                , _isSequence( false )
+        dictinary_guard(serialize_context& context)
+                : _context(0)
+                , _isSequence(false)
         {
             _isSequence = context.isSequenue();
-            context.isDictinary( true );
+            context.isDictinary(true);
             _context = &context;
         }
 
         ~dictinary_guard()
         {
-            if ( 0 != _context )
+            if (0 != _context)
             {
-                _context -> isDictinary( false );
-                _context -> isSequenue( _isSequence );
+                _context -> isDictinary(false);
+                _context -> isSequenue(_isSequence);
                 _context = 0;
             }
         }
@@ -83,17 +83,17 @@ public:
     class sequenue_guard
     {
     public:
-        sequenue_guard( serialize_context& context )
-                : _context( 0 )
+        sequenue_guard(serialize_context& context)
+                : _context(0)
         {
             _context = &context;
         }
 
         ~sequenue_guard()
         {
-            if ( 0 != _context )
+            if (0 != _context)
             {
-                _context -> isSequenue( false );
+                _context -> isSequenue(false);
                 _context = 0;
             }
         }
@@ -107,12 +107,12 @@ public:
     /**
      * 序列化深入一级
      */
-    virtual void push( const tstring& className, const tstring& fieldName) = 0;
+    virtual void push(const tstring& className, const tstring& fieldName) = 0;
 
     /**
      * 序列化跳出一级
      */
-    virtual void pop( ) = 0;
+    virtual void pop() = 0;
 
     /**
      * 当前级的类名
@@ -144,12 +144,12 @@ public:
     /**
      * 取得level级的类名
      */
-    virtual const tstring& getClass( int level ) const = 0;
+    virtual const tstring& getClass(int level) const = 0;
 
     /**
      * 取得level级的字段名
      */
-    virtual const tstring& getField( int level ) const = 0;
+    virtual const tstring& getField(int level) const = 0;
 
     /**
      * 取得当前级中字典中键名为key的值

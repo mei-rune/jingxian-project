@@ -37,7 +37,7 @@ public:
      * 初始化端口(如果已经初始化返回true)
        * @param[ in ] 并行线程数
      */
-    bool initialize( size_t number_of_threads );
+    bool initialize(size_t number_of_threads);
 
     /**
      * @implements connectWith
@@ -45,7 +45,7 @@ public:
     virtual void connectWith(const tchar* endPoint
                              , OnBuildConnectionComplete onComplete
                              , OnBuildConnectionError onError
-                             , void* context );
+                             , void* context);
 
     /**
      * @implements listenWith
@@ -56,7 +56,7 @@ public:
     /**
      * @implements send
      */
-    virtual bool send( IRunnable* runnable );
+    virtual bool send(IRunnable* runnable);
 
     /**
      * @implements runForever
@@ -122,7 +122,7 @@ private:
     /**
      * 关闭本对象
      */
-    void close (void);
+    void close(void);
 
     /**
      * 发送一个已经完成的请求到完成端口
@@ -133,7 +133,7 @@ private:
      * 获取已完成的事件,并处理这个事件
      * @return 超时返回1,获取到事件并成功处理返回0,获取失败返回-1
      */
-    int handle_events (uint32_t milli_seconds);
+    int handle_events(uint32_t milli_seconds);
 
     /**
      * 等侍未返回的 IO 请求
@@ -145,10 +145,10 @@ private:
      */
     bool isPending();
 
-    void application_specific_code (ICommand *asynch_result,
-                                    size_t bytes_transferred,
-                                    const void *completion_key,
-                                    errcode_t error);
+    void application_specific_code(ICommand *asynch_result,
+                                   size_t bytes_transferred,
+                                   const void *completion_key,
+                                   errcode_t error);
 
     /// 完成端口句柄
     HANDLE completion_port_;

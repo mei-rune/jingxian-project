@@ -32,7 +32,7 @@ ICommand* IncomingBuffer::makeCommand()
         if (!bufferOP::isMemory(current))
             return bufferOP::makeCommand(current, true);
 
-        command.reset( new ReadCommand(connectedSocket_));
+        command.reset(new ReadCommand(connectedSocket_));
         io_mem_buf tmp;
 
         do
@@ -49,7 +49,7 @@ ICommand* IncomingBuffer::makeCommand()
     }
     else
     {
-        command.reset( new ReadCommand(connectedSocket_));
+        command.reset(new ReadCommand(connectedSocket_));
     }
 
     if (command->iovec().empty())
@@ -85,7 +85,7 @@ bool IncomingBuffer::increaseBytes(size_t len)
     {
         size_t bytes = bufferOP::wd_length(current);
 
-        if ( bytes >= exceptLen )
+        if (bytes >= exceptLen)
         {
             bufferOP::wd_ptr(current, exceptLen);
             current_ = last;
@@ -107,10 +107,10 @@ bool IncomingBuffer::decreaseBytes(size_t len)
     while (null_ptr != (current = dataBuffer_.head()))
     {
         size_t dataLen = bufferOP::rd_length(current);
-        if ( current_ == current)
+        if (current_ == current)
             current_ = null_ptr;
 
-        if ( dataLen >= exceptLen)
+        if (dataLen >= exceptLen)
         {
             bufferOP::rd_ptr(current, exceptLen);
             dataLen -= exceptLen;
@@ -148,7 +148,7 @@ void IncomingBuffer::dataBuffer(std::vector<io_mem_buf>& buf)
 
         buf.push_back(tmp);
 
-        if ( current_ == current)
+        if (current_ == current)
             break;
     }
 }

@@ -5,7 +5,7 @@
 _jingxian_begin
 
 
-void command_queue::release( ICommand* cmd )
+void command_queue::release(ICommand* cmd)
 {
     delete cmd;
 }

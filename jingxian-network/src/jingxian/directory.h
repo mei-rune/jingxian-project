@@ -3,7 +3,7 @@
 /**
 * -*- C++ -*-
 * -------------------------------------------------------------------------------
-* - ¤╭⌒╮ ╭⌒╮					 System_Directory.H,v 1.0 2005/05/17 16:41:54
+* - ¤╭⌒╮ ╭⌒╮          System_Directory.H,v 1.0 2005/05/17 16:41:54
 *  ╱◥██◣ ╭╭ ⌒╮
 * ︱田︱田田| ╰------
 * -------------------------------------------------------------------------------
@@ -40,12 +40,12 @@
 
 _jingxian_begin
 
-inline DWORD getApplicationDirectory(tchar *szModName, DWORD Size, bool slash = true )
+inline DWORD getApplicationDirectory(tchar *szModName, DWORD Size, bool slash = true)
 {
     DWORD ps = GetModuleFileName(NULL, szModName, Size);
-    while (ps > 0 && szModName[ps-1] != _T('\\') && szModName[ps-1] != _T('/') ) ps--;
+    while (ps > 0 && szModName[ps-1] != _T('\\') && szModName[ps-1] != _T('/')) ps--;
     szModName[ps] = _T('\0');
-    if ( !slash && ps> 0 )
+    if (!slash && ps > 0)
     {
         ps --;
         szModName[ps] = _T('\0');
@@ -58,11 +58,11 @@ inline DWORD getApplicationDirectory(tchar *szModName, DWORD Size, bool slash = 
  * 取得模块所在的目录
  * @param[ in ] slash 是否保留最后的"/"符（true 保留，false 不保留）
  */
-inline tstring getApplicationDirectory( bool slash = true )
+inline tstring getApplicationDirectory(bool slash = true)
 {
     tchar path[ MAX_PATH ] = _T("");
-    getApplicationDirectory( path, MAX_PATH ,slash );
-    return tstring( path );
+    getApplicationDirectory(path, MAX_PATH , slash);
+    return tstring(path);
 }
 
 /**
@@ -241,7 +241,7 @@ inline tstring getDirectoryName(const tstring& pa)
 /**
  * 取得文件路径中的扩展名
  */
-inline tstring getExtension (const tstring& pa)
+inline tstring getExtension(const tstring& pa)
 {
     const tstring path = simplify(pa);
 
@@ -273,7 +273,7 @@ inline tstring getFileName(const tstring& pa)
     }
     else
     {
-        return path.substr( slashPos + 1 );
+        return path.substr(slashPos + 1);
     }
 }
 
@@ -285,13 +285,13 @@ inline tstring getFileNameWithoutExtension(const tstring& pa)
     tstring path = getFileName(pa);
     tstring::size_type dotPos = path.rfind(_T('.'));
 
-    if (dotPos == tstring::npos )
+    if (dotPos == tstring::npos)
     {
         return path;
     }
     else
     {
-        return path.substr( 0, dotPos);
+        return path.substr(0, dotPos);
     }
 }
 
@@ -301,13 +301,13 @@ namespace detail
 class filefinder
 {
 public:
-    filefinder( intptr_t h )
-            : h_( h )
+    filefinder(intptr_t h)
+            : h_(h)
     {
     }
     ~filefinder()
     {
-        if ( -1 != h_ )
+        if (-1 != h_)
             _findclose(h_);
     }
 
@@ -333,14 +333,14 @@ inline std::list<tstring> readDirectory(const tstring& pa)
 
 #ifdef  _UNICODE
     struct _wfinddata_t data;
-    detail::filefinder finder( _wfindfirst(simplify((path + _T("/*"))).c_str(), &data) );
+    detail::filefinder finder(_wfindfirst(simplify((path + _T("/*"))).c_str(), &data));
 #else
     struct _finddata_t data;
-    detail::filefinder finder( _findfirst(simplify((path + _T("/*"))).c_str(), &data) );
+    detail::filefinder finder(_findfirst(simplify((path + _T("/*"))).c_str(), &data));
 #endif
-    if ( ( -1 == finder.get()) )
+    if ((-1 == finder.get()))
     {
-        ThrowException1( RuntimeException, _T("不能读目录 `") + path + _T("':\n") + lastError() );
+        ThrowException1(RuntimeException, _T("不能读目录 `") + path + _T("':\n") + lastError());
     }
 
     std::list<tstring> result;
@@ -351,7 +351,7 @@ inline std::list<tstring> readDirectory(const tstring& pa)
 
         //assert(!name.empty());
 
-        if ( name == _T("..") && name == _T("."))
+        if (name == _T("..") && name == _T("."))
         {
             result.push_back(name);
         }
@@ -367,7 +367,7 @@ inline std::list<tstring> readDirectory(const tstring& pa)
             }
 
             tstring ex = _T("不能读目录 `") + path + _T("':\n") + lastError();
-            ThrowException1( RuntimeException, ex );
+            ThrowException1(RuntimeException, ex);
         }
     }
 
@@ -380,7 +380,7 @@ inline std::list<tstring> readDirectory(const tstring& pa)
     int n = scandir(path.c_str(), &namelist, 0, alphasort);
     if (n < 0)
     {
-        ThrowException1( RuntimeException, _T("不能读目录 `") + path + _T("':\n") + lastError() );
+        ThrowException1(RuntimeException, _T("不能读目录 `") + path + _T("':\n") + lastError());
     }
 
     std::list< stringData<charT> > result;
@@ -433,7 +433,7 @@ inline void remove(const tstring& pa)
     if (stat(pa.c_str(), &buf) == -1)
 #endif
     {
-        ThrowException1( RuntimeException,  _T("不能stat `") + path + _T("':\n") + lastError() );
+        ThrowException1(RuntimeException,  _T("不能stat `") + path + _T("':\n") + lastError());
     }
 
     if (S_ISDIR(buf.st_mode))
@@ -444,14 +444,14 @@ inline void remove(const tstring& pa)
         if (rmdir(path.c_str()) == -1)
 #endif
         {
-            ThrowException1( RuntimeException,  _T("不能删除目录 `") + path + _T("':\n") + lastError() );
+            ThrowException1(RuntimeException,  _T("不能删除目录 `") + path + _T("':\n") + lastError());
         }
     }
     else
     {
         if (::_tremove(path.c_str()) == -1)
         {
-            ThrowException1( RuntimeException, _T("不能删除文件 `") + path + _T("':\n") + lastError());
+            ThrowException1(RuntimeException, _T("不能删除文件 `") + path + _T("':\n") + lastError());
         }
     }
 }
@@ -470,7 +470,7 @@ inline void removeRecursive(const tstring& pa)
     if (stat(pa.c_str(), &buf) == -1)
 #endif
     {
-        ThrowException1( RuntimeException, _T("不能stat `") + path + _T("':\n") + lastError() );
+        ThrowException1(RuntimeException, _T("不能stat `") + path + _T("':\n") + lastError());
     }
 
     if (S_ISDIR(buf.st_mode))
@@ -489,7 +489,7 @@ inline void removeRecursive(const tstring& pa)
             if (rmdir(path.c_str()) == -1)
 #endif
             {
-                ThrowException1( RuntimeException, _T("不能删除目录 `") + path + _T("':\n") + lastError() );
+                ThrowException1(RuntimeException, _T("不能删除目录 `") + path + _T("':\n") + lastError());
             }
         }
     }
@@ -497,7 +497,7 @@ inline void removeRecursive(const tstring& pa)
     {
         if (::_tremove(path.c_str()) == -1)
         {
-            ThrowException1( RuntimeException, _T("不能删除文件 `") + path + _T("':\n") + lastError() );
+            ThrowException1(RuntimeException, _T("不能删除文件 `") + path + _T("':\n") + lastError());
         }
     }
 }
@@ -517,7 +517,7 @@ inline void createDirectory(const tstring& pa)
     {
         if (errno != EEXIST)
         {
-            ThrowException1( RuntimeException, _T("不能创建目录 `") + path + _T("':\n") + lastError() );
+            ThrowException1(RuntimeException, _T("不能创建目录 `") + path + _T("':\n") + lastError());
         }
     }
 }
@@ -543,7 +543,7 @@ inline void createDirectoryRecursive(const tstring& pa)
     {
         if (errno != EEXIST)
         {
-            ThrowException1( RuntimeException, _T("不能创建目录 `") + path + _T("':\n") + lastError() );
+            ThrowException1(RuntimeException, _T("不能创建目录 `") + path + _T("':\n") + lastError());
         }
     }
 }
@@ -551,9 +551,9 @@ inline void createDirectoryRecursive(const tstring& pa)
 /**
  * 合并一个路径
  */
-inline tstring combinePath(const tstring& path1,const tstring& path2)
+inline tstring combinePath(const tstring& path1, const tstring& path2)
 {
-    return simplify(path1 + _T("/") + path2 );
+    return simplify(path1 + _T("/") + path2);
 }
 
 _jingxian_end

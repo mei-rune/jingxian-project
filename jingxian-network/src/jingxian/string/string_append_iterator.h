@@ -14,7 +14,7 @@
 _jingxian_begin
 
 template <class _Container>
-class string_append_iterator ITERATOR_BASE( input_iterator, tstring , ptrdiff_t )
+class string_append_iterator ITERATOR_BASE(input_iterator, tstring , ptrdiff_t)
 {
 protected:
     _Container* container;

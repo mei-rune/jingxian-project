@@ -70,13 +70,13 @@ struct ctype_traits<char_t>
 
     static char_type    to_upper(char_type ch)
     {
-        if ( 0 == is_alpha( ch ) || is_upper( ch ) )
+        if (0 == is_alpha(ch) || is_upper(ch))
             return ch;
         return (char_type) _toupper(ch);
     }
     static char_type    to_lower(char_type ch)
     {
-        if ( 0 == is_alpha( ch ) || is_lower( ch ) )
+        if (0 == is_alpha(ch) || is_lower(ch))
             return ch;
 
         return (char_type) _tolower(ch);
@@ -136,13 +136,13 @@ struct ctype_traits<wchar_t>
 
     static char_type    to_upper(char_type ch)
     {
-        if ( 0 == is_alpha( ch ) || is_upper( ch ) )
+        if (0 == is_alpha(ch) || is_upper(ch))
             return ch;
         return (char_type) towupper(ch);
     }
     static char_type    to_lower(char_type ch)
     {
-        if ( 0 == is_alpha( ch ) || is_lower( ch ) )
+        if (0 == is_alpha(ch) || is_lower(ch))
             return ch;
 
         return (char_type) towlower(ch);

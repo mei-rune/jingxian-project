@@ -94,7 +94,7 @@ void Logger::trace(const LogStream& message, const char* file, int line)
 
 bool Logger::isEnabledFor(const logging::LevelPtr& level) const
 {
-    return logger_.isPriorityEnabled( level );
+    return logger_.isPriorityEnabled(level);
 }
 
 void Logger::log(const logging::LevelPtr& level, const LogStream& message,
@@ -108,11 +108,11 @@ logging::LevelPtr Logger::getLevel() const
     return logger_.getPriority();
 }
 
-void Logger::pushNDC( const tchar* str )
+void Logger::pushNDC(const tchar* str)
 {
 }
 
-void Logger::popNDC( )
+void Logger::popNDC()
 {
 }
 
@@ -131,7 +131,7 @@ Tracer::Tracer(const tchar* nm, const tstring& thost, const tstring& tpeer, cons
     std::string peer = toNarrowString(tpeer);
 
     size_t len = host.size() + peer.size() + 20;
-    name_ = (char*)my_malloc( len );
+    name_ = (char*)my_malloc(len);
     memset(name_, 0, len);
     name_[0] = '[';
     memcpy(name_ + 1, host.c_str(), host.size());
@@ -161,7 +161,7 @@ Tracer::Tracer(const tchar* nm, const tstring& thost, const tstring& tpeer, cons
     if (!existDirectory(dir))
         createDirectory(dir);
 
-    appender = toNarrowString(combinePath(dir,toTstring(name) + _T(".txt")));
+    appender = toNarrowString(combinePath(dir, toTstring(name) + _T(".txt")));
     logger_.addAppender(new log4cpp::FileAppender(name, appender));
 }
 
@@ -182,7 +182,7 @@ bool Tracer::isDebugEnabled() const
 void Tracer::debug(transport_mode::type way, const LogStream& message, const char* file, int line)
 {
     std::string str = toNarrowString(message.str());
-    logger_.debug( "%s %s", TRANSPORT_MODE[way], str.c_str(), file, line);
+    logger_.debug("%s %s", TRANSPORT_MODE[way], str.c_str(), file, line);
 }
 
 bool Tracer::isErrorEnabled() const
@@ -193,7 +193,7 @@ bool Tracer::isErrorEnabled() const
 void Tracer::error(transport_mode::type way, const LogStream& message, const char* file, int line)
 {
     std::string str = toNarrowString(message.str());
-    logger_.error( "%s %s", TRANSPORT_MODE[way], str.c_str(), file, line);
+    logger_.error("%s %s", TRANSPORT_MODE[way], str.c_str(), file, line);
 }
 
 bool Tracer::isFatalEnabled() const
@@ -204,7 +204,7 @@ bool Tracer::isFatalEnabled() const
 void Tracer::fatal(transport_mode::type way, const LogStream& message, const char* file, int line)
 {
     std::string str = toNarrowString(message.str());
-    logger_.fatal( "%s %s", TRANSPORT_MODE[way], str.c_str(), file, line);
+    logger_.fatal("%s %s", TRANSPORT_MODE[way], str.c_str(), file, line);
 }
 
 bool Tracer::isInfoEnabled() const
@@ -215,7 +215,7 @@ bool Tracer::isInfoEnabled() const
 void Tracer::info(transport_mode::type way, const LogStream& message, const char* file, int line)
 {
     std::string str = toNarrowString(message.str());
-    logger_.crit( "%s %s", TRANSPORT_MODE[way], str.c_str(), file, line);
+    logger_.crit("%s %s", TRANSPORT_MODE[way], str.c_str(), file, line);
 }
 
 bool Tracer::isWarnEnabled() const
@@ -226,7 +226,7 @@ bool Tracer::isWarnEnabled() const
 void Tracer::warn(transport_mode::type way, const LogStream& message, const char* file, int line)
 {
     std::string str = toNarrowString(message.str());
-    logger_.warn( "%s %s", TRANSPORT_MODE[way], str.c_str(), file, line);
+    logger_.warn("%s %s", TRANSPORT_MODE[way], str.c_str(), file, line);
 }
 
 bool Tracer::isTraceEnabled() const
@@ -237,7 +237,7 @@ bool Tracer::isTraceEnabled() const
 void Tracer::trace(transport_mode::type way, const LogStream& message, const char* file, int line)
 {
     std::string str = toNarrowString(message.str());
-    logger_.debug( "%s %s", TRANSPORT_MODE[way], str.c_str(), file, line);
+    logger_.debug("%s %s", TRANSPORT_MODE[way], str.c_str(), file, line);
 }
 
 bool Tracer::isCritEnabled() const
@@ -248,14 +248,14 @@ bool Tracer::isCritEnabled() const
 void Tracer::crit(transport_mode::type way, const LogStream& message, const char* file, int line)
 {
     std::string str = toNarrowString(message.str());
-    logger_.crit( "%s %s", TRANSPORT_MODE[way], str.c_str(), file, line);
+    logger_.crit("%s %s", TRANSPORT_MODE[way], str.c_str(), file, line);
 }
 
 
 
 ContextCategory::ContextCategory(const std::string& name
                                  , const std::string& context)
-        : log4cpp::Category(name,&log4cpp::Category::getInstance(name), log4cpp::Priority::DEBUG)
+        : log4cpp::Category(name, &log4cpp::Category::getInstance(name), log4cpp::Priority::DEBUG)
         , context_(context)
 {
     this->setPriority(this->getParent()->getPriority());

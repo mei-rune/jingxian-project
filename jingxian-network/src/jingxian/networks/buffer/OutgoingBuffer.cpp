@@ -33,7 +33,7 @@ ICommand* OutgoingBuffer::makeCommand()
     if (is_null(current))
         return null_ptr;
 
-    if ( bufferOP::isMemory(current))
+    if (bufferOP::isMemory(current))
     {
         std::auto_ptr<WriteCommand> command(new WriteCommand(connectedSocket_));
         io_mem_buf iobuf;
@@ -71,10 +71,10 @@ bool OutgoingBuffer::clearBytes(size_t len)
         }
 
         size_t dataLen = bufferOP::rd_length(current);
-        if ( dataLen >= exceptLen)
+        if (dataLen >= exceptLen)
         {
             bufferOP::rd_ptr(current, exceptLen);
-            if ( dataLen == exceptLen)
+            if (dataLen == exceptLen)
                 freebuffer(buffer_.pop());
 
             exceptLen = 0;
@@ -91,32 +91,32 @@ bool OutgoingBuffer::clearBytes(size_t len)
 
 void assertBuffer(buffer_chain_t* newbuf)
 {
-    switch ( newbuf->type)
+    switch (newbuf->type)
     {
     case BUFFER_ELEMENT_MEMORY:
     {
         databuffer_t* data = (databuffer_t*)newbuf;
-        assert( data->ptr <= data->start );
-        assert( data->start <= data->end);
-        assert( data->end <= data->ptr + data->capacity);
+        assert(data->ptr <= data->start);
+        assert(data->start <= data->end);
+        assert(data->end <= data->ptr + data->capacity);
         break;
     }
     case BUFFER_ELEMENT_FILE:
     {
         // TODO: 加入对文件的支持
         filebuffer_t* filebuf = (filebuffer_t*)newbuf;
-        assert( false );
+        assert(false);
         break;
     }
     case BUFFER_ELEMENT_PACKET:
     {
         // TODO: 加入对文件的支持
         packetbuffer_t* packetbuf = (packetbuffer_t*)newbuf;
-        assert( false );
+        assert(false);
         break;
     }
     default:
-        assert( false );
+        assert(false);
         break;
     }
 }

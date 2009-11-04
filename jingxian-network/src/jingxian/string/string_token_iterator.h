@@ -14,7 +14,7 @@
 _jingxian_begin
 
 template< typename C >
-struct string_token_iterator ITERATOR_BASE( input_iterator, tstring , ptrdiff_t )
+struct string_token_iterator ITERATOR_BASE(input_iterator, tstring , ptrdiff_t)
 {
 public:
 
@@ -26,7 +26,7 @@ public:
     template< typename S >
     string_token_iterator(const S & s, const char_type * separator_ = _T(" ")) :
             separator(separator_),
-            _ptr( c_str_ptr(s) ),
+            _ptr(c_str_ptr(s)),
             end(0)
     {
         find_next();

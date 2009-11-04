@@ -78,7 +78,7 @@ public:
     {
         get { return Helper.ReadInt16(_IOBuffer, 2, true);
             }
-        set { Helper.Write(_IOBuffer, 2, value, true );
+        set { Helper.Write(_IOBuffer, 2, value, true);
             }
     }
 
@@ -145,7 +145,7 @@ public:
             ip[3] = 1;
 
             byte[] u = _encoding.GetBytes(value);
-            Array.Copy(u, 0, _IOBuffer, _length, u.Length );
+            Array.Copy(u, 0, _IOBuffer, _length, u.Length);
             _IOBuffer[_length + u.Length + 1] = 0;
             _length = _length + u.Length + 1;
         }
@@ -254,9 +254,9 @@ class ResponsePacket
 
     public short Port
     {
-        get { return Helper.ReadInt16(_IOBuffer, 2,true );
+        get { return Helper.ReadInt16(_IOBuffer, 2, true);
             }
-        set { Helper.Write(_IOBuffer, 2, value, false );
+        set { Helper.Write(_IOBuffer, 2, value, false);
             }
     }
 

@@ -62,7 +62,7 @@ public:
 
     void copyFrom(const HostAddress& addr)
     {
-        this->copyFrom(addr.ptr(),addr.len());
+        this->copyFrom(addr.ptr(), addr.len());
     }
 
     struct sockaddr* ptr()

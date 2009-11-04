@@ -5,9 +5,9 @@
 *
 * History:
 *  2009-03-23         - Yalon changes:
-*						Made this an abstract class (OnOutput is now pure virtual)
-*						Added a parameter skipFramesCount to ShowCallstack
-*						Added ability to filter out the general info. As part of this, changed the name and meaning of one of the options
+*           Made this an abstract class (OnOutput is now pure virtual)
+*           Added a parameter skipFramesCount to ShowCallstack
+*           Added ability to filter out the general info. As part of this, changed the name and meaning of one of the options
 *  2005-07-27   v1    - First public release on http://www.codeproject.com/
 *  (for additional changes see History in 'StackTracer.cpp'!
 *

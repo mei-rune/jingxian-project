@@ -24,10 +24,10 @@ public:
 
     virtual ~RunCommand();
 
-    virtual void on_complete (size_t bytes_transferred,
-                              bool success,
-                              void *completion_key,
-                              errcode_t error);
+    virtual void on_complete(size_t bytes_transferred,
+                             bool success,
+                             void *completion_key,
+                             errcode_t error);
 
     virtual bool execute();
 

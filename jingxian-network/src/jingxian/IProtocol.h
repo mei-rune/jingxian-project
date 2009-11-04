@@ -86,13 +86,13 @@ public:
     virtual const tstring& toString() const = 0;
 };
 
-inline tostream& operator<<( tostream& target, const IProtocolFactory& protocolFactory )
+inline tostream& operator<<(tostream& target, const IProtocolFactory& protocolFactory)
 {
     target << protocolFactory.toString();
     return target;
 }
 
-inline tostream& operator<<( tostream& target, const IProtocol& protocol )
+inline tostream& operator<<(tostream& target, const IProtocol& protocol)
 {
     target << protocol.toString();
     return target;

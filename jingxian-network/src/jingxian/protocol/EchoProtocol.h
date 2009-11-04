@@ -64,8 +64,8 @@ public:
     {
         OutBuffer out(&context.transport());
         for (std::vector<io_mem_buf>::const_iterator it = context.inMemory().begin()
-                ; it != context.inMemory().end(); ++ it )
-            out.writeBlob( it->buf, it->len);
+                ; it != context.inMemory().end(); ++ it)
+            out.writeBlob(it->buf, it->len);
 
         return out.size();
     }

@@ -4,7 +4,7 @@
 
 _jingxian_begin
 
-const tchar* TRANSPORT_MODE[] = { _T(""), _T("Receive"),_T("Send"),_T("Both") };
+const tchar* TRANSPORT_MODE[] = { _T(""), _T("Receive"), _T("Send"), _T("Both") };
 
 Tracer::Tracer(ILogger* logger, const tchar* nm)
         : logger_(logger)

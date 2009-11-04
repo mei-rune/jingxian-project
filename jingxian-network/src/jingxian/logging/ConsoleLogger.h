@@ -35,10 +35,10 @@ public:
     {
     }
 
-    virtual void assertLog(bool assertion, const LogStream& message, const char* file=0, int line=-1)
+    virtual void assertLog(bool assertion, const LogStream& message, const char* file = 0, int line = -1)
     {
         tcout << message.str() << std::endl;
-        assert( assertion );
+        assert(assertion);
     }
 
     virtual bool isFatalEnabled() const
@@ -46,7 +46,7 @@ public:
         return true;
     }
 
-    virtual void fatal(const LogStream& message, const char* file=0, int line=-1)
+    virtual void fatal(const LogStream& message, const char* file = 0, int line = -1)
     {
         tcout << message.str() << std::endl;
     }
@@ -57,7 +57,7 @@ public:
         return true;
     }
 
-    virtual void error(const LogStream& message, const char* file=0, int line=-1)
+    virtual void error(const LogStream& message, const char* file = 0, int line = -1)
     {
         tcout << message.str() << std::endl;
     }
@@ -67,7 +67,7 @@ public:
         return true;
     }
 
-    virtual void info(const LogStream& message, const char* file=NULL, int line=-1)
+    virtual void info(const LogStream& message, const char* file = NULL, int line = -1)
     {
         tcout << message.str() << std::endl;
     }
@@ -77,7 +77,7 @@ public:
         return true;
     }
 
-    virtual void debug(const LogStream& message, const char* file=0, int line=-1)
+    virtual void debug(const LogStream& message, const char* file = 0, int line = -1)
     {
         tcout << message.str() << std::endl;
     }
@@ -87,7 +87,7 @@ public:
         return true;
     }
 
-    virtual void warn(const LogStream& message, const char* file=NULL, int line=-1)
+    virtual void warn(const LogStream& message, const char* file = NULL, int line = -1)
     {
         tcout << message.str() << std::endl;
     }
@@ -97,7 +97,7 @@ public:
         return true;
     }
 
-    virtual void trace(const LogStream& message, const char* file=NULL, int line=-1)
+    virtual void trace(const LogStream& message, const char* file = NULL, int line = -1)
     {
         tcout << message.str() << std::endl;
     }
@@ -108,7 +108,7 @@ public:
     }
 
     virtual void log(const logging::LevelPtr& level, const LogStream& message,
-                     const char* file=0, int line=-1)
+                     const char* file = 0, int line = -1)
     {
         tcout << message.str() << std::endl;
     }
@@ -118,11 +118,11 @@ public:
         return _levelPtr;
     }
 
-    virtual void pushNDC( const tchar* str )
+    virtual void pushNDC(const tchar* str)
     {
     }
 
-    virtual void popNDC( )
+    virtual void popNDC()
     {
     }
 

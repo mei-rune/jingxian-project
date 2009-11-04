@@ -12,7 +12,7 @@ namespace proxy
 {
 
 SOCKSv5Incoming::SOCKSv5Incoming()
-        :socks_(null_ptr)
+        : socks_(null_ptr)
         , transport_(null_ptr)
 {
 }
@@ -27,11 +27,11 @@ void SOCKSv5Incoming::write(const std::vector<io_mem_buf>& buffers)
     OutBuffer out(transport_);
     for (std::vector<io_mem_buf>::const_iterator it = buffers.begin()
             ; it != buffers.end()
-            ; ++ it )
+            ; ++ it)
     {
         out.writeBlob(it->buf, it->len);
 #ifdef DUMPFILE
-        (*os) << std::string( it->buf, it->len );
+        (*os) << std::string(it->buf, it->len);
         os->flush();
 #endif
     }
@@ -55,9 +55,9 @@ size_t SOCKSv5Incoming::onReceived(ProtocolContext& context)
 #ifdef DUMPFILE
     for (std::vector<io_mem_buf>::const_iterator it = context.inMemory().begin()
             ; it != context.inMemory().end()
-            ; ++ it )
+            ; ++ it)
     {
-        *is << std::string( it->buf, it->len );
+        *is << std::string(it->buf, it->len);
         is->flush();
     }
 #endif
@@ -75,10 +75,10 @@ void SOCKSv5Incoming::onConnected(ProtocolContext& context)
 
 #ifdef DUMPFILE
     static int id = 0;
-    os.reset( new std::ofstream(toNarrowString(simplify (combinePath(combinePath(socks_->internalCore()->basePath(), _T("session")),concat<tstring>(_T("incoming_os_"), ::toString(++id), _T(".txt"))))).c_str()));
+    os.reset(new std::ofstream(toNarrowString(simplify(combinePath(combinePath(socks_->internalCore()->basePath(), _T("session")), concat<tstring>(_T("incoming_os_"), ::toString(++id), _T(".txt"))))).c_str()));
     *os <<  toNarrowString(context.transport().toString())  << std::endl;
 
-    is.reset( new std::ofstream(toNarrowString(simplify (combinePath(combinePath(socks_->internalCore()->basePath(), _T("session")),concat<tstring>(_T("incoming_is_"), ::toString(id), _T(".txt"))))).c_str()));
+    is.reset(new std::ofstream(toNarrowString(simplify(combinePath(combinePath(socks_->internalCore()->basePath(), _T("session")), concat<tstring>(_T("incoming_is_"), ::toString(id), _T(".txt"))))).c_str()));
     *is  <<  toNarrowString(context.transport().toString()) << std::endl;
 #endif
 }

@@ -46,7 +46,7 @@ public:
 #endif
 
 private:
-    DECLARE_NO_COPY_CLASS( null_mutex );
+    DECLARE_NO_COPY_CLASS(null_mutex);
 };
 
 _jingxian_end
