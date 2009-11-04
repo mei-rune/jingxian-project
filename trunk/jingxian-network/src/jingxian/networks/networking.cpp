@@ -421,7 +421,11 @@ bool stringToAddress(const tchar* host
         begin = host;
     }
 
-    return (SOCKET_ERROR != ::WSAStringToAddress((LPTSTR)begin, addr->sa_family, 0, addr, len));
+    return (SOCKET_ERROR != ::WSAStringToAddress((LPTSTR)begin
+									, addr->sa_family
+									, 0
+									, addr
+									, len));
 }
 
 tstring fetchAddr(const tchar* host)
@@ -460,7 +464,11 @@ bool addressToString(struct sockaddr* addr
     host.resize(256);
     DWORD addressLength = host.size() - prefix;
 
-    if (SOCKET_ERROR == ::WSAAddressToString(addr, len, NULL, (LPTSTR)host.c_str() + prefix, &addressLength))
+    if (SOCKET_ERROR == ::WSAAddressToString(addr
+					, len
+					, NULL
+					, (LPTSTR)host.c_str() + prefix
+					, &addressLength))
         return false;
 
     host.resize(addressLength + prefix - 1);
