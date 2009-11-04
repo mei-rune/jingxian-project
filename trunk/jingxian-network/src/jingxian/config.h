@@ -2,7 +2,7 @@
 /**
  * -*- C++ -*-
  * -------------------------------------------------------------------------------
- * - °Ë®q°–®r ®q°–®r		                    config.h,v 1.0 2004/12/09 16:01:34
+ * - °Ë®q°–®r ®q°–®r                        config.h,v 1.0 2004/12/09 16:01:34
  *  ®u®ê®Ä®Ä®é ®q®q °–®r
  * ¶ÚÃÔ¶ÚÃÔÃÔ| ®t------
  * -------------------------------------------------------------------------------
@@ -133,45 +133,45 @@ typedef _off_t off_t;
 
 
 # ifdef HAVE_ITERATOR
-#  define ITERATOR_BASE(cat,val,diff)	: public std::iterator<std::cat##_tag,val,diff>
+#  define ITERATOR_BASE(cat,val,diff) : public std::iterator<std::cat##_tag,val,diff>
 # elif HAVE_ITERATOR_TRAITS
 #  define ITERATOR_BASE(cat,val,diff)
 # else
-#  define ITERATOR_BASE(cat,val,diff)	: public std::cat<val,diff>
+#  define ITERATOR_BASE(cat,val,diff) : public std::cat<val,diff>
 # endif
 
 # ifdef HAVE_REVERSE_ITERATOR_STYLE
 #  define REVERSE_ITERATOR(tname,tag,iter,value,reference,pointer,difference) \
-	std::reverse_iterator<iter>
+  std::reverse_iterator<iter>
 # elif HAVE_REVERSE_ITERATOR_STYLE == 2
 #  define REVERSE_ITERATOR(tname,tag,iter,value,reference,pointer,difference) \
-	std::reverse_iterator<iter,std::tag,value,reference,pointer,difference>
+  std::reverse_iterator<iter,std::tag,value,reference,pointer,difference>
 # elif HAVE_REVERSE_ITERATOR_STYLE == 3
 #  define REVERSE_ITERATOR(tname,tag,iter,value,reference,pointer,difference) \
-	std::tname<iter,value,reference,pointer,difference>
+  std::tname<iter,value,reference,pointer,difference>
 # elif HAVE_REVERSE_ITERATOR_STYLE == 4
 #  define REVERSE_ITERATOR(tname,tag,iter,value,reference,pointer,difference) \
-	std::os_##tname<iter,value,reference,pointer,difference>
+  std::os_##tname<iter,value,reference,pointer,difference>
 # else
 #  define REVERSE_ITERATOR(tname,tag,iter,value,reference,pointer,difference) \
-	I_don_t_know_how_to_define_reverse_iterator
+  I_don_t_know_how_to_define_reverse_iterator
 # endif
 
 
 template< typename T >
-inline bool is_null( T t )
+inline bool is_null(T t)
 {
-    return ( NULL == t );
+    return (NULL == t);
 }
 
 template< typename T >
-inline bool is_null( const std::auto_ptr<T>& t )
+inline bool is_null(const std::auto_ptr<T>& t)
 {
-    return ( NULL == t.get() );
+    return (NULL == t.get());
 }
 
 template< typename T >
-inline T get_ptr( T t )
+inline T get_ptr(T t)
 {
     return t;
 }

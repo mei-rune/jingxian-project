@@ -92,8 +92,8 @@ class ErrorCode
 public:
     ErrorCode(const tchar* err)
             : isSuccess_(false)
-            , code_( 0 )
-            , err_( err )
+            , code_(0)
+            , err_(err)
     {}
 
     ErrorCode(bool success, int code)
@@ -138,20 +138,20 @@ private:
     tstring err_;
 };
 
-inline tostream& operator<<( tostream& target, const ITransport& transport )
+inline tostream& operator<<(tostream& target, const ITransport& transport)
 {
     target << transport.toString();
     return target;
 }
 
-inline tostream& operator<<( tostream& target, const ErrorCode& err )
+inline tostream& operator<<(tostream& target, const ErrorCode& err)
 {
     target << err.toString();
     return target;
 }
 
-typedef void (*OnBuildConnectionComplete)( ITransport* transport, void* context);
-typedef void (*OnBuildConnectionError)( const ErrorCode& err,  void* context);
+typedef void (*OnBuildConnectionComplete)(ITransport* transport, void* context);
+typedef void (*OnBuildConnectionError)(const ErrorCode& err,  void* context);
 
 _jingxian_end
 

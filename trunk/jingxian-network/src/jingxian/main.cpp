@@ -6,10 +6,10 @@
 
 int _tmain(int argc, tchar* argv[])
 {
-    int tmpFlag = _CrtSetDbgFlag( _CRTDBG_REPORT_FLAG );
+    int tmpFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
     tmpFlag |= _CRTDBG_LEAK_CHECK_DF;
     tmpFlag &= ~_CRTDBG_CHECK_CRT_DF;
-    _CrtSetDbgFlag( tmpFlag );
+    _CrtSetDbgFlag(tmpFlag);
 
 # ifdef _GOOGLETEST_
     testing::InitGoogleTest(&argc, argv);

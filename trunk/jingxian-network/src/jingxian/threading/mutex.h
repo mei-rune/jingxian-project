@@ -25,34 +25,34 @@ public:
 
     mutex()
     {
-        InitializeCriticalSection( &section_ );
+        InitializeCriticalSection(&section_);
     }
 
     ~mutex()
     {
-        DeleteCriticalSection( &section_ );
+        DeleteCriticalSection(&section_);
     }
 
     bool acquire()
     {
-        EnterCriticalSection( &section_ );
+        EnterCriticalSection(&section_);
         return true;
     }
     void release()
     {
-        LeaveCriticalSection( &section_ );
+        LeaveCriticalSection(&section_);
     }
 
 #if(_WIN32_WINNT >= 0x0400)
     bool tryacquire()
     {
-        return TryEnterCriticalSection( &section_ );
+        return TryEnterCriticalSection(&section_);
     }
 #endif
 
 private:
 
-    DECLARE_NO_COPY_CLASS( mutex );
+    DECLARE_NO_COPY_CLASS(mutex);
 
     CRITICAL_SECTION section_;
 };

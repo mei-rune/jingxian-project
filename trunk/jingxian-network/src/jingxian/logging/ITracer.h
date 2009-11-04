@@ -35,7 +35,7 @@ public:
      * @param[ in ] file 日志记录的源文件名
      * @param[ in ] line 日志记录的源文件的当前行
      */
-    virtual void debug(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
+    virtual void debug(transport_mode::type way, const LogStream& message, const char* file = 0, int line = -1) = 0;
 
     /**
      * error级的日志是否可以记日志
@@ -50,7 +50,7 @@ public:
      * @param[ in ] file 日志记录的源文件名
      * @param[ in ] line 日志记录的源文件的当前行
      */
-    virtual void error(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
+    virtual void error(transport_mode::type way, const LogStream& message, const char* file = 0, int line = -1) = 0;
 
     /**
      * fatal级的日志是否可以记日志
@@ -65,7 +65,7 @@ public:
      * @param[ in ] file 日志记录的源文件名
      * @param[ in ] line 日志记录的源文件的当前行
      */
-    virtual void fatal(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
+    virtual void fatal(transport_mode::type way, const LogStream& message, const char* file = 0, int line = -1) = 0;
 
     /**
      * info级的日志是否可以记日志
@@ -80,7 +80,7 @@ public:
      * @param[ in ] file 日志记录的源文件名
      * @param[ in ] line 日志记录的源文件的当前行
      */
-    virtual void info(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
+    virtual void info(transport_mode::type way, const LogStream& message, const char* file = 0, int line = -1) = 0;
 
     /**
      * warn级的日志是否可以记日志
@@ -95,7 +95,7 @@ public:
      * @param[ in ] file 日志记录的源文件名
      * @param[ in ] line 日志记录的源文件的当前行
      */
-    virtual void warn(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
+    virtual void warn(transport_mode::type way, const LogStream& message, const char* file = 0, int line = -1) = 0;
 
 
     /**
@@ -111,7 +111,7 @@ public:
      * @param[ in ] file 日志记录的源文件名
      * @param[ in ] line 日志记录的源文件的当前行
      */
-    virtual void trace(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
+    virtual void trace(transport_mode::type way, const LogStream& message, const char* file = 0, int line = -1) = 0;
 
     /**
      * Crit 级的日志是否可以记日志
@@ -126,7 +126,7 @@ public:
      * @param[ in ] file 日志记录的源文件名
      * @param[ in ] line 日志记录的源文件的当前行
      */
-    virtual void crit(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1) = 0;
+    virtual void crit(transport_mode::type way, const LogStream& message, const char* file = 0, int line = -1) = 0;
 };
 
 namespace logging
@@ -138,7 +138,7 @@ class ITraceFactory
 public:
     virtual ~ITraceFactory() {};
 
-    virtual ITracer* make( const tchar* nm, const tstring& host, const tstring& peer, const tstring& sessionId) = 0;
+    virtual ITracer* make(const tchar* nm, const tstring& host, const tstring& peer, const tstring& sessionId) = 0;
 };
 }
 }
@@ -150,88 +150,88 @@ _jingxian_end
 
 #ifndef TP_CRITICAL
 #define TP_CRITICAL(logger, way, message) { \
-	if ( logger != 0 && logger->isCritEnabled()) {\
-	LogStream oss; \
-	oss << message; \
-	logger->crit(way, oss, __FILE__, __LINE__); }}
+  if ( logger != 0 && logger->isCritEnabled()) {\
+  LogStream oss; \
+  oss << message; \
+  logger->crit(way, oss, __FILE__, __LINE__); }}
 #endif // TP_CRITICAL
 
 #ifndef TP_DEBUG
 #define TP_DEBUG(logger, way, message) { \
-	if ( logger != 0 && logger->isDebugEnabled()) {\
-	LogStream oss; \
-	oss << message; \
-	logger->debug(way, oss, __FILE__, __LINE__); }}
+  if ( logger != 0 && logger->isDebugEnabled()) {\
+  LogStream oss; \
+  oss << message; \
+  logger->debug(way, oss, __FILE__, __LINE__); }}
 #endif // LOG_DEBUG
 
 #ifndef TP_INFO
 #define TP_INFO(logger, way, message) { \
-	if ( logger != 0 && logger->isInfoEnabled()) {\
-	LogStream oss; \
-	oss << message; \
-	logger->info(way, oss, __FILE__, __LINE__); }}
+  if ( logger != 0 && logger->isInfoEnabled()) {\
+  LogStream oss; \
+  oss << message; \
+  logger->info(way, oss, __FILE__, __LINE__); }}
 #endif // LOG_INFO
 
 #ifndef TP_WARN
 #define TP_WARN(logger, way, message ) { \
-	if ( logger != 0 && logger->isWarnEnabled()) {\
-	LogStream oss; \
-	oss << message; \
-	logger->warn(way, oss, __FILE__, __LINE__); }}
+  if ( logger != 0 && logger->isWarnEnabled()) {\
+  LogStream oss; \
+  oss << message; \
+  logger->warn(way, oss, __FILE__, __LINE__); }}
 #endif // LOG_WARN
 
 #ifndef TP_ERROR
 #define TP_ERROR(logger, way, message) { \
-	if ( logger != 0 && logger->isErrorEnabled()) {\
-	LogStream oss; \
-	oss << message; \
-	logger->error(way, oss, __FILE__, __LINE__); }}
+  if ( logger != 0 && logger->isErrorEnabled()) {\
+  LogStream oss; \
+  oss << message; \
+  logger->error(way, oss, __FILE__, __LINE__); }}
 #endif // LOG_ERROR
 
 #ifndef TP_FATAL
 #define TP_FATAL(logger, way, message) { \
-	if ( logger != 0 && logger->isFatalEnabled()) {\
-	LogStream oss; \
-	oss << message; \
-	logger->fatal(way, oss, __FILE__, __LINE__); }}
+  if ( logger != 0 && logger->isFatalEnabled()) {\
+  LogStream oss; \
+  oss << message; \
+  logger->fatal(way, oss, __FILE__, __LINE__); }}
 #endif // LOG_FATAL
 
 #ifndef TP_TRACE
 #define TP_TRACE(logger, way, message) { \
-	if ( logger != 0 && logger->isTraceEnabled()) {\
-	LogStream oss; \
-	oss << message; \
-	logger->trace(way, oss, __FILE__, __LINE__); }}
+  if ( logger != 0 && logger->isTraceEnabled()) {\
+  LogStream oss; \
+  oss << message; \
+  logger->trace(way, oss, __FILE__, __LINE__); }}
 #endif // TP_TRACE
 
-#else	// _NO_LOG_
+#else // _NO_LOG_
 
 #ifndef TP_LOG
-#define TP_LOG(logger, way, level, message)			{}
+#define TP_LOG(logger, way, level, message)     {}
 #endif // TP_LOG
 
 #ifndef TP_DEBUG
-#define TP_DEBUG(logger, way, message)			{}
+#define TP_DEBUG(logger, way, message)      {}
 #endif // TP_DEBUG
 
 #ifndef TP_INFO
-#define TP_INFO(logger, way, message)			{}
+#define TP_INFO(logger, way, message)     {}
 #endif // TP_INFO
 
 #ifndef TP_WARN
-#define TP_WARN(logger, way, message)			{}
+#define TP_WARN(logger, way, message)     {}
 #endif // TP_WARN
 
 #ifndef TP_ERROR
-#define TP_ERROR(logger, way, message)			{}
+#define TP_ERROR(logger, way, message)      {}
 #endif // TP_TP_ERROR
 
 #ifndef TP_FATAL
-#define TP_FATAL(logger, way, message)			{}
+#define TP_FATAL(logger, way, message)      {}
 #endif // LOG_FATAL
 
 #ifndef TP_TRACE
-#define TP_TRACE(logger, way, message)			{}
+#define TP_TRACE(logger, way, message)      {}
 #endif // TP_TRACE
 
 #endif // _NO_LOG_

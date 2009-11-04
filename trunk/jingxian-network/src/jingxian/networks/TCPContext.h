@@ -33,7 +33,7 @@ public:
         {
             totalLen = 0;
             for (std::vector<io_mem_buf>::const_iterator it = buffers->begin()
-                    ; it != buffers->end(); ++ it )
+                    ; it != buffers->end(); ++ it)
             {
                 totalLen += it->len;
             }
@@ -44,17 +44,17 @@ public:
 
     //InBuffer& GetInBuffer()
     //{
-    //	return _inBuffer;
+    //  return _inBuffer;
     //}
 
     //OutBuffer& GetOutBuffer()
     //{
-    //	return _outBuffer;
+    //  return _outBuffer;
     //}
 
 //private:
-//	InBuffer _inBuffer;
-//	OutBuffer _outBuffer;
+//  InBuffer _inBuffer;
+//  OutBuffer _outBuffer;
 };
 
 _jingxian_end

@@ -28,7 +28,7 @@ public:
      *
      * @param[ in ] runnable 执行方法
     */
-    virtual bool send( IRunnable* runnable ) = 0;
+    virtual bool send(IRunnable* runnable) = 0;
 
     /**
     * 取得地址的描述
@@ -36,7 +36,7 @@ public:
     virtual const tstring& toString() const = 0;
 };
 
-inline tostream& operator<<( tostream& target, const IConcurrentPort& concurrentPort )
+inline tostream& operator<<(tostream& target, const IConcurrentPort& concurrentPort)
 {
     target << concurrentPort.toString();
     return target;

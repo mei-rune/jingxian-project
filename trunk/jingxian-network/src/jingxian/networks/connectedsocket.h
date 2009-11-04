@@ -37,7 +37,7 @@ public:
                     , const tstring& host
                     , const tstring& peer);
 
-    virtual ~ConnectedSocket( );
+    virtual ~ConnectedSocket();
 
     /**
      * @implements initialize

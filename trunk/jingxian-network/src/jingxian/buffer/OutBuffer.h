@@ -19,7 +19,7 @@ class OutBuffer : public BaseBuffer<IOutBuffer>
 {
 public:
     OutBuffer(ITransport* transport);
-    virtual ~OutBuffer( );
+    virtual ~OutBuffer();
 
     virtual int beginTranscation();
     virtual void rollbackTranscation(int);

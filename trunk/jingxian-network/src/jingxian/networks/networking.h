@@ -83,29 +83,29 @@ bool transmitFile(SOCKET hSocket,
                   DWORD nNumberOfBytesPerSend,
                   LPOVERLAPPED lpOverlapped,
                   LPTRANSMIT_FILE_BUFFERS lpTransmitBuffers,
-                  DWORD dwFlags );
+                  DWORD dwFlags);
 
 /**
  * @see MSDN
  */
-bool acceptEx( SOCKET sListenSocket,
-               SOCKET sAcceptSocket,
-               PVOID lpOutputBuffer,
-               DWORD dwReceiveDataLength,
-               DWORD dwLocalAddressLength,
-               DWORD dwRemoteAddressLength,
-               LPDWORD lpdwBytesReceived,
-               LPOVERLAPPED lpOverlapped );
+bool acceptEx(SOCKET sListenSocket,
+              SOCKET sAcceptSocket,
+              PVOID lpOutputBuffer,
+              DWORD dwReceiveDataLength,
+              DWORD dwLocalAddressLength,
+              DWORD dwRemoteAddressLength,
+              LPDWORD lpdwBytesReceived,
+              LPOVERLAPPED lpOverlapped);
 
 /**
  * @see MSDN
  */
-bool transmitPackets( SOCKET hSocket,
-                      LPTRANSMIT_PACKETS_ELEMENT lpPacketArray,
-                      DWORD nElementCount,
-                      DWORD nSendSize,
-                      LPOVERLAPPED lpOverlapped,
-                      DWORD dwFlags);
+bool transmitPackets(SOCKET hSocket,
+                     LPTRANSMIT_PACKETS_ELEMENT lpPacketArray,
+                     DWORD nElementCount,
+                     DWORD nSendSize,
+                     LPOVERLAPPED lpOverlapped,
+                     DWORD dwFlags);
 
 /**
  * @see MSDN
@@ -116,7 +116,7 @@ bool connectEx(SOCKET s,
                PVOID lpSendBuffer,
                DWORD dwSendDataLength,
                LPDWORD lpdwBytesSent,
-               LPOVERLAPPED lpOverlapped );
+               LPOVERLAPPED lpOverlapped);
 
 /**
  * @see MSDN

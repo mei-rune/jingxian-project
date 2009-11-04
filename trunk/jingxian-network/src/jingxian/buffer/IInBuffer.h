@@ -45,7 +45,7 @@ public:
     /**
      * 查找指定的数据的第一次出现位置
      */
-    virtual size_t search(const void* context,size_t len) const = 0;
+    virtual size_t search(const void* context, size_t len) const = 0;
 
     /**
      * 查找指定的数据的第一次出现位置

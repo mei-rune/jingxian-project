@@ -22,15 +22,15 @@ TCPAcceptor::~TCPAcceptor()
 {
     stopListening();
 
-    assert( connection_status::disconnected == status_ );
+    assert(connection_status::disconnected == status_);
 
     delete logger_;
     logger_ = null_ptr;
 }
 
-time_t TCPAcceptor::timeout () const
+time_t TCPAcceptor::timeout() const
 {
-    ThrowException( NotImplementedException );
+    ThrowException(NotImplementedException);
 }
 
 const tstring& TCPAcceptor::bindPoint() const
@@ -63,7 +63,7 @@ void TCPAcceptor::accept(OnBuildConnectionComplete onComplete
                                         , endpoint_
                                         , _T("' 时发生错误 - '系统已停止'"));
 
-        LOG_ERROR( logger_,descr);
+        LOG_ERROR(logger_, descr);
 
         ErrorCode err(false, 0, descr);
         onError(err, context);
@@ -71,16 +71,16 @@ void TCPAcceptor::accept(OnBuildConnectionComplete onComplete
     }
 
     std::auto_ptr< ICommand> command(new AcceptCommand(this->core_, family_, socket_, endpoint_, onComplete, onError, context));
-    if (! command->execute() )
+    if (! command->execute())
     {
         int code = WSAGetLastError();
         tstring descr = concat<tstring>(_T("启动监听地址 '")
                                         , endpoint_
                                         , _T("' 时发生错误 - '")
                                         , lastError(code)
-                                        , _T("'" ));
+                                        , _T("'"));
 
-        LOG_ERROR( logger_,descr);
+        LOG_ERROR(logger_, descr);
 
         ErrorCode err(false, code, descr);
         onError(err, context);
@@ -92,27 +92,27 @@ void TCPAcceptor::accept(OnBuildConnectionComplete onComplete
 
 bool TCPAcceptor::startListening()
 {
-    if ( connection_status::disconnected != status_ )
+    if (connection_status::disconnected != status_)
     {
-        LOG_ERROR( logger_, _T("启动监听地址 '") << endpoint_
-                   << _T("' 时发生错误 - 状态不正确 - '") << status_
-                   << _T("'" ));
+        LOG_ERROR(logger_, _T("启动监听地址 '") << endpoint_
+                  << _T("' 时发生错误 - 状态不正确 - '") << status_
+                  << _T("'"));
         return false;
     }
     SOCKADDR_STORAGE  addr;
     int len = sizeof(SOCKADDR_STORAGE);
     if (!networking::stringToAddress(endpoint_.c_str(), (struct sockaddr*)&addr, &len))
     {
-        LOG_ERROR( logger_, _T("监听地址 '") << endpoint_
-                   << _T("' 格式不正确 - ") << lastError(WSAGetLastError()));
+        LOG_ERROR(logger_, _T("监听地址 '") << endpoint_
+                  << _T("' 格式不正确 - ") << lastError(WSAGetLastError()));
         return false;
     }
 
     if (INVALID_SOCKET == (socket_ = socket(addr.ss_family, SOCK_STREAM, IPPROTO_TCP)))
     {
-        LOG_ERROR( logger_, _T("启动监听地址 '") << endpoint_
-                   << _T("' 时发生错误 - 创建 socket失败 - '") << lastError()
-                   << _T("'" ));
+        LOG_ERROR(logger_, _T("启动监听地址 '") << endpoint_
+                  << _T("' 时发生错误 - 创建 socket失败 - '") << lastError()
+                  << _T("'"));
         return false;
     }
 
@@ -120,33 +120,33 @@ bool TCPAcceptor::startListening()
     if (SOCKET_ERROR == ::bind(socket_, (struct sockaddr*)&addr, len))
 //#pragma warning(default: 4267)
     {
-        LOG_ERROR( logger_, _T("启动监听地址 '") << endpoint_
-                   << _T("' 时发生错误 - 绑定端口失败 - '") << lastError()
-                   << _T("'" ));
+        LOG_ERROR(logger_, _T("启动监听地址 '") << endpoint_
+                  << _T("' 时发生错误 - 绑定端口失败 - '") << lastError()
+                  << _T("'"));
         return false;
     }
 
-    if (SOCKET_ERROR == ::listen( socket_, SOMAXCONN))
+    if (SOCKET_ERROR == ::listen(socket_, SOMAXCONN))
     {
-        LOG_ERROR( logger_, _T("启动监听地址 '") << endpoint_
-                   << _T("' 时发生错误 -  '") << lastError()
-                   << _T("'" ));
+        LOG_ERROR(logger_, _T("启动监听地址 '") << endpoint_
+                  << _T("' 时发生错误 -  '") << lastError()
+                  << _T("'"));
         return false;
     }
 
     if (!core_->bind((HANDLE)socket_, this))
     {
-        LOG_ERROR( logger_, _T("绑定监听地址 '") << endpoint_
-                   << _T("' 到完成端口时发生错误 -  '") << lastError()
-                   << _T("'" ));
+        LOG_ERROR(logger_, _T("绑定监听地址 '") << endpoint_
+                  << _T("' 到完成端口时发生错误 -  '") << lastError()
+                  << _T("'"));
         return false;
     }
 
     status_ = connection_status::listening;
     family_ = addr.ss_family;
 
-    LOG_INFO( logger_, _T("启动监听地址 '") << endpoint_
-              << _T("' 成功!") );
+    LOG_INFO(logger_, _T("启动监听地址 '") << endpoint_
+             << _T("' 成功!"));
 
     toString_ = concat<tstring>(_T("TCPAcceptor[ socket=")
                                 , ::toString((int)socket_)
@@ -192,7 +192,7 @@ IAcceptor* TCPAcceptorFactory::createAcceptor(const tchar* endPoint)
 
     //std::auto_ptr<TCPAcceptor> acceptor(new TCPAcceptor(core_, endPoint));
     //if( acceptor->startListening())
-    //	return acceptor.release();
+    //  return acceptor.release();
     //return null_ptr;
 }
 

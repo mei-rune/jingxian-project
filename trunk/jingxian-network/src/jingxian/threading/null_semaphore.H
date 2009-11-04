@@ -20,7 +20,7 @@ public:
 
     typedef guard< null_semaphore > spcode_lock;
 
-    null_semaphore( long lInitialCount,long lMaxCount,const char* pSemaphoreName=NULL )
+    null_semaphore(long lInitialCount, long lMaxCount, const char* pSemaphoreName = NULL)
     {
 
     }
@@ -29,17 +29,17 @@ public:
     {
 
     }
-    bool acquire( )
+    bool acquire()
     {
         return true;
     }
 
-    void release(long lAmount=1)
+    void release(long lAmount = 1)
     {
     }
 
 #ifdef _WIN32_ADV_
-    bool tryacquire(u_long ulMSTimeout= 10000 )
+    bool tryacquire(u_long ulMSTimeout = 10000)
     {
         return true;
     }
@@ -47,7 +47,7 @@ public:
 
 
 private:
-    DECLARE_NO_COPY_CLASS( null_semaphore );
+    DECLARE_NO_COPY_CLASS(null_semaphore);
 };
 
 _jingxian_end

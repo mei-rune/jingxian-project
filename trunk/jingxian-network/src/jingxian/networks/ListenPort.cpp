@@ -31,19 +31,19 @@ bool ListenPort::start()
 {
     if (!acceptor_.initialize())
     {
-        LOG_TRACE( logger_, toString()
-                   << _T(" ³¢ÊÔ¼àÌýµØÖ· '")
-                   << acceptor_.bindPoint()
-                   << _T("' Ê±·¢Éú´íÎó¡®")
-                   << lastError()
-                   << _T("¡¯"));
+        LOG_TRACE(logger_, toString()
+                  << _T(" ³¢ÊÔ¼àÌýµØÖ· '")
+                  << acceptor_.bindPoint()
+                  << _T("' Ê±·¢Éú´íÎó¡®")
+                  << lastError()
+                  << _T("¡¯"));
         return false;
     }
 
-    LOG_TRACE( logger_, toString()
-               << _T(" ³¢ÊÔ¼àÌýµØÖ· '")
-               << acceptor_.bindPoint()
-               << _T("' ³É¹¦!"));
+    LOG_TRACE(logger_, toString()
+              << _T(" ³¢ÊÔ¼àÌýµØÖ· '")
+              << acceptor_.bindPoint()
+              << _T("' ³É¹¦!"));
 
     isPending_ = true;
     acceptor_.accept(this
@@ -92,7 +92,7 @@ void ListenPort::onError(const ErrorCode& err
         return;
     }
 
-    if ( errorCount_ > 20 )
+    if (errorCount_ > 20)
     {
         LOG_FATAL(log(), toString()
                   << _T(" ³¢ÊÔ½ÓÊÕÇëÇóÊ§°Ü³¬¹ý '")

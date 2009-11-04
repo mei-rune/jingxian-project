@@ -1,1 +1,1 @@
-for /R %f in (*.cpp;*.c;*.h) do astyle --style=gnu "%f"
+for /R %f in (*.cpp;*.c;*.h) do astyle -p -U -c --style=gnu "%f"

@@ -19,17 +19,17 @@ template< typename charT >
 class StringOp
 {
 public:
-    static charT* malloc( size_t size )
+    static charT* malloc(size_t size)
     {
         return (charT*)::my_malloc(size);
     }
 
-    static charT* dup( const charT* p )
+    static charT* dup(const charT* p)
     {
         return string_traits< charT>::strdup(p);
     }
 
-    static void free( void* p)
+    static void free(void* p)
     {
         ::my_free(p);
     }
@@ -39,27 +39,27 @@ public:
 /**
 * symbol[var]
 */
-inline bool square_pattern( const tstring& src , tstring& symbol , tstring& var )
+inline bool square_pattern(const tstring& src , tstring& symbol , tstring& var)
 {
-    if ( src.size() < 2 )
+    if (src.size() < 2)
         return false;
 
-    tstring::size_type square_start = src.find( '[' );
+    tstring::size_type square_start = src.find('[');
 
-    if ( tstring::npos == square_start )
+    if (tstring::npos == square_start)
     {
         symbol = src;
         return true;
     }
 
-    tstring::size_type square_end = src.find( ']' , square_start );
-    if ( tstring::npos == square_end )
+    tstring::size_type square_end = src.find(']' , square_start);
+    if (tstring::npos == square_end)
     {
-        symbol = src.substr( 0,square_start );
+        symbol = src.substr(0, square_start);
         return true;
     }
-    symbol = src.substr( 0,square_start );
-    var = src.substr( square_start + 1, square_end - square_start - 1 );
+    symbol = src.substr(0, square_start);
+    var = src.substr(square_start + 1, square_end - square_start - 1);
     return true;
 }
 
@@ -72,9 +72,9 @@ inline bool square_pattern( const tstring& src , tstring& symbol , tstring& var 
 // */
 //inline
 //tstring::size_type
-//casefind (const tstring	&s,
-//		    tchar		what,
-//		    tstring::size_type			offset /* = 0 */ )
+//casefind (const tstring &s,
+//        tchar   what,
+//        tstring::size_type      offset /* = 0 */ )
 //{
 //    ASSERT (offset >= 0);
 //    ASSERT ((size_t) offset <= s.size ());
@@ -82,13 +82,13 @@ inline bool square_pattern( const tstring& src , tstring& symbol , tstring& var 
 //    const tchar *begin = s.c_str ();
 //
 //
-//	const tchar *end = begin + s.size ();
-//	const tchar *p = begin + offset;
+//  const tchar *end = begin + s.size ();
+//  const tchar *p = begin + offset;
 //
-//	for (tstring::size_type ch = _totlower ( what ); p != end; ++p)
-//	    if (_totlower ( *p) == ch )
-//		return p - begin;
-//	return tstring::npos;
+//  for (tstring::size_type ch = _totlower ( what ); p != end; ++p)
+//      if (_totlower ( *p) == ch )
+//    return p - begin;
+//  return tstring::npos;
 // }
 //
 ///**
@@ -101,28 +101,28 @@ inline bool square_pattern( const tstring& src , tstring& symbol , tstring& var 
 // */
 //inline
 //tstring::size_type
-//casefind (const tstring	&s,
-//		    const tchar		*what,
-//		    tstring::size_type		len,
-//		    tstring::size_type			offset /* = 0 */ )
+//casefind (const tstring &s,
+//        const tchar   *what,
+//        tstring::size_type    len,
+//        tstring::size_type      offset /* = 0 */ )
 //{
 //    ASSERT ((size_t) offset <= s.size ());
 //    ASSERT (what || !len);
 //
 //    if (s.size () - offset < len)
-//		return tstring::npos;
+//    return tstring::npos;
 //
 //    if (! what )
-//	return offset;
+//  return offset;
 //
 //    const tchar *begin = s.c_str ();
 //    const tchar *end = begin + s.size ();
 //    const tchar *p = begin + offset;
 //
-//	for ( ; p <= end-len; ++p)
-//	    if (! _tcsnicmp (p, what, len))
-//		return p - begin;
-//	return tstring::npos;
+//  for ( ; p <= end-len; ++p)
+//      if (! _tcsnicmp (p, what, len))
+//    return p - begin;
+//  return tstring::npos;
 //}
 //
 ///**
@@ -134,17 +134,17 @@ inline bool square_pattern( const tstring& src , tstring& symbol , tstring& var 
 // */
 //inline
 //tstring::size_type
-//caserfind (const tstring	&s,
-//		     tchar		what,
-//		     tstring::size_type		offset /* = tstring::npos*/)
+//caserfind (const tstring  &s,
+//         tchar    what,
+//         tstring::size_type   offset /* = tstring::npos*/)
 //{
 //    ASSERT ((size_t) offset <= s.size ());
 //
 //    const tchar *begin = s.c_str ();
 //    const tchar *p = begin + offset + 1;
-//	for (tstring::size_type ch = _totlower ( what); p != begin; --p)
-//	    if (_totlower ( p[tstring::npos]) == ch)
-//		return p - begin - 1;
+//  for (tstring::size_type ch = _totlower ( what); p != begin; --p)
+//      if (_totlower ( p[tstring::npos]) == ch)
+//    return p - begin - 1;
 //    return tstring::npos;
 //}
 //
@@ -158,29 +158,29 @@ inline bool square_pattern( const tstring& src , tstring& symbol , tstring& var 
 // */
 //inline
 //tstring::size_type
-//caserfind (const tstring	&s,
-//		     const tchar		*what,
-//		     tstring::size_type		len,
-//		     tstring::size_type		offset /* = tstring::npos*/)
+//caserfind (const tstring  &s,
+//         const tchar    *what,
+//         tstring::size_type   len,
+//         tstring::size_type   offset /* = tstring::npos*/)
 //{
 //    ASSERT ((size_t) offset <= s.size ());
 //    ASSERT (!what || !len);
 //
 //    if (s.size () < len)
-//		return tstring::npos;
+//    return tstring::npos;
 //
 //    if (s.size () - len < (size_t) offset)
-//	offset = s.size () - len;
+//  offset = s.size () - len;
 //
 //    if (! what)
-//	return offset;
+//  return offset;
 //
 //    const char *begin = s.c_str ();
 //    const char *p = begin + offset + 1;
 //
-//	for ( ; p != begin; --p)
-//	    if (! _tcsnicmp ( p, what, len))
-//		return p - begin - 1;
+//  for ( ; p != begin; --p)
+//      if (! _tcsnicmp ( p, what, len))
+//    return p - begin - 1;
 //    return tstring::npos;
 //}
 //
@@ -193,25 +193,25 @@ inline bool square_pattern( const tstring& src , tstring& symbol , tstring& var 
 // */
 //inline
 //StringList
-//grep (const StringList	&items,
-//		 const tstring	&what,
-//		 bool			CaseInsensitive /* = false */)
+//grep (const StringList  &items,
+//     const tstring  &what,
+//     bool     CaseInsensitive /* = false */)
 //{
 //    StringList result;
-//	if( CaseInsensitive )
-//	{
-//		for (size_t i = 0; i < items.size (); ++i)
-//			if (casefind (items [i], what.c_str (), what.size () ,0 ) != tstring::npos )
-//				result.push_back (items [i]);
-//	}
-//	else
-//	{
-//	for (size_t i = 0; i < items.size (); ++i)
-//	if (items[i].find ( what ) != tstring::npos )
-//	    result.push_back (items [i]);
-//	}
+//  if( CaseInsensitive )
+//  {
+//    for (size_t i = 0; i < items.size (); ++i)
+//      if (casefind (items [i], what.c_str (), what.size () ,0 ) != tstring::npos )
+//        result.push_back (items [i]);
+//  }
+//  else
+//  {
+//  for (size_t i = 0; i < items.size (); ++i)
+//  if (items[i].find ( what ) != tstring::npos )
+//      result.push_back (items [i]);
+//  }
 //
-//	return result;
+//  return result;
 //}
 //
 ///**
@@ -223,22 +223,22 @@ inline bool square_pattern( const tstring& src , tstring& symbol , tstring& var 
 // */
 //inline
 //tstring::size_type
-//contains (const tstring	&s,
-//		     tchar		what,
-//		     bool		Casesensitive /* = false */)
+//contains (const tstring &s,
+//         tchar    what,
+//         bool   Casesensitive /* = false */)
 //{
 //    tstring::size_type n = 0;
 //    tstring::size_type index = 0;
-//	if( Casesensitive )
-//	{
+//  if( Casesensitive )
+//  {
 //    while ((index = casefind (s, what, index )) != tstring::npos )
-//	++n, ++index;
-//	}
-//	else
-//	{
-//	while ((index = s.find ( what, index )) != tstring::npos )
-//	++n, ++index;
-//	}
+//  ++n, ++index;
+//  }
+//  else
+//  {
+//  while ((index = s.find ( what, index )) != tstring::npos )
+//  ++n, ++index;
+//  }
 //    return n;
 //}
 //
@@ -252,25 +252,25 @@ inline bool square_pattern( const tstring& src , tstring& symbol , tstring& var 
 // */
 //inline
 //tstring::size_type
-//contains (const tstring	&s,
-//		     const tchar		*what,
-//			 tstring::size_type	len,
-//		     bool		Casesensitive /* = false */)
+//contains (const tstring &s,
+//         const tchar    *what,
+//       tstring::size_type len,
+//         bool   Casesensitive /* = false */)
 //{
-//	ASSERT( what != 0 );
-//	ASSERT( *what != 0 );
-//    tstring::size_type		n = 0;
-//    tstring::size_type		index = 0;
-//	if( Casesensitive )
-//	{
+//  ASSERT( what != 0 );
+//  ASSERT( *what != 0 );
+//    tstring::size_type    n = 0;
+//    tstring::size_type    index = 0;
+//  if( Casesensitive )
+//  {
 //    while ((index = casefind (s, what, len, index )) != tstring::npos )
-//	++n, ++index;
-//	}
-//	else
-//	{
-//	while ((index = s.find ( what, len, index )) != tstring::npos )
-//	++n, ++index;
-//	}
+//  ++n, ++index;
+//  }
+//  else
+//  {
+//  while ((index = s.find ( what, len, index )) != tstring::npos )
+//  ++n, ++index;
+//  }
 //    return n;
 //}
 //
@@ -283,11 +283,11 @@ inline bool square_pattern( const tstring& src , tstring& symbol , tstring& var 
 // */
 //inline
 //tstring::size_type
-//contains (const tstring	&s,
-//		     const tchar		*what,
-//		     bool		Casesensitive /* = false */)
+//contains (const tstring &s,
+//         const tchar    *what,
+//         bool   Casesensitive /* = false */)
 //{
-//    size_t	len = strlen (what);
+//    size_t  len = strlen (what);
 //    return contains( s,what,len,Casesensitive);
 //}
 //
@@ -299,9 +299,9 @@ inline bool square_pattern( const tstring& src , tstring& symbol , tstring& var 
 // * @return ·µ»ØËùÓÐ°üº¬what×Ö·û´®µÄ×Ö·û´®¡£
 // */
 //inline tstring::size_type
-//contains (const tstring	&s,
-//		     const tstring	&what,
-//		     bool Casesensitive /* = false */)
+//contains (const tstring &s,
+//         const tstring  &what,
+//         bool Casesensitive /* = false */)
 //{
 //    return contains( s, what.c_str(), what.size(), Casesensitive );
 //}
@@ -317,130 +317,130 @@ inline bool square_pattern( const tstring& src , tstring& symbol , tstring& var 
 //// */
 ////inline
 ////tstring
-////replace (const tstring	&s,
-////		 tstring::size_type			offset,
-////		    const tchar*	what,
-////			tstring::size_type	whatlen,
-////		    const tchar* with,
-////			tstring::size_type withlen,
-////			bool Casesensitive )
+////replace (const tstring  &s,
+////     tstring::size_type     offset,
+////        const tchar*  what,
+////      tstring::size_type  whatlen,
+////        const tchar* with,
+////      tstring::size_type withlen,
+////      bool Casesensitive )
 ////{
 ////    tstring result (s);
-////	if( Casesensitive )
-////	{
-////		while (true)
-////		{
-////			if ((offset = casefind( result, what, whatlen, offset) ) == tstring::npos )
-////				break;
-////			result.replace( offset, whatlen, with , with + withlen );
-////			offset += ( withlen + 1 );
-////		}
-////	}
-////	else
-////	{
-////		while (true)
-////		{
-////			if ((offset = result.find( what, offset, whatlen ) ) == tstring::npos )
-////				break;
-////			result.replace( offset, whatlen, with , with + withlen );
-////			offset += ( withlen + 1 );
-////		}
-////	}
+////  if( Casesensitive )
+////  {
+////    while (true)
+////    {
+////      if ((offset = casefind( result, what, whatlen, offset) ) == tstring::npos )
+////        break;
+////      result.replace( offset, whatlen, with , with + withlen );
+////      offset += ( withlen + 1 );
+////    }
+////  }
+////  else
+////  {
+////    while (true)
+////    {
+////      if ((offset = result.find( what, offset, whatlen ) ) == tstring::npos )
+////        break;
+////      result.replace( offset, whatlen, with , with + withlen );
+////      offset += ( withlen + 1 );
+////    }
+////  }
 ////    return result;
 ////}
 ////
 ////inline
 ////tstring
-////replace (const tstring	&s,
-////		 tstring::size_type			offset,
-////		    tchar		what,
-////		    const tchar* with,
-////			tstring::size_type len,
-////			bool Casesensitive )
+////replace (const tstring  &s,
+////     tstring::size_type     offset,
+////        tchar   what,
+////        const tchar* with,
+////      tstring::size_type len,
+////      bool Casesensitive )
 ////{
-////	return replace( s, offset, &what, 1, with, len, Casesensitive );
+////  return replace( s, offset, &what, 1, with, len, Casesensitive );
 ////}
 ////
 ////inline
 ////tstring
-////replace (const tstring	&s,
-////		 tstring::size_type			offset,
-////		    tchar		what,
-////		    const tchar* with,
-////			bool Casesensitive )
+////replace (const tstring  &s,
+////     tstring::size_type     offset,
+////        tchar   what,
+////        const tchar* with,
+////      bool Casesensitive )
 ////{
-////	return replace( s, offset,
-////		&what, 1,
-////		with, _tcslen( with ),
-////		Casesensitive );
+////  return replace( s, offset,
+////    &what, 1,
+////    with, _tcslen( with ),
+////    Casesensitive );
 ////}
 ////
 ////inline
 ////tstring
-////replace (const tstring	&s,
-////		 tstring::size_type			offset,
-////		    tchar		what,
-////		    const tstring	&with,
-////			bool Casesensitive )
+////replace (const tstring  &s,
+////     tstring::size_type     offset,
+////        tchar   what,
+////        const tstring &with,
+////      bool Casesensitive )
 ////{
-////	return replace( s, offset,
-////		what,
-////		with.c_str(),with.size(),
-////		Casesensitive );
+////  return replace( s, offset,
+////    what,
+////    with.c_str(),with.size(),
+////    Casesensitive );
 ////}
 ////
 ////inline
 ////tstring
-////replace (const tstring	&s,
-////		 tstring::size_type			offset,
-////		    const tchar* what,
-////		    const tchar* with,
-////			bool Casesensitive )
+////replace (const tstring  &s,
+////     tstring::size_type     offset,
+////        const tchar* what,
+////        const tchar* with,
+////      bool Casesensitive )
 ////{
-////	return replace( s, offset,
-////		what,_tcslen( what ),
-////		with, _tcslen( with ),
-////		Casesensitive );
+////  return replace( s, offset,
+////    what,_tcslen( what ),
+////    with, _tcslen( with ),
+////    Casesensitive );
 ////}
 ////
 ////inline
 ////tstring
-////replace (const tstring	&s,
-////		 tstring::size_type			offset,
-////		    const tstring& what,
-////		    const tstring& with,
-////			bool Casesensitive )
+////replace (const tstring  &s,
+////     tstring::size_type     offset,
+////        const tstring& what,
+////        const tstring& with,
+////      bool Casesensitive )
 ////{
-////	return replace( s, offset,
-////		what.c_str(),what.size( ),
-////		with.c_str(), with.size( ),
-////		Casesensitive );
+////  return replace( s, offset,
+////    what.c_str(),what.size( ),
+////    with.c_str(), with.size( ),
+////    Casesensitive );
 ////}
 ////
 ////inline
 ////tstring
-////replace (const tstring	&s,
-////		    const tchar* what,
-////		    const tchar* with,
-////			bool Casesensitive )
+////replace (const tstring  &s,
+////        const tchar* what,
+////        const tchar* with,
+////      bool Casesensitive )
 ////{
-////	return replace( s, 0,
-////		what,_tcslen( what ),
-////		with, _tcslen( with ),
-////		Casesensitive );
+////  return replace( s, 0,
+////    what,_tcslen( what ),
+////    with, _tcslen( with ),
+////    Casesensitive );
 ////}
 ////
 ////inline
 ////tstring
-////replace (const tstring	&s,
-////		    const tstring	&what,
-////		    const tstring	&with,
-////			bool Casesensitive )
+////replace (const tstring  &s,
+////        const tstring &what,
+////        const tstring &with,
+////      bool Casesensitive )
 ////{
-////	return replace (s, 0,
-////		what.c_str(), what.size(),
-////		with.c_str(), with.size(),
-////		Casesensitive );
+////  return replace (s, 0,
+////    what.c_str(), what.size(),
+////    with.c_str(), with.size(),
+////    Casesensitive );
 ////}
 //
 ///**
@@ -452,60 +452,60 @@ inline bool square_pattern( const tstring& src , tstring& symbol , tstring& var 
 // */
 ////inline
 ////tstring
-////remove (const tstring	&s,
-////		   tchar			what,
-////		   tstring::size_type			offset /* = 0 */)
+////remove (const tstring &s,
+////       tchar      what,
+////       tstring::size_type     offset /* = 0 */)
 ////{ return replace (s, offset, what, "",0); }
 ////
 ////tstring
-////remove (const tstring	&s,
-////		   const tstring	&what,
-////		   tstring::size_type			offset /* = 0 */)
+////remove (const tstring &s,
+////       const tstring  &what,
+////       tstring::size_type     offset /* = 0 */)
 ////{ return replace (s, offset, what.c_str(),what.size(), "",0); }
 //
 //inline
 //bool startwith( const tchar* str, const tchar* with )
 //{
-//	if( str == 0 || *str == 0 )
-//		return false;
-//	if(  with == 0 || *with == 0  )
-//		return true;
+//  if( str == 0 || *str == 0 )
+//    return false;
+//  if(  with == 0 || *with == 0  )
+//    return true;
 //
-//	while( *with == *str )
-//	{
-//		if( *with == 0 )
-//			return true;
-//		if( *str == 0 )
-//			return false;
-//		with ++;
-//		str ++;
-//	}
-//	return false;
+//  while( *with == *str )
+//  {
+//    if( *with == 0 )
+//      return true;
+//    if( *str == 0 )
+//      return false;
+//    with ++;
+//    str ++;
+//  }
+//  return false;
 //}
 //
 //inline
 //bool endwith( const tchar* str, const tchar* with )
 //{
-//	if( str == 0 || *str == 0 )
-//		return false;
-//	if(  with == 0 || *with == 0  )
-//		return true;
+//  if( str == 0 || *str == 0 )
+//    return false;
+//  if(  with == 0 || *with == 0  )
+//    return true;
 //
-//	const char* s = str;
-//	while( *s != 0 ) s ++;
-//	const char* w = with;
-//	while( *w != 0 ) w ++;
+//  const char* s = str;
+//  while( *s != 0 ) s ++;
+//  const char* w = with;
+//  while( *w != 0 ) w ++;
 //
-//	while( *w == *s )
-//	{
-//		if( w == with )
-//			return true;
-//		if( str == s )
-//			return false;
-//		w --;
-//		s --;
-//	}
-//	return false;
+//  while( *w == *s )
+//  {
+//    if( w == with )
+//      return true;
+//    if( str == s )
+//      return false;
+//    w --;
+//    s --;
+//  }
+//  return false;
 //}
 
 _jingxian_end

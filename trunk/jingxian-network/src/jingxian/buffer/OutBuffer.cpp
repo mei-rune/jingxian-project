@@ -12,7 +12,7 @@ void free_Buffer(buffer_chain_t* chain, void* context)
 
 inline databuffer_t* databuffer_cast(buffer_chain_t* chain)
 {
-    assert( BUFFER_ELEMENT_MEMORY == chain->type);
+    assert(BUFFER_ELEMENT_MEMORY == chain->type);
     return (databuffer_t*)chain;
 }
 
@@ -35,7 +35,7 @@ OutBuffer::~OutBuffer()
 
         freeBuffer();
     }
-    catch ( ... )
+    catch (...)
     {
         freeBuffer();
         throw;
@@ -52,38 +52,38 @@ void OutBuffer::freeBuffer()
 
 IOutBuffer& OutBuffer::writeBoolean(bool value)
 {
-    int8_t tmp = value?1:0;
-    writeBlob(&tmp,sizeof(tmp));
+    int8_t tmp = value ? 1 : 0;
+    writeBlob(&tmp, sizeof(tmp));
     return *this;
 }
 
 IOutBuffer& OutBuffer::writeInt8(int8_t value)
 {
-    writeBlob(&value,sizeof(value));
+    writeBlob(&value, sizeof(value));
     return *this;
 }
 
 IOutBuffer& OutBuffer::writeInt16(int16_t value)
 {
-    writeBlob(&value,sizeof(value));
+    writeBlob(&value, sizeof(value));
     return *this;
 }
 
 IOutBuffer& OutBuffer::writeInt32(int32_t value)
 {
-    writeBlob(&value,sizeof(value));
+    writeBlob(&value, sizeof(value));
     return *this;
 }
 
 IOutBuffer& OutBuffer::writeInt64(const int64_t& value)
 {
-    writeBlob(&value,sizeof(value));
+    writeBlob(&value, sizeof(value));
     return *this;
 }
 
 databuffer_t* OutBuffer::allocate(size_t len)
 {
-    databuffer_t* result = (databuffer_t*)my_calloc(1,sizeof(databuffer_t)+len);
+    databuffer_t* result = (databuffer_t*)my_calloc(1, sizeof(databuffer_t) + len);
 
     result->chain.context = result;
     result->chain.freebuffer = &free_Buffer;
@@ -121,7 +121,7 @@ IOutBuffer& OutBuffer::writeBlob(const void* blob, size_t len)
         }
     }
 
-    size_t bytes = max(exceptLen, 100 );
+    size_t bytes = max(exceptLen, 100);
     databuffer_t* data = allocate(bytes);
     dataBuffer_.push_back((buffer_chain_t*)data);
 
@@ -142,12 +142,12 @@ size_t OutBuffer::size() const
 
 //std::vector<buffer_chain_t*>& OutBuffer::dataBuffer()
 //{
-//	return dataBuffer_;
+//  return dataBuffer_;
 //}
 //
 //void OutBuffer::releaseBuffer()
 //{
-//	dataBuffer_.clear();
+//  dataBuffer_.clear();
 //}
 
 int OutBuffer::beginTranscation()

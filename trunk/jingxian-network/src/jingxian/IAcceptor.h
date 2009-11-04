@@ -22,7 +22,7 @@ public:
     /**
      * 取得超时时间
      */
-    virtual  time_t timeout () const = 0;
+    virtual  time_t timeout() const = 0;
 
     /**
      * 初始化
@@ -60,11 +60,11 @@ public:
 class Acceptor : public IAcceptor
 {
 public:
-    template<typename F1,typename F2, typename T>
+    template<typename F1, typename F2, typename T>
     class closure
     {
     public:
-        closure( const F1& func1, const F2& func2, T context)
+        closure(const F1& func1, const F2& func2, T context)
                 : function1_(func1)
                 , function2_(func2)
                 , context_(context)
@@ -89,7 +89,7 @@ public:
         T context_;
     };
 
-    template<typename C, typename F1,typename F2, typename T>
+    template<typename C, typename F1, typename F2, typename T>
     class closure_0
     {
     public:
@@ -136,14 +136,14 @@ public:
         reset(null_ptr);
     }
 
-    void reset( IAcceptor* acceptor)
+    void reset(IAcceptor* acceptor)
     {
         if (!is_null(acceptor_))
             acceptor_->close();
-        acceptor_=acceptor;
+        acceptor_ = acceptor;
     }
 
-    virtual  time_t timeout () const
+    virtual  time_t timeout() const
     {
         if (isNull())
             ThrowException(NullException);
@@ -176,7 +176,7 @@ public:
     /**
      * 发起一个监听请求
      */
-    template< typename F1,typename F2, typename T>
+    template< typename F1, typename F2, typename T>
     void accept(F1 onComplete
                 , F2 onError
                 , T context)
@@ -184,7 +184,7 @@ public:
         if (isNull())
             ThrowException(NullException);
 
-        typedef closure<F1,F2,T> closure_type;
+        typedef closure<F1, F2, T> closure_type;
         acceptor_->accept(closure_type::OnComplete
                           , closure_type::OnError
                           , new closure_type(onComplete, onError, context));
@@ -193,7 +193,7 @@ public:
     /**
      * 发起一个监听请求
      */
-    template<typename C, typename F1,typename F2, typename T>
+    template<typename C, typename F1, typename F2, typename T>
     void accept(C c
                 , F1 onComplete
                 , F2 onError
@@ -202,7 +202,7 @@ public:
         if (isNull())
             ThrowException(NullException);
 
-        typedef closure_0<C,F1,F2,T> closure_type;
+        typedef closure_0<C, F1, F2, T> closure_type;
         acceptor_->accept(closure_type::OnComplete
                           , closure_type::OnError
                           , new closure_type(c, onComplete, onError, context));
@@ -275,13 +275,13 @@ public:
     virtual const tstring& toString() const = 0;
 };
 
-inline tostream& operator<<( tostream& target, const IAcceptor& acceptor )
+inline tostream& operator<<(tostream& target, const IAcceptor& acceptor)
 {
     target << acceptor.toString();
     return target;
 }
 
-inline tostream& operator<<( tostream& target, const IAcceptorFactory& acceptorFactory )
+inline tostream& operator<<(tostream& target, const IAcceptorFactory& acceptorFactory)
 {
     target << acceptorFactory.toString();
     return target;
@@ -289,7 +289,7 @@ inline tostream& operator<<( tostream& target, const IAcceptorFactory& acceptorF
 
 inline bool is_null(const Acceptor* acceptor)
 {
-    return null_ptr==acceptor || acceptor->isNull();
+    return null_ptr == acceptor || acceptor->isNull();
 }
 
 _jingxian_end

@@ -70,9 +70,9 @@ public:
         return 0;
     }
 
-    void ReleasePort( int port)
+    void ReleasePort(int port)
     {
-        if ( _begin > port || _end < port )
+        if (_begin > port || _end < port)
             return;
 
         _ports[ port - _begin ].IsUsed = false;
@@ -91,7 +91,7 @@ class Proxy  : public IProtocolFactory
 {
 public:
     Proxy(const tstring& basePath)
-            :toString_(_T("socks 代理"))
+            : toString_(_T("socks 代理"))
     {
         path_ = combinePath(basePath, _T("log"));
         if (!existDirectory(path_))
@@ -116,14 +116,14 @@ public:
 
     //bool IsBlockingIP(const tstring& ip)
     //{
-    //	if (null == _blockingIPs)
-    //		return false;
+    //  if (null == _blockingIPs)
+    //    return false;
 
-    //	foreach (IPSeg seg in _blockingIPs)
-    //	{
-    //		if (seg.In(ip)) return true;
-    //	}
-    //	return false;
+    //  foreach (IPSeg seg in _blockingIPs)
+    //  {
+    //    if (seg.In(ip)) return true;
+    //  }
+    //  return false;
     //}
 
 

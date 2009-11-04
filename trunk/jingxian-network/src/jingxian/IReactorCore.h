@@ -36,7 +36,7 @@ public:
     virtual void connectWith(const tchar* endPoint
                              , OnBuildConnectionComplete onComplete
                              , OnBuildConnectionError onError
-                             , void* context ) = 0;
+                             , void* context) = 0;
 
     /**
     * 创建一个监听服务

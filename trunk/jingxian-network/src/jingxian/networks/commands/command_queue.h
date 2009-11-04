@@ -19,7 +19,7 @@ class command_queue
 {
 public:
 
-    static void release( ICommand* cmd );
+    static void release(ICommand* cmd);
 };
 
 _jingxian_end

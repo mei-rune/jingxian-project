@@ -90,7 +90,7 @@ private:
     Proxy* server_;
     int status_;
     std::auto_ptr<proxy::ICredentialPolicy> credentialPolicy_;
-    typedef ConnectProxy<SOCKSv5Protocol,ProtocolContext&> connectorType;
+    typedef ConnectProxy<SOCKSv5Protocol, ProtocolContext&> connectorType;
     connectorType* connectProxy_;
 
     SOCKSv5Outgoing outgoing_;

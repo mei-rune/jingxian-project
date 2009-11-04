@@ -95,7 +95,7 @@ public:
 
     virtual buffer_chain_t* createBuffer(const ProtocolContext& context)
     {
-        databuffer_t* result = (databuffer_t*)my_calloc(1,sizeof(databuffer_t)+100);
+        databuffer_t* result = (databuffer_t*)my_calloc(1, sizeof(databuffer_t) + 100);
         result->chain.context = result;
         result->chain.freebuffer = &freeBuffer;
         result->chain.type = BUFFER_ELEMENT_MEMORY;

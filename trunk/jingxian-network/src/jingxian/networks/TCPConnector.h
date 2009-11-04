@@ -34,7 +34,7 @@ public:
     virtual void connect(const tchar* endPoint
                          , OnBuildConnectionComplete onComplete
                          , OnBuildConnectionError onError
-                         , void* context );
+                         , void* context);
 
     /**
      * @implements toString

@@ -13,19 +13,19 @@
 
 _jingxian_begin
 
-template< typename charT , typename OP = detail::StringOp<charT> >
+template < typename charT , typename OP = detail::StringOp<charT> >
 class StringPtr
 {
 public:
     StringPtr(charT * ptr = 0, size_t len = -1) _THROW0()
             : _ptr(ptr)
-            , _length( (-1 == len)?string_traits< charT>::strlen( ptr): len )
+            , _length((-1 == len) ? string_traits< charT>::strlen(ptr) : len)
     {
     }
 
     StringPtr(StringPtr& right) _THROW0()
-            : _ptr( 0 )
-            , _length( 0 )
+            : _ptr(0)
+            , _length(0)
     {
         _length = right.size();
         _ptr = right.release();
@@ -33,12 +33,12 @@ public:
 
     template< typename STRING >
     explicit StringPtr(const STRING& right) _THROW0()
-            : _ptr( 0 )
-            , _length( 0 )
+            : _ptr(0)
+            , _length(0)
     {
-        if ( !right.empty() )
+        if (!right.empty())
         {
-            _ptr = OP::dup( right.c_str() );
+            _ptr = OP::dup(right.c_str());
             _length = right.size();
         }
     }
@@ -46,7 +46,7 @@ public:
     StringPtr& operator=(StringPtr& right) _THROW0()
     {
         size_t l = right.size();
-        reset(right.release(), l );
+        reset(right.release(), l);
         return (*this);
     }
 
@@ -82,11 +82,11 @@ public:
     {
         if (ptr != _ptr)
         {
-            OP::free( _ptr );
+            OP::free(_ptr);
             _length = 0;
         }
         _ptr = ptr;
-        _length = (-1 == l)?string_traits<charT>::strlen( _ptr ): l ;
+        _length = (-1 == l) ? string_traits<charT>::strlen(_ptr) : l ;
     }
 
 private:

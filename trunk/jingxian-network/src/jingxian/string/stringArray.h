@@ -18,19 +18,19 @@ _jingxian_begin
 
 
 
-template<typename charT, typename OP = detail::StringOp<charT> >
+template < typename charT, typename OP = detail::StringOp<charT> >
 class StringArray
 {
 public:
 
-    explicit StringArray( size_t size )
+    explicit StringArray(size_t size)
     {
-        ptrArray_ = (stringData<charT>*)OP::malloc( sizeof( stringData<charT> ) * size );
-        memset( ptrArray_, 0, sizeof( stringData<charT> ) * size );
+        ptrArray_ = (stringData<charT>*)OP::malloc(sizeof(stringData<charT>) * size);
+        memset(ptrArray_, 0, sizeof(stringData<charT>) * size);
         size_ = size;
     }
 
-    StringArray( StringArray& sa )
+    StringArray(StringArray& sa)
     {
         ptrArray_ = sa.ptrArray_;
         size_ = sa.size_;
@@ -40,7 +40,7 @@ public:
     }
 
 
-    StringArray& operator=( StringArray& sa )
+    StringArray& operator=(StringArray& sa)
     {
         ptrArray_ = sa.ptrArray_;
         size_ = sa.size_;
@@ -53,48 +53,48 @@ public:
 
     ~StringArray()
     {
-        if ( is_null( ptrArray_ ) )
+        if (is_null(ptrArray_))
             return;
 
-        for ( size_t i = 0; i < size_ ; i ++ )
+        for (size_t i = 0; i < size_ ; i ++)
         {
-            OP::free( ptrArray_[ i ].ptr );
+            OP::free(ptrArray_[ i ].ptr);
         }
 
-        OP::free( ptrArray_ );
+        OP::free(ptrArray_);
     }
 
-    stringData<charT>& operator[]( size_t p )
+    stringData<charT>& operator[](size_t p)
     {
-        if ( p >= size_ )
+        if (p >= size_)
             ThrowException(OutOfRangeException);
         return ptrArray_[ p ];
     }
 
-    const stringData<charT>& operator[]( size_t p ) const
+    const stringData<charT>& operator[](size_t p) const
     {
-        if ( p >= size_ )
+        if (p >= size_)
             ThrowException(OutOfRangeException);
         return ptrArray_[ p ];
     }
 
-    charT* ptr( size_t p )
+    charT* ptr(size_t p)
     {
-        if ( p >= size_ )
+        if (p >= size_)
             return NULL;
         return ptrArray_[ p ].ptr;
     }
 
-    const charT* ptr( size_t p ) const
+    const charT* ptr(size_t p) const
     {
-        if ( p >= size_ )
+        if (p >= size_)
             return NULL;
         return ptrArray_[ p ].ptr;
     }
 
-    size_t len( size_t p ) const
+    size_t len(size_t p) const
     {
-        if ( p >= size_ )
+        if (p >= size_)
             return 0;
         return ptrArray_[ p ].len;
     }
@@ -104,10 +104,10 @@ public:
         return size_;
     }
 
-    void swap( StringArray& sa )
+    void swap(StringArray& sa)
     {
-        std::swap( ptrArray_, sa.ptrArray_ );
-        std::swap( size_, sa.size_ );
+        std::swap(ptrArray_, sa.ptrArray_);
+        std::swap(size_, sa.size_);
     }
 
 private:

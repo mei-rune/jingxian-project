@@ -14,52 +14,52 @@ static LPFN_CONNECTEX __connectex;
 static LPFN_DISCONNECTEX __disconnectex;
 static LPFN_GETACCEPTEXSOCKADDRS __getacceptexsockaddrs;
 
-bool set_option (SOCKET sock,
-                 int level,
-                 int option,
-                 void *optval,
-                 int optlen)
+bool set_option(SOCKET sock,
+                int level,
+                int option,
+                void *optval,
+                int optlen)
 {
-    return ( SOCKET_ERROR != setsockopt (sock, level,
-                                         option, (char *) optval, optlen) );
+    return (SOCKET_ERROR != setsockopt(sock, level,
+                                       option, (char *) optval, optlen));
 }
 
-bool get_option (SOCKET sock,
-                 int level,
-                 int option,
-                 void *optval,
-                 int *optlen)
+bool get_option(SOCKET sock,
+                int level,
+                int option,
+                void *optval,
+                int *optlen)
 {
-    return ( SOCKET_ERROR != getsockopt (sock, level,
-                                         option, (char *) optval, optlen) );
+    return (SOCKET_ERROR != getsockopt(sock, level,
+                                       option, (char *) optval, optlen));
 }
 
-bool enable (SOCKET sock, int value)
+bool enable(SOCKET sock, int value)
 {
     u_long nonblock = 1;
-    return ( 0 ==::ioctlsocket (sock,
-                                value,
-                                &nonblock));
+    return (0 ==::ioctlsocket(sock,
+                              value,
+                              &nonblock));
 }
 
-bool disable (SOCKET sock, int value)
+bool disable(SOCKET sock, int value)
 {
     u_long nonblock = 0;
-    return ( 0 == ioctlsocket (sock,
-                               value,
-                               &nonblock));
+    return (0 == ioctlsocket(sock,
+                             value,
+                             &nonblock));
 }
 
 bool poll(SOCKET sock, const TIMEVAL& time_val, int mode)
 {
     fd_set socket_set;
-    FD_ZERO( &socket_set );
-    FD_SET(sock, &socket_set );
+    FD_ZERO(&socket_set);
+    FD_SET(sock, &socket_set);
 
-    return ( 1 == ::select( 0, (mode & select_read)?&socket_set:NULL
-                            , (mode & select_write)?&socket_set:NULL
-                            , (mode & select_error)?&socket_set:NULL
-                            , &time_val ) );
+    return (1 == ::select(0, (mode & select_read) ? &socket_set : NULL
+                          , (mode & select_write) ? &socket_set : NULL
+                          , (mode & select_error) ? &socket_set : NULL
+                          , &time_val));
 }
 
 bool isReadable(SOCKET sock)
@@ -67,7 +67,7 @@ bool isReadable(SOCKET sock)
     TIMEVAL time_val;
     time_val.tv_sec = 0;
     time_val.tv_usec = 0;
-    return poll(sock, time_val, select_read );
+    return poll(sock, time_val, select_read);
 }
 
 bool isWritable(SOCKET sock)
@@ -75,12 +75,12 @@ bool isWritable(SOCKET sock)
     TIMEVAL time_val;
     time_val.tv_sec = 0;
     time_val.tv_usec = 0;
-    return poll(sock, time_val, select_write );
+    return poll(sock, time_val, select_write);
 }
 
 void setBlocking(SOCKET sock, bool val)
 {
-    if ( val )
+    if (val)
         enable(sock, FIONBIO);
     else
         disable(sock, FIONBIO);
@@ -91,15 +91,15 @@ bool send_n(SOCKET sock, const char* buf, size_t length)
     do
     {
 #pragma warning(disable: 4267)
-        int n = ::send(sock, buf, length, 0 );
+        int n = ::send(sock, buf, length, 0);
 #pragma warning(default: 4267)
-        if ( 0 >= n)
+        if (0 >= n)
             return false;
 
         length -= n;
         buf += n;
     }
-    while ( 0 < length );
+    while (0 < length);
 
     return true;
 }
@@ -109,36 +109,36 @@ bool recv_n(SOCKET sock, char* buf, size_t length)
     do
     {
 #pragma warning(disable: 4267)
-        int n = ::recv(sock, buf, length, 0 );
+        int n = ::recv(sock, buf, length, 0);
 #pragma warning(default: 4267)
 
-        if ( 0 >= n)
+        if (0 >= n)
             return false;
 
         length -= n;
         buf += n;
     }
-    while ( 0 < length );
+    while (0 < length);
 
     return true;
 }
 
 bool sendv_n(SOCKET sock, const io_mem_buf* wsaBuf, size_t size)
 {
-    std::vector<io_mem_buf> buf( wsaBuf, wsaBuf + size );
+    std::vector<io_mem_buf> buf(wsaBuf, wsaBuf + size);
     io_mem_buf* p = &buf[0];
 
     do
     {
-        DWORD numberOfBytesSent =0;
+        DWORD numberOfBytesSent = 0;
 #pragma warning(disable: 4267)
-        if ( SOCKET_ERROR == ::WSASend(sock, p, size, &numberOfBytesSent,0,0 , 0 ) )
+        if (SOCKET_ERROR == ::WSASend(sock, p, size, &numberOfBytesSent, 0, 0 , 0))
 #pragma warning(default: 4267)
             return false;
 
         do
         {
-            if ( numberOfBytesSent < p->len)
+            if (numberOfBytesSent < p->len)
             {
                 p->len -= numberOfBytesSent;
                 p->buf = p->buf + numberOfBytesSent;
@@ -148,9 +148,9 @@ bool sendv_n(SOCKET sock, const io_mem_buf* wsaBuf, size_t size)
             ++ p;
             -- size;
         }
-        while ( 0 < numberOfBytesSent );
+        while (0 < numberOfBytesSent);
     }
-    while ( 0 < size );
+    while (0 < size);
 
     return true;
 }
@@ -161,15 +161,15 @@ bool recvv_n(SOCKET sock, io_mem_buf* wsaBuf, size_t size)
 
     do
     {
-        DWORD numberOfBytesRecvd =0;
+        DWORD numberOfBytesRecvd = 0;
 #pragma warning(disable: 4267)
-        if ( SOCKET_ERROR == ::WSARecv(sock, p, size, &numberOfBytesRecvd,0,0 , 0 ) )
+        if (SOCKET_ERROR == ::WSARecv(sock, p, size, &numberOfBytesRecvd, 0, 0 , 0))
 #pragma warning(default: 4267)
             return false;
 
         do
         {
-            if ( numberOfBytesRecvd < p->len)
+            if (numberOfBytesRecvd < p->len)
             {
                 p->len -= numberOfBytesRecvd;
                 p->buf = p->buf + numberOfBytesRecvd;
@@ -179,26 +179,26 @@ bool recvv_n(SOCKET sock, io_mem_buf* wsaBuf, size_t size)
             ++ p;
             -- size;
         }
-        while ( 0 < numberOfBytesRecvd );
+        while (0 < numberOfBytesRecvd);
     }
-    while ( 0 < size );
+    while (0 < size);
 
     return true;
 }
 bool  initializeScket()
 {
     WSADATA wsaData;
-    if ( 0 != WSAStartup( MAKEWORD( 2, 2 ), &wsaData ) )
+    if (0 != WSAStartup(MAKEWORD(2, 2), &wsaData))
         return false;
 
-    if ( LOBYTE( wsaData.wVersion ) != 2 ||
-            HIBYTE( wsaData.wVersion ) != 2 )
+    if (LOBYTE(wsaData.wVersion) != 2 ||
+            HIBYTE(wsaData.wVersion) != 2)
     {
-        WSACleanup( );
+        WSACleanup();
         return false;
     }
 
-    SOCKET cliSock = ::socket( AF_INET , SOCK_STREAM, IPPROTO_TCP);
+    SOCKET cliSock = ::socket(AF_INET , SOCK_STREAM, IPPROTO_TCP);
 
     GUID GuidConnectEx = WSAID_CONNECTEX;
     GUID GuidDisconnectEx = WSAID_DISCONNECTEX;
@@ -208,98 +208,98 @@ bool  initializeScket()
     GUID GuidTransmitPackets = WSAID_TRANSMITPACKETS;
 
     DWORD dwBytes = 0;
-    if ( SOCKET_ERROR == WSAIoctl(cliSock,
-                                  SIO_GET_EXTENSION_FUNCTION_POINTER,
-                                  &GuidConnectEx,
-                                  sizeof(GuidConnectEx),
-                                  &__connectex,
-                                  sizeof(__connectex),
-                                  &dwBytes,
-                                  NULL,
-                                  NULL))
+    if (SOCKET_ERROR == WSAIoctl(cliSock,
+                                 SIO_GET_EXTENSION_FUNCTION_POINTER,
+                                 &GuidConnectEx,
+                                 sizeof(GuidConnectEx),
+                                 &__connectex,
+                                 sizeof(__connectex),
+                                 &dwBytes,
+                                 NULL,
+                                 NULL))
     {
         __connectex = NULL;
     }
 
 
     dwBytes = 0;
-    if ( SOCKET_ERROR == WSAIoctl(cliSock,
-                                  SIO_GET_EXTENSION_FUNCTION_POINTER,
-                                  &GuidDisconnectEx,
-                                  sizeof(GuidDisconnectEx),
-                                  &__disconnectex,
-                                  sizeof(__disconnectex),
-                                  &dwBytes,
-                                  NULL,
-                                  NULL))
+    if (SOCKET_ERROR == WSAIoctl(cliSock,
+                                 SIO_GET_EXTENSION_FUNCTION_POINTER,
+                                 &GuidDisconnectEx,
+                                 sizeof(GuidDisconnectEx),
+                                 &__disconnectex,
+                                 sizeof(__disconnectex),
+                                 &dwBytes,
+                                 NULL,
+                                 NULL))
     {
         __disconnectex = NULL;
     }
 
     dwBytes = 0;
-    if ( SOCKET_ERROR == WSAIoctl(cliSock,
-                                  SIO_GET_EXTENSION_FUNCTION_POINTER,
-                                  &GuidTransmitFile,
-                                  sizeof(GuidTransmitFile),
-                                  &__transmitfile,
-                                  sizeof(__transmitfile),
-                                  &dwBytes,
-                                  NULL,
-                                  NULL))
+    if (SOCKET_ERROR == WSAIoctl(cliSock,
+                                 SIO_GET_EXTENSION_FUNCTION_POINTER,
+                                 &GuidTransmitFile,
+                                 sizeof(GuidTransmitFile),
+                                 &__transmitfile,
+                                 sizeof(__transmitfile),
+                                 &dwBytes,
+                                 NULL,
+                                 NULL))
     {
         __transmitfile = NULL;
     }
 
     dwBytes = 0;
-    if ( SOCKET_ERROR == WSAIoctl(cliSock,
-                                  SIO_GET_EXTENSION_FUNCTION_POINTER,
-                                  &GuidAcceptEx,
-                                  sizeof(GuidAcceptEx),
-                                  &__acceptex,
-                                  sizeof(__acceptex),
-                                  &dwBytes,
-                                  NULL,
-                                  NULL))
+    if (SOCKET_ERROR == WSAIoctl(cliSock,
+                                 SIO_GET_EXTENSION_FUNCTION_POINTER,
+                                 &GuidAcceptEx,
+                                 sizeof(GuidAcceptEx),
+                                 &__acceptex,
+                                 sizeof(__acceptex),
+                                 &dwBytes,
+                                 NULL,
+                                 NULL))
     {
         __acceptex = NULL;
     }
 
     dwBytes = 0;
-    if ( SOCKET_ERROR == WSAIoctl(cliSock,
-                                  SIO_GET_EXTENSION_FUNCTION_POINTER,
-                                  &GuidTransmitPackets,
-                                  sizeof(GuidTransmitPackets),
-                                  &__transmitpackets,
-                                  sizeof(__transmitpackets),
-                                  &dwBytes,
-                                  NULL,
-                                  NULL))
+    if (SOCKET_ERROR == WSAIoctl(cliSock,
+                                 SIO_GET_EXTENSION_FUNCTION_POINTER,
+                                 &GuidTransmitPackets,
+                                 sizeof(GuidTransmitPackets),
+                                 &__transmitpackets,
+                                 sizeof(__transmitpackets),
+                                 &dwBytes,
+                                 NULL,
+                                 NULL))
     {
         __transmitpackets = NULL;
     }
 
     dwBytes = 0;
-    if ( SOCKET_ERROR == WSAIoctl(cliSock,
-                                  SIO_GET_EXTENSION_FUNCTION_POINTER,
-                                  &GuidGetAcceptExSockAddrs,
-                                  sizeof(GuidGetAcceptExSockAddrs),
-                                  &__getacceptexsockaddrs,
-                                  sizeof(__getacceptexsockaddrs),
-                                  &dwBytes,
-                                  NULL,
-                                  NULL))
+    if (SOCKET_ERROR == WSAIoctl(cliSock,
+                                 SIO_GET_EXTENSION_FUNCTION_POINTER,
+                                 &GuidGetAcceptExSockAddrs,
+                                 sizeof(GuidGetAcceptExSockAddrs),
+                                 &__getacceptexsockaddrs,
+                                 sizeof(__getacceptexsockaddrs),
+                                 &dwBytes,
+                                 NULL,
+                                 NULL))
     {
         __getacceptexsockaddrs = NULL;
     }
 
-    closesocket(  cliSock );
+    closesocket(cliSock);
 
     return true;
 }
 
 void shutdownSocket()
 {
-    WSACleanup( );
+    WSACleanup();
 }
 
 bool transmitFile(SOCKET hSocket,
@@ -308,7 +308,7 @@ bool transmitFile(SOCKET hSocket,
                   DWORD nNumberOfBytesPerSend,
                   LPOVERLAPPED lpOverlapped,
                   LPTRANSMIT_FILE_BUFFERS lpTransmitBuffers,
-                  DWORD dwFlags )
+                  DWORD dwFlags)
 {
     return TRUE == __transmitfile(hSocket
                                   , hFile
@@ -319,14 +319,14 @@ bool transmitFile(SOCKET hSocket,
                                   , dwFlags);
 }
 
-bool acceptEx( SOCKET sListenSocket,
-               SOCKET sAcceptSocket,
-               PVOID lpOutputBuffer,
-               DWORD dwReceiveDataLength,
-               DWORD dwLocalAddressLength,
-               DWORD dwRemoteAddressLength,
-               LPDWORD lpdwBytesReceived,
-               LPOVERLAPPED lpOverlapped )
+bool acceptEx(SOCKET sListenSocket,
+              SOCKET sAcceptSocket,
+              PVOID lpOutputBuffer,
+              DWORD dwReceiveDataLength,
+              DWORD dwLocalAddressLength,
+              DWORD dwRemoteAddressLength,
+              LPDWORD lpdwBytesReceived,
+              LPOVERLAPPED lpOverlapped)
 {
     return TRUE == __acceptex(sListenSocket,
                               sAcceptSocket,
@@ -338,12 +338,12 @@ bool acceptEx( SOCKET sListenSocket,
                               lpOverlapped);
 }
 
-bool transmitPackets( SOCKET hSocket,
-                      LPTRANSMIT_PACKETS_ELEMENT lpPacketArray,
-                      DWORD nElementCount,
-                      DWORD nSendSize,
-                      LPOVERLAPPED lpOverlapped,
-                      DWORD dwFlags)
+bool transmitPackets(SOCKET hSocket,
+                     LPTRANSMIT_PACKETS_ELEMENT lpPacketArray,
+                     DWORD nElementCount,
+                     DWORD nSendSize,
+                     LPOVERLAPPED lpOverlapped,
+                     DWORD dwFlags)
 {
     return TRUE == __transmitpackets(hSocket,
                                      lpPacketArray,
@@ -411,10 +411,10 @@ bool stringToAddress(const tchar* host
     const tchar* begin = string_traits<tchar>::strstr(host, _T("://"));
     if (null_ptr != begin)
     {
-        if (begin != host && _T('6') == *(begin-1))
+        if (begin != host && _T('6') == *(begin - 1))
             addr->sa_family = AF_INET6;
 
-        begin +=3;
+        begin += 3;
     }
     else
     {
@@ -453,17 +453,17 @@ bool addressToString(struct sockaddr* addr
                      , const tchar* schema
                      , tstring& host)
 {
-    host = (null_ptr == schema)?_T("tcp"):schema;
-    host += (addr->sa_family == AF_INET6)?_T("6://"):_T("://");
+    host = (null_ptr == schema) ? _T("tcp") : schema;
+    host += (addr->sa_family == AF_INET6) ? _T("6://") : _T("://");
 
     size_t prefix = host.size();
     host.resize(256);
     DWORD addressLength = host.size() - prefix;
 
-    if (SOCKET_ERROR == ::WSAAddressToString(addr, len, NULL,(LPTSTR)host.c_str() + prefix, &addressLength))
+    if (SOCKET_ERROR == ::WSAAddressToString(addr, len, NULL, (LPTSTR)host.c_str() + prefix, &addressLength))
         return false;
 
-    host.resize( addressLength + prefix - 1);
+    host.resize(addressLength + prefix - 1);
     return true;
 }
 }

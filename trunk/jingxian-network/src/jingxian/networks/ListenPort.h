@@ -45,15 +45,15 @@ private:
     tstring toString_;
 };
 
-inline tostream& operator<<( tostream& target, const ListenPort& server )
+inline tostream& operator<<(tostream& target, const ListenPort& server)
 {
     target << server.toString();
     return target;
 }
 
-inline tostream& operator<<( tostream& target, const ListenPort* server )
+inline tostream& operator<<(tostream& target, const ListenPort* server)
 {
-    if ( null_ptr == server)
+    if (null_ptr == server)
     {
         target << _T("<null>");
         return target;

@@ -43,21 +43,21 @@ public:
     IReactorCore& core()
     {
         if (is_null(core_))
-            ThrowException( NullException );
+            ThrowException(NullException);
         return *core_;
     }
 
     ITransport& transport()
     {
         if (is_null(transport_))
-            ThrowException( NullException );
+            ThrowException(NullException);
         return *transport_;
     }
 
     const std::vector<io_mem_buf>& inMemory() const
     {
         if (is_null(inMemory_))
-            ThrowException( NullException );
+            ThrowException(NullException);
         return *inMemory_;
     }
 
@@ -68,16 +68,16 @@ public:
 
     //IInBuffer& inBuffer()
     //{
-    //	if(is_null(inBuffer_))
-    //		ThrowException( NullException );
-    //	return *inBuffer_;
+    //  if(is_null(inBuffer_))
+    //    ThrowException( NullException );
+    //  return *inBuffer_;
     //}
     //
     //IOutBuffer& outBuffer()
     //{
-    //	if(is_null(outBuffer_))
-    //		ThrowException( NullException );
-    //	return *outBuffer_;
+    //  if(is_null(outBuffer_))
+    //    ThrowException( NullException );
+    //  return *outBuffer_;
     //}
 
 protected:

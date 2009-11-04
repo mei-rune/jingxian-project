@@ -10,7 +10,7 @@ ReadCommand::ReadCommand(ConnectedSocket* transport)
 {
 }
 
-ReadCommand::~ReadCommand( )
+ReadCommand::~ReadCommand()
 {
 }
 
@@ -27,7 +27,7 @@ void ReadCommand::on_complete(size_t bytes_transferred
     if (!success)
     {
         tstring err = ::concat<tstring>(_T("读数据时发生错误 - "), lastError(error));
-        transport_->onError(*this, transport_mode::Receive, error,err);
+        transport_->onError(*this, transport_mode::Receive, error, err);
         return;
     }
     else if (0 == bytes_transferred)
@@ -44,7 +44,7 @@ void ReadCommand::on_complete(size_t bytes_transferred
 bool ReadCommand::execute()
 {
     DWORD bytesTransferred;
-    DWORD flags =0;
+    DWORD flags = 0;
 
     assert(iovec_.size() > 0);
     assert(iovec_[0].len > 0);

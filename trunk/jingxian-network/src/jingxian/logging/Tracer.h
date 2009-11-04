@@ -24,27 +24,27 @@ public:
 
     virtual bool isDebugEnabled() const;
 
-    virtual void debug(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
+    virtual void debug(transport_mode::type way, const LogStream& message, const char* file = 0, int line = -1);
 
     virtual bool isErrorEnabled() const;
 
-    virtual void error(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
+    virtual void error(transport_mode::type way, const LogStream& message, const char* file = 0, int line = -1);
 
     virtual bool isFatalEnabled() const;
 
-    virtual void fatal(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
+    virtual void fatal(transport_mode::type way, const LogStream& message, const char* file = 0, int line = -1);
 
     virtual bool isInfoEnabled() const;
 
-    virtual void info(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
+    virtual void info(transport_mode::type way, const LogStream& message, const char* file = 0, int line = -1);
 
     virtual bool isWarnEnabled() const ;
 
-    virtual void warn(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
+    virtual void warn(transport_mode::type way, const LogStream& message, const char* file = 0, int line = -1);
 
     virtual bool isTraceEnabled() const;
 
-    virtual void trace(transport_mode::type way, const LogStream& message, const char* file=0, int line=-1);
+    virtual void trace(transport_mode::type way, const LogStream& message, const char* file = 0, int line = -1);
 
 private:
 

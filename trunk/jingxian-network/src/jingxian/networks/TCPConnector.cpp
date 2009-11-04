@@ -24,14 +24,14 @@ TCPConnector::~TCPConnector()
 void TCPConnector::connect(const tchar* endPoint
                            , OnBuildConnectionComplete onComplete
                            , OnBuildConnectionError onError
-                           , void* context )
+                           , void* context)
 {
     std::auto_ptr< ICommand> command(new ConnectCommand(core_
                                      , endPoint
                                      , onComplete
                                      , onError
                                      , context));
-    if (! command->execute() )
+    if (! command->execute())
     {
         int code = WSAGetLastError();
         tstring descr = concat<tstring>(_T("连接到地址 '")

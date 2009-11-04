@@ -31,7 +31,7 @@ public:
         while (null_ptr != head_)
         {
             T* current = head_;
-            head_= (head_)->_next;
+            head_ = (head_)->_next;
 
             freebuffer(current);
         }
@@ -49,12 +49,12 @@ public:
 
     T* tail()
     {
-        return is_null(head_)? null_ptr : tail_;
+        return is_null(head_) ? null_ptr : tail_;
     }
 
     const T* tail() const
     {
-        return is_null(head_)? null_ptr : tail_;
+        return is_null(head_) ? null_ptr : tail_;
     }
 
     /**
@@ -63,7 +63,7 @@ public:
     void push(T* newbuf)
     {
         newbuf->_next = NULL;
-        if ( is_null(head_))
+        if (is_null(head_))
             head_ = newbuf;
         else
             tail_->_next = newbuf;
@@ -96,7 +96,7 @@ public:
     */
     T* next(T* current)
     {
-        return is_null(current)?head_:current->_next;
+        return is_null(current) ? head_ : current->_next;
     }
 
     /**
@@ -104,7 +104,7 @@ public:
     */
     const T* next(const T* current) const
     {
-        return is_null(current)?head_:current->_next;
+        return is_null(current) ? head_ : current->_next;
     }
 
     /**

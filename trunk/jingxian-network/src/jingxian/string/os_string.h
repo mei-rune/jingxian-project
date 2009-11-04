@@ -43,155 +43,155 @@ struct stringData
     charT* ptr;
 };
 
-inline const char* c_str_ptr( const char* t )
+inline const char* c_str_ptr(const char* t)
 {
     return t;
 }
 
-inline std::string::const_pointer c_str_ptr( const std::string& t )
+inline std::string::const_pointer c_str_ptr(const std::string& t)
 {
     return t.c_str();
 }
 
-inline std::string::const_pointer c_str_ptr( const std::string* t )
+inline std::string::const_pointer c_str_ptr(const std::string* t)
 {
     return t->c_str();
 }
 
-inline const wchar_t* c_str_ptr( const wchar_t* t )
+inline const wchar_t* c_str_ptr(const wchar_t* t)
 {
     return t;
 }
 
-inline std::wstring::const_pointer c_str_ptr( const std::wstring& t )
+inline std::wstring::const_pointer c_str_ptr(const std::wstring& t)
 {
     return t.c_str();
 }
 
-inline std::wstring::const_pointer c_str_ptr( const std::wstring* t )
+inline std::wstring::const_pointer c_str_ptr(const std::wstring* t)
 {
     return t->c_str();
 }
 
 #pragma warning(disable: 4267)
-inline std::wstring toWideString( const char* pStr , size_t len=-1 )
+inline std::wstring toWideString(const char* pStr , size_t len = -1)
 {
-    int nChars = MultiByteToWideChar( CP_ACP , 0 , pStr , len , NULL , 0 ) ;
-    if ( (size_t)-1 == len )
+    int nChars = MultiByteToWideChar(CP_ACP , 0 , pStr , len , NULL , 0) ;
+    if ((size_t) - 1 == len)
         -- nChars;
-    if ( nChars == 0 )
+    if (nChars == 0)
         return L"";
 
     std::wstring buf;
-    buf.resize( nChars ) ;
-    MultiByteToWideChar( CP_ACP , 0 , pStr , len ,
-                         const_cast<wchar_t*>(buf.c_str()) , nChars ) ;
+    buf.resize(nChars) ;
+    MultiByteToWideChar(CP_ACP , 0 , pStr , len ,
+                        const_cast<wchar_t*>(buf.c_str()) , nChars) ;
     return buf ;
 }
 #pragma warning(default: 4267)
 
-inline std::wstring toWideString( const std::string& str )
+inline std::wstring toWideString(const std::string& str)
 {
-    return toWideString(str.c_str(),str.length()) ;
+    return toWideString(str.c_str(), str.length()) ;
 }
 
-inline std::wstring toWideString( const wchar_t* pStr , size_t len=-1 )
+inline std::wstring toWideString(const wchar_t* pStr , size_t len = -1)
 {
-    return ((size_t)-1 == len) ? pStr : std::wstring(pStr,len) ;
+    return ((size_t) - 1 == len) ? pStr : std::wstring(pStr, len) ;
 }
 
-inline const std::wstring& toWideString( const std::wstring& str )
+inline const std::wstring& toWideString(const std::wstring& str)
 {
     return str ;
 }
 
 #pragma warning(disable: 4267)
-inline std::string toNarrowString( const wchar_t* pStr , size_t len=-1 )
+inline std::string toNarrowString(const wchar_t* pStr , size_t len = -1)
 {
-    int nChars = WideCharToMultiByte( CP_ACP , 0 ,
-                                      pStr , len , NULL , 0 , NULL , NULL ) ;
-    if ( (size_t)-1 == len )
+    int nChars = WideCharToMultiByte(CP_ACP , 0 ,
+                                     pStr , len , NULL , 0 , NULL , NULL) ;
+    if ((size_t) - 1 == len)
         -- nChars ;
 
-    if ( nChars == 0 )
+    if (nChars == 0)
         return "" ;
 
     std::string buf;
-    buf.resize( nChars ) ;
-    WideCharToMultiByte( CP_ACP , 0 , pStr , len ,
-                         const_cast<char*>(buf.c_str()) , nChars , NULL , NULL ) ;
+    buf.resize(nChars) ;
+    WideCharToMultiByte(CP_ACP , 0 , pStr , len ,
+                        const_cast<char*>(buf.c_str()) , nChars , NULL , NULL) ;
     return buf ;
 }
 #pragma warning(default: 4267)
 
-inline std::string toNarrowString( const std::wstring& str )
+inline std::string toNarrowString(const std::wstring& str)
 {
-    return toNarrowString(str.c_str(),str.length()) ;
+    return toNarrowString(str.c_str(), str.length()) ;
 }
 
-inline std::string toNarrowString( const char* pStr , size_t len=-1 )
+inline std::string toNarrowString(const char* pStr , size_t len = -1)
 {
-    return ((size_t)-1 == len) ? pStr : std::string(pStr,len) ;
+    return ((size_t) - 1 == len) ? pStr : std::string(pStr, len) ;
 }
-inline const std::string& toNarrowString( const std::string& str )
+inline const std::string& toNarrowString(const std::string& str)
 {
     return str ;
 }
 
 #ifdef _UNICODE
-inline tchar toTchar( char ch )
+inline tchar toTchar(char ch)
 {
     return (wchar_t)ch ;
 }
 
-inline tchar toTchar( wchar_t ch )
+inline tchar toTchar(wchar_t ch)
 {
     return ch ;
 }
-inline tstring toTstring( const std::string& s )
+inline tstring toTstring(const std::string& s)
 {
     return toWideString(s) ;
 }
 
-inline const tstring& toTstring( const std::wstring& s )
+inline const tstring& toTstring(const std::wstring& s)
 {
     return s;
 }
 
-inline tstring toTstring( const char* p , size_t len=-1 )
+inline tstring toTstring(const char* p , size_t len = -1)
 {
-    return toWideString(p,len);
+    return toWideString(p, len);
 }
 
-inline tstring toTstring( const wchar_t* p , size_t len=-1 )
+inline tstring toTstring(const wchar_t* p , size_t len = -1)
 {
-    return (-1 == len) ? p : std::wstring(p,len) ;
+    return (-1 == len) ? p : std::wstring(p, len) ;
 }
 
 #else
-inline tchar toTchar( char ch )
+inline tchar toTchar(char ch)
 {
     return ch ;
 }
-inline tchar toTchar( wchar_t ch )
+inline tchar toTchar(wchar_t ch)
 {
     return (ch >= 0 && ch <= 0xFF) ? (char)ch : '?' ;
 }
-inline const tstring& toTstring( const std::string& s )
+inline const tstring& toTstring(const std::string& s)
 {
     return s ;
 }
-inline tstring toTstring( const char* p , size_t len=-1 )
+inline tstring toTstring(const char* p , size_t len = -1)
 {
-    return ((size_t)-1 == len) ? p : std::string(p,len) ;
+    return ((size_t) - 1 == len) ? p : std::string(p, len) ;
 }
-inline tstring toTstring( const std::wstring& s )
+inline tstring toTstring(const std::wstring& s)
 {
     return toNarrowString(s) ;
 }
-inline tstring toTstring( const wchar_t* p , size_t len=-1 )
+inline tstring toTstring(const wchar_t* p , size_t len = -1)
 {
-    return toNarrowString(p,len) ;
+    return toNarrowString(p, len) ;
 }
 #endif // _UNICODE
 
