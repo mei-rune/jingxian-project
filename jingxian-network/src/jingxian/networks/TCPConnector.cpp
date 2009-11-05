@@ -40,7 +40,7 @@ void TCPConnector::connect(const tchar* endPoint
                                         , lastError(code));
         LOG_ERROR(logger_, descr);
 
-        ErrorCode err(false, code, descr);
+        ErrorCode err(code, descr);
         onError(err, context);
         return ;
     }

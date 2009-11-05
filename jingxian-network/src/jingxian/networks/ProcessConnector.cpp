@@ -26,26 +26,26 @@ void ProcessConnector::connect(const tchar* endPoint
                            , OnBuildConnectionError onError
                            , void* context)
 {
-    std::auto_ptr< ICommand> command(new CreateProcessCommand(core_
-                                     , endPoint
-                                     , onComplete
-                                     , onError
-                                     , context));
-    if (! command->execute())
-    {
-        int code = GetLastError();
-        tstring descr = concat<tstring>(_T("连接到地址 '")
-                                        , endPoint
-                                        , _T("' 时发生错误 - ")
-                                        , lastError(code));
-        LOG_ERROR(logger_, descr);
+    //std::auto_ptr< ICommand> command(new CreateProcessCommand(core_
+    //                                 , endPoint
+    //                                 , onComplete
+    //                                 , onError
+    //                                 , context));
+    //if (! command->execute())
+    //{
+    //    int code = GetLastError();
+    //    tstring descr = concat<tstring>(_T("连接到地址 '")
+    //                                    , endPoint
+    //                                    , _T("' 时发生错误 - ")
+    //                                    , lastError(code));
+    //    LOG_ERROR(logger_, descr);
 
-        ErrorCode err(false, code, descr);
-        onError(err, context);
-        return ;
-    }
+    //    ErrorCode err(code, descr);
+    //    onError(err, context);
+    //    return ;
+    //}
 
-    command.release();
+    //command.release();
 }
 
 const tstring& ProcessConnector::toString() const
