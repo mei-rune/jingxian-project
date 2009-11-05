@@ -289,6 +289,22 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\jingxian\networks\ProcessConnector.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\ProcessConnector.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\ProcessPipe.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\networks\ProcessPipe.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\jingxian\networks\TCPAcceptor.cpp"
 				>
 			</File>
@@ -341,6 +357,14 @@
 				</File>
 				<File
 					RelativePath=".\src\jingxian\networks\commands\ConnectCommand.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\commands\CreateProcessCommand.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\jingxian\networks\commands\CreateProcessCommand.h"
 					>
 				</File>
 				<File
@@ -738,6 +762,18 @@
 			</File>
 			<File
 				RelativePath=".\src\jingxian\utilities\StackTracer.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="proc"
+			>
+			<File
+				RelativePath=".\src\jingxian\proc\ProcessManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\proc\ProcessManager.h"
 				>
 			</File>
 		</Filter>

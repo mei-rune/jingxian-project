@@ -1,39 +1,39 @@
 
 # include "pro_config.h"
 # include "jingxian/exception.h"
-# include "jingxian/networks/TCPConnector.h"
-# include "jingxian/networks/commands/ConnectCommand.h"
+# include "jingxian/networks/ProcessConnector.h"
+# include "jingxian/networks/commands/CreateProcessCommand.h"
 
 _jingxian_begin
 
-TCPConnector::TCPConnector(IOCPServer* core)
+ProcessConnector::ProcessConnector(IOCPServer* core)
         : core_(core)
         , logger_(null_ptr)
-        , toString_(_T("TCPConnector"))
+        , toString_(_T("ProcessConnector"))
 {
-    toString_ = _T("TCPConnector");
-    logger_ = logging::makeLogger(_T("jingxian.connector.tcpConnector"));
+    toString_ = _T("ProcessConnector");
+    logger_ = logging::makeLogger(_T("jingxian.connector.processConnector"));
 }
 
-TCPConnector::~TCPConnector()
+ProcessConnector::~ProcessConnector()
 {
     delete logger_;
     logger_ = null_ptr;
 }
 
-void TCPConnector::connect(const tchar* endPoint
+void ProcessConnector::connect(const tchar* endPoint
                            , OnBuildConnectionComplete onComplete
                            , OnBuildConnectionError onError
                            , void* context)
 {
-    std::auto_ptr< ICommand> command(new ConnectCommand(core_
+    std::auto_ptr< ICommand> command(new CreateProcessCommand(core_
                                      , endPoint
                                      , onComplete
                                      , onError
                                      , context));
     if (! command->execute())
     {
-        int code = WSAGetLastError();
+        int code = GetLastError();
         tstring descr = concat<tstring>(_T("连接到地址 '")
                                         , endPoint
                                         , _T("' 时发生错误 - ")
@@ -48,7 +48,7 @@ void TCPConnector::connect(const tchar* endPoint
     command.release();
 }
 
-const tstring& TCPConnector::toString() const
+const tstring& ProcessConnector::toString() const
 {
     return toString_;
 }
