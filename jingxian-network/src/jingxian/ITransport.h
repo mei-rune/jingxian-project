@@ -91,49 +91,44 @@ class ErrorCode
 {
 public:
     ErrorCode(const tchar* err)
-            : isSuccess_(false)
-            , code_(0)
+            : code_(0)
             , err_(err)
     {}
 
-    ErrorCode(bool success, int code)
-            : isSuccess_(success)
-            , code_(code)
+    ErrorCode(int code)
+            : code_(code)
             , err_(lastError(code))
     {
     }
 
-    ErrorCode(bool success, int code, const tstring& err)
-            : isSuccess_(success)
-            , code_(code)
+    ErrorCode(int code, const tstring& err)
+            : code_(code)
             , err_(err)
     {
     }
 
-    ErrorCode(bool success, int code, const tchar* err)
-            : isSuccess_(success)
-            , code_(code)
+    ErrorCode(int code, const tchar* err)
+            : code_(code)
             , err_(err)
     {
     }
 
-    virtual ~ErrorCode() { }
+    virtual ~ErrorCode()
+	{
+	}
 
-    bool isSuccess() const
-    {
-        return isSuccess_;
-    }
-    int getCode() const
+
+    int errorCode() const
     {
         return code_;
     }
+
     const tstring& toString() const
     {
         return err_;
     }
 
 private:
-    bool isSuccess_;
     int code_;
     tstring err_;
 };

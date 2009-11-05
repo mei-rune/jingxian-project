@@ -40,22 +40,28 @@ void usage(int argc, tchar** args)
     tcout << _T("使用方法如下:") << std::endl;
 
     tcout << _T("安装一个后台服务:") << std::endl;
-    tcout << _T("\t") << getFileName(args[0]) << _T(" --install Win32服务名 [Win32服务的显示名] [Win32服务的描述信息] [Win32服务的执行程序名称] [Win32服务的参数1] [Win32服务的参数2] ...") << std::endl;
+    tcout << _T("\t") << getFileName(args[0]) << _T(" --install Win32服务名") 
+		<< _T(" [Win32服务的显示名]") << _T(" [Win32服务的描述信息]") 
+		<< _T(" [Win32服务的执行程序名称]") << _T(" [Win32服务的参数1]")
+		<< _T(" [Win32服务的参数2] ...") << std::endl;
 
     tcout << _T("卸载一个后台服务:") << std::endl;
     tcout << _T("\t") << getFileName(args[0]) << _T(" --uninstall Win32服务名") << std::endl;
 
     tcout << _T("启动一个后台服务:") << std::endl;
-    tcout << _T("\t") << getFileName(args[0]) << _T(" --start Win32服务名 [Win32服务的参数1] [Win32服务的参数2] ...") << std::endl;
+    tcout << _T("\t") << getFileName(args[0]) << _T(" --start Win32服务名") 
+		<< _T(" [Win32服务的参数1]") << _T(" [Win32服务的参数2] ...") << std::endl;
 
     tcout << _T("停止一个后台服务:") << std::endl;
     tcout << _T("\t") << getFileName(args[0]) << _T(" --stop Win32服务名") << std::endl;
 
     tcout << _T("作为一个控制台程序运行:") << std::endl;
-    tcout << _T("\t") << getFileName(args[0]) << _T(" --console [Win32服务的参数1] [Win32服务的参数2] ...") << std::endl;
+    tcout << _T("\t") << getFileName(args[0]) << _T(" --console ")
+		<< _T("[Win32服务的参数1] [Win32服务的参数2] ...") << std::endl;
 
     tcout << _T("作为一个后台服务运行:") << std::endl;
-    tcout << _T("\t") << getFileName(args[0]) << _T(" --service [Win32服务的参数1] [Win32服务的参数2] ...") << std::endl;
+    tcout << _T("\t") << getFileName(args[0]) << _T(" --service") 
+		<< _T(" [Win32服务的参数1] [Win32服务的参数2] ...") << std::endl;
 
     tcout << _T("获得帮助:") << std::endl;
     tcout << _T("\t") << getFileName(args[0]) << _T(" --help") << std::endl;
@@ -80,7 +86,7 @@ int Application::main(int argc, tchar** args)
         if (argc < 3)
         {
             tcout << _T("安装服务失败 - 参数不正确,正确使用方法为:") << std::endl;
-            tcout << _T("\t ") << args[0] << _T(" --install Win32服务名 [Win32服务的显示名] [Win32服务的描述信息] [Win32服务的执行程序名称] [Win32服务的参数1] [Win32服务的参数2] ...") << std::endl;
+            tcout << _T("\t ") << args[0] << _T(" --install Win32服务名") << _T(" [Win32服务的显示名] [Win32服务的描述信息] [Win32服务的执行程序名称] [Win32服务的参数1] [Win32服务的参数2] ...") << std::endl;
             return -1;
         }
         tstring name(args[2]);

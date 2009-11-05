@@ -57,7 +57,7 @@ void ConnectCommand::onResolveComplete(const tstring& name, const tstring& port,
     }
 
     int error = WSAGetLastError();
-    ErrorCode err(false, error, concat<tstring>(_T("连接到地址 '")
+    ErrorCode err(error, concat<tstring>(_T("连接到地址 '")
                   , name
                   , _T(":")
                   , ::toString(port)
@@ -70,7 +70,7 @@ void ConnectCommand::onResolveComplete(const tstring& name, const tstring& port,
 
 void ConnectCommand::onResolveError(const tstring& name, const tstring& port, errcode_t error)
 {
-    ErrorCode err(false, error, concat<tstring>(_T("解析主机名 '")
+    ErrorCode err(error, concat<tstring>(_T("解析主机名 '")
                   , name
                   , _T("' 失败 - ")
                   , lastError(error)));
@@ -133,7 +133,7 @@ void ConnectCommand::on_complete(size_t bytes_transferred
 {
     if (!success)
     {
-        ErrorCode err(0 == success, error, concat<tstring>(_T("连接到 '")
+        ErrorCode err(error, concat<tstring>(_T("连接到 '")
                       , host_
                       , _T("' 失败 - ")
                       , lastError(error)));
@@ -154,7 +154,7 @@ void ConnectCommand::on_complete(size_t bytes_transferred
 
         if (SOCKET_ERROR == getsockname(socket_, & name, &namelen))
         {
-            ErrorCode err(0 == success, error, concat<tstring>(_T("连接到 '")
+            ErrorCode err(error, concat<tstring>(_T("连接到 '")
                           , host_
                           , _T("' 成功,取本地地址时失败 - ")
                           , lastError(error)));
@@ -165,7 +165,7 @@ void ConnectCommand::on_complete(size_t bytes_transferred
         tstring local;
         if (!networking::addressToString(&name, namelen, _T("tcp"), local))
         {
-            ErrorCode err(0 == success, error, concat<tstring>(_T("连接到 '")
+            ErrorCode err(error, concat<tstring>(_T("连接到 '")
                           , host_
                           , _T("' 成功,转换本地地址时失败 - ")
                           , lastError(error)));
@@ -183,7 +183,7 @@ void ConnectCommand::on_complete(size_t bytes_transferred
     }
     catch (std::exception& e)
     {
-        ErrorCode err(0 == success, error, concat<tstring>(_T("连接到 '")
+        ErrorCode err(error, concat<tstring>(_T("连接到 '")
                       , host_
                       , _T("' 成功,初始化时失败 - ")
                       , toTstring(e.what())));
