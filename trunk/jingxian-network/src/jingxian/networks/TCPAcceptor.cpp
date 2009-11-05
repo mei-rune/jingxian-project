@@ -65,7 +65,7 @@ void TCPAcceptor::accept(OnBuildConnectionComplete onComplete
 
         LOG_ERROR(logger_, descr);
 
-        ErrorCode err(false, 0, descr);
+        ErrorCode err(0, descr);
         onError(err, context);
         return ;
     }
@@ -82,7 +82,7 @@ void TCPAcceptor::accept(OnBuildConnectionComplete onComplete
 
         LOG_ERROR(logger_, descr);
 
-        ErrorCode err(false, code, descr);
+        ErrorCode err(code, descr);
         onError(err, context);
         return ;
     }

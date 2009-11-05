@@ -45,7 +45,7 @@ void AcceptCommand::on_complete(size_t bytes_transferred
 {
     if (!success)
     {
-        ErrorCode err(0 == success, error, concat<tstring>(_T("接受器 '")
+        ErrorCode err(error, concat<tstring>(_T("接受器 '")
                       , listenAddr_
                       , _T("' 获取连接请求失败 - ")
                       , lastError(error)));
@@ -82,7 +82,7 @@ void AcceptCommand::on_complete(size_t bytes_transferred
     if (!networking::addressToString(remote_addr, remote_size, _T("tcp"), peer))
     {
         int errCode = ::WSAGetLastError();
-        ErrorCode err(false, errCode, concat<tstring, tchar*, tstring, tchar*, tstring>(_T("接受器 '")
+        ErrorCode err(errCode, concat<tstring, tchar*, tstring, tchar*, tstring>(_T("接受器 '")
                       , listenAddr_
                       , _T("' 获取连接请求返回,获取远程地址失败 -")
                       , lastError(errCode)));
@@ -94,7 +94,7 @@ void AcceptCommand::on_complete(size_t bytes_transferred
     if (!networking::addressToString(local_addr, local_size, _T("tcp"), host))
     {
         int errCode = ::WSAGetLastError();
-        ErrorCode err(false, errCode, concat<tstring>(_T("接受器 '")
+        ErrorCode err(errCode, concat<tstring>(_T("接受器 '")
                       , listenAddr_
                       , _T("' 获取连接请求返回,获取本地地址失败 -")
                       , lastError(errCode)));
@@ -108,7 +108,7 @@ void AcceptCommand::on_complete(size_t bytes_transferred
     {
         int errCode = ::WSAGetLastError();
 
-        ErrorCode err(false, errCode, _T("接受器 '")
+        ErrorCode err(errCode, _T("接受器 '")
                       + listenAddr_
                       + _T("' 获取连接请求返回,在对 socket 句柄设置 SO_UPDATE_ACCEPT_CONTEXT 选项时发生错误 - ")
                       + lastError(errCode));
@@ -122,7 +122,7 @@ void AcceptCommand::on_complete(size_t bytes_transferred
     if (!core_->bind((HANDLE)(connectedSocket->handle()), connectedSocket.get()))
     {
         int errCode = ::WSAGetLastError();
-        ErrorCode err(false, errCode, concat<tstring>(_T("初始化来自 '")
+        ErrorCode err(errCode, concat<tstring>(_T("初始化来自 '")
                       , peer
                       , _T("' 的连接时，绑定到iocp发生错误 - ")
                       , lastError(errCode)));

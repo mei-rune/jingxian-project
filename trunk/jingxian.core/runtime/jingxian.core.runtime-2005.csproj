@@ -229,14 +229,18 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Messages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Schemas\ArbitraryConfiguration.xsd" />
+    <EmbeddedResource Include="Schemas\ArbitraryConfiguration.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Schemas\Bundle.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Schemas\Category.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Schemas\CommandLineArgumentConfiguration.xsd" />
+    <EmbeddedResource Include="Schemas\CommandLineArgumentConfiguration.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Schemas\ComponentConfiguration.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
