@@ -762,6 +762,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\jingxian\IConfigureHandler.h"
+			>
+		</File>
+		<File
 			RelativePath=".\src\jingxian\IConnectionBuilder.h"
 			>
 		</File>
