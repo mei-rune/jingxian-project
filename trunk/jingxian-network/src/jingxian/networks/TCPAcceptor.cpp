@@ -11,11 +11,10 @@ TCPAcceptor::TCPAcceptor(IOCPServer* core, const tchar* endpoint)
         , socket_(INVALID_SOCKET)
         , endpoint_(endpoint)
         , status_(connection_status::disconnected)
-        , logger_(null_ptr)
+        , logger_(_T("jingxian.acceptor.tcpAcceptor"))
         , toString_(_T("TCPAcceptor"))
 {
     toString_ = _T("TCPAcceptor[address=") + endpoint_ + _T("]");
-    logger_ = logging::makeLogger(_T("jingxian.acceptor.tcpAcceptor"));
 }
 
 TCPAcceptor::~TCPAcceptor()
@@ -23,9 +22,6 @@ TCPAcceptor::~TCPAcceptor()
     stopListening();
 
     assert(connection_status::disconnected == status_);
-
-    delete logger_;
-    logger_ = null_ptr;
 }
 
 time_t TCPAcceptor::timeout() const

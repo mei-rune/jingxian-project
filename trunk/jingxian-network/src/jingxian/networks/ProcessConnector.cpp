@@ -8,17 +8,14 @@ _jingxian_begin
 
 ProcessConnector::ProcessConnector(IOCPServer* core)
         : core_(core)
-        , logger_(null_ptr)
+        , logger_(_T("jingxian.connector.processConnector"))
         , toString_(_T("ProcessConnector"))
 {
     toString_ = _T("ProcessConnector");
-    logger_ = logging::makeLogger(_T("jingxian.connector.processConnector"));
 }
 
 ProcessConnector::~ProcessConnector()
 {
-    delete logger_;
-    logger_ = null_ptr;
 }
 
 void ProcessConnector::connect(const tchar* endPoint

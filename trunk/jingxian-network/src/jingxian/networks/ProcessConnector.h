@@ -50,13 +50,14 @@ private:
     {
         return core_;
     }
-    ILogger* logger()
+
+    logging::logger& log()
     {
         return logger_;
     }
 
     IOCPServer* core_;
-    ILogger* logger_;
+	logging::logger logger_;
     tstring toString_;
 };
 

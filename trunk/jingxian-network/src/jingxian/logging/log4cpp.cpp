@@ -4,6 +4,8 @@
 
 _jingxian_begin
 
+namespace logging
+{
 
 namespace log4cppAdaptor
 {
@@ -276,6 +278,8 @@ void ContextCategory::_logUnconditionally2(log4cpp::Priority::Value priority,
 {
     log4cpp::LoggingEvent evt(getName(), message, context_, priority);
     callAppenders(evt);
+}
+
 }
 
 }

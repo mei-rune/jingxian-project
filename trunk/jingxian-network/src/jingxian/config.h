@@ -204,12 +204,21 @@ typedef  int errno_t;
 #endif
 
 typedef DWORD errcode_t;
-#define my_free free
-#define my_malloc malloc
-#define my_calloc calloc
-#define my_realloc realloc
-#define my_strdup _strdup
-#define my_wcsdup _wcsdup
+
+void* my_calloc(__in size_t _NumOfElements, __in size_t _SizeOfElements);
+void  my_free(__inout_opt void * _Memory);
+void* my_malloc(__in size_t _Size);                 
+void* my_realloc(__in_opt void * _Memory, __in size_t _NewSize);
+
+char*  my_strdup(__in_z_opt const char * _Src);
+wchar_t* my_wcsdup(__in_z const wchar_t * _Str);
+
+//#define my_free free
+//#define my_malloc malloc
+//#define my_calloc calloc
+//#define my_realloc realloc
+//#define my_strdup _strdup
+//#define my_wcsdup _wcsdup
 
 #define JINGXIAN_MT   1
 

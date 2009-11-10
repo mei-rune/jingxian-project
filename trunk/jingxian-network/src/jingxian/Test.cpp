@@ -28,7 +28,6 @@ void testStackTracer1()
     testStackTracer2();
 }
 
-# ifdef _GOOGLETEST_
 TEST(string, stringOP)
 {
     StringArray<char, detail::StringOp<char> > sa(split<char, detail::StringOp<char> >("ad,adf,ff,d,,.d.f", ",."));
@@ -120,6 +119,5 @@ TEST(string, stringOP)
 #endif
     }
 }
-#endif
 
 _jingxian_end

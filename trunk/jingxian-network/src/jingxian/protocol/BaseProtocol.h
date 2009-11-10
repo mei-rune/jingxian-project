@@ -21,31 +21,25 @@ _jingxian_begin
 class BaseProtocol : public IProtocol
 {
 public:
-    BaseProtocol()
-            : toString_(_T("BaseProtocol"))
-            , logger_(null_ptr)
+    BaseProtocol(const tchar* descr = _T("BaseProtocol"))
+            : logger_(descr)
+			, toString_(descr)
     {
     }
 
     BaseProtocol(const BaseProtocol& protocol)
+	: logger_(protocol.toString_)
+	, toString_(protocol.toString_)
     {
-        toString_ = protocol.toString_;
-        logger_ = null_ptr;
     }
 
     virtual ~BaseProtocol()
     {
-        if (null_ptr != logger_)
-        {
-            delete logger_;
-            logger_ = null_ptr;
-        }
     }
 
     BaseProtocol& operator=(const BaseProtocol& protocol)
     {
         toString_ = protocol.toString_;
-        logger_ = null_ptr;
     }
 
     /**
@@ -105,14 +99,6 @@ public:
         return (buffer_chain_t*)result;
     }
 
-    ILogger* log()
-    {
-        if (is_null(logger_))
-            logger_ = logging::makeLogger(toString_);
-
-        return logger_;
-    }
-
     /**
      * 取得地址的描述
      */
@@ -121,7 +107,8 @@ public:
         return toString_;
     }
 protected:
-    ILogger* logger_;
+	logging::logger logger_;
+private:
     tstring toString_;
 };
 

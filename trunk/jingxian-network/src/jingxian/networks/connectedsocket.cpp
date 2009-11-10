@@ -36,7 +36,7 @@ ConnectedSocket::ConnectedSocket(IOCPServer* core
                                 , ::toString(sock)
                                 , _T("]"));
 
-    tracer_ = logging::makeTracer(_T("jingxian.connection.tcpConnection")
+	tracer_ = logging::spi::makeTracer(_T("jingxian.connection.tcpConnection")
                                   , host_
                                   , peer_
                                   , ::toString(sock));

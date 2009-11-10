@@ -8,17 +8,14 @@ _jingxian_begin
 
 TCPConnector::TCPConnector(IOCPServer* core)
         : core_(core)
-        , logger_(null_ptr)
+        , logger_(_T("jingxian.connector.tcpConnector"))
         , toString_(_T("TCPConnector"))
 {
     toString_ = _T("TCPConnector");
-    logger_ = logging::makeLogger(_T("jingxian.connector.tcpConnector"));
 }
 
 TCPConnector::~TCPConnector()
 {
-    delete logger_;
-    logger_ = null_ptr;
 }
 
 void TCPConnector::connect(const tchar* endPoint

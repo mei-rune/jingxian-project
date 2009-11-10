@@ -151,7 +151,7 @@ size_t SOCKSv5Protocol::onHello(ProtocolContext& context, InBuffer& inBuffer)
     outBuffer.writeInt8(version);
     outBuffer.writeInt8(credentialPolicy_->authenticationType());
     status_ = 1; //AUTHENTICATING;
-    LOG_TRACE(log(), _T("握手成功!"));
+    LOG_TRACE(logger_, _T("握手成功!"));
     return 2 + nmethods;
 }
 
@@ -161,7 +161,7 @@ size_t SOCKSv5Protocol::onAuthenticating(ProtocolContext& context, InBuffer& inB
     if (credentialPolicy_->isComplete())
     {
         status_ = 2;// COMMAND;
-        LOG_TRACE(log(), _T("登录成功!"));
+        LOG_TRACE(logger_, _T("登录成功!"));
         return len;
     }
 
@@ -227,7 +227,7 @@ size_t SOCKSv5Protocol::onCommand(ProtocolContext& context, InBuffer& inBuffer)
         if (!readNetAddress(inBuffer, host, AF_INET, 4))
         {
             tstring err = concat<tstring>(_T("连接地址格式不正确 - "), lastError(WSAGetLastError()));
-            LOG_ERROR(log(), err);
+            LOG_ERROR(logger_, err);
 
             sendReply(context, SOCKSv5Error::Error, 5, addressType, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 4, 0);
             context.transport().disconnection(err);
@@ -239,7 +239,7 @@ size_t SOCKSv5Protocol::onCommand(ProtocolContext& context, InBuffer& inBuffer)
         if (!readNetAddress(inBuffer, host, AF_INET6, 16))
         {
             tstring err = concat<tstring>(_T("连接地址格式不正确 - "), lastError(WSAGetLastError()));
-            LOG_ERROR(log(), err);
+            LOG_ERROR(logger_, err);
             sendReply(context, SOCKSv5Error::Error, 5, addressType, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 16, 0);
             context.transport().disconnection(err);
             return 0;
@@ -308,7 +308,7 @@ void SOCKSv5Protocol::connectTo(ProtocolContext& context, const tstring& host)
     connectProxy_ = new connectorType(this, host, &context.core(), &SOCKSv5Protocol::onConnectComplete, &SOCKSv5Protocol::onConnectError, context);
     connectProxy_->connectWith();
 
-    LOG_TRACE(log(), _T("发出连接请求!"));
+    LOG_TRACE(logger_, _T("发出连接请求!"));
 }
 
 //      public IProtocol BuildProtocol(ITransport transport, SOCKSv5 context)
@@ -329,11 +329,11 @@ void SOCKSv5Protocol::onConnectComplete(ITransport* transport, ProtocolContext& 
     {
         static NullProtocol nullProtocol(true);
         transport->bindProtocol(&nullProtocol);
-        LOG_TRACE(log(), _T("连接请求返回但发现状态不对!"));
+        LOG_TRACE(logger_, _T("连接请求返回但发现状态不对!"));
         return;
     }
 
-    LOG_TRACE(log(), _T("连接请求返回成功!"));
+    LOG_TRACE(logger_, _T("连接请求返回成功!"));
 
     transport->bindProtocol(&outgoing_);
     transport->initialize();
@@ -348,7 +348,7 @@ void SOCKSv5Protocol::onConnectComplete(ITransport* transport, ProtocolContext& 
 
 void SOCKSv5Protocol::onConnectError(const ErrorCode&, ProtocolContext& context)
 {
-    LOG_TRACE(log(), _T("连接请求返回失败!"));
+    LOG_TRACE(logger_, _T("连接请求返回失败!"));
 
     connectProxy_ = null_ptr;
     if (3 != status_)
