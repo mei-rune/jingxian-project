@@ -169,7 +169,7 @@ private:
     /// 程序运行的基本路径
     tstring path_;
     /// 日志接口
-    ILogger* logger_;
+	logging::logger logger_;
     /// 实例的描述
     tstring toString_;
 };

@@ -19,8 +19,8 @@ class EchoProtocol : public BaseProtocol
 {
 public:
     EchoProtocol()
+		: BaseProtocol(_T("EchoProtocol"))
     {
-        toString_ = _T("EchoProtocol");
     }
 
     /**
@@ -39,7 +39,7 @@ public:
     */
     virtual void onConnected(ProtocolContext& context)
     {
-        LOG_INFO(log(), _T("新连接到来 - ") << context.transport().peer());
+        LOG_INFO(logger_, _T("新连接到来 - ") << context.transport().peer());
     }
 
     /**
@@ -51,7 +51,7 @@ public:
     */
     virtual void onDisconnected(ProtocolContext& context, errcode_t errCode, const tstring& reason)
     {
-        LOG_INFO(log(), _T("连接断开 - ") << context.transport().peer());
+        LOG_INFO(logger_, _T("连接断开 - ") << context.transport().peer());
     }
 
     /**

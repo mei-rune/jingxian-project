@@ -122,7 +122,7 @@ private:
 
 	ProcessList processes_;
 	
-	ILogger* logger_;
+	logging::logger logger_;
 };
 
 _jingxian_end

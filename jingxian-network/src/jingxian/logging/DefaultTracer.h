@@ -15,12 +15,15 @@
 
 _jingxian_begin
 
-class Tracer : public ITracer
+namespace logging
+{
+
+class DefaultTracer : public ITracer
 {
 public:
-    Tracer(ILogger* logger, const tchar* nm);
+	DefaultTracer(spi::ILogger* logger, const tchar* nm);
 
-    virtual ~Tracer(void);
+    virtual ~DefaultTracer(void);
 
     virtual bool isDebugEnabled() const;
 
@@ -48,9 +51,13 @@ public:
 
 private:
 
-    ILogger* logger_;
+	NOCOPY(DefaultTracer);
+
+    spi::ILogger* logger_;
     tstring name_;
 };
+
+}
 
 _jingxian_end
 

@@ -1,27 +1,30 @@
 # include "pro_config.h"
-# include "Tracer.h"
+# include "DefaultTracer.h"
 
 
 _jingxian_begin
 
+namespace logging
+{
+
 const tchar* TRANSPORT_MODE[] = { _T(""), _T("Receive"), _T("Send"), _T("Both") };
 
-Tracer::Tracer(ILogger* logger, const tchar* nm)
+DefaultTracer::DefaultTracer(spi::ILogger* logger, const tchar* nm)
         : logger_(logger)
         , name_(nm)
 {
 }
 
-Tracer::~Tracer(void)
+DefaultTracer::~DefaultTracer(void)
 {
 }
 
-bool Tracer::isDebugEnabled() const
+bool DefaultTracer::isDebugEnabled() const
 {
     return logger_->isDebugEnabled();
 }
 
-void Tracer::debug(transport_mode::type way, const LogStream& message, const char* file, int line)
+void DefaultTracer::debug(transport_mode::type way, const LogStream& message, const char* file, int line)
 {
     LogStream stream;
     stream << name_;
@@ -31,12 +34,12 @@ void Tracer::debug(transport_mode::type way, const LogStream& message, const cha
     logger_->debug(stream, file, line);
 }
 
-bool Tracer::isErrorEnabled() const
+bool DefaultTracer::isErrorEnabled() const
 {
     return logger_->isErrorEnabled();
 }
 
-void Tracer::error(transport_mode::type way, const LogStream& message, const char* file, int line)
+void DefaultTracer::error(transport_mode::type way, const LogStream& message, const char* file, int line)
 {
     LogStream stream;
     stream << name_;
@@ -46,12 +49,12 @@ void Tracer::error(transport_mode::type way, const LogStream& message, const cha
     logger_->error(stream, file, line);
 }
 
-bool Tracer::isFatalEnabled() const
+bool DefaultTracer::isFatalEnabled() const
 {
     return logger_->isFatalEnabled();
 }
 
-void Tracer::fatal(transport_mode::type way, const LogStream& message, const char* file, int line)
+void DefaultTracer::fatal(transport_mode::type way, const LogStream& message, const char* file, int line)
 {
     LogStream stream;
     stream << name_;
@@ -61,12 +64,12 @@ void Tracer::fatal(transport_mode::type way, const LogStream& message, const cha
     logger_->fatal(stream, file, line);
 }
 
-bool Tracer::isInfoEnabled() const
+bool DefaultTracer::isInfoEnabled() const
 {
     return logger_->isInfoEnabled();
 }
 
-void Tracer::info(transport_mode::type way, const LogStream& message, const char* file, int line)
+void DefaultTracer::info(transport_mode::type way, const LogStream& message, const char* file, int line)
 {
     LogStream stream;
     stream << name_;
@@ -76,12 +79,12 @@ void Tracer::info(transport_mode::type way, const LogStream& message, const char
     logger_->info(stream, file, line);
 }
 
-bool Tracer::isWarnEnabled() const
+bool DefaultTracer::isWarnEnabled() const
 {
     return logger_->isWarnEnabled();
 }
 
-void Tracer::warn(transport_mode::type way, const LogStream& message, const char* file, int line)
+void DefaultTracer::warn(transport_mode::type way, const LogStream& message, const char* file, int line)
 {
     LogStream stream;
     stream << name_;
@@ -91,12 +94,12 @@ void Tracer::warn(transport_mode::type way, const LogStream& message, const char
     logger_->warn(stream, file, line);
 }
 
-bool Tracer::isTraceEnabled() const
+bool DefaultTracer::isTraceEnabled() const
 {
     return logger_->isTraceEnabled();
 }
 
-void Tracer::trace(transport_mode::type way, const LogStream& message, const char* file, int line)
+void DefaultTracer::trace(transport_mode::type way, const LogStream& message, const char* file, int line)
 {
     LogStream stream;
     stream << name_;
@@ -104,6 +107,8 @@ void Tracer::trace(transport_mode::type way, const LogStream& message, const cha
     stream << TRANSPORT_MODE[way];
     stream << message;
     logger_->trace(stream, file, line);
+}
+
 }
 
 _jingxian_end

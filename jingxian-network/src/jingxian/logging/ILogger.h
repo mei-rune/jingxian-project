@@ -30,7 +30,9 @@ enum
 
 
 typedef long LevelPtr;
-}
+
+namespace spi
+{
 
 /**
  * @Brief ILogger 日志接口
@@ -43,7 +45,7 @@ public:
 
 
     /**
-     * virtual JINGXIAN_Log_Impl destructor
+     * destructor
      */
     virtual ~ILogger() {};
 
@@ -174,38 +176,7 @@ public:
      * @return 日志的级别
      */
     virtual logging::LevelPtr getLevel() const = 0;
-
-    /**
-     * 基于对象的NDC,与下面的基于线程的不一样，它是只有使用这个日志对象才有
-     * 会在日志中打印NDC
-     * 加一个NDC
-     * @param[ in ] str 描述字符串
-     */
-    virtual void pushNDC(const tchar* str) = 0;
-
-    /**
-     * 取出一个NDC
-     */
-    virtual void popNDC() = 0;
-
-    /**
-     * 清空NDC
-     */
-    virtual void clearNDC() = 0;
 };
-
-class ndc
-{
-public:
-    virtual ~ndc() {}
-    virtual void pushNDC(const tchar* str) = 0;
-    virtual void popNDC() = 0;
-};
-
-namespace logging
-{
-namespace spi
-{
 
 class ILogFactory
 {
@@ -215,130 +186,12 @@ public:
 
     virtual ILogger* make(const tchar* nm) = 0;
 };
+
 }
+
 }
 
 _jingxian_end
 
-#ifndef _NO_LOG_
-
-
-
-#ifndef LOG
-#define LOG(logger, level, message) { \
-  if ( logger != 0 && logger->isEnabledFor(level)) {\
-  LogStream oss; \
-  oss << message; \
-  logger->fatal(level, oss, __FILE__, __LINE__); }}
-#endif // LOG
-
-#ifndef LOG_DEBUG
-#define LOG_DEBUG(logger, message) { \
-  if ( logger != 0 && logger->isDebugEnabled()) {\
-  LogStream oss; \
-  oss << message; \
-  logger->debug( oss, __FILE__, __LINE__); }}
-#endif // LOG_DEBUG
-
-#ifndef LOG_INFO
-#define LOG_INFO(logger, message) { \
-  if ( logger != 0 && logger->isInfoEnabled()) {\
-  LogStream oss; \
-  oss << message; \
-  logger->info( oss, __FILE__, __LINE__); }}
-#endif // LOG_INFO
-
-#ifndef LOG_WARN
-#define LOG_WARN(logger, message ) { \
-  if ( logger != 0 && logger->isWarnEnabled()) {\
-  LogStream oss; \
-  oss << message; \
-  logger->warn( oss, __FILE__, __LINE__); }}
-#endif // LOG_WARN
-
-#ifndef LOG_ERROR
-#define LOG_ERROR(logger, message) { \
-  if ( logger != 0 && logger->isErrorEnabled()) {\
-  LogStream oss; \
-  oss << message; \
-  logger->error( oss, __FILE__, __LINE__); }}
-#endif // LOG_ERROR
-
-#ifndef LOG_FATAL
-#define LOG_FATAL(logger, message) { \
-  if ( logger != 0 && logger->isFatalEnabled()) {\
-  LogStream oss; \
-  oss << message; \
-  logger->fatal( oss, __FILE__, __LINE__); }}
-#endif // LOG_FATAL
-
-#ifndef LOG_TRACE
-#define LOG_TRACE(logger, message) { \
-  if ( logger != 0 && logger->isTraceEnabled()) {\
-  LogStream oss; \
-  oss << message; \
-  logger->trace( oss, __FILE__, __LINE__); }}
-#endif // LOG_TRACE
-
-#ifndef LOG_CRITICAL
-#define LOG_CRITICAL(logger, message) { \
-  if ( logger != 0 && logger->isCritEnabled()) {\
-  LogStream oss; \
-  oss << message; \
-  logger->crit( oss, __FILE__, __LINE__); }}
-#endif // TP_CRITICAL
-
-#ifndef LOG_ASSERT
-#define LOG_ASSERT( logger,assertion ) { \
-  if ( logger != 0 ) {\
-  LogStream oss;                      \
-  logger->assertLog( assertion ,oss, __FILE__, __LINE__);   \
-  }                             \
-  else                            \
-  {                             \
-  (void)( (!!(assertion)) || (_wassert(_CRT_WIDE(#assertion), _CRT_WIDE(__FILE__), __LINE__), 0) );\
-  } }
-
-#endif // LOG_ASSERT
-
-#else // _NO_LOG_
-
-#ifndef BT_NDC
-#define BT_NDC( logger, ndc , msg )       {}
-#endif // BT_NDC
-
-#ifndef LOG
-#define LOG(logger, level, message)     {}
-#endif // LOG
-
-#ifndef LOG_DEBUG
-#define LOG_DEBUG(logger, message)      {}
-#endif // LOG_DEBUG
-
-#ifndef LOG_INFO
-#define LOG_INFO(logger, message)     {}
-#endif // LOG_INFO
-
-#ifndef LOG_WARN
-#define LOG_WARN(logger, message)     {}
-#endif // LOG_WARN
-
-#ifndef LOG_ERROR
-#define LOG_ERROR(logger, message)      {}
-#endif // LOG_ERROR
-
-#ifndef LOG_FATAL
-#define LOG_FATAL(logger, message)      {}
-#endif // LOG_FATAL
-
-#ifndef LOG_TRACE
-#define LOG_TRACE(logger, message)      {}
-#endif // LOG_TRACE
-
-#ifndef LOG_ASSERT
-#define LOG_ASSERT(logger,assertion )     {}
-#endif // LOG_ASSERT
-
-#endif // _NO_LOG_
 
 #endif // _JINGXIAN_Log_H_

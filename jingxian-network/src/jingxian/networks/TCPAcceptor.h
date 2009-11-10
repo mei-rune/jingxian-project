@@ -91,7 +91,7 @@ private:
     int family_;
     tstring endpoint_;
     connection_status::type status_;
-    ILogger* logger_;
+	logging::logger logger_;
     tstring toString_;
 };
 

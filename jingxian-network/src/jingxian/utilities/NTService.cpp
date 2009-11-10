@@ -10,16 +10,16 @@ _jingxian_begin
 
 #define SERVICE_NAME_SIZE       1024
 
-static  ILogger*                serviceLogger = NULL;
+static  logging::logger*         serviceLogger;
 static  IInstance*              serviceInstance;
-static  SERVICE_STATUS        serviceStatus;
-static  SERVICE_STATUS_HANDLE serviceHandle;
+static  SERVICE_STATUS          serviceStatus;
+static  SERVICE_STATUS_HANDLE   serviceHandle;
 static  TCHAR                   serviceName[SERVICE_NAME_SIZE];
 static  SERVICE_TABLE_ENTRY     serviceTable[] =
-{
-    { NULL, NULL },
-    { NULL, NULL }
-};
+	{
+		{ NULL, NULL },
+		{ NULL, NULL }
+	};
 
 
 /**
@@ -42,12 +42,12 @@ static DWORD WINAPI serviceCtrlHandler(DWORD dwControl,
     {
     case SERVICE_CONTROL_STOP:
     case SERVICE_CONTROL_SHUTDOWN:
-        //LOG_CRITICAL(serviceLogger, serviceName << _T( "  服务收到停止请求!"));
+        //LOG_CRITICAL((*serviceLogger), serviceName << _T( "  服务收到停止请求!"));
 
         serviceStatus.dwCurrentState  = SERVICE_STOP_PENDING;
         serviceStatus.dwWaitHint  = 4000;
         if (!SetServiceStatus(serviceHandle, &serviceStatus))
-            LOG_WARN(serviceLogger, serviceName
+            LOG_WARN((*serviceLogger), serviceName
                      << _T("  服务设置 'SERVICE_STOP_PENDING' 状态失败 - ")
                      << lastError(GetLastError()));
 
@@ -68,7 +68,7 @@ static VOID WINAPI serviceEntry(DWORD argc, LPTSTR *argv)
     serviceHandle = RegisterServiceCtrlHandlerEx(serviceName, serviceCtrlHandler, NULL);
     if (0 == serviceHandle)
     {
-        LOG_FATAL(serviceLogger, serviceName << _T("  服务注册控制回调失败 - ") << lastError(GetLastError()));
+        LOG_FATAL((*serviceLogger), serviceName << _T("  服务注册控制回调失败 - ") << lastError(GetLastError()));
         return;
     }
 
@@ -83,7 +83,7 @@ static VOID WINAPI serviceEntry(DWORD argc, LPTSTR *argv)
 
     if (!SetServiceStatus(serviceHandle, &serviceStatus))
     {
-        LOG_WARN(serviceLogger, serviceName
+        LOG_WARN((*serviceLogger), serviceName
                  << _T("  服务设置 'SERVICE_START_PENDING' 状态失败 - ")
                  << lastError(GetLastError()));
     }
@@ -93,7 +93,7 @@ static VOID WINAPI serviceEntry(DWORD argc, LPTSTR *argv)
     serviceStatus.dwWaitHint  = 0;
     if (!SetServiceStatus(serviceHandle, &serviceStatus))
     {
-        LOG_WARN(serviceLogger, serviceName
+        LOG_WARN((*serviceLogger), serviceName
                  << _T("  服务设置 'SERVICE_RUNNING' 状态失败 - ")
                  << lastError(GetLastError()));
     }
@@ -105,16 +105,16 @@ static VOID WINAPI serviceEntry(DWORD argc, LPTSTR *argv)
     }
 
 
-    //LOG_CRITICAL(serviceLogger,  serviceName << _T( "  服务启动成功，正在运行中......"));
+    //LOG_CRITICAL((*serviceLogger),  serviceName << _T( "  服务启动成功，正在运行中......"));
     serviceInstance->onRun(arguments);
-    //LOG_CRITICAL(serviceLogger,  serviceName << _T( "  服务退出，运行结束!"));
+    //LOG_CRITICAL((*serviceLogger),  serviceName << _T( "  服务退出，运行结束!"));
 
     serviceStatus.dwCurrentState  = SERVICE_STOPPED;
     serviceStatus.dwWin32ExitCode = 0;
     serviceStatus.dwCheckPoint  = 0;
     serviceStatus.dwWaitHint  = 0;
     if (!SetServiceStatus(serviceHandle, &serviceStatus))
-        LOG_FATAL(serviceLogger, serviceName << _T("  服务设置 'SERVICE_STOPPED' 状态失败 - ") << lastError(GetLastError()));
+        LOG_FATAL((*serviceLogger), serviceName << _T("  服务设置 'SERVICE_STOPPED' 状态失败 - ") << lastError(GetLastError()));
 }
 
 
@@ -125,11 +125,11 @@ int serviceMain(IInstance* instance)
 {
     int result = -1;
     if (NULL == serviceLogger)
-        serviceLogger = logging::makeLogger(_T("jingxian.system"));
+        serviceLogger = new logging::logger(_T("jingxian.system"));
 
     if (0 != _tcscpy_s(serviceName, SERVICE_NAME_SIZE, instance->name().c_str()))
     {
-        LOG_WARN(serviceLogger, _T("启动服务时发生错误, 服务名 '") << instance->name() << _T("' 太长。"));
+        LOG_WARN((*serviceLogger), _T("启动服务时发生错误, 服务名 '") << instance->name() << _T("' 太长。"));
         SetLastError(ERROR_INVALID_NAME);
 
         result = -1;

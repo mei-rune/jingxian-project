@@ -5,17 +5,12 @@
 _jingxian_begin
 	
 ProcessManager::ProcessManager(void)
-: logger_(logging::makeLogger(_T("jingxian.system")))
+: logger_(_T("jingxian.system"))
 {
 }
 
 ProcessManager::~ProcessManager(void)
 {
-	if(null_ptr != logger_)
-	{
-		delete logger_;
-		logger_ = null_ptr;
-	}
 }
 
 HANDLE ProcessManager::startProcess(const tstring& filePath

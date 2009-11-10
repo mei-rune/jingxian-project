@@ -25,9 +25,13 @@
 
 _jingxian_begin
 
+namespace logging
+{
+
 namespace log4cppAdaptor
 {
-class Logger : public ILogger
+
+class Logger : public spi::ILogger
 {
 public:
     Logger(const tchar* nm);
@@ -138,6 +142,9 @@ private:
     char* name_;
     std::string appender;
 };
+
+}
+
 }
 
 _jingxian_end

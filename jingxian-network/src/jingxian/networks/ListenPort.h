@@ -30,8 +30,6 @@ public:
 
     bool isPending() const;
 
-    ILogger* log();
-
     virtual const tstring& toString() const;
 
 private:
@@ -41,7 +39,7 @@ private:
     Acceptor acceptor_;
     int errorCount_;
     bool isPending_;
-    ILogger* logger_;
+	logging::logger logger_;
     tstring toString_;
 };
 

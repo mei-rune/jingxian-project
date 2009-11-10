@@ -21,8 +21,10 @@ _jingxian_begin
 #define tcout std::cout
 #endif
 
+namespace logging
+{
 
-class ConsoleLogger : public ILogger
+	class ConsoleLogger : public spi::ILogger
 {
 public:
 
@@ -133,6 +135,8 @@ public:
 private:
     logging::LevelPtr _levelPtr;
 };
+
+}
 
 _jingxian_end
 

@@ -13,10 +13,9 @@ _jingxian_begin
 IOCPServer::IOCPServer(void)
         : completion_port_(null_ptr)
         , isRunning_(false)
-        , logger_(null_ptr)
+        , logger_(_T("jingxian.system"))
         , toString_(_T("IOCPServer"))
 {
-    logger_ = logging::makeLogger(_T("jingxian.system"));
 
     resolver_.initialize(this);
     acceptorFactories_[_T("tcp")] = new TCPAcceptorFactory(this);
@@ -52,9 +51,6 @@ IOCPServer::~IOCPServer(void)
     {
         delete(it->second);
     }
-
-    delete logger_;
-    logger_ = null_ptr;
 }
 
 

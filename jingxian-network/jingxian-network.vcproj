@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(LOG4CPP_ROOT)\include&quot;;&quot;$(GOOGLETEST_ROOT)\include&quot;;&quot;$(ProjectDir)src\&quot;;."
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DEBUG_TRACE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DEBUG_TRACE;_GOOGLETEST_"
 				GeneratePreprocessedFile="0"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -181,11 +181,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\src\jingxian\Application.cpp"
+				RelativePath=".\src\jingxian\connectionExample.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\jingxian\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\Test.cpp"
 				>
 			</File>
 		</Filter>
@@ -194,10 +198,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath=".\src\jingxian\Application.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="资源文件"
@@ -214,6 +214,14 @@
 			</File>
 			<File
 				RelativePath=".\src\jingxian\logging\ConsoleLogger.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\logging\DefaultTracer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\logging\DefaultTracer.h"
 				>
 			</File>
 			<File
@@ -238,14 +246,6 @@
 			</File>
 			<File
 				RelativePath=".\src\jingxian\logging\logging.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\logging\Tracer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\logging\Tracer.h"
 				>
 			</File>
 		</Filter>
@@ -778,6 +778,14 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath=".\src\jingxian\Application.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\jingxian\Application.h"
+			>
+		</File>
+		<File
 			RelativePath=".\src\jingxian\changelog.txt"
 			>
 		</File>
@@ -787,6 +795,10 @@
 		</File>
 		<File
 			RelativePath=".\src\jingxian\config.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\jingxian\connection_functionals.h"
 			>
 		</File>
 		<File

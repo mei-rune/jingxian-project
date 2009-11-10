@@ -11,7 +11,7 @@ ListenPort::ListenPort(IReactorCore* core
         , acceptor_(acceptor)
         , isPending_(false)
         , errorCount_(0)
-        , logger_(null_ptr)
+        , logger_(_T("jingxian.system.listenPort"))
 {
     toString_ = _T("ListenPort[address=")
                 + acceptor_.bindPoint()
@@ -20,11 +20,6 @@ ListenPort::ListenPort(IReactorCore* core
 
 ListenPort::~ListenPort()
 {
-    if (null_ptr != logger_)
-    {
-        delete logger_;
-        logger_ = null_ptr;
-    }
 }
 
 bool ListenPort::start()
@@ -65,7 +60,7 @@ void ListenPort::onComplete(ITransport* transport
     isPending_ = false;
     if (!reactor_->isRunning())
     {
-        LOG_TRACE(log(), toString()
+        LOG_TRACE(logger_, toString()
                   << _T(" 系统已退出!"));
         return;
     }
@@ -87,14 +82,14 @@ void ListenPort::onError(const ErrorCode& err
     isPending_ = false;
     if (!reactor_->isRunning())
     {
-        LOG_TRACE(log(), toString()
+        LOG_TRACE(logger_, toString()
                   << _T(" 系统已退出!"));
         return;
     }
 
     if (errorCount_ > 20)
     {
-        LOG_FATAL(log(), toString()
+        LOG_FATAL(logger_, toString()
                   << _T(" 尝试接收请求失败超过 '")
                   << errorCount_
                   << _T("' 次,退出服务"));
@@ -113,13 +108,6 @@ void ListenPort::onError(const ErrorCode& err
 bool ListenPort::isPending() const
 {
     return isPending_;
-}
-
-ILogger* ListenPort::log()
-{
-    if (is_null(logger_))
-        logger_ = logging::makeLogger(_T("jingxian.system.listenPort"));
-    return logger_;
 }
 
 const tstring& ListenPort::toString() const
