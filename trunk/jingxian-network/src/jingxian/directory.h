@@ -227,7 +227,7 @@ inline tstring getDirectoryName(const tstring& pa)
 {
     const tstring path = simplify(pa);
 
-    tstring::size_type pos = path.rfind('/');
+    tstring::size_type pos = path.rfind(_T('/'));
     if (pos == tstring::npos)
     {
         return tstring();
