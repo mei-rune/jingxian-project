@@ -114,33 +114,11 @@ public:
         return new SOCKSv5Protocol(this);
     }
 
-    //bool IsBlockingIP(const tstring& ip)
-    //{
-    //  if (null == _blockingIPs)
-    //    return false;
-
-    //  foreach (IPSeg seg in _blockingIPs)
-    //  {
-    //    if (seg.In(ip)) return true;
-    //  }
-    //  return false;
-    //}
-
-
-    //bool IsAllowedIP(IPAddress ip)
-    //{
-    //    if (IsBlockingIP(ip))
-    //        return false;
-
-    //    if (null == _allowedIPs)
-    //        return true;
-
-    //    foreach (IPSeg seg in _allowedIPs)
-    //    {
-    //        if (seg.In(ip)) return true;
-    //    }
-    //    return false;
-    //}
+	
+	virtual bool configure(configure::Context& context, const tstring& t)
+	{
+		return false;
+	}
 
     const tstring& basePath() const
     {

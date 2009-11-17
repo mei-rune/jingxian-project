@@ -64,6 +64,16 @@ void freeBuffer(buffer_chain_t* chain, void* context);
 const int BUFFER_ELEMENT_MEMORY = 1;
 const int BUFFER_ELEMENT_FILE = 2;
 const int BUFFER_ELEMENT_PACKET = 3;
+//
+//typedef struct data
+//{
+//	// 内存块大小（可选值，为0时为无效值）
+//    size_t capacity;
+//    // 数据在 buf 的起始位置
+//    char* start;
+//    // 数据在 buf 的结束位置
+//    char* end;
+//} data_t;
 
 typedef struct databuffer
 {

@@ -16,6 +16,16 @@
 
 _jingxian_begin
 
+
+namespace StringSplitOptions
+{
+	enum type
+	{
+		None //返回值包括含有空字符串的数组元素 
+		,RemoveEmptyEntries //返回值不包括含有空字符串的数组元素
+	};
+}
+
 template<typename charT, typename OP >
 inline StringArray<charT, OP> split_with_string(const charT* ptr
         , const charT* seps
@@ -84,7 +94,7 @@ inline StringArray<typename stringT::value_type, detail::StringOp<typename strin
 }
 
 template<typename charT, typename OP >
-inline StringArray<charT, OP> split(const charT* str, const charT* seps)
+inline StringArray<charT, OP> split(const charT* str, const charT* seps, StringSplitOptions::type removeEmpties)
 {
     assert(NULL != str);
     assert(NULL != seps);
@@ -96,7 +106,9 @@ inline StringArray<charT, OP> split(const charT* str, const charT* seps)
     charT* token = string_traits<charT>::strtok(ptr, seps, &next_token);
     while (token != NULL)
     {
-        tmpList.push_back(OP::dup(token));
+		if(StringSplitOptions::None == removeEmpties || NULL != token[0])
+			tmpList.push_back(OP::dup(token));
+
         token = string_traits<charT>::strtok(NULL, seps , &next_token);
     }
 
@@ -112,23 +124,23 @@ inline StringArray<charT, OP> split(const charT* str, const charT* seps)
 
 template<typename charT >
 inline StringArray<charT, detail::StringOp<charT> > split(const  charT* str
-        , const charT* seps)
+        , const charT* seps, StringSplitOptions::type removeEmpties)
 {
-    return split<charT, detail::StringOp<charT> >(str, seps);
+    return split<charT, detail::StringOp<charT> >(str, seps, removeEmpties);
 }
 
 template<typename stringT, typename OP >
 inline StringArray<typename stringT::value_type, OP> split(const  stringT& str
-        , const typename stringT::value_type* seps)
+        , const typename stringT::value_type* seps, StringSplitOptions::type removeEmpties)
 {
-    return split<typename stringT::value_type, OP>(str.c_str(), seps);
+    return split<typename stringT::value_type, OP>(str.c_str(), seps, removeEmpties);
 }
 
 template<typename stringT >
 inline StringArray<typename stringT::value_type, detail::StringOp<typename stringT::value_type> > split(const stringT& str
-        , const typename stringT::value_type* seps)
+        , const typename stringT::value_type* seps, StringSplitOptions::type removeEmpties)
 {
-    return split<typename stringT::value_type, detail::StringOp<typename stringT::value_type> >(str.c_str(), seps);
+    return split<typename stringT::value_type, detail::StringOp<typename stringT::value_type> >(str.c_str(), seps, removeEmpties);
 }
 
 _jingxian_end

@@ -89,7 +89,7 @@ public:
     {
         if (p >= size_)
             return NULL;
-        return ptrArray_[ p ].ptr;
+        return c_str_ptr(ptrArray_[ p ]);
     }
 
     size_t len(size_t p) const

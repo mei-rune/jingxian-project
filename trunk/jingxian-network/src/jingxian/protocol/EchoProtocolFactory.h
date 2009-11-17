@@ -30,6 +30,11 @@ public:
     {
         return &protocol_;
     }
+	
+	virtual bool configure(configure::Context& context, const tstring& t)
+	{
+		return false;
+	}
 
     virtual const tstring& toString() const
     {
