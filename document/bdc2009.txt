@@ -395,6 +395,7 @@ violence
 exposure
 lasting
 significantly
+significance
 given
 adopt
 distinguish
@@ -413,3 +414,16 @@ imply
 fascination
 drama
 guilty
+
+male
+reasoning
+female
+excited
+nerve
+elementary
+aggressive
+aggression
+lean
+treatment
+consequent
+satisfy
