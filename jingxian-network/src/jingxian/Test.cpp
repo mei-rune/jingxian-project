@@ -30,12 +30,12 @@ void testStackTracer1()
 
 TEST(string, stringOP)
 {
-    StringArray<char, detail::StringOp<char> > sa(split<char, detail::StringOp<char> >("ad,adf,ff,d,,.d.f", ",."));
-    StringArray<char, detail::StringOp<char> > sa1 = split<std::string, detail::StringOp<char> >(std::string("ad,adf,ff,d,,.d.f"), ",.");
+	StringArray<char, detail::StringOp<char> > sa(split<char, detail::StringOp<char> >("ad,adf,ff,d,,.d.f", ",.", StringSplitOptions::None));
+    StringArray<char, detail::StringOp<char> > sa1 = split<std::string, detail::StringOp<char> >(std::string("ad,adf,ff,d,,.d.f"), ",.", StringSplitOptions::None);
 
-    StringArray<char > sa2 = split("ad,adf,ff,d,,.d.f", ",.");
+    StringArray<char > sa2 = split("ad,adf,ff,d,,.d.f", ",.", StringSplitOptions::None);
 
-    StringArray<char> sa3 = split(std::string("ad,adf,ff,d,,.d.f"), ",.");
+    StringArray<char> sa3 = split(std::string("ad,adf,ff,d,,.d.f"), ",.", StringSplitOptions::None);
     ASSERT_FALSE(sa.size() != 6);
     ASSERT_FALSE(0 != strcmp("ad", sa.ptr(0))
                  && 0 != strcmp("adf", sa.ptr(1))

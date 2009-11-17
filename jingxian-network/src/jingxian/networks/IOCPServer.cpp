@@ -57,7 +57,10 @@ IOCPServer::~IOCPServer(void)
 bool IOCPServer::initialize(size_t number_of_threads)
 {
     if (!is_null(completion_port_))
+	{
+        LOG_WARN(logger_ , _T("已初始化过了!"));
         return false;
+	}
 
     number_of_threads_ = number_of_threads;
     completion_port_ = ::CreateIoCompletionPort(INVALID_HANDLE_VALUE,
@@ -65,7 +68,15 @@ bool IOCPServer::initialize(size_t number_of_threads)
                        0,
                        number_of_threads_);
 
-    return  !is_null(completion_port_);
+    if(is_null(completion_port_))
+	{
+		LOG_FATAL(logger_ , _T("创建完成端口失败 - ") << lastError(::GetLastError())<<_T(" !"));
+		return false;
+	}
+
+
+
+	return true;
 }
 
 bool IOCPServer::isPending()
@@ -166,6 +177,7 @@ int IOCPServer::handle_events(uint32_t milli_seconds)
             return 0;
 
         default:
+			LOG_FATAL(logger_ , _T("轮询完成端口发生错误 - ") << lastError(::GetLastError())<<_T(" !"));
             return -1;
         }
     }
@@ -357,9 +369,17 @@ void IOCPServer::runForever()
 
     while (isRunning_)
     {
-        if (1 ==  handle_events(5*1000))
+        switch(handle_events(5*1000))
+		{
+		case 1:
             onIdle();
+			break;
+		case -1:
+			LOG_CRITICAL(logger_, _T("服务发生错误,退出服务!"));
+			return;
+		}
     }
+
 
     LOG_CRITICAL(logger_, _T("服务停止,开始清理工作!"));
 

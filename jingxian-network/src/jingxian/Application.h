@@ -12,6 +12,7 @@
 #include <vector>
 #include <iostream>
 #include "jingxian/directory.h"
+#include "jingxian/configure.h"
 #include "jingxian/networks/IOCPServer.h"
 #include "jingxian/utilities/NTService.h"
 
@@ -30,6 +31,11 @@ public:
      * NT 服务名
      */
     virtual const tstring& name() const;
+
+	/**
+	 * 配置处理函数
+	 */
+	virtual bool configure(configure::Context& context, const tstring& txt);
 
     /**
     * 服务运行
@@ -59,6 +65,8 @@ public:
 private:
     NOCOPY(Application);
     Application(const tstring& name, const tstring& descr);
+
+	IProtocolFactory* createProtocolFactory(tchar* name);
 
     tstring name_;
     tstring toString_;

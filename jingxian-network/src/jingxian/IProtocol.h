@@ -10,6 +10,7 @@
 
 // Include files
 # include "jingxian/exception.h"
+# include "jingxian/configure.h"
 # include "jingxian/Buffer/IBuffer.H"
 # include "jingxian/Buffer/Buffer.H"
 
@@ -79,6 +80,11 @@ public:
      * 创建 IProtocol 对象
      */
     virtual IProtocol* createProtocol(ITransport* transport, IReactorCore* core) = 0;
+
+	/**
+	 * 配置处理函数
+	 */
+	virtual bool configure(configure::Context& context, const tstring& t) = 0;
 
     /**
     * 取得地址的描述

@@ -43,9 +43,41 @@ struct stringData
     charT* ptr;
 };
 
+struct string_t
+{
+    // 内存块大小（可选值，为0时为无效值）
+    size_t capacity;
+    // 字符串大小（可选值，为0或-1为无效值）
+    size_t len;
+    // 字符串指针
+    tchar* ptr;
+};
+
 inline const char* c_str_ptr(const char* t)
 {
     return t;
+}
+
+inline const char* c_str_ptr(const string_t* t)
+{
+    return t->ptr;
+}
+
+inline const char* c_str_ptr(const string_t& t)
+{
+    return t.ptr;
+}
+
+template<typename charT>
+inline const char* c_str_ptr(const stringData<charT>& t)
+{
+    return t.ptr;
+}
+
+template<typename charT>
+inline const char* c_str_ptr(const stringData<charT>* t)
+{
+    return t->ptr;
 }
 
 inline std::string::const_pointer c_str_ptr(const std::string& t)
