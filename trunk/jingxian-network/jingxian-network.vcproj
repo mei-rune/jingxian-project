@@ -18,7 +18,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="$(ProjectDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ProjectDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)$(ConfigurationName)\tmp"
 			ConfigurationType="1"
 			CharacterSet="2"
 			>
@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(LOG4CPP_ROOT)\include&quot;;&quot;$(GOOGLETEST_ROOT)\include&quot;;&quot;$(ProjectDir)src\&quot;;."
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DEBUG_TRACE;_GOOGLETEST_"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DEBUG_TRACE"
 				GeneratePreprocessedFile="0"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -813,6 +813,18 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\jingxian\default.conf"
+			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					CommandLine="copy $(InputPath)  $(OutDir)\InputFileName&#x0D;&#x0A;"
+				/>
+			</FileConfiguration>
+		</File>
+		<File
 			RelativePath=".\src\jingxian\Dictionary.cpp"
 			>
 		</File>
@@ -879,6 +891,18 @@
 		<File
 			RelativePath=".\src\jingxian\linklist.h"
 			>
+		</File>
+		<File
+			RelativePath=".\src\jingxian\log4cpp.conf"
+			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					CommandLine="copy $(InputPath)  $(OutDir)\InputFileName&#x0D;&#x0A;"
+				/>
+			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\src\jingxian\pro.h"

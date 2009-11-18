@@ -21,17 +21,12 @@ public:
     OutBuffer(ITransport* transport);
     virtual ~OutBuffer();
 
-    virtual int beginTranscation();
-    virtual void rollbackTranscation(int);
-    virtual void commitTranscation(int);
-
     virtual IOutBuffer& writeBoolean(bool value);
     virtual IOutBuffer& writeInt8(int8_t value);
     virtual IOutBuffer& writeInt16(int16_t value);
     virtual IOutBuffer& writeInt32(int32_t value);
     virtual IOutBuffer& writeInt64(const int64_t& value);
     virtual IOutBuffer& writeBlob(const void* blob, size_t len);
-
 
     virtual size_t size() const;
 

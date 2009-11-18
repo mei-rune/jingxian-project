@@ -150,19 +150,4 @@ size_t OutBuffer::size() const
 //  dataBuffer_.clear();
 //}
 
-int OutBuffer::beginTranscation()
-{
-    ThrowException(NotImplementedException);
-}
-
-void OutBuffer::rollbackTranscation(int id)
-{
-    ThrowException(NotImplementedException);
-}
-
-void OutBuffer::commitTranscation(int id)
-{
-    ThrowException(NotImplementedException);
-}
-
 _jingxian_end

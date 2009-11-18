@@ -529,6 +529,9 @@ inline void createDirectoryRecursive(const tstring& pa)
 {
     const tstring path = simplify(pa);
 
+	if(existDirectory(path))
+		return;
+
     tstring dir = getDirectoryName(path);
     if (!dir.empty())
     {

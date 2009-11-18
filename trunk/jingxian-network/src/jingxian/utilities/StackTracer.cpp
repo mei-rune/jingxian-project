@@ -243,7 +243,7 @@ public:
     }
     ~StackWalkerInternal()
     {
-        if (pSC != NULL)
+        if (NULL != pSC && INVALID_HANDLE_VALUE != m_hProcess)
             pSC(m_hProcess);  // SymCleanup
         if (m_hDbhHelp != NULL)
             FreeLibrary(m_hDbhHelp);

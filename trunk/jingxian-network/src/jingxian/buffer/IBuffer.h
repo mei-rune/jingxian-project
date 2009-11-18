@@ -40,24 +40,6 @@ public:
     virtual ~IBuffer() {}
 
     /**
-     * 当从流中读或写数据时,指针当前位置也向前移动,启动事
-     * 务则会记住指针的当前位置,如果回滚则会将指针移动到
-     * 事务启始位置.
-     *
-     * 启动一个事务
-     */
-    virtual int beginTranscation() = 0;
-    /**
-     * 回滚一个事务
-     */
-    virtual void rollbackTranscation(int) = 0;
-
-    /**
-     * 提交一个事务
-     */
-    virtual void commitTranscation(int) = 0;
-
-    /**
      * 设置流在发生错误时是否抛出异常.
      */
     virtual void exceptions(ExceptionStyle::type exceptionStyle) = 0;
@@ -81,43 +63,6 @@ public:
      * 清除当前流的错误状态
      */
     virtual void clearError() = 0;
-};
-
-
-/**
- * 当从流中读或写数据时,指针当前位置也向前移动,启动事
- * 务则会记住指针的当前位置,如果回滚则会将指针移动到
- * 事务启始位置.
- */
-template<typename T, typename I>
-class TranscationScope
-{
-public:
-    TranscationScope(T& buffer)
-            : buffer_(buffer)
-            , transcationId_(buffer.beginTranscation())
-    {
-    }
-
-    ~TranscationScope()
-    {
-        if (-1 != transcationId_)
-            return;
-        buffer_.rollbackTranscation(transcationId_);
-    }
-
-    void commit()
-    {
-        if (-1 != transcationId_)
-            return;
-        buffer_.commitTranscation(transcationId_);
-        transcationId_ = -1;
-    }
-
-private:
-    NOCOPY(TranscationScope);
-    T& buffer_;
-    I transcationId_;
 };
 
 _jingxian_end

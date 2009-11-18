@@ -42,20 +42,16 @@ public:
 
     virtual void reset(const std::vector<io_mem_buf>* buf, size_t totalLength);
 
-    virtual int beginTranscation();
-    virtual void rollbackTranscation(int);
-    virtual void commitTranscation(int);
-
     virtual bool    readBoolean();
     virtual int8_t  readInt8();
     virtual int16_t readInt16();
     virtual int32_t readInt32();
     virtual int64_t readInt64();
-    virtual void readBlob(void* blob, size_t len);
+    virtual void    readBlob(void* blob, size_t len);
 
     virtual void seek(int offest);
 
-    virtual size_t size()const;
+    virtual size_t size() const;
 
     virtual size_t search(char ch) const;
     virtual size_t search(wchar_t ch) const;
@@ -63,7 +59,7 @@ public:
     virtual size_t searchAny(const char* charset) const;
     virtual size_t searchAny(const wchar_t* charset) const;
 
-    virtual size_t readLength() const;
+    //virtual size_t readLength() const;
     virtual const std::vector<io_mem_buf>& rawBuffer() const;
     virtual size_t rawLength() const;
 
@@ -83,8 +79,6 @@ private:
     const char* currentPtr_;
     // 当前正在读的数据块的剩余字节数
     size_t currentLength_;
-
-    std::vector<TranscationData> transcationDatas_;
 };
 
 _jingxian_end

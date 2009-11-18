@@ -51,6 +51,7 @@ public:
 	}
 };
 
+# ifdef _GOOGLETEST_
 TEST(connection, connectionBase)
 {
 	ConnectionExample example;
@@ -136,5 +137,4 @@ TEST(connection, connectionBase)
 		sig.disconnect(connection);
 	}
 }
-
-
+#endif

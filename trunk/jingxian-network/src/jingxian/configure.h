@@ -97,7 +97,7 @@ public:
 
   virtual logging::logger& logger()
   {
-	return pimpl_->logger();
+    return pimpl_->logger();
   }
 
 private:
@@ -165,8 +165,8 @@ public:
   };
 
   ContextImpl(logging::logger& alogger)
-	  : m_exit(false)
-	  , m_logger(alogger)
+      : m_exit(false)
+      , m_logger(alogger)
   {
     m_slots.push(new ConnectionSlot());
   }
@@ -201,17 +201,17 @@ public:
 
   virtual void exit()
   {
-	  m_exit = true;
+    m_exit = true;
   }
 
   virtual bool isExit()
   {
-	  return m_exit;
+    return m_exit;
   }
 
   virtual logging::logger& logger()
   {
-	  return m_logger;
+    return m_logger;
   }
 
 private:

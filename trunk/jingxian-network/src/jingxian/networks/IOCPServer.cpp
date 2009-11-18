@@ -319,7 +319,7 @@ bool IOCPServer::listenWith(const tchar* endPoint, IProtocolFactory* protocolFac
 
     listenPorts_[endPoint] = new ListenPort(this, protocolFactory
                                             , it->second->createAcceptor(sa.ptr(1)));
-    return false;
+    return true;
 }
 
 bool IOCPServer::send(IRunnable* runnable)
