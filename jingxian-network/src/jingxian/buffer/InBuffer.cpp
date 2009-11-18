@@ -69,60 +69,6 @@ void InBuffer::reset(const std::vector<io_mem_buf>* iobuf, size_t totalLength)
 
     currentPtr_ = (*memory_)[current_].buf;
     currentLength_ = (*memory_)[current_].len;
-
-    transcationDatas_.clear();
-}
-
-int InBuffer::beginTranscation()
-{
-    TranscationData data;
-    data.current_ = this->current_;
-    data.currentLength_ = this->currentLength_;
-    data.currentPtr_ = this->currentPtr_;
-    data.readLength_ = this->readLength_;
-    data.exceptionStyle_ = this->exceptionStyle_;
-    data.errno_ = this->errno_;
-
-    transcationDatas_.push_back(data);
-    return (int)transcationDatas_.size();
-}
-
-void InBuffer::rollbackTranscation(int id)
-{
-    if (id <= 0 || id > (int)transcationDatas_.size())
-        ThrowException(OutOfRangeException);
-
-    TranscationData& data = transcationDatas_[id-1];
-
-    this->current_ = data.current_;
-    this->currentLength_ = data.currentLength_;
-    this->currentPtr_ = data.currentPtr_;
-    this->readLength_ = data.readLength_;
-    this->exceptionStyle_ = data.exceptionStyle_;
-    this->errno_ = data.errno_;
-
-    transcationDatas_.resize(id - 1);
-}
-
-void InBuffer::commitTranscation(int id)
-{
-    size_t index = id;
-    if (index <= 0 || index > transcationDatas_.size())
-        ThrowException(OutOfRangeException);
-
-    for (size_t i = transcationDatas_.size(); i >= index; --i)
-    {
-        TranscationData& data = transcationDatas_[i-1];
-
-        this->current_ = data.current_;
-        this->currentLength_ = data.currentLength_;
-        this->currentPtr_ = data.currentPtr_;
-        this->readLength_ = data.readLength_;
-        this->exceptionStyle_ = data.exceptionStyle_;
-        this->errno_ = data.errno_;
-    }
-
-    transcationDatas_.resize(index - 1);
 }
 
 bool InBuffer::readBoolean()
@@ -303,11 +249,10 @@ size_t InBuffer::size() const
     return totalLength_ - readLength_;
 }
 
-size_t InBuffer::readLength() const
-{
-    return readLength_;
-}
-
+//size_t InBuffer::readLength() const
+//{
+//    return readLength_;
+//}
 
 size_t InBuffer::search(char ch) const
 {

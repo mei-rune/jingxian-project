@@ -28,6 +28,7 @@ void testStackTracer1()
     testStackTracer2();
 }
 
+# ifdef _GOOGLETEST_
 TEST(string, stringOP)
 {
 	StringArray<char, detail::StringOp<char> > sa(split<char, detail::StringOp<char> >("ad,adf,ff,d,,.d.f", ",.", StringSplitOptions::None));
@@ -47,10 +48,11 @@ TEST(string, stringOP)
     try
     {
         char* p = sa[ 8 ].ptr;
-        std::cout << "LOG_ERROR split!" << std::endl;
+		ASSERT_FALSE(true);
     }
     catch (OutOfRangeException& e)
     {
+        std::cerr << e << std::endl;
     }
 
 
@@ -119,5 +121,6 @@ TEST(string, stringOP)
 #endif
     }
 }
+#endif
 
 _jingxian_end
