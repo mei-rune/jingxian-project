@@ -283,7 +283,7 @@ int Application::onRun(const std::vector<tstring>& args)
 
   logging::logger configureLogger(_T("jingxian.configure"));
 
-  std::ifstream configStream(configFile.c_str());
+  std::basic_ifstream<tchar, std::char_traits<tchar> > configStream(configFile.c_str());
 
   configure::ContextImpl impl(configureLogger);
   configure::Context configureContext(&impl);
@@ -349,7 +349,7 @@ void Application::interrupt()
 
 bool Application::configure(configure::Context& context, const tstring& txt)
 {
-  StringArray<tstring::value_type> sa = split(trim_all(std::string(txt)), _T(" \t"), StringSplitOptions::None);
+  StringArray<tstring::value_type> sa = split(trim_all(tstring(txt)), _T(" \t"), StringSplitOptions::None);
   if (0 == sa.size())
     return false;
 

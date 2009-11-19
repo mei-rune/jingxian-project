@@ -21,6 +21,8 @@ typedef std::wstringstream tstringstream;
 typedef std::wstringstream LogStream;
 typedef wchar_t tchar;
 #define tcout std::wcout
+#define tcerr std::wcerr
+#define tcin std::wcin
 #else
 typedef std::string tstring;
 typedef std::ostream tostream;
@@ -28,6 +30,8 @@ typedef std::stringstream tstringstream;
 typedef std::stringstream LogStream;
 typedef char_t tchar;
 #define tcout std::cout
+#define tcerr std::cerr
+#define tcin  std::cin
 #endif
 
 _jingxian_begin
@@ -58,12 +62,12 @@ inline const char* c_str_ptr(const char* t)
     return t;
 }
 
-inline const char* c_str_ptr(const string_t* t)
+inline const tchar* c_str_ptr(const string_t* t)
 {
     return t->ptr;
 }
 
-inline const char* c_str_ptr(const string_t& t)
+inline const tchar* c_str_ptr(const string_t& t)
 {
     return t.ptr;
 }

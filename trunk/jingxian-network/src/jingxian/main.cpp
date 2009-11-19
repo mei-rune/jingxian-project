@@ -3,8 +3,11 @@
 #include "pro_config.h"
 #include <iostream>
 #include "jingxian/Application.h"
-# ifdef _GOOGLETEST_
+
+#ifdef _GOOGLETEST_
 #include <gtest/gtest.h>
+#else
+#include "jingxian/utilities/unittest.h"
 #endif
 
 void* my_calloc(__in size_t _NumOfElements, __in size_t _SizeOfElements)
@@ -54,8 +57,9 @@ int _tmain(int argc, tchar* argv[])
 
 # ifdef _GOOGLETEST_
     testing::InitGoogleTest(&argc, argv);
-    RUN_ALL_TESTS();
 #endif
+    RUN_ALL_TESTS();
+
 
     return Application::main(argc, argv);
 }

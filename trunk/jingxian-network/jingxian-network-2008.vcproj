@@ -18,8 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ProjectDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ProjectDir)$(ConfigurationName)\tmp"
+			OutputDirectory="$(ProjectDir)$(ConfigurationName)\"
+			IntermediateDirectory="$(ProjectDir)$(ConfigurationName)\tmp\2008"
 			ConfigurationType="1"
 			CharacterSet="1"
 			>
@@ -40,7 +40,6 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/DTEST"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(LOG4CPP_ROOT)\include&quot;;&quot;$(ProjectDir)src\&quot;;."
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DEBUG_TRACE"
@@ -181,14 +180,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\src\jingxian\Application.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\Application.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\jingxian\main.cpp"
 				>
 			</File>
@@ -221,6 +212,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\jingxian\logging\DefaultTracer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\logging\DefaultTracer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\jingxian\logging\ILogger.h"
 				>
 			</File>
@@ -242,14 +241,6 @@
 			</File>
 			<File
 				RelativePath=".\src\jingxian\logging\logging.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\logging\Tracer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\logging\Tracer.h"
 				>
 			</File>
 		</Filter>
@@ -720,7 +711,23 @@
 				RelativePath=".\src\jingxian\utilities\StackTracer.h"
 				>
 			</File>
+			<File
+				RelativePath=".\src\jingxian\utilities\unittest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\utilities\unittest.h"
+				>
+			</File>
 		</Filter>
+		<File
+			RelativePath=".\src\jingxian\Application.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\jingxian\Application.h"
+			>
+		</File>
 		<File
 			RelativePath=".\src\jingxian\changelog.txt"
 			>
@@ -734,7 +741,19 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\jingxian\configure.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\jingxian\connection_functionals.h"
+			>
+		</File>
+		<File
 			RelativePath=".\src\jingxian\Connector.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\jingxian\default.conf"
 			>
 		</File>
 		<File
@@ -803,6 +822,10 @@
 		</File>
 		<File
 			RelativePath=".\src\jingxian\linklist.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\jingxian\log4cpp.conf"
 			>
 		</File>
 		<File

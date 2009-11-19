@@ -8,6 +8,8 @@
 
 # ifdef _GOOGLETEST_
 #include <gtest/gtest.h>
+#else
+#include "jingxian/utilities/unittest.h"
 #endif
 
 _jingxian_begin
@@ -28,7 +30,6 @@ void testStackTracer1()
     testStackTracer2();
 }
 
-# ifdef _GOOGLETEST_
 TEST(string, stringOP)
 {
 	StringArray<char, detail::StringOp<char> > sa(split<char, detail::StringOp<char> >("ad,adf,ff,d,,.d.f", ",.", StringSplitOptions::None));
@@ -52,7 +53,7 @@ TEST(string, stringOP)
     }
     catch (OutOfRangeException& e)
     {
-        std::cerr << e << std::endl;
+        tcerr << e << std::endl;
     }
 
 
@@ -121,6 +122,5 @@ TEST(string, stringOP)
 #endif
     }
 }
-#endif
 
 _jingxian_end
