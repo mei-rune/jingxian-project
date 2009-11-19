@@ -1,8 +1,10 @@
 # include "pro_config.h"
 # include "jingxian/Buffer/InBuffer.h"
 # ifdef _GOOGLETEST_
-#include <gtest/gtest.h>
-#endif
+# include <gtest/gtest.h>
+# else
+# include "jingxian/utilities/unittest.h"
+# endif
 
 _jingxian_begin
 
@@ -447,12 +449,10 @@ size_t InBuffer::rawLength() const
 }
 
 
-# ifdef _GOOGLETEST_
 TEST(buffer, bufferSearch)
 {
     //TODO: «Î–¥”√¿˝
 }
-#endif
 
 
 _jingxian_end
