@@ -416,8 +416,10 @@ drama
 guilty
 
 male
-reasoning
 female
+mechanical
+reasoning
+superor
 excited
 nerve
 elementary
@@ -428,4 +430,35 @@ treatment
 consequent
 satisfy
 
-stay out of
+
+western
+alarming
+surgical
+surgery
+critic
+prevention
+experise
+lack
+sufficient
+dietary
+
+
+diet
+strict
+chemical
+gradually
+resistance
+essential
+radical
+mood
+sweetener
+appetite
+excess
+nutrient
+vitamin
+orgen
+mineral
+calium
+skim
+
+
