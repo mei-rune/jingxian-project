@@ -451,6 +451,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\src\jingxian\protocol\proxy\BindPorts.h"
+					>
+				</File>
+				<File
 					RelativePath=".\src\jingxian\protocol\proxy\Credentials.cpp"
 					>
 				</File>
@@ -471,11 +475,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\src\jingxian\protocol\proxy\Packet.h"
+					RelativePath=".\src\jingxian\protocol\proxy\ProxyProtocolFactory.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\src\jingxian\protocol\proxy\Proxy.h"
+					RelativePath=".\src\jingxian\protocol\proxy\ProxyProtocolFactory.h"
 					>
 				</File>
 				<File

@@ -11,7 +11,6 @@
 // Include files
 # include <list>
 # include "jingxian/directory.h"
-# include "jingxian/networks/IOCPServer.h"
 # include "jingxian/protocol/EchoProtocol.h"
 
 

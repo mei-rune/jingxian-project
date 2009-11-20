@@ -26,7 +26,7 @@ public:
 
     static charT* dup(const charT* p)
     {
-        return string_traits< charT>::strdup(p);
+        return string_traits<charT>::strdup(p);
     }
 
     static void free(void* p)

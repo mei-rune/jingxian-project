@@ -18,7 +18,7 @@ namespace proxy
 class BaseCredentialPolicy : public AbstractCredentialPolicy
 {
 public:
-    BaseCredentialPolicy(Proxy* server, const config::Credential& credential)
+    BaseCredentialPolicy(ProxyProtocolFactory* server, const config::Credential& credential)
             : AbstractCredentialPolicy(server, credential)
     {
     }
@@ -91,7 +91,7 @@ class BaseCredentialPolicyFactory : public ICredentialPolicyFactory
 {
 public:
 
-    BaseCredentialPolicyFactory(Proxy* server
+    BaseCredentialPolicyFactory(ProxyProtocolFactory* server
                                 , int authenticationType
                                 , const tstring& name
                                 , const tstring& description)
@@ -102,7 +102,7 @@ public:
         credential_.Description = description;
     }
 
-    BaseCredentialPolicyFactory(Proxy* server, const config::Credential& credential)
+    BaseCredentialPolicyFactory(ProxyProtocolFactory* server, const config::Credential& credential)
             : server_(server)
             , credential_(credential)
     {
@@ -123,7 +123,7 @@ public:
     }
 
 private:
-    Proxy* server_;
+    ProxyProtocolFactory* server_;
     config::Credential credential_;
 };
 }

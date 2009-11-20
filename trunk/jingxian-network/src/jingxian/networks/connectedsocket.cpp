@@ -208,7 +208,7 @@ void ConnectedSocket::doRead()
     }
 
     TP_TRACE(tracer_, transport_mode::Receive, _T("发送读请求 - ")
-             << ((int)command.get()));
+             << ((size_t)command.get()));
     reading_ = true;
     command.release();
 }
@@ -250,7 +250,7 @@ void ConnectedSocket::doWrite()
     }
 
     TP_TRACE(tracer_, transport_mode::Send, _T("发送写数据请求 - ")
-             << ((int)command.get()));
+             << ((size_t)command.get()));
     writing_ = true;
     command.release();
 }
@@ -306,7 +306,7 @@ void ConnectedSocket::doDisconnect(transport_mode::type mode
 
 void ConnectedSocket::onRead(const ICommand& command, size_t bytes_transferred)
 {
-    TP_TRACE(tracer_, transport_mode::Receive, _T("读请求 '")<< (int)&command <<_T("' 成功返回!"));
+    TP_TRACE(tracer_, transport_mode::Receive, _T("读请求 '")<< (size_t)&command <<_T("' 成功返回!"));
 
     reading_ = false;
 
@@ -408,7 +408,7 @@ void ConnectedSocket::onRead(const ICommand& command, size_t bytes_transferred)
 
 void ConnectedSocket::onWrite(const ICommand& command, size_t bytes_transferred)
 {
-    TP_TRACE(tracer_, transport_mode::Send, _T("写请求 '")<< (int)&command <<_T("' 成功返回!"));
+    TP_TRACE(tracer_, transport_mode::Send, _T("写请求 '")<< (size_t)&command <<_T("' 成功返回!"));
 
 
 #ifdef DUMPFILE
@@ -467,14 +467,14 @@ void ConnectedSocket::onError(const ICommand& command
     {
     case transport_mode::Receive:
         TP_TRACE(tracer_, transport_mode::Receive, _T("读请求 '")
-                 << (int)&command
+                 << (size_t)&command
                  <<_T("' 错误返回,")
                  << description);
         reading_ = false;
         break;
     case transport_mode::Send:
         TP_TRACE(tracer_, transport_mode::Send, _T("写请求 '")
-                 << (int)&command
+                 << (size_t)&command
                  << _T("' 错误返回,")
                  << description);
         writing_ = false;
@@ -512,7 +512,7 @@ void ConnectedSocket::onDisconnected(const ICommand& command
                                      , const tstring& description)
 {
     TP_TRACE(tracer_, transport_mode::Both , _T("断开请求 '")
-             << (int)&command
+             << (size_t)&command
              <<_T("' 返回!"));
 
     state_ = connection_status::disconnected;

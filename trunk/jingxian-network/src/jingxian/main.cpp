@@ -36,7 +36,7 @@ char*  my_strdup(__in_z_opt const char * _Src)
 {
 	size_t len = strlen(_Src) + 1;
 	char* ptr =(char*)my_calloc(len, sizeof(char));
-	strcpy(ptr, _Src);
+	strcpy_s(ptr, len, _Src);
 	return ptr;
 }
 
@@ -44,7 +44,7 @@ wchar_t* my_wcsdup(__in_z const wchar_t * _Str)
 {
 	size_t len = wcslen(_Str) + 1;
 	wchar_t* ptr =(wchar_t*)my_calloc(len, sizeof(wchar_t));
-	wcscpy(ptr, _Str);
+	wcscpy_s(ptr, len, _Str);
 	return ptr;
 }
 

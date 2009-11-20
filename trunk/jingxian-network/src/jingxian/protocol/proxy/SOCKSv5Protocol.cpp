@@ -6,9 +6,10 @@
 # include <io.h>
 # include <stdio.h>
 # include "jingxian/directory.h"
+# include "jingxian/networks/networking.h"
 # include "jingxian/protocol/NullProtocol.h"
 # include "jingxian/protocol/proxy/SOCKSv5Protocol.h"
-# include "jingxian/protocol/proxy/Proxy.h"
+# include "jingxian/protocol/proxy/ProxyProtocolFactory.h"
 
 
 _jingxian_begin
@@ -16,7 +17,7 @@ _jingxian_begin
 namespace proxy
 {
 
-SOCKSv5Protocol:: SOCKSv5Protocol(Proxy* server)
+SOCKSv5Protocol:: SOCKSv5Protocol(ProxyProtocolFactory* server)
         : server_(server)
         , status_(0)
         , credentialPolicy_(null_ptr)
@@ -26,8 +27,8 @@ SOCKSv5Protocol:: SOCKSv5Protocol(Proxy* server)
     incoming_.initialize(this);
 
 #ifdef DEBUG_TRACE
-    sessionPath_ = combinePath(combinePath(server_->basePath(), _T("session")), ::toString((int)this) + _T(".txt"));
-    sessionId_ = _tfopen(sessionPath_.c_str(), _T("w+"));
+    sessionPath_ = combinePath(combinePath(server_->basePath(), _T("session")), ::toString((size_t)this) + _T(".txt"));
+    _tfopen_s(&sessionId_, sessionPath_.c_str(), _T("w+"));
 #endif
 }
 
@@ -446,7 +447,7 @@ void SOCKSv5Protocol::onConnectError(const ErrorCode&, ProtocolContext& context)
 
 //      #endregion
 
-Proxy* SOCKSv5Protocol::internalCore()
+ProxyProtocolFactory* SOCKSv5Protocol::internalCore()
 {
     return server_;
 }
