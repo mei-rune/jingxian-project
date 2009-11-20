@@ -5,8 +5,7 @@
 #include "jingxian/Application.h"
 #include "jingxian/directory.h"
 #include "jingxian/networks/IOCPServer.h"
-#include "jingxian/protocol/EchoProtocol.h"
-#include "jingxian/protocol/Proxy/Proxy.h"
+#include "jingxian/protocol/Proxy/ProxyProtocolFactory.h"
 #include "jingxian/protocol/EchoProtocolFactory.h"
 
 
@@ -218,6 +217,13 @@ Application::Application(const tstring& name, const tstring& descr)
 
 Application::~Application()
 {
+	for(std::map<tstring, configure::callback_type*>::iterator it=callbacks_.begin()
+	  ; it != callbacks_.end(); ++it)
+  {
+	  delete (it->second);
+  }
+  callbacks_.clear();
+
   networking::shutdownSocket();
 }
 
@@ -302,7 +308,7 @@ int Application::onRun(const std::vector<tstring>& args)
       if (tstring::npos != index)
         line = line.substr(index);
 
-      // 删除结尾的空白
+      // 删除空白
       line = trim_right(line);
       if (line.empty())
         continue;
@@ -316,9 +322,14 @@ int Application::onRun(const std::vector<tstring>& args)
 
       if (!segment.empty())
         {
+		  // 删除空白
           line = segment + line;
           segment.clear();
         }
+			
+	  line = trim_left(line);
+      if (line.empty())
+        continue;
 
       if (!impl.call(configureContext, line))
         LOG_WARN(configureLogger, _T("不可识别的行 '")
@@ -349,46 +360,124 @@ void Application::interrupt()
 
 bool Application::configure(configure::Context& context, const tstring& txt)
 {
-  StringArray<tstring::value_type> sa = split(trim_all(tstring(txt)), _T(" \t"), StringSplitOptions::None);
-  if (0 == sa.size())
-    return false;
+  tstring::size_type index = txt.find_first_of(_T(" \t"));
+  tstring command = (tstring::npos == index)?txt:txt.substr(0, index);
 
-  if (0 == string_traits<tstring::value_type>::strcmp(_T("listen"), sa.ptr(0)))
+  if (0 == string_traits<tstring::value_type>::stricmp(_T("listen"), command.c_str()))
     {
-      if (3 != sa.size())
+      if (tstring::npos == index)
         {
           LOG_FATAL(context.logger(), _T("命令 'listen' 格式不正确"));
           context.exit();
           return true;
         }
 
-      IProtocolFactory* protocolFactory = createProtocolFactory(sa.ptr(2));
+	  StringArray<tstring::value_type> sa = split(txt.c_str()+index
+		  , _T(" \t")
+		  , StringSplitOptions::RemoveEmptyEntries);
+      if (2 > sa.size())
+        {
+          LOG_FATAL(context.logger(), _T("命令 'listen' 格式不正确"));
+          context.exit();
+          return true;
+        }
 
+      IProtocolFactory* protocolFactory = createProtocolFactory(sa.ptr(1));
       if (null_ptr == protocolFactory)
         {
-          LOG_FATAL(context.logger(), _T("创建服务 '")<< sa.ptr(2) << _T("' 失败!"));
+          LOG_FATAL(context.logger(), _T("创建服务 '")<< sa.ptr(1) << _T("' 失败!"));
           context.exit();
           return false;
         }
 
-      if (!core_.listenWith(sa.ptr(1), protocolFactory))
+      if (!core_.listenWith(sa.ptr(0), protocolFactory))
         {
           LOG_FATAL(context.logger(), _T("命令 'listen' 格式不正确"));
           context.exit();
           return false;
         }
 
-      context.connect(protocolFactory, &IProtocolFactory::configure);
+
+	  callbacks_[sa.ptr(1)] = new _connection<IProtocolFactory
+		  ,bool (configure::Context& context, const tstring& txt)>
+						(protocolFactory, &IProtocolFactory::configure);
+
+      //context.connect(protocolFactory, &IProtocolFactory::configure);
       return true;
     }
 
+  if (0 == string_traits<tstring::value_type>::strcmp(_T("<IfModule"), command.c_str()))
+  {
+      if (tstring::npos == index)
+	  {
+          LOG_FATAL(context.logger(), _T("命令 'IfModule' 格式不正确"));
+          context.exit();
+          return false;
+	  }
+
+	  StringArray<tstring::value_type> sa = split(txt.c_str()+index
+		  , _T(" \t\"=>")
+		  , StringSplitOptions::RemoveEmptyEntries);
+      if (2 != sa.size())
+        {
+          LOG_FATAL(context.logger(), _T("命令 'IfModule' 格式不正确"));
+          context.exit();
+          return true;
+        }
+
+	  if (0 != string_traits<tstring::value_type>::stricmp(_T("name"), sa.ptr(0)))
+	    {
+          LOG_FATAL(context.logger(), _T("命令 'IfModule' 格式不正确"));
+          context.exit();
+          return true;
+	    }
+
+	  std::map<tstring, configure::callback_type*>::iterator it = callbacks_.find(sa.ptr(1));
+	  if(it == callbacks_.end())
+	  {
+          LOG_FATAL(context.logger(), _T("模块 '") << sa.ptr(1) << _T("' 不可识别!"));
+          context.exit();
+          return false;
+	  }
+
+	  // IfModule 命令处理器
+	  class IfModule : public configure::callback_type
+	  {
+	  public:
+			IfModule(configure::callback_type* ptr)
+				: ptr_(ptr)
+			{
+			}
+
+			virtual ~IfModule()
+			{
+			}
+
+			virtual bool call(configure::Context& context, const tstring& txt)
+			{
+				tstring line = replace_all(replace_all(trim_all(txt)
+											, 0, _T(" "), 1, _T(""), 0)
+												, 0, _T("\t"), 1, _T(""), 0);
+				if(0 == string_traits<tstring::value_type>::strcmp(_T("</IfModule>"), line.c_str()))
+					return true;
+
+				return ptr_->call(context, txt);
+			}
+	  private:
+		  configure::callback_type* ptr_;
+	  };
+
+	  context.push(new IfModule(it->second));
+	  return true;
+  }
+  
   return false;
 }
 
 IProtocolFactory* Application::createProtocolFactory(tchar* name)
 {
   if (0 == string_traits<tchar>::stricmp(_T("proxy"), name))
-    return new proxy::Proxy(core_.basePath());
+    return new proxy::ProxyProtocolFactory(core_.basePath());
 
   if (0 == string_traits<tchar>::stricmp(_T("echo"), name))
     return new EchoProtocolFactory();

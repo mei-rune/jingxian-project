@@ -143,13 +143,13 @@ Tracer::Tracer(const tchar* nm, const tstring& thost, const tstring& tpeer, cons
 
     logger_.setContext(name_);
 
-    host = trim_all(host, "tcp://");
-    host = trim_all(host, "tcp6://");
-    host = trim_all(host, "tcpv6://");
+    trim_all(host, "tcp://");
+    trim_all(host, "tcp6://");
+    trim_all(host, "tcpv6://");
 
-    peer = trim_all(peer, "tcp://");
-    peer = trim_all(peer, "tcp6://");
-    peer = trim_all(peer, "tcpv6://");
+    trim_all(peer, "tcp://");
+    trim_all(peer, "tcp6://");
+    trim_all(peer, "tcpv6://");
 
     host = replace_all(host, ":", "[");
     peer = replace_all(peer, ":", "[");

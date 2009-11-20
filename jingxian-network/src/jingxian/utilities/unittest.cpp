@@ -28,19 +28,27 @@ void RawClose(RawFD handle) {
 
 
 
-std::vector<void (*)()> g_testlist;
+std::vector<void (*)()>* g_unittestlist = NULL;
 
 void ADD_RUN_TEST(void (*func)())
 {
-	g_testlist.push_back(func);
+	if(NULL == g_unittestlist)
+		g_unittestlist = new std::vector<void (*)()>();
+
+	g_unittestlist->push_back(func);
 }
 
 int RUN_ALL_TESTS() 
 {
-	std::vector<void (*)()>::const_iterator it;
-  for (it = g_testlist.begin(); it != g_testlist.end(); ++it) {
+  for (std::vector<void (*)()>::const_iterator it = g_unittestlist->begin();
+	  it != g_unittestlist->end(); ++it) 
+  {
     (*it)();
   }
-  fprintf(stderr, "\nPassed %d tests\n\nPASS\n", (int)g_testlist.size());
+	if(NULL == g_unittestlist)
+	{
+		delete g_unittestlist;
+		g_unittestlist = NULL;
+	}
   return 0;
 }

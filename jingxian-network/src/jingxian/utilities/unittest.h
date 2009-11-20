@@ -120,10 +120,10 @@ enum LogSeverity {INFO = -1, WARNING = -2, ERROR = -3, FATAL = -4};
 inline void LogPrintf(int severity, const char* pat, va_list ap)
 {
   char buf[600];
-  vsnprintf(buf, sizeof(buf)-1, pat, ap);
+  vsnprintf_s(buf, sizeof(char), sizeof(buf), pat, ap);
   if (buf[0] != '\0' && buf[strlen(buf)-1] != '\n') {
     assert(strlen(buf)+1 < sizeof(buf));
-    strcat(buf, "\n");
+    strcat_s(buf,600, "\n");
   }
   WRITE_TO_STDERR(buf, strlen(buf));
   if ((severity) == FATAL)

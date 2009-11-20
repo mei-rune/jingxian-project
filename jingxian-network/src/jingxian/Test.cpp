@@ -67,40 +67,102 @@ TEST(string, stringOP)
 
     ASSERT_FALSE(begin_with(str1, "as1d"));
 
-    if (!end_with(str1, "fas"))
-        std::cout << "LOG_ERROR end_with!" << std::endl;
+	ASSERT_TRUE(end_with(str1, "fas"));
     ASSERT_FALSE(end_with(str1, "f1as"));
+
+	{
+
+    std::string str33("       ");
+    std::string str34("       ");
+    std::string str35("       ");
 
     std::string str3("       asdkdfasdf");
     std::string str4("asdkdfasdf         ");
     std::string str5("       asdkdfasdf         ");
 
-    ASSERT_FALSE(trim_left(str3) != "asdkdfasdf");
+	trim_left(str33);
+    ASSERT_TRUE( str33.empty() );
 
-    ASSERT_FALSE(trim_right(str4) != "asdkdfasdf");
+	trim_right(str34);
+    ASSERT_TRUE( str34.empty() );
 
-    ASSERT_FALSE(trim_all(str5) != "asdkdfasdf");
+	trim_all(str35);
+    ASSERT_TRUE( str35.empty() );
+
+	trim_left(str3);
+    ASSERT_FALSE( str3 != "asdkdfasdf");
+
+	trim_right(str4);
+    ASSERT_FALSE( str4 != "asdkdfasdf");
+
+	trim_all(str5);
+    ASSERT_FALSE( str5 != "asdkdfasdf");
 
 
     std::string str6("asdkdfasdf");
     std::string str7("asdkdfasdf");
     std::string str8("asdkdfasdf");
 
-    ASSERT_FALSE(trim_left(str6, "af") != "sdkdfasdf");
+	trim_left(str6, "af");
+    ASSERT_FALSE( str6 != "sdkdfasdf");
 
-    ASSERT_FALSE(trim_right(str7, "af") != "asdkdfasd");
+	trim_right(str7, "af");
+    ASSERT_FALSE( str7 != "asdkdfasd");
 
-    ASSERT_FALSE(trim_all(str8, "af") != "sdkdfasd");
+	trim_all(str8, "af");
+    ASSERT_FALSE( str8 != "sdkdfasd");
 
     std::string str9("asdkdfasdf");
     std::string str10("asdddkdfasdf");
     std::string str11("asdkdfasdf");
+	replace_all(str9, "a", "c");
+	replace_all(str10, "a", "cc");
+	replace_all(str11, "a", "aaa");
 
-    ASSERT_FALSE(replace_all(str9, "a", "c") != "csdkdfcsdf");
+    ASSERT_FALSE( str9 != "csdkdfcsdf");
 
-    ASSERT_FALSE(replace_all(str10, "a", "cc") != "ccsdddkdfccsdf");
+    ASSERT_FALSE( str10 != "ccsdddkdfccsdf");
 
-    ASSERT_FALSE(replace_all(str11, "a", "aaa") != "aaasdkdfaaasdf");
+    ASSERT_FALSE( str11 != "aaasdkdfaaasdf");
+	}
+
+	
+	{
+
+    const std::string str33("       ");
+    const std::string str34("       ");
+    const std::string str35("       ");
+    const std::string str3("       asdkdfasdf");
+    const std::string str4("asdkdfasdf         ");
+    const std::string str5("       asdkdfasdf         ");
+
+	
+    ASSERT_TRUE( trim_left(str33).empty() );
+    ASSERT_TRUE( trim_right(str34).empty() );
+    ASSERT_TRUE( trim_all(str35).empty() );
+
+    ASSERT_FALSE( trim_left(str3) != "asdkdfasdf");
+    ASSERT_FALSE( trim_right(str4) != "asdkdfasdf");
+    ASSERT_FALSE( trim_all(str5) != "asdkdfasdf");
+
+
+    const std::string str6("asdkdfasdf");
+    const std::string str7("asdkdfasdf");
+    const std::string str8("asdkdfasdf");
+
+    ASSERT_FALSE( trim_left(str6, "af") != "sdkdfasdf");
+    ASSERT_FALSE( trim_right(str7, "af") != "asdkdfasd");
+    ASSERT_FALSE( trim_all(str8, "af") != "sdkdfasd");
+
+    const std::string str9("asdkdfasdf");
+    const std::string str10("asdddkdfasdf");
+    const std::string str11("asdkdfasdf");
+
+    ASSERT_FALSE( replace_all(str9, "a", "c") != "csdkdfcsdf");
+    ASSERT_FALSE( replace_all(str10, "a", "cc") != "ccsdddkdfccsdf");
+    ASSERT_FALSE( replace_all(str11, "a", "aaa") != "aaasdkdfaaasdf");
+	}
+
 
     std::string str12("aAsDFddSdkdfasdf");
     std::string str13("asdSkdfaFAsSDdf");
@@ -115,11 +177,7 @@ TEST(string, stringOP)
     }
     catch (Exception& e)
     {
-#ifdef  _UNICODE
-        std::wcerr << e << std::endl;
-#else
-        std::cerr << e << std::endl;
-#endif
+		tcerr << e << std::endl;
     }
 }
 

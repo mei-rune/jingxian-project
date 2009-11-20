@@ -2,7 +2,7 @@
 # include "pro_config.h"
 # include "jingxian/protocol/proxy/SOCKSv5Outgoing.h"
 # include "jingxian/protocol/proxy/SOCKSv5Protocol.h"
-# include "jingxian/protocol/proxy/Proxy.h"
+# include "jingxian/protocol/proxy/ProxyProtocolFactory.h"
 # include "jingxian/buffer/OutBuffer.h"
 # include "jingxian/directory.h"
 

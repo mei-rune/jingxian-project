@@ -80,7 +80,21 @@ inline stringT& replace_all(stringT  &s,
             offset += (withlen + 1);
         }
     }
-    return s;
+	return s;
+}
+
+template<typename stringT>
+inline stringT replace_all(const stringT  &s,
+                            typename stringT::size_type      offset,
+                            const typename stringT::value_type*  what,
+                            typename stringT::size_type  whatlen,
+                            const typename stringT::value_type* with,
+                            typename stringT::size_type withlen,
+                            bool casesensitive = true)
+{
+	stringT str(s);
+	replace_all(str, offset, what, whatlen, with, withlen, casesensitive);
+	return str;
 }
 
 template<typename stringT>
@@ -95,7 +109,20 @@ inline stringT& replace_all(stringT  &s,
 }
 
 template<typename stringT>
-inline stringT& replace_all(stringT  &s,
+inline stringT replace_all(const stringT  &s,
+                            typename stringT::size_type      offset,
+                            typename stringT::value_type   what,
+                            typename stringT::value_type const * with,
+                            typename stringT::size_type len,
+                            bool casesensitive = true)
+{
+	stringT str(s);
+    replace_all(str, offset, &what, 1, with, len, casesensitive);
+	return str;
+}
+
+template<typename stringT>
+inline stringT&  replace_all(stringT  &s,
                             typename stringT::size_type      offset,
                             typename stringT::value_type   what,
                             typename stringT::value_type const * with,
@@ -108,7 +135,22 @@ inline stringT& replace_all(stringT  &s,
 }
 
 template<typename stringT>
-inline stringT& replace_all(stringT  &s,
+inline stringT  replace_all(const stringT  &s,
+                            typename stringT::size_type      offset,
+                            typename stringT::value_type   what,
+                            typename stringT::value_type const * with,
+                            bool casesensitive)
+{
+	stringT str(s);
+    replace_all(str, offset,
+                       &what, 1,
+                       with, string_traits<typename stringT::value_type>::strlen(with),
+                       casesensitive);
+	return str;
+}
+
+template<typename stringT>
+inline stringT&  replace_all(stringT  &s,
                             typename stringT::size_type      offset,
                             typename stringT::value_type what,
                             const stringT  &with,
@@ -121,7 +163,22 @@ inline stringT& replace_all(stringT  &s,
 }
 
 template<typename stringT>
-inline stringT& replace_all(stringT  &s,
+inline stringT  replace_all(const stringT  &s,
+                            typename stringT::size_type      offset,
+                            typename stringT::value_type what,
+                            const stringT  &with,
+                            bool casesensitive  = true)
+{
+	stringT str(s);
+    replace_all(str, offset,
+                       what,
+                       c_str_ptr(with), with.size(),
+                       casesensitive);
+	return str;
+}
+
+template<typename stringT>
+inline stringT&  replace_all(stringT  &s,
                             typename stringT::size_type      offset,
                             typename stringT::value_type const * what,
                             typename stringT::value_type const * with,
@@ -134,7 +191,22 @@ inline stringT& replace_all(stringT  &s,
 }
 
 template<typename stringT>
-inline stringT& replace_all(stringT  &s,
+inline stringT  replace_all(const stringT  &s,
+                            typename stringT::size_type      offset,
+                            typename stringT::value_type const * what,
+                            typename stringT::value_type const * with,
+                            bool casesensitive  = true)
+{
+	stringT str(s);
+    replace_all(str, offset,
+                       what, string_traits<typename stringT::value_type>::strlen(what),
+                       with, string_traits<typename stringT::value_type>::strlen(with),
+                       casesensitive);
+	return str;
+}
+
+template<typename stringT>
+inline stringT&  replace_all(stringT  &s,
                             typename stringT::size_type      offset,
                             const stringT& what,
                             const stringT& with,
@@ -147,7 +219,22 @@ inline stringT& replace_all(stringT  &s,
 }
 
 template<typename stringT>
-inline stringT& replace_all(stringT  &s,
+inline stringT  replace_all(const stringT  &s,
+                            typename stringT::size_type      offset,
+                            const stringT& what,
+                            const stringT& with,
+                            bool casesensitive  = true)
+{
+	stringT str(s);
+    replace_all(str, offset,
+                       c_str_ptr(what), what.size(),
+                       c_str_ptr(with), with.size(),
+                       casesensitive);
+	return str;
+}
+
+template<typename stringT>
+inline stringT&  replace_all(stringT  &s,
                             typename stringT::value_type const * what,
                             typename stringT::value_type const * with,
                             bool casesensitive  = true)
@@ -159,7 +246,21 @@ inline stringT& replace_all(stringT  &s,
 }
 
 template<typename stringT>
-inline stringT& replace_all(stringT  &s,
+inline stringT  replace_all(const stringT  &s,
+                            typename stringT::value_type const * what,
+                            typename stringT::value_type const * with,
+                            bool casesensitive  = true)
+{
+	stringT str(s);
+    replace_all(str, 0,
+                       what, string_traits<typename stringT::value_type>::strlen(what),
+                       with, string_traits<typename stringT::value_type>::strlen(with),
+                       casesensitive);
+	return str;
+}
+
+template<typename stringT>
+inline stringT&  replace_all(stringT  &s,
                             const stringT  &what,
                             const stringT  &with,
                             bool casesensitive  = true)
@@ -168,6 +269,20 @@ inline stringT& replace_all(stringT  &s,
                        c_str_ptr(what), what.size(),
                        c_str_ptr(with), with.size(),
                        casesensitive);
+}
+
+template<typename stringT>
+inline stringT  replace_all(const stringT  &s,
+                            const stringT  &what,
+                            const stringT  &with,
+                            bool casesensitive  = true)
+{
+	stringT str(s);
+    replace_all(str, 0,
+                       c_str_ptr(what), what.size(),
+                       c_str_ptr(with), with.size(),
+                       casesensitive);
+	return str;
 }
 
 _jingxian_end

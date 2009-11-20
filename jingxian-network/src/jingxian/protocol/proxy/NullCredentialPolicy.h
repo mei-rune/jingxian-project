@@ -18,7 +18,7 @@ namespace proxy
 class NullCredentialPolicy : public AbstractCredentialPolicy
 {
 public:
-    NullCredentialPolicy(Proxy* server, const config::Credential& credential)
+    NullCredentialPolicy(ProxyProtocolFactory* server, const config::Credential& credential)
             : AbstractCredentialPolicy(server, credential)
     {
         _complete = true;
@@ -39,7 +39,7 @@ class NullCredentialPolicyFactory : public ICredentialPolicyFactory
 {
 public:
 
-    NullCredentialPolicyFactory(Proxy* server)
+    NullCredentialPolicyFactory(ProxyProtocolFactory* server)
             : server_(server)
     {
         credential_.AuthenticationType = AuthenticationType::NONE;
@@ -63,7 +63,7 @@ public:
 
 private:
     config::Credential credential_;
-    Proxy* server_;
+    ProxyProtocolFactory* server_;
 };
 
 }

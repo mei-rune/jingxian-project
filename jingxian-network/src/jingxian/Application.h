@@ -9,6 +9,7 @@
 #endif /* JINGXIAN_LACKS_PRAGMA_ONCE */
 
 // Include files
+#include <map>
 #include <vector>
 #include <iostream>
 #include "jingxian/directory.h"
@@ -68,9 +69,10 @@ private:
 
 	IProtocolFactory* createProtocolFactory(tchar* name);
 
-    tstring name_;
-    tstring toString_;
     IOCPServer core_;
+    tstring name_;
+	std::map<tstring, configure::callback_type*> callbacks_;
+    tstring toString_;
 };
 
 _jingxian_end

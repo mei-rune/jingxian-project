@@ -17,15 +17,6 @@ _jingxian_begin
 
 namespace proxy
 {
-class ICredentialPolicyFactory
-{
-public:
-    virtual ~ICredentialPolicyFactory() {}
-
-    virtual int authenticationType() const = 0;
-
-    virtual ICredentialPolicy* make() = 0;
-};
 
 class Credentials : public ICredentials
 {

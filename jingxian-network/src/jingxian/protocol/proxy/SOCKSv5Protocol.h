@@ -15,12 +15,13 @@
 # include "jingxian/protocol/proxy/SOCKSv5Incoming.h"
 # include "jingxian/protocol/proxy/SOCKSv5Outgoing.h"
 # include "jingxian/protocol/proxy/ICredentialPolicy.h"
+//# include "jingxian/protocol/proxy/ProxyProtocolFactory.h"
 
 _jingxian_begin
 
 namespace proxy
 {
-class Proxy;
+class ProxyProtocolFactory;
 
 namespace SocksError
 {
@@ -64,7 +65,7 @@ enum Type
 class SOCKSv5Protocol : public BaseProtocol
 {
 public :
-    SOCKSv5Protocol(Proxy* server);
+    SOCKSv5Protocol(ProxyProtocolFactory* server);
     ~SOCKSv5Protocol();
 
     virtual void onConnected(ProtocolContext& context);
@@ -85,9 +86,9 @@ public :
 
     void sendReply(ProtocolContext& context, int reply, int version, int addressType, const char* addr, size_t len, int port);
 
-    Proxy* internalCore();
+    ProxyProtocolFactory* internalCore();
 private:
-    Proxy* server_;
+    ProxyProtocolFactory* server_;
     int status_;
     std::auto_ptr<proxy::ICredentialPolicy> credentialPolicy_;
     typedef ConnectProxy<SOCKSv5Protocol, ProtocolContext&> connectorType;

@@ -16,19 +16,19 @@ _jingxian_begin
 
 namespace proxy
 {
-class Proxy;
+class ProxyProtocolFactory;
 
 class AbstractCredentialPolicy : public ICredentialPolicy
 {
 public:
-    AbstractCredentialPolicy(Proxy* server, const config::Credential& credential)
+    AbstractCredentialPolicy(ProxyProtocolFactory* server, const config::Credential& credential)
             : _server(server)
             , _credential(credential)
             , _complete(false)
     {
     }
 
-    AbstractCredentialPolicy(Proxy* server)
+    AbstractCredentialPolicy(ProxyProtocolFactory* server)
             : _server(server)
             , _complete(false)
     {
@@ -49,7 +49,7 @@ public:
     }
 
 protected:
-    Proxy* _server;
+    ProxyProtocolFactory* _server;
     config::Credential _credential;
     bool _complete;
 };

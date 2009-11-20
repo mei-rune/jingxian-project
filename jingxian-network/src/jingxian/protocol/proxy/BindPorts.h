@@ -1,6 +1,6 @@
 
-#ifndef _Proxy_H_
-#define _Proxy_H_
+#ifndef _BindPorts_H_
+#define _BindPorts_H_
 
 #include "jingxian/config.h"
 
@@ -87,61 +87,8 @@ private:
     int _position;
 };
 
-class Proxy  : public IProtocolFactory
-{
-public:
-    Proxy(const tstring& basePath)
-            : toString_(_T("socks ´úÀí"))
-    {
-        path_ = combinePath(basePath, _T("log"));
-        if (!existDirectory(path_))
-            createDirectory(path_);
-
-        path_ = combinePath(path_, _T("proxy"));
-        if (!existDirectory(path_))
-            createDirectory(path_);
-
-        if (!existDirectory(combinePath(path_, _T("session"))))
-            createDirectory(combinePath(path_, _T("session")));
-
-        credentials_.policies().push_back(new NullCredentialPolicyFactory(this));
-        credentials_.policies().push_back(new BaseCredentialPolicyFactory(this, AuthenticationType::BASE, _T("BASE"), _T("")));
-        credentials_.policies().push_back(new BaseCredentialPolicyFactory(this, AuthenticationType::GSSAPI, _T("GSSAPI"), _T("")));
-    }
-
-    virtual IProtocol* createProtocol(ITransport* transport, IReactorCore* core)
-    {
-        return new SOCKSv5Protocol(this);
-    }
-
-	
-	virtual bool configure(configure::Context& context, const tstring& t)
-	{
-		return false;
-	}
-
-    const tstring& basePath() const
-    {
-        return path_;
-    }
-
-    proxy::Credentials&  credentials()
-    {
-        return credentials_;
-    }
-
-    const tstring& toString() const
-    {
-        return toString_;
-    }
-
-private:
-    tstring toString_;
-    proxy::Credentials credentials_;
-    tstring path_;
-};
 }
 
 _jingxian_end
 
-#endif // _Proxy_H_
+#endif // _BindPorts_H_
