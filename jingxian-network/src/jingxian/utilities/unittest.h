@@ -27,6 +27,7 @@ extern int Test_Flags_Verbose;
     if (!(condition)) {                                                 \
       WRITE_TO_STDERR("Check failed: " #condition "\n",                 \
                       sizeof("Check failed: " #condition "\n")-1);      \
+	  abort();                                                          \
       exit(1);                                                          \
     }                                                                   \
   } while (0)
@@ -37,18 +38,11 @@ extern int Test_Flags_Verbose;
     if (!(condition)) {                                                        \
       WRITE_TO_STDERR("Check failed: " #condition ": " message "\n",           \
                       sizeof("Check failed: " #condition ": " message "\n")-1);\
+	  abort();                                                                 \
       exit(1);                                                                 \
     }                                                                          \
   } while (0)
 
-
-#ifdef NDEBUG
-enum { DEBUG_MODE = 0 };
-#define RAW_DCHECK(condition, message)
-#else
-enum { DEBUG_MODE = 1 };
-#define RAW_DCHECK(condition, message)  RAW_CHECK(condition, message)
-#endif
 
 #define PCHECK(condition)                                               \
   do {                                                                  \
@@ -58,6 +52,7 @@ enum { DEBUG_MODE = 1 };
                       sizeof("Check failed: " #condition ": ")-1);      \
       WRITE_TO_STDERR(strerror(err_no), strlen(strerror(err_no)));      \
       WRITE_TO_STDERR("\n", sizeof("\n")-1);                            \
+	  abort();                                                          \
       exit(1);                                                          \
     }                                                                   \
   } while (0)
@@ -66,6 +61,7 @@ enum { DEBUG_MODE = 1 };
   do {                                                                  \
     if (!((val1) op (val2))) {                                          \
       fprintf(stderr, "Check failed: %s %s %s\n", #val1, #op, #val2);   \
+	  abort();                                                          \
       exit(1);                                                          \
     }                                                                   \
   } while (0)
