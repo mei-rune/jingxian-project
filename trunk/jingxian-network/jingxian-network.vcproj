@@ -18,7 +18,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="$(ProjectDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ProjectDir)$(ConfigurationName)\tmp"
+			IntermediateDirectory="$(ProjectDir)$(ConfigurationName)\tmp\2005"
 			ConfigurationType="1"
 			CharacterSet="2"
 			>
@@ -189,10 +189,6 @@
 			</File>
 			<File
 				RelativePath=".\src\jingxian\main.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\jingxian\Test.cpp"
 				>
 			</File>
 		</Filter>
@@ -632,6 +628,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\jingxian\string\stringTest.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\jingxian\string\toString.h"
 				>
 			</File>
@@ -765,6 +765,14 @@
 			</File>
 			<File
 				RelativePath=".\src\jingxian\utilities\StackTracer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\utilities\unittest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\jingxian\utilities\unittest.h"
 				>
 			</File>
 		</Filter>

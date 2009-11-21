@@ -30,7 +30,61 @@ inline S& trim_left_impl(S &str
     }
 	return str;
 }
-
+//
+//template<typename S>
+//inline S trim_left_impl(typename S::value_type const *  s
+//						 , typename S::size_type len
+//						 , typename S::value_type const *trimChars
+//						 , typename S::size_type count)
+//{
+//	typename S::value_type const * eptr = s + len;
+//	for (typename S::value_type const * ptr = s; ptr < eptr; ++ptr)
+//	{
+//		typename S::value_type const *ch = trimChars;
+//		typename S::value_type const *ech = ch + count;
+//		for (; ch < ech; ++ch)
+//		{
+//			if((*ch) == (*ptr))
+//				break;
+//		}
+//
+//		if(ch >= ech)
+//			return ptr;
+//	}
+//	return S();
+//}
+//
+//template<typename S>
+//inline S trim_left(typename S::value_type const *  s
+//						 , typename S::value_type const *trimChars
+//						 , typename S::size_type count)
+//{
+//	return trim_left_impl(s
+//		, string_traits<typename S::value_type>::strlen(s)
+//		, trimChars
+//		, count);
+//}
+//
+//template<typename S>
+//inline S trim_left(typename S::value_type const *  s
+//						 , typename S::size_type len
+//						 , typename S::value_type const *trimChars)
+//{
+//	return trim_left_impl(s
+//		, len
+//		, trimChars
+//		, string_traits<typename S::value_type>::strlen(trimChars));
+//}
+//
+//template<typename S>
+//inline S trim_left(typename S::value_type const *  s
+//						 , typename S::value_type const *trimChars)
+//{
+//	return trim_left_impl(s
+//		, string_traits<typename S::value_type>::strlen(s)
+//		, trimChars
+//		, string_traits<typename S::value_type>::strlen(trimChars));
+//}
 
 template<typename S>
 inline S& trim_left(S &str)
@@ -100,6 +154,62 @@ inline S& trim_right_impl(S &str
         str.erase(i + 1);
 	return str;
 }
+
+
+//template<typename S>
+//inline S trim_right(typename S::value_type const *  s
+//						 , typename S::size_type len
+//						 , typename S::value_type const *trimChars
+//						 , typename S::size_type count)
+//{
+//	typename S::value_type const * ptr = s + len;
+//	for ( ; s < ptr; --ptr)
+//	{
+//		typename S::value_type const *ch = trimChars;
+//		typename S::value_type const *ech = ch + count;
+//		for (; ch < ech; ++ch)
+//		{
+//			if((*ch) == (*ptr))
+//				break;
+//		}
+//
+//		if(ch >= ech)
+//			return S(s, ptr+1);
+//	}
+//	return S();
+//}
+//
+//template<typename S>
+//inline S trim_right(typename S::value_type const *  s
+//						 , typename S::value_type const *trimChars
+//						 , typename S::size_type count)
+//{
+//	return trim_right(s
+//		, string_traits<typename S::value_type>::strlen(s)
+//		, trimChars
+//		, count);
+//}
+//
+//template<typename S>
+//inline S trim_right(typename S::value_type const *  s
+//						 , typename S::size_type len
+//						 , typename S::value_type const *trimChars)
+//{
+//	return trim_right(s
+//		, len
+//		, trimChars
+//		, string_traits<typename S::value_type>::strlen(trimChars));
+//}
+//
+//template<typename S>
+//inline S trim_right(typename S::value_type const *  s
+//						 , typename S::value_type const *trimChars)
+//{
+//	return trim_right(s
+//		, string_traits<typename S::value_type>::strlen(s)
+//		, trimChars
+//		, string_traits<typename S::value_type>::strlen(trimChars));
+//}
 
 template<typename S>
 inline S& trim_right(S &str)

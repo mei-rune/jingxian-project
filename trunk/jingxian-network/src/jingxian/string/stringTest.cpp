@@ -2,7 +2,9 @@
 
 #include "pro_config.h"
 #include <iostream>
-#include "jingxian/directory.h"
+#include "jingxian/exception.h"
+#include "jingxian/string/string.h"
+//#include "jingxian/directory.h"
 
 
 
@@ -163,6 +165,20 @@ TEST(string, stringOP)
     ASSERT_FALSE( replace_all(str11, "a", "aaa") != "aaasdkdfaaasdf");
 	}
 
+	{	
+    ASSERT_TRUE( trim_left<std::string>("       ").empty() );
+    ASSERT_TRUE( trim_right<std::string>("       ").empty() );
+    //ASSERT_TRUE( trim_all<std::string>("       ").empty() );
+
+	ASSERT_FALSE( trim_left<std::string>("       asdkdfasdf") != "asdkdfasdf");
+    ASSERT_FALSE( trim_right<std::string>("asdkdfasdf         ") != "asdkdfasdf");
+    //ASSERT_FALSE( trim_all<std::string>("       asdkdfasdf         ") != "asdkdfasdf");
+
+    ASSERT_FALSE( trim_left<std::string>("asdkdfasdf", "af") != "sdkdfasdf");
+    ASSERT_FALSE( trim_right<std::string>("asdkdfasdf", "af") != "asdkdfasd");
+    //ASSERT_FALSE( trim_all<std::string>("asdkdfasdf", "af") != "sdkdfasd");
+
+	}
 
     std::string str12("aAsDFddSdkdfasdf");
     std::string str13("asdSkdfaFAsSDdf");
