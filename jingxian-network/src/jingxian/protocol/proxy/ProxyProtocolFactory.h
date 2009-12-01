@@ -40,6 +40,9 @@ public:
 
 private:
 	NOCOPY(ProxyProtocolFactory);
+
+	bool appendCredentialPolicy(const StringArray<tstring::value_type>& sa);
+
     tstring toString_;
     proxy::Credentials credentials_;
     tstring path_;
