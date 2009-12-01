@@ -26,10 +26,6 @@ namespace proxy
 
         if (!existDirectory(combinePath(path_, _T("session"))))
             createDirectory(combinePath(path_, _T("session")));
-
-        credentials_.policies().push_back(new NullCredentialPolicyFactory(this));
-        credentials_.policies().push_back(new BaseCredentialPolicyFactory(this, AuthenticationType::BASE, _T("BASE"), _T("")));
-        credentials_.policies().push_back(new BaseCredentialPolicyFactory(this, AuthenticationType::GSSAPI, _T("GSSAPI"), _T("")));
     }
 
     IProtocol* ProxyProtocolFactory::createProtocol(ITransport* transport, IReactorCore* core)
@@ -48,7 +44,7 @@ namespace proxy
 
 		if(0 == string_traits<tstring::value_type>::stricmp(_T("user"), sa.ptr(0)))
 		{  
-			if(3 > sa.size())
+			if(3 != sa.size())
 			{
 				LOG_FATAL(context.logger(), _T("命令 'user' 格式不正确"));
 				context.exit();
@@ -59,6 +55,44 @@ namespace proxy
 			return true;
 		}
 
+		if(0 == string_traits<tstring::value_type>::stricmp(_T("credentialPolicy"), sa.ptr(0)))
+		{  
+			if(2 > sa.size())
+			{
+				LOG_FATAL(context.logger(), _T("命令 'credentialPolicy' 格式不正确"));
+				context.exit();
+				return true;
+			}
+
+			if(appendCredentialPolicy(sa))
+			{
+				LOG_FATAL(context.logger(), _T("命令 'credentialPolicy' 执行失败"));
+				context.exit();
+				return false;
+			}
+			return true;
+		}
+
+		return false;
+	}
+
+	bool ProxyProtocolFactory::appendCredentialPolicy(const StringArray<tstring::value_type>& sa)
+	{
+		if(0 == string_traits<tstring::value_type>::stricmp(_T("None"), sa.ptr(1)))
+		{
+			credentials_.policies().push_back(new NullCredentialPolicyFactory(this));
+			return true;
+		}
+		if(0 == string_traits<tstring::value_type>::stricmp(_T("BASE"), sa.ptr(1)))
+		{
+			credentials_.policies().push_back(new BaseCredentialPolicyFactory(this, AuthenticationType::BASE, _T("BASE"), _T("")));
+			return true;
+		}
+		//if(0 == string_traits<tstring::value_type>::stricmp(_T("GSSAPI"), ptr))
+		//{
+		//	credentials_.policies().push_back(new BaseCredentialPolicyFactory(this, AuthenticationType::GSSAPI, _T("GSSAPI"), _T("")));
+		//	return true;
+		//}
 		return false;
 	}
 
