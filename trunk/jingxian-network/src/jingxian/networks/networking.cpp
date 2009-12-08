@@ -462,7 +462,7 @@ bool addressToString(struct sockaddr* addr
 
     size_t prefix = host.size();
     host.resize(256);
-    DWORD addressLength = host.size() - prefix;
+    DWORD addressLength = static_cast<DWORD>(host.size() - prefix);
 
     if (SOCKET_ERROR == ::WSAAddressToString(addr
 					, len

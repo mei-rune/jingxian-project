@@ -475,7 +475,7 @@ void SOCKSv5Protocol::sendReply(ProtocolContext& context, int reply, int version
         out.writeBlob(addr, 16);
         break;
     case 3:
-        out.writeInt8(len);
+        out.writeInt8(static_cast<int8_t>(len));
         out.writeBlob(addr, len);
         break;
     default:

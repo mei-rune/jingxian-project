@@ -39,7 +39,7 @@ ICommand* OutgoingBuffer::makeCommand()
         do
         {
             iobuf.buf = rd_ptr(current);
-            iobuf.len = rd_length(current);
+            iobuf.len = static_cast<u_long>(rd_length(current));
 
             assert(0 <= iobuf.len);
             if (0 < iobuf.len)

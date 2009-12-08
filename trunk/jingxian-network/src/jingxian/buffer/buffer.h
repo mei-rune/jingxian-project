@@ -62,9 +62,6 @@ inline void freebuffer(buffer_chain_t* buf)
         buf->freebuffer(buf, buf->context);
 }
 
-//void freeBuffer(buffer_chain_t* chain, void* context);
-
-
 typedef struct databuffer
 {
     buffer_chain_t chain;
