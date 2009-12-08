@@ -1,7 +1,6 @@
 
 # include "pro_config.h"
 # include "jingxian/networks/buffer/OutgoingBuffer.h"
-# include "jingxian/networks/buffer/buffer-internal.h"
 # include "jingxian/networks/commands/WriteCommand.H"
 # include "jingxian/networks/ConnectedSocket.h"
 
@@ -33,21 +32,21 @@ ICommand* OutgoingBuffer::makeCommand()
     if (is_null(current))
         return null_ptr;
 
-    if (bufferOP::isMemory(current))
+    if (BUFFER_ELEMENT_MEMORY == current->type)
     {
         std::auto_ptr<WriteCommand> command(new WriteCommand(connectedSocket_));
         io_mem_buf iobuf;
         do
         {
-            iobuf.buf = bufferOP::rd_ptr(current);
-            iobuf.len = bufferOP::rd_length(current);
+            iobuf.buf = rd_ptr(current);
+            iobuf.len = rd_length(current);
 
             assert(0 <= iobuf.len);
             if (0 < iobuf.len)
                 command->iovec().push_back(iobuf);
         }
         while (null_ptr != (current = buffer_.next(current))
-                && bufferOP::isMemory(current));
+                && BUFFER_ELEMENT_MEMORY == current->type);
 
         if (command->iovec().empty())
             return null_ptr;
@@ -55,7 +54,7 @@ ICommand* OutgoingBuffer::makeCommand()
         return command.release();
     }
 
-    return bufferOP::makeCommand(current, false);
+    ThrowException(NotImplementedException);
 }
 
 bool OutgoingBuffer::clearBytes(size_t len)
@@ -64,16 +63,16 @@ bool OutgoingBuffer::clearBytes(size_t len)
     buffer_chain_t* current = null_ptr;
     while (null_ptr != (current = buffer_.head()))
     {
-        if (!bufferOP::isMemory(current))
+		if (BUFFER_ELEMENT_MEMORY != current->type)
         {
             freebuffer(buffer_.pop());
             return true;
         }
 
-        size_t dataLen = bufferOP::rd_length(current);
+        size_t dataLen = rd_length(current);
         if (dataLen >= exceptLen)
         {
-            bufferOP::rd_ptr(current, exceptLen);
+            rd_ptr(current, exceptLen);
             if (dataLen == exceptLen)
                 freebuffer(buffer_.pop());
 
@@ -81,7 +80,7 @@ bool OutgoingBuffer::clearBytes(size_t len)
             return false;
         }
 
-        bufferOP::rd_ptr(current, dataLen);
+        rd_ptr(current, dataLen);
         exceptLen -= dataLen;
 
         freebuffer(buffer_.pop());

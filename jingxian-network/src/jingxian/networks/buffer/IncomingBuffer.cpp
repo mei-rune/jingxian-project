@@ -1,7 +1,6 @@
 
 # include "pro_config.h"
 # include "jingxian/networks/buffer/IncomingBuffer.h"
-# include "jingxian/networks/buffer/buffer-internal.h"
 # include "jingxian/networks/ConnectedSocket.h"
 # include "jingxian/networks/commands/ReadCommand.H"
 
@@ -26,7 +25,7 @@ ICommand* IncomingBuffer::makeCommand()
 {
     std::auto_ptr<ReadCommand> command;
 
-    databuffer_t* current = dataBuffer_.next(current_);
+    buffer_chain_t* current = dataBuffer_.next(current_);
     if (!is_null(current))
     {
         command.reset(new ReadCommand(connectedSocket_));
@@ -50,7 +49,7 @@ ICommand* IncomingBuffer::makeCommand()
 
     if (command->iovec().empty())
     {
-        databuffer_t* ptr = connectedSocket_->allocateProtocolBuffer();
+        buffer_chain_t* ptr = cast_to_buffer_chain(connectedSocket_->allocateProtocolBuffer());
         dataBuffer_.push(ptr);
 
         io_mem_buf tmp;
@@ -68,8 +67,8 @@ bool IncomingBuffer::increaseBytes(size_t len)
 {
     size_t exceptLen = len;
 
-    databuffer_t* current = current_;
-    databuffer_t* last = current_;
+    buffer_chain_t* current = current_;
+    buffer_chain_t* last = current_;
 
     while (null_ptr != (current = dataBuffer_.next(current)))
     {
@@ -92,7 +91,7 @@ bool IncomingBuffer::increaseBytes(size_t len)
 bool IncomingBuffer::decreaseBytes(size_t len)
 {
     size_t exceptLen = len;
-    databuffer_t* current = null_ptr;
+    buffer_chain_t* current = null_ptr;
 
     while (null_ptr != (current = dataBuffer_.head()))
     {
@@ -130,7 +129,7 @@ void IncomingBuffer::copyTo(std::vector<io_mem_buf>& buf)
 {
     io_mem_buf tmp;
 
-    databuffer_t* current = null_ptr;
+    buffer_chain_t* current = null_ptr;
     while (null_ptr != (current = dataBuffer_.next(current)))
     {
         tmp.buf = rd_ptr(current);

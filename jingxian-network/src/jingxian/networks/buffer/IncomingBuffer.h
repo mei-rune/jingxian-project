@@ -38,29 +38,9 @@ public:
 private:
 	NOCOPY(IncomingBuffer);
 
-	template<typename T>
-	class linktraits
-	{
-	public:
-		static void setNext(T* rhs, T* lhs)
-		{
-			rhs->chain._next = &(lhs->chain);
-		}
-
-		static T* getNext(T* t)
-		{
-			return (T*)t->chain._next;
-		}
-
-		static const T* getNext(const T* t)
-		{
-			return (const T*)t->chain._next;
-		}
-	};
-
 	ConnectedSocket* connectedSocket_;
-	linklist<databuffer_t, linktraits<databuffer_t>> dataBuffer_;
-	databuffer_t* current_;
+	linklist<buffer_chain_t> dataBuffer_;
+	buffer_chain_t* current_;
 };
 
 _jingxian_end
