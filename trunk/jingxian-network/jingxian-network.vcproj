@@ -407,18 +407,6 @@
 				Name="buffer"
 				>
 				<File
-					RelativePath=".\src\jingxian\networks\buffer\buffer-internal.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\jingxian\networks\buffer\buffer-internal.h"
-					>
-				</File>
-				<File
-					RelativePath=".\src\jingxian\networks\buffer\FileBufferHandler.h"
-					>
-				</File>
-				<File
 					RelativePath=".\src\jingxian\networks\buffer\IncomingBuffer.cpp"
 					>
 				</File>
@@ -427,19 +415,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\src\jingxian\networks\buffer\MemoryBufferHandler.h"
-					>
-				</File>
-				<File
 					RelativePath=".\src\jingxian\networks\buffer\OutgoingBuffer.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\src\jingxian\networks\buffer\OutgoingBuffer.h"
-					>
-				</File>
-				<File
-					RelativePath=".\src\jingxian\networks\buffer\PacketBufferHandler.h"
 					>
 				</File>
 			</Filter>
