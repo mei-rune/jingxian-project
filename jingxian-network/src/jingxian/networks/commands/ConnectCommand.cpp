@@ -52,7 +52,7 @@ void ConnectCommand::onResolveComplete(const tstring& name, const tstring& port,
     for (std::vector<HostAddress>::const_iterator it = hostEntry.AddressList.begin()
             ; it != hostEntry.AddressList.end(); ++ it)
     {
-        if (execute(it->ptr(), it->len()))
+        if (execute(it->ptr(), static_cast<int>(it->len())))
             return;
     }
 

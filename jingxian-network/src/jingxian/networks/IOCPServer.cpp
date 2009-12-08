@@ -62,7 +62,7 @@ bool IOCPServer::initialize(size_t number_of_threads)
         return false;
 	}
 
-    number_of_threads_ = number_of_threads;
+    number_of_threads_ = static_cast<u_long>(number_of_threads);
     completion_port_ = ::CreateIoCompletionPort(INVALID_HANDLE_VALUE,
                        0,
                        0,

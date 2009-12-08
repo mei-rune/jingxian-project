@@ -34,7 +34,7 @@ ICommand* IncomingBuffer::makeCommand()
         do
         {
             tmp.buf = wd_ptr(current);
-            tmp.len = wd_length(current);
+            tmp.len = static_cast<u_long>(wd_length(current));
 
             assert(tmp.len >= 0);
             if (tmp.len > 0)
@@ -54,7 +54,7 @@ ICommand* IncomingBuffer::makeCommand()
 
         io_mem_buf tmp;
         tmp.buf = wd_ptr(ptr);
-        tmp.len = wd_length(ptr);
+        tmp.len = static_cast<u_long>(wd_length(ptr));
         assert(tmp.len >= 0);
         command->iovec().push_back(tmp);
 
@@ -133,7 +133,7 @@ void IncomingBuffer::copyTo(std::vector<io_mem_buf>& buf)
     while (null_ptr != (current = dataBuffer_.next(current)))
     {
         tmp.buf = rd_ptr(current);
-        tmp.len = rd_length(current);
+        tmp.len = static_cast<u_long>(rd_length(current));
 
         buf.push_back(tmp);
 
