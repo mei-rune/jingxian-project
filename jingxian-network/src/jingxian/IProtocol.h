@@ -62,7 +62,7 @@ public:
      *
      * @param[ in ] context 会话的上下文
     */
-    virtual buffer_chain_t* createBuffer(const ProtocolContext& context) = 0;
+    virtual databuffer_t* createBuffer(const ProtocolContext& context) = 0;
 
     /**
      * 取得地址的描述

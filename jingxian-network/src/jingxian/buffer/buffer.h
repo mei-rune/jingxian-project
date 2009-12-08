@@ -88,6 +88,47 @@ typedef struct databuffer
     char ptr[1];
 } databuffer_t;
 
+inline void freebuffer(databuffer* buf)
+{
+    if (is_null(buf))
+        return;
+
+    if (is_null(buf->chain.freebuffer))
+        my_free(buf);
+    else
+        buf->chain.freebuffer(&(buf->chain), buf->chain.context);
+}
+
+inline char*  wd_ptr(databuffer_t* data)
+{
+   return data->end;
+}
+
+inline void   wd_ptr(databuffer_t* data, size_t len)
+{
+    data->end += len;
+}
+
+inline size_t    wd_length(const databuffer_t* data)
+{
+    return (data->ptr + data->capacity) - data->end;
+}
+
+inline char*  rd_ptr(databuffer_t* data)
+{
+    return data->start;
+}
+
+inline void   rd_ptr(databuffer_t* data, size_t len)
+{
+    data->start += len;
+}
+
+inline size_t    rd_length(const databuffer_t* data)
+{
+    return data->end - data->start;
+}
+
 typedef struct filebuffer
 {
     buffer_chain_t chain;

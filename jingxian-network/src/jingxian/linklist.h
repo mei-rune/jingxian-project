@@ -13,6 +13,26 @@
 _jingxian_begin
 
 template<typename T>
+class linklist_traits
+{
+public:
+	static void setNext(T* rhs, T* lhs)
+	{
+		rhs->_next = lhs;
+	}
+
+	static T* getNext(T* t)
+	{
+		return t->_next;
+	}
+
+	static const T* getNext(const T* t)
+	{
+		return t->_next;
+	}
+};
+
+template<typename T, typename TRAITS = linklist_traits<T> >
 class linklist
 {
 public:
@@ -24,14 +44,14 @@ public:
     }
 
     /**
-    * 析构函数
-    */
+     * 析构函数
+     */
     ~linklist()
     {
         while (null_ptr != head_)
         {
             T* current = head_;
-            head_ = (head_)->_next;
+			head_ = TRAITS::getNext(head_);
 
             freebuffer(current);
         }
@@ -58,22 +78,22 @@ public:
     }
 
     /**
-    * 向尾部添加一个空闲的内存块
-    */
+     * 向尾部添加一个空闲的内存块
+     */
     void push(T* newbuf)
     {
-        newbuf->_next = NULL;
+        TRAITS::setNext(newbuf, NULL);
         if (is_null(head_))
             head_ = newbuf;
         else
-            tail_->_next = newbuf;
+            TRAITS::setNext(tail_, newbuf);
         tail_ = newbuf;
         ++ length_;
     }
 
     /**
-    * 向头部取一个内存块
-    */
+     * 向头部取一个内存块
+     */
     T* pop()
     {
         T* current = head_;
@@ -81,7 +101,7 @@ public:
         if (null_ptr != head_)
         {
             -- length_;
-            head_ = head_->_next;
+            head_ = TRAITS::getNext(head_);
         }
         else
         {
@@ -92,29 +112,32 @@ public:
     }
 
     /**
-    * 用于遍历buf,
-    */
+     * 用于遍历buf,
+     */
     T* next(T* current)
     {
-        return is_null(current) ? head_ : current->_next;
+        return is_null(current) ? head_ : TRAITS::getNext(current);
     }
 
     /**
-    * 用于遍历buf,v
-    */
+     * 用于遍历buf,v
+     */
     const T* next(const T* current) const
     {
-        return is_null(current) ? head_ : current->_next;
+        return is_null(current) ? head_ : TRAITS::getNext(current);
     }
 
     /**
-    * 是否为空
-    */
+     * 是否为空
+     */
     bool empty() const
     {
         return is_null(head_);
     }
 
+	/**
+	 * 节点个数
+	 */
     size_t size() const
     {
         return length_;

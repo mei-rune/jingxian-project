@@ -127,7 +127,7 @@ public:
     void onError(const ICommand& command, transport_mode::type mode, errcode_t error, const tstring& description);
     void onDisconnected(const ICommand& command, errcode_t error, const tstring& description);
 
-    buffer_chain_t* allocateProtocolBuffer();
+    databuffer_t* allocateProtocolBuffer();
 
 private:
     NOCOPY(ConnectedSocket);
