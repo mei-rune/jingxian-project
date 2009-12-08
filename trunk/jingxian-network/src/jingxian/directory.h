@@ -60,9 +60,11 @@ inline DWORD getApplicationDirectory(tchar *szModName, DWORD Size, bool slash = 
  */
 inline tstring getApplicationDirectory(bool slash = true)
 {
+	tstring ret;
     tchar path[ MAX_PATH ] = _T("");
     getApplicationDirectory(path, MAX_PATH , slash);
-    return tstring(path);
+	ret = path;
+    return ret;
 }
 
 /**
@@ -204,17 +206,13 @@ inline bool existFile(const tstring& pa)
  */
 inline tstring getBasename(const tstring& pa)
 {
-    const tstring path = simplify(pa);
+    tstring path = simplify(pa);
 
     tstring::size_type pos = path.rfind(_T('/'));
-    if (pos == tstring::npos)
-    {
-        return path;
-    }
-    else
-    {
-        return path.substr(pos + 1);
-    }
+    if (pos != tstring::npos)
+        path = path.substr(pos + 1);
+
+    return path;
 }
 
 /**
@@ -225,17 +223,19 @@ inline tstring getBasename(const tstring& pa)
  */
 inline tstring getDirectoryName(const tstring& pa)
 {
-    const tstring path = simplify(pa);
+    tstring path = simplify(pa);
 
     tstring::size_type pos = path.rfind(_T('/'));
     if (pos == tstring::npos)
     {
-        return tstring();
+		path.clear();
     }
     else
     {
-        return path.substr(0, pos);
+        path = path.substr(0, pos);
     }
+
+    return path;
 }
 
 /**
@@ -243,19 +243,20 @@ inline tstring getDirectoryName(const tstring& pa)
  */
 inline tstring getExtension(const tstring& pa)
 {
-    const tstring path = simplify(pa);
+    tstring path = simplify(pa);
 
     tstring::size_type dotPos = path.rfind(_T('.'));
     tstring::size_type slashPos = path.rfind(_T('/'));
 
     if (dotPos == tstring::npos || slashPos != tstring::npos && slashPos > dotPos)
     {
-        return tstring();
+		path.clear();
     }
     else
     {
-        return path.substr(dotPos + 1);
+        path = path.substr(dotPos + 1);
     }
+	return path;
 }
 
 /**
@@ -263,18 +264,14 @@ inline tstring getExtension(const tstring& pa)
  */
 inline tstring getFileName(const tstring& pa)
 {
-    const tstring path = simplify(pa);
+    tstring path = simplify(pa);
 
     tstring::size_type slashPos = path.rfind(_T('/'));
 
-    if (slashPos == tstring::npos)
-    {
-        return path;
-    }
-    else
-    {
-        return path.substr(slashPos + 1);
-    }
+    if (slashPos != tstring::npos)
+        path = path.substr(slashPos + 1);
+
+	return path;
 }
 
 /**
@@ -285,14 +282,10 @@ inline tstring getFileNameWithoutExtension(const tstring& pa)
     tstring path = getFileName(pa);
     tstring::size_type dotPos = path.rfind(_T('.'));
 
-    if (dotPos == tstring::npos)
-    {
-        return path;
-    }
-    else
-    {
-        return path.substr(0, dotPos);
-    }
+    if (dotPos != tstring::npos)
+       path = path.substr(0, dotPos);
+
+	return path;
 }
 
 namespace detail
@@ -329,6 +322,8 @@ private:
 inline std::list<tstring> readDirectory(const tstring& pa)
 {
     typedef detail::StringOp<tchar> OP;
+	
+    std::list<tstring> result;
     const tstring path = simplify(pa);
 
 #ifdef _WIN32
@@ -345,7 +340,6 @@ inline std::list<tstring> readDirectory(const tstring& pa)
         ThrowException1(RuntimeException, _T("²»ÄÜ¶ÁÄ¿Â¼ `") + path + _T("':\n") + lastError());
     }
 
-    std::list<tstring> result;
 
     while (true)
     {
