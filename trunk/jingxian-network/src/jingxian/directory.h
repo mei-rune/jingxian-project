@@ -305,6 +305,7 @@ public:
             : h_(h)
     {
     }
+
     ~filefinder()
     {
         if (-1 != h_)
@@ -319,6 +320,7 @@ public:
 private:
     intptr_t h_;
 };
+
 }
 
 /**

@@ -28,33 +28,34 @@ void OutgoingBuffer::send(buffer_chain_t* buf)
 
 ICommand* OutgoingBuffer::makeCommand()
 {
-    buffer_chain_t* current = buffer_.next(null_ptr);
-    if (is_null(current))
-        return null_ptr;
+	buffer_chain_t* current = buffer_.next(null_ptr);
+	if (is_null(current))
+		return null_ptr;
 
-    if (BUFFER_ELEMENT_MEMORY == current->type)
-    {
-        std::auto_ptr<WriteCommand> command(new WriteCommand(connectedSocket_));
-        io_mem_buf iobuf;
-        do
-        {
-            iobuf.buf = rd_ptr(current);
-            iobuf.len = static_cast<u_long>(rd_length(current));
+	if (BUFFER_ELEMENT_MEMORY != current->type)
+	{
+		ThrowException(NotImplementedException);
+		return null_ptr;
+	}
 
-            assert(0 <= iobuf.len);
-            if (0 < iobuf.len)
-                command->iovec().push_back(iobuf);
-        }
-        while (null_ptr != (current = buffer_.next(current))
-                && BUFFER_ELEMENT_MEMORY == current->type);
+	std::auto_ptr<WriteCommand> command(new WriteCommand(connectedSocket_));
+	io_mem_buf iobuf;
+	do
+	{
+		iobuf.buf = rd_ptr(current);
+		iobuf.len = static_cast<u_long>(rd_length(current));
 
-        if (command->iovec().empty())
-            return null_ptr;
+		assert(0 <= iobuf.len);
+		if (0 < iobuf.len)
+			command->iovec().push_back(iobuf);
+	}
+	while (null_ptr != (current = buffer_.next(current))
+		&& BUFFER_ELEMENT_MEMORY == current->type);
 
-        return command.release();
-    }
+	if (command->iovec().empty())
+		return null_ptr;
 
-    ThrowException(NotImplementedException);
+	return command.release();
 }
 
 bool OutgoingBuffer::clearBytes(size_t len)
