@@ -64,7 +64,7 @@ namespace proxy
 				return true;
 			}
 
-			if(appendCredentialPolicy(sa))
+			if(!appendCredentialPolicy(sa))
 			{
 				LOG_FATAL(context.logger(), _T("√¸¡Ó 'credentialPolicy' ÷¥–– ß∞‹"));
 				context.exit();
