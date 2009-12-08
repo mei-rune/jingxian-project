@@ -363,7 +363,7 @@ void ConnectedSocket::onRead(const ICommand& command, size_t bytes_transferred)
     try
     {
         std::vector<io_mem_buf> ioBuf;
-        incoming_.dataBuffer(ioBuf);
+        incoming_.copyTo(ioBuf);
         context_.inMemory(&ioBuf, -1);
 
         size_t readLen = protocol_->onReceived( context_ );
@@ -519,7 +519,7 @@ void ConnectedSocket::onDisconnected(const ICommand& command
     protocol_->onDisconnected(context_,error, description);
 }
 
-buffer_chain_t* ConnectedSocket::allocateProtocolBuffer()
+databuffer_t* ConnectedSocket::allocateProtocolBuffer()
 {
     return protocol_->createBuffer(context_);
 }

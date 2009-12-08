@@ -33,18 +33,34 @@ public:
 
     bool increaseBytes(size_t len);
 
-    const linklist<buffer_chain_t>& buffer() const;
-
-    const buffer_chain_t* current() const;
-
-    void dataBuffer(std::vector<io_mem_buf>& buf);
+    void copyTo(std::vector<io_mem_buf>& buf);
 
 private:
-    NOCOPY(IncomingBuffer);
+	NOCOPY(IncomingBuffer);
 
-    ConnectedSocket* connectedSocket_;
-    linklist<buffer_chain_t> dataBuffer_;
-    buffer_chain_t* current_;
+	template<typename T>
+	class linktraits
+	{
+	public:
+		static void setNext(T* rhs, T* lhs)
+		{
+			rhs->chain._next = &(lhs->chain);
+		}
+
+		static T* getNext(T* t)
+		{
+			return (T*)t->chain._next;
+		}
+
+		static const T* getNext(const T* t)
+		{
+			return (const T*)t->chain._next;
+		}
+	};
+
+	ConnectedSocket* connectedSocket_;
+	linklist<databuffer_t, linktraits<databuffer_t>> dataBuffer_;
+	databuffer_t* current_;
 };
 
 _jingxian_end
