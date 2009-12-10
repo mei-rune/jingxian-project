@@ -111,11 +111,16 @@ public:
      */
     virtual const tstring& toString() const;
 
+	DWORD GetTickCount(void)
+	{
+		return tickCount_;
+	}
 
     SOCKET handle()
     {
         return socket_;
     }
+
     ITracer* tracer()
     {
         return tracer_;
@@ -155,13 +160,13 @@ private:
     TCPContext context_;
     /// 是否已初始化
     bool isInitialize_;
+	/// 最后一次IO数据返回时间
+	DWORD tickCount_;
     ///暂停数据时读来的数据临时存放位置
-
     bool stopReading_;
     /// 表示发出一个读请求,但还没有返回
     bool reading_;
     IncomingBuffer incoming_;
-
     /// 表示发出一个写请求,但还没有返回
     bool writing_;
     OutgoingBuffer outgoing_;

@@ -306,6 +306,8 @@ void ConnectedSocket::doDisconnect(transport_mode::type mode
 
 void ConnectedSocket::onRead(const ICommand& command, size_t bytes_transferred)
 {
+	tickCount_ = GetTickCount();
+
     TP_TRACE(tracer_, transport_mode::Receive, _T("读请求 '")<< (size_t)&command <<_T("' 成功返回!"));
 
     reading_ = false;
@@ -408,6 +410,8 @@ void ConnectedSocket::onRead(const ICommand& command, size_t bytes_transferred)
 
 void ConnectedSocket::onWrite(const ICommand& command, size_t bytes_transferred)
 {
+	tickCount_ = GetTickCount();
+
     TP_TRACE(tracer_, transport_mode::Send, _T("写请求 '")<< (size_t)&command <<_T("' 成功返回!"));
 
 
@@ -463,6 +467,8 @@ void ConnectedSocket::onError(const ICommand& command
                               , errcode_t error
                               , const tstring& description)
 {
+	tickCount_ = GetTickCount();
+
     switch ( mode )
     {
     case transport_mode::Receive:
@@ -511,6 +517,8 @@ void ConnectedSocket::onDisconnected(const ICommand& command
                                      , errcode_t error
                                      , const tstring& description)
 {
+	tickCount_ = GetTickCount();
+
     TP_TRACE(tracer_, transport_mode::Both , _T("断开请求 '")
              << (size_t)&command
              <<_T("' 返回!"));
