@@ -73,13 +73,13 @@ inline const tchar* c_str_ptr(const string_t& t)
 }
 
 template<typename charT>
-inline const char* c_str_ptr(const stringData<charT>& t)
+inline const charT* c_str_ptr(const stringData<charT>& t)
 {
     return t.ptr;
 }
 
 template<typename charT>
-inline const char* c_str_ptr(const stringData<charT>* t)
+inline const charT* c_str_ptr(const stringData<charT>* t)
 {
     return t->ptr;
 }

@@ -85,6 +85,12 @@ public:
     {
     }
 
+    Connector(IReactorCore* core, const tstring& host)
+            : core_(core)
+            , host_(host)
+    {
+    }
+
     virtual ~Connector()
     {
         reset(null_ptr);
