@@ -5,7 +5,7 @@
 #include <iostream>
 #include "jingxian/connection_functionals.h"
 
-# ifdef _GOOGLETEST_
+#ifdef _GOOGLETEST_
 #include <gtest/gtest.h>
 #endif
 
